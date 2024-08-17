@@ -1,0 +1,45 @@
+---
+name: Build Reverse Proxy NginX Docker Image
+run-name: Build Reverse Proxy NginX Docker Image by @${{ github.actor }}
+
+permissions:
+  id-token: write
+  contents: write
+
+on:
+  workflow_dispatch:
+
+jobs:
+# ------------------------------------------------------------------------------
+# set version
+# ------------------------------------------------------------------------------
+  build-image:
+    name: prepare docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: set vars
+        id: variables
+        run: |
+          echo "version_no=$(date +%y%m%d).${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+          prep_image_id=$(echo "ghcr.io/${{ github.repository_owner }}/web-rp-nginx" | tr '[A-Z]' '[a-z]')
+          echo "image_id=$prep_image_id" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+
+      - name: log in to registry
+        run: echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io --username ${{ github.actor }} --password-stdin
+        shell: bash
+
+      - name: Build and push image
+        run: |
+          echo ${{ steps.variables.outputs.image_id }}
+          docker build --tag ${{ steps.variables.outputs.image_id }}:${{ steps.variables.outputs.version_no }} --build-arg "BUILD_VERSION=${{ inputs.version }}" --platform linux/amd64 --no-cache .
+          docker push ${{ steps.variables.outputs.image_id }}:${{ steps.variables.outputs.version_no }}
+        shell: bash
+      - name: Tag latest
+        run: |
+          docker tag ${{ steps.variables.outputs.image_id }}:${{ steps.variables.outputs.version_no }} ${{ steps.variables.outputs.image_id }}:latest
+          docker push ${{ steps.variables.outputs.image_id }}:latest
+        shell: bash
+
+...
