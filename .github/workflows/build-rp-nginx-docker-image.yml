@@ -37,7 +37,7 @@ jobs:
             --tag ${{ steps.variables.outputs.image_id }}:${{ steps.variables.outputs.version_no }} \
             --build-arg "BUILD_VERSION=${{ steps.variables.outputs.version_no }}" \
             --platform linux/amd64 \
-            --no-cache 
+            --no-cache \
             --file ./docker-builds/rp-nginx/docker-alpine-rp-nginx \
             .
           docker push ${{ steps.variables.outputs.image_id }}:${{ steps.variables.outputs.version_no }}
