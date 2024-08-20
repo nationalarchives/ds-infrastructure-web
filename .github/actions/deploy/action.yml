@@ -1,0 +1,22 @@
+name: Deploy
+
+inputs:
+  config:
+    required: true
+    type: string
+  environment:
+    required: true
+    type: string
+
+concurrency:
+  group: deploy
+
+runs:
+  using: "composite"
+  steps:
+    - name: DEBUG
+      run: cat config/${{ inputs.config }}
+      shell: bash
+    - name: DEBUG
+      run: echo "Deploy '${{ inputs.config }}' to '${{ inputs.environment }}'"
+      shell: bash

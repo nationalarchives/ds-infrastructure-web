@@ -1,0 +1,42 @@
+name: Release to production
+
+on:
+  release:
+    types:
+      - published
+
+concurrency:
+  group: deploy-production
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Copy config from staging to production
+        run: |
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          git config --global user.name "Release manager"
+          git config --global user.email "<>"
+          cp config/staging.json config/production.json
+          git add config/production.json
+          git commit -m "Release v$VERSION"
+          git push
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - update
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Deploy
+        uses: ./.github/actions/deploy
+        with:
+          config: production.json
+          environment: production
