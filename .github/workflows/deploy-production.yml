@@ -43,6 +43,8 @@ jobs:
   
   test:
     runs-on: ubuntu-latest
+    needs:
+      - deploy
     steps:
       - uses: actions/checkout@v4
       - name: Test
