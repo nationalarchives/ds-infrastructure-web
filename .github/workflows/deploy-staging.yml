@@ -47,3 +47,12 @@ jobs:
         with:
           config: staging.json
           environment: staging
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test
+        uses: ./.github/actions/test
+        with:
+          domain: https://develop.tna.dblclk.dev  # TODO: Change

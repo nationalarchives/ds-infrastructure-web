@@ -36,5 +36,10 @@ override.tf.json
 .terraformrc
 terraform.rc
 
+# Ignore tests
+test/node_modules
+test/playwright-report
+test/test-results
+
 .idea
 .DS_Store

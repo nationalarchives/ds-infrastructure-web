@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "lint:fix": "npx prettier --write ."
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.45.2",
+    "@types/node": "^22.5.0"
+  }
+}
