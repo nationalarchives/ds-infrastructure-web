@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io --username ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io --username ${{ github.actor }} --password-stdin
         shell: bash
 
       - name: build and push image
