@@ -37,9 +37,9 @@ override.tf.json
 terraform.rc
 
 # Ignore tests
-test/node_modules
-test/playwright-report
-test/test-results
+node_modules
+playwright-report
+test-results
 
 .idea
 .DS_Store
