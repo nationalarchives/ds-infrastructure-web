@@ -14,7 +14,7 @@
         },
         "search": {
             "image": "ghcr.io/nationalarchives/ds-search",
-            "version": "24.08.27.23"
+            "version": "24.08.27.24"
         }
     }
 }
