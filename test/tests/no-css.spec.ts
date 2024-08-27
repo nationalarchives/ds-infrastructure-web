@@ -1,11 +1,7 @@
-import { test, expect } from "@playwright/test";
+import { test } from "@playwright/test";
 
-test.beforeEach(async ({ context }) => {
-  // Block any css requests for each test in this file.
+test("loads page without css", async ({ context, page }) => {
   await context.route(/.css$/, (route) => route.abort());
-});
-
-test("loads page without css", async ({ page }) => {
   await page.goto("/");
   // await page.screenshot({ path: 'no-css.png', fullPage: true });
 });
