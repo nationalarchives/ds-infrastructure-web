@@ -7,8 +7,10 @@ permissions:
   contents: write
 
 on:
-  push:
-    branches:
+  workflow_dispatch:
+  # push:  # TODO: Re-enable once ready
+  #   branches:
+  #     - main
 
 jobs:
   terraform-plan-dev:
