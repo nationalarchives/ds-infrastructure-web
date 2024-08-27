@@ -47,5 +47,4 @@ jobs:
           docker tag ${{ steps.variables.outputs.image_id }}:${{ steps.variables.outputs.version_no }} ${{ steps.variables.outputs.image_id }}:latest
           docker push ${{ steps.variables.outputs.image_id }}:latest
         shell: bash
-
 ...
