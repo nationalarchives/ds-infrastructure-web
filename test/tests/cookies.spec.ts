@@ -73,7 +73,7 @@ test("no cookies set", async ({ page, context }) => {
   );
   expect(TNAFrontendCookies).toBeDefined();
 
-  checkTNAFrontendCookies(page);
+  await checkTNAFrontendCookies(page);
   checkCookiesPolicy(await context.cookies(), true, false, false, false);
 });
 
@@ -94,7 +94,7 @@ test("cookie_policies and cookie_preferences_set set", async ({
   const cookieBanner = page.locator('[data-module="tna-cookie-banner"]');
   expect(cookieBanner).not.toBeVisible();
 
-  checkTNAFrontendCookies(page);
+  await checkTNAFrontendCookies(page);
   checkCookiesPolicy(await context.cookies(), true, true, true, true);
 });
 
@@ -114,7 +114,7 @@ test("cookie_policies set but no cookie_preferences_set cookie", async ({
   const cookieBanner = page.locator('[data-module="tna-cookie-banner"]');
   expect(cookieBanner).toBeVisible();
 
-  checkTNAFrontendCookies(page);
+  await checkTNAFrontendCookies(page);
   checkCookiesPolicy(await context.cookies(), true, true, true, true);
 });
 
@@ -129,7 +129,7 @@ test("cookie_preferences_set set but no cookie_policies cookie", async ({
   const cookieBanner = page.locator('[data-module="tna-cookie-banner"]');
   expect(cookieBanner).not.toBeVisible();
 
-  checkTNAFrontendCookies(page);
+  await checkTNAFrontendCookies(page);
   checkCookiesPolicy(await context.cookies(), true, false, false, false);
 });
 
@@ -144,7 +144,7 @@ test("invalid cookie_policies set with no cookie_preferences_set", async ({
   const cookieBanner = page.locator('[data-module="tna-cookie-banner"]');
   expect(cookieBanner).toBeVisible();
 
-  checkTNAFrontendCookies(page);
+  await checkTNAFrontendCookies(page);
   checkCookiesPolicy(await context.cookies(), true, false, false, false);
 });
 
@@ -162,6 +162,6 @@ test("invalid cookie_policies set with cookie_preferences_set", async ({
   const cookieBanner = page.locator('[data-module="tna-cookie-banner"]');
   expect(cookieBanner).not.toBeVisible();
 
-  checkTNAFrontendCookies(page);
+  await checkTNAFrontendCookies(page);
   checkCookiesPolicy(await context.cookies(), true, false, false, false);
 });
