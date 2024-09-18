@@ -10,7 +10,7 @@
         },
         "search": {
             "image": "ghcr.io/nationalarchives/ds-search",
-            "version": "24.09.17.32"
+            "version": "24.09.18.33"
         },
         "search_api": {
             "version": "24.09.16.98"
