@@ -5,7 +5,7 @@ on:
     inputs:
       source:
         type: choice
-        description: Target
+        description: Source
         required: true
         default: production
         options:
