@@ -1,25 +1,25 @@
-name: Copy production database
+name: Copy database to development
 
 on:
   workflow_dispatch:
     inputs:
-      target:
+      source:
         type: choice
         description: Target
         required: true
-        default: develop
+        default: production
         options:
-          - develop
+          - production
           - staging
 
 concurrency:
-  group: copy-db-${{ inputs.target }}
+  group: copy-db-${{ inputs.source }}
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Copy production database
+      - name: Copy database to development
         run: |
-          echo "Copy production DB to ${{ inputs.target }}"
+          echo "Copy ${{ inputs.source }} DB to development"
