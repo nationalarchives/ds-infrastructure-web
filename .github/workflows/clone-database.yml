@@ -1,0 +1,25 @@
+name: Copy production database
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        type: choice
+        description: Target
+        required: true
+        default: develop
+        options:
+          - develop
+          - staging
+
+concurrency:
+  group: copy-db-${{ inputs.target }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copy production database
+        run: |
+          echo "Copy production DB to ${{ inputs.target }}"
