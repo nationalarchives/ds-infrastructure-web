@@ -20,7 +20,7 @@ concurrency:
   group: deploy-feature-${{ github.ref }}
 
 jobs:
-  deploy:
+  env-name:
     runs-on: ubuntu-latest
     if: github.ref_name != 'main'
     steps:
@@ -28,19 +28,31 @@ jobs:
       - name: Get environment name
         id: get-environment
         run: echo "ENVIRONMENT=$(echo "${{ github.ref_name }}" | sed -e 's,/,-,g')" >> "$GITHUB_OUTPUT"
+    outputs:
+      environment: ${{ steps.get-environment.outputs.ENVIRONMENT }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref_name != 'main'
+    needs:
+      - env-name
+    steps:
+      - uses: actions/checkout@v4
       - name: Deploy
         uses: ./.github/actions/deploy
         with:
           config: ${{ inputs.config }}
-          environment: ${{ steps.get-environment.outputs.ENVIRONMENT }}
+          environment: ${{ needs.env-name.outputs.environment }}
   
   test:
     runs-on: ubuntu-latest
+    if: github.ref_name != 'main'
     needs:
+      - env-name
       - deploy
     steps:
       - uses: actions/checkout@v4
       - name: Test
         uses: ./.github/actions/test
         with:
-          domain: https://develop.tna.dblclk.dev  # TODO: Change
+          domain: https://${{ needs.env-name.outputs.environment }}.dev.tna.dblclk.dev  # TODO: Change
