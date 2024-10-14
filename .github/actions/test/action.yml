@@ -17,6 +17,10 @@ runs:
         npm ci
         npx playwright install --with-deps
       shell: bash
+    - name: Wait for service
+      uses: nev7n/wait_for_response@v1
+      with:
+        url: ${{ inputs.domain }}
     - name: Run tests
       run: |
         cd test
