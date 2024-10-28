@@ -11,6 +11,10 @@
         "search": {
             "image": "ghcr.io/nationalarchives/ds-search",
             "version": "24.10.24.41"
+        },
+        "frontend-enrichment": {
+            "image": "ghcr.io/nationalarchives/ds-frontend-enrichment",
+            "version": "24.10.28.1"
         }
     }
 }
