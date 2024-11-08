@@ -11,6 +11,9 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: develop
+      url: https://develop.tna.dblclk.dev/
     steps:
       - uses: actions/checkout@v4
       - name: Deploy
