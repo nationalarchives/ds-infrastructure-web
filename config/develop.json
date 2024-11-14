@@ -2,7 +2,7 @@
     "services": {
         "frontend": {
             "image": "ghcr.io/nationalarchives/ds-frontend",
-            "version": "24.11.14.808"
+            "version": "24.11.14.809"
         },
         "cms": {
             "image": "ghcr.io/nationalarchives/ds-wagtail",
