@@ -6,7 +6,7 @@
         },
         "cms": {
             "image": "ghcr.io/nationalarchives/ds-wagtail",
-            "version": "24.11.13.511"
+            "version": "24.11.15.513"
         },
         "search": {
             "image": "ghcr.io/nationalarchives/ds-search",
