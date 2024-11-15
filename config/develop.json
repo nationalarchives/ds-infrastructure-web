@@ -14,7 +14,7 @@
         },
         "frontend-enrichment": {
             "image": "ghcr.io/nationalarchives/ds-frontend-enrichment",
-            "version": "24.11.05.5"
+            "version": "24.11.15.6"
         }
     }
 }
