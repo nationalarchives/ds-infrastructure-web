@@ -1,0 +1,31 @@
+name: Deploy to AWS EC2 via SSM
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-west-2
+    - name: Pull and deploy the latest container image
+      run: |
+          aws ssm send-command \
+          --instance-ids i-0b9d358c28976acae \
+          --document-name "AWS-RunShellScript" \
+          --comment "Deploy latest container image" \
+          --parameters 'commands=[
+          "sudo docker pull ghcr.io/nationalarchives/tna-python:latest",
+          "sudo docker stop blue-web || true",
+          "sudo docker rm blue-web || true",
+          "sudo docker run -d --name blue-web -p 80:80 ghcr.io/nationalarchives/tna-python:latest"
+          ]' \
+          --output text
+
