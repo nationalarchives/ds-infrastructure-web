@@ -14,7 +14,7 @@ resource "aws_efs_file_system" "media_efs" {
 }
 
 resource "aws_efs_mount_target" "media_efs_private_sub" {
-    for_each = var.private_subs
+    for_each = { for idx, sub in tolist(var.private_subs) : idx => sub}
 
     file_system_id = aws_efs_file_system.media_efs.id
     subnet_id      = each.value

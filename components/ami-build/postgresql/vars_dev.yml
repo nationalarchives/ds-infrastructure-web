@@ -1,0 +1,12 @@
+---
+key_name: "postgresql-dev-eu-west-2"
+region: "eu-west-2"
+service: "postgresql"
+env: "dev"
+volume_size: 40
+s3_deployment_bucket: "ds-dev-deployment-source"
+s3_deployment_root: "postgresql"
+ebs_size: 20
+ebs_type: "gp3"
+ebs_device_name: "/dev/sdf"
+...

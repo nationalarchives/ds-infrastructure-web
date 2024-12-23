@@ -1,0 +1,23 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+    s3_bucket: ""
+    region: ""
+    deployed_by: ""
+    git_repo: ""
+  tasks:
+  - name: Create S3 bucket for state file
+    s3_bucket:
+      name: "{{ s3_bucket }}"
+      region: "{{ region }}"
+      versioning: yes
+      tags:
+        CreatedBy: "{{ deployed_by }}"
+        Repository: "{{ git_repo }}"
+    with_items: "{{ s3_bucket }}"
+
+  - name: Run AWS CLI to configure server side encryption
+    command: "aws s3api put-bucket-encryption --bucket {{ item }} --server-side-encryption-configuration '{\"Rules\": [{\"ApplyServerSideEncryptionByDefault\": {\"SSEAlgorithm\": \"AES256\"}}]}'"
+    with_items: "{{ s3_bucket }}"
