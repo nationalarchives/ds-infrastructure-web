@@ -22,4 +22,12 @@ provider "aws" {
 # this provider is used for command line to  suppress input for region
 provider "aws" {
     region = "eu-west-2"
+    default_tags {
+        tags = {
+            CostCentre = "53"
+            Owner      = "Digital Services"
+            Terraform  = "true"
+            Service    = "web"
+        }
+    }
 }
