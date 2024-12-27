@@ -7,7 +7,7 @@ resource "aws_lb" "web_frontend" {
     load_balancer_type = "application"
 
     security_groups = [
-        var.lb_sg_id
+        aws_security_group.frontend_lb.id,
     ]
 
     subnets = [

@@ -4,6 +4,9 @@ variable "frontend_asg_desired_capacity" {}
 variable "frontend_asg_health_check_grace_period" {}
 variable "frontend_asg_health_check_type" {}
 
+variable "frontend_key_name" {}
+variable "frontend_instance_type" {}
+
 variable "frontend_patch_group" {}
 variable "frontend_deployment_group" {}
 
@@ -24,7 +27,23 @@ module "frontend" {
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
     private_subnet_b_id = data.aws_ssm_parameter.private_subnet_2b_id.value
 
-    ami_id = data.aws_ami.frontend_ami.id
+    lb_cidr = [
+        data.aws_ssm_parameter.private_subnet_2a_cidr.value,
+        data.aws_ssm_parameter.private_subnet_2b_cidr.value,
+    ]
+
+    instance_cidr = [
+        data.aws_ssm_parameter.private_subnet_2a_cidr.value,
+        data.aws_ssm_parameter.private_subnet_2b_cidr.value,
+        data.aws_ssm_parameter.private_db_subnet_2a_cidr.value,
+        data.aws_ssm_parameter.private_db_subnet_2b_cidr.value,
+        data.aws_ssm_parameter.client_vpn_cidr.value,
+    ]
+
+
+    ami_id        = data.aws_ami.frontend_ami.id
+    key_name      = var.frontend_key_name
+    instance_type = var.frontend_instance_type
 
     deployment_s3_bucket = "ds-${var.account}-deployment-source"
     folder_s3_key = "web"

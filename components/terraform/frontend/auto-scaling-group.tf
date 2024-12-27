@@ -1,3 +1,36 @@
+locals {
+    asg_web_frontend_tags = merge(var.asg_tags, [
+        {
+            key                 = "Name"
+            value               = "web-frontend"
+        },
+        {
+            key                 = "AutoSwitchOff"
+            value               = var.auto_switch_off
+        },
+        {
+            key                 = "AutoSwitchOn"
+            value               = var.auto_switch_on
+        },
+        {
+            key                 = "PatchGroup"
+            value               = var.patch_group
+        },
+        {
+            key                 = "DeploymentGroup"
+            value               = var.deployment_group
+        },
+        {
+            key                 = "PatchGroup"
+            value               = var.patch_group
+        },
+        {
+            key                 = "Deployment-Group"
+            value               = var.deployment_group
+        },
+    ])
+}
+
 resource "aws_autoscaling_group" "web_frontend" {
     name = "web-frontend"
     launch_template {
@@ -34,33 +67,14 @@ resource "aws_autoscaling_group" "web_frontend" {
         ]
     }
 
-    tag = merge(var.asg_tags, [
-        {
-            key                 = "Name"
+    dynamic "tag" {
+        for_each = local.asg_web_frontend_tags
+        content {
+            key                 = tag.value["key"]
+            value               = tag.value["value"]
             propagate_at_launch = true
-            value               = "web-frontend"
-        },
-        {
-            key                 = "AutoSwitchOff"
-            value               = var.auto_switch_off
-            propagate_at_launch = "true"
-        },
-        {
-            key                 = "AutoSwitchOn"
-            value               = var.auto_switch_on
-            propagate_at_launch = "true"
-        },
-        {
-            key                 = "PatchGroup"
-            value               = var.patch_group
-            propagate_at_launch = "true"
-        },
-        {
-            key                 = "DeploymentGroup"
-            value               = var.deployment_group
-            propagate_at_launch = "true"
-        },
-    ])
+        }
+    }
 }
 
 resource "aws_autoscaling_attachment" "web_frontend" {

@@ -2,12 +2,12 @@ variable "vpc_id" {}
 variable "private_subnet_a_id" {}
 variable "private_subnet_b_id" {}
 
-variable "lb_sg_id" {}
+variable "lb_cidr" {}
 
+variable "instance_cidr" {}
 variable "ami_id" {}
 variable "instance_type" {}
 variable "key_name" {}
-variable "sg_ids" {}
 variable "root_block_device_size" {}
 
 variable "patch_group" {}
@@ -25,5 +25,3 @@ variable "deployment_s3_bucket" {}
 variable "folder_s3_key" {}
 
 variable "asg_tags" {}
-
-variable "tags" {}

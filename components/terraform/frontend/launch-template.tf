@@ -13,7 +13,9 @@ resource "aws_launch_template" "web_frontend" {
     key_name               = var.key_name
     update_default_version = true
 
-    vpc_security_group_ids = var.sg_ids
+    vpc_security_group_ids = [
+        aws_security_group.frontend.id,
+    ]
 
     user_data = base64encode(templatefile("${path.module}/scripts/userdata.sh", {
         deployment_s3_bucket = var.deployment_s3_bucket,
