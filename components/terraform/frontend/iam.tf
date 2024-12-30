@@ -10,7 +10,7 @@ resource "aws_iam_policy" "frontend_deployment_s3" {
 
 resource "aws_iam_role" "frontend_role" {
     name = "web-frontend-assume-role"
-    assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
+    assume_role_policy = file("${path.root}/templates/ec2_assume_role.json")
 }
 
 resource "aws_iam_role_policy_attachment" "service_role_ssm" {
@@ -28,10 +28,10 @@ resource "aws_iam_role_policy_attachment" "ssm_managed_instance" {
     policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-#resource "aws_iam_role_policy_attachment" "service_role_ssm" {
-#    role       = aws_iam_role.frontend_role.name
-#    policy_arn = aws_iam_policy.frontend_deployment_s3.arn
-#}
+resource "aws_iam_role_policy_attachment" "service_role_ssm" {
+    role       = aws_iam_role.frontend_role.name
+    policy_arn = aws_iam_policy.frontend_deployment_s3.arn
+}
 
 resource "aws_iam_instance_profile" "web_frontend_profile" {
     name = "web-frontend-profile"

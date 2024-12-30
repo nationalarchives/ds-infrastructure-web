@@ -25,4 +25,3 @@ variable "deployment_s3_bucket" {}
 variable "folder_s3_key" {}
 
 variable "asg_tags" {}
-variable "tags" {}
