@@ -1,11 +1,11 @@
 # -----------------------------------------------------------------------------
 # Launch Template
 # -----------------------------------------------------------------------------
-resource "aws_launch_template" "django_wagtail_web" {
-    name = "web-dw"
+resource "aws_launch_template" "web_frontend" {
+    name = "web-frontend"
 
     iam_instance_profile {
-        arn = var.instance_profile_arn
+        arn = aws_iam_instance_profile.web_frontend_profile.arn
     }
 
     image_id               = var.ami_id
@@ -13,11 +13,11 @@ resource "aws_launch_template" "django_wagtail_web" {
     key_name               = var.key_name
     update_default_version = true
 
-    vpc_security_group_ids = var.sg_ids
+    vpc_security_group_ids = [
+        aws_security_group.frontend.id,
+    ]
 
     user_data = base64encode(templatefile("${path.module}/scripts/userdata.sh", {
-        mount_target         = var.efs_dns_name,
-        mount_dir            = var.efs_mount_dir,
         deployment_s3_bucket = var.deployment_s3_bucket,
         nginx_folder_s3_key  = var.folder_s3_key
     }))

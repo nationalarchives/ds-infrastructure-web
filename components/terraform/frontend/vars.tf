@@ -2,18 +2,13 @@ variable "vpc_id" {}
 variable "private_subnet_a_id" {}
 variable "private_subnet_b_id" {}
 
-variable "lb_sg_id" {}
-variable "efs_id" {}
+variable "lb_cidr" {}
 
+variable "instance_cidr" {}
 variable "ami_id" {}
 variable "instance_type" {}
-variable "instance_profile_arn" {}
 variable "key_name" {}
-variable "sg_ids" {}
 variable "root_block_device_size" {}
-
-variable "efs_mount_dir" {}
-variable "efs_dns_name" {}
 
 variable "patch_group" {}
 variable "deployment_group" {}
@@ -30,5 +25,4 @@ variable "deployment_s3_bucket" {}
 variable "folder_s3_key" {}
 
 variable "asg_tags" {}
-
 variable "tags" {}

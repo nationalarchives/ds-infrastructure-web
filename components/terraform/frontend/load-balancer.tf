@@ -1,13 +1,13 @@
 # -----------------------------------------------------------------------------
 # Internal Load Balancer
 # -----------------------------------------------------------------------------
-resource "aws_lb" "web_dw" {
-    name               = "web-dw"
+resource "aws_lb" "web_frontend" {
+    name               = "web-frontend"
     internal           = true
     load_balancer_type = "application"
 
     security_groups = [
-        var.lb_sg_id
+        aws_security_group.frontend_lb.id,
     ]
 
     subnets = [
@@ -18,8 +18,8 @@ resource "aws_lb" "web_dw" {
     tags = var.tags
 }
 
-resource "aws_lb_target_group" "web_dw" {
-    name     = "web-dw"
+resource "aws_lb_target_group" "web_frontend" {
+    name     = "web-frontend"
     port     = 80
     protocol = "HTTP"
     vpc_id   = var.vpc_id
@@ -37,12 +37,12 @@ resource "aws_lb_target_group" "web_dw" {
     tags = var.tags
 }
 
-resource "aws_lb_listener" "internal_http_web" {
+resource "aws_lb_listener" "internal_http" {
     default_action {
         type             = "forward"
-        target_group_arn = aws_lb_target_group.web_dw.arn
+        target_group_arn = aws_lb_target_group.web_frontend.arn
     }
     protocol          = "HTTP"
-    load_balancer_arn = aws_lb.web_dw.arn
+    load_balancer_arn = aws_lb.web_frontend.arn
     port              = 80
 }
