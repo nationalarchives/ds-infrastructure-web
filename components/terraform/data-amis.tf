@@ -4,7 +4,7 @@ data "aws_ami" "frontend_ami" {
     filter {
         name   = "name"
         values = [
-            "web-frontend-primer*"
+            "web-frontend"
         ]
     }
 

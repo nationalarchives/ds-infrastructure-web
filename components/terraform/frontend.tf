@@ -52,7 +52,7 @@ module "frontend" {
     asg_min_size                  = var.frontend_asg_min_size
     asg_max_size                  = var.frontend_asg_max_size
     asg_desired_capacity          = var.frontend_asg_desired_capacity
-    asg_health_check_type         = varfrontend_asg_health_check_type
+    asg_health_check_type         = var.frontend_asg_health_check_type            
     asg_health_check_grace_period = var.frontend_asg_health_check_grace_period
 
     patch_group      = var.frontend_patch_group
@@ -64,4 +64,5 @@ module "frontend" {
     auto_switch_on  = var.frontend_auto_switch_on
 
     asg_tags = local.asg_default_tags
+    tags = local.tags
 }
