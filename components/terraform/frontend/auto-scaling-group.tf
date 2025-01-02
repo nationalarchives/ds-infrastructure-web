@@ -1,5 +1,5 @@
 locals {
-    asg_web_frontend_tags = merge(var.asg_tags, [
+    asg_web_frontend_tags = concat(var.asg_tags, [
         {
             key                 = "Name"
             value               = "web-frontend"
@@ -68,7 +68,7 @@ resource "aws_autoscaling_group" "web_frontend" {
     }
 
     dynamic "tag" {
-        for_each = local.asg_web_frontend_tags
+        for_each = var.asg_tags
         content {
             key                 = tag.value["key"]
             value               = tag.value["value"]
