@@ -18,7 +18,7 @@
         },
         "sitemap-search": {
             "image": "ghcr.io/nationalarchives/ds-sitemap-search",
-            "version": "24.12.11.25"
+            "version": "25.01.03.26"
         }
     }
 }
