@@ -1,6 +1,9 @@
 {
   "scripts": {
-    "lint:fix": "npx prettier --write ."
+    "lint:fix": "npx prettier --write .",
+    "test:develop": "TEST_DOMAIN=https://dev-www.nationalarchives.gov.uk npx playwright test --ui",
+    "test:staging": "TEST_DOMAIN=https://staging-www.nationalarchives.gov.uk npx playwright test --ui",
+    "test:production": "TEST_DOMAIN=https://www.nationalarchives.gov.uk npx playwright test --ui"
   },
   "devDependencies": {
     "@playwright/test": "^1.45.2",

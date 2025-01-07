@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: staging
-      url: https://develop.tna.dblclk.dev/
+      url: https://staging-www.nationalarchives.gov.uk/
     needs:
       - release
     steps:
@@ -60,4 +60,4 @@ jobs:
       - name: Test
         uses: ./.github/actions/test
         with:
-          domain: https://develop.tna.dblclk.dev  # TODO: Change
+          domain: https://staging-www.nationalarchives.gov.uk/
