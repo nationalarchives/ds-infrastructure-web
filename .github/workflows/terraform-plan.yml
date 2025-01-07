@@ -19,7 +19,5 @@ jobs:
       assume_role: "arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL"
       region: "eu-west-2"
       account: "dev"
-
 # ------------------------------------------------------------------------------
 
-...

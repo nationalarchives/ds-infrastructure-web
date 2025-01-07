@@ -10,9 +10,9 @@ on:
   workflow_dispatch:
 
 jobs:
-# ------------------------------------------------------------------------------
-# set version
-# ------------------------------------------------------------------------------
+  # ------------------------------------------------------------------------------
+  # set version
+  # ------------------------------------------------------------------------------
   build-image:
     name: prepare docker image
     runs-on: ubuntu-latest
@@ -47,4 +47,3 @@ jobs:
           docker tag ${{ steps.variables.outputs.image_id }}:${{ steps.variables.outputs.version_no }} ${{ steps.variables.outputs.image_id }}:latest
           docker push ${{ steps.variables.outputs.image_id }}:latest
         shell: bash
-...
