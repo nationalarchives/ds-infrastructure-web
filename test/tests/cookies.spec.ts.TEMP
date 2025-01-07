@@ -6,7 +6,7 @@ const createCookie: (name: string, value: string) => Cookie = (
 ) => ({
   name,
   value,
-  domain: ".dblclk.dev",
+  domain: ".nationalarchives.gov.uk",
   path: "/",
   expires: Date.now() / 1000 + 60000,
   httpOnly: false,
