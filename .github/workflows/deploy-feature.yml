@@ -14,7 +14,7 @@ on:
           - production.json
   push:
     branches:
-      - 'feature/**'
+      - "feature/**"
 
 concurrency:
   group: deploy-feature-${{ github.ref }}
@@ -45,16 +45,17 @@ jobs:
         with:
           config: ${{ inputs.config }}
           environment: ${{ needs.env-name.outputs.environment }}
-  
-  test:
-    runs-on: ubuntu-latest
-    if: github.ref_name != 'main'
-    needs:
-      - env-name
-      - deploy
-    steps:
-      - uses: actions/checkout@v4
-      - name: Test
-        uses: ./.github/actions/test
-        with:
-          domain: https://${{ needs.env-name.outputs.environment }}-www.nationalarchives.gov.uk
+
+  # TODO: Enable once dev-www.nationalarchives.gov.uk can be accessed by GitHub Action runners
+  # test:
+  #   runs-on: ubuntu-latest
+  #   if: github.ref_name != 'main'
+  #   needs:
+  #     - env-name
+  #     - deploy
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Test
+  #       uses: ./.github/actions/test
+  #       with:
+  #         domain: https://${{ needs.env-name.outputs.environment }}-www.nationalarchives.gov.uk
