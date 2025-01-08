@@ -17,7 +17,7 @@ npx playwright test
 
 ```sh
 # Run the tests against a specific site
-TEST_DOMAIN=https://develop.tna.dblclk.dev npx playwright test
+TEST_DOMAIN=https://dev-www.nationalarchives.gov.uk npx playwright test
 
 # Run the tests with a UI
 npx playwright test --ui

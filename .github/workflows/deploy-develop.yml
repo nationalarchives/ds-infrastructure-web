@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: develop
-      url: https://develop.tna.dblclk.dev/
+      url: https://dev-www.nationalarchives.gov.uk/
     steps:
       - uses: actions/checkout@v4
       - name: Deploy
@@ -21,14 +21,15 @@ jobs:
         with:
           config: develop.json
           environment: develop
-  
-  test:
-    runs-on: ubuntu-latest
-    needs:
-      - deploy
-    steps:
-      - uses: actions/checkout@v4
-      - name: Test
-        uses: ./.github/actions/test
-        with:
-          domain: https://develop.tna.dblclk.dev  # TODO: Change
+
+  # TODO: Enable once dev-www.nationalarchives.gov.uk can be accessed by GitHub Action runners
+  # test:
+  #   runs-on: ubuntu-latest
+  #   needs:
+  #     - deploy
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Test
+  #       uses: ./.github/actions/test
+  #       with:
+  #         domain: https://dev-www.nationalarchives.gov.uk
