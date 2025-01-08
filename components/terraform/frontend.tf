@@ -63,6 +63,6 @@ module "frontend" {
     auto_switch_off = var.frontend_auto_switch_off
     auto_switch_on  = var.frontend_auto_switch_on
 
-    asg_tags = local.asg_default_tags
+    asg_tags = local.asg_web_frontend_tags 
     tags = local.tags
 }
