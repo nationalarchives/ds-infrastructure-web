@@ -14,9 +14,6 @@ variable "frontend_deployment_group" {}
 variable "frontend_patch_group" {}
 variable "frontend_deployment_s3_bucket" {}
 variable "frontend_folder_s3_key" {}
-variable "frontend_instance_cidr" {}
-variable "frontend_lb_cidr" {}
-variable "frontend_asg_tags" {}
 
 module "frontend" {
     source = "./frontend"
@@ -40,8 +37,14 @@ module "frontend" {
     key_name = "web-frontend-${var.environment}-eu-west-2"
     root_block_device_size = "100"
 
-    instance_cidr = var.frontend_instance_cidr
-    lb_cidr = var.frontend_lb_cidr
+    instance_cidr = [
+        data.aws_ssm_parameter.private_subnet_2a_cidr,
+        data.aws_ssm_parameter.private_subnet_2b_cidr,
+    ]
+    lb_cidr = [
+        data.aws_ssm_parameter.private_subnet_2a_cidr,
+        data.aws_ssm_parameter.private_subnet_2b_cidr,
+    ]
 
     auto_switch_off = var.frontend_auto_switch_off
     auto_switch_on = var.frontend_auto_switch_on
