@@ -54,6 +54,6 @@ module "frontend" {
     deployment_s3_bucket = var.frontend_deployment_s3_bucket
     folder_s3_key = var.frontend_folder_s3_key
 
-    asg_tags = []
-    tags = local.asg_default_tags
+    asg_tags = local.asg_default_tags
+    tags = local.tags
 }
