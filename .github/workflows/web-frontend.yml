@@ -60,7 +60,7 @@ jobs:
       vpc_id: ${{ secrets.VPC_ID_STAGING }}
       subnet_id: ${{ secrets.SUBNET_ID_2A_STAGING }}
 # ------------------------------------------------------------------------------
-# staging deployment
+# live deployment
 # ------------------------------------------------------------------------------
   web-frontend-ami-live:
     if: github.event.inputs.account == 'live'
