@@ -1,6 +1,6 @@
 ---
-name: Django-Wagtail AMI
-run-name: Beta Django-Wagtail AMI beta-dw-primer-(date-time) to ${{ inputs.account }} by @${{ github.actor }}
+name: Web Frontend AMI
+run-name: Web Frontend AMI web-frontend-primer-(date-time) to ${{ inputs.account }} by @${{ github.actor }}
 
 permissions:
   id-token: write
@@ -22,9 +22,9 @@ jobs:
 # ------------------------------------------------------------------------------
 # dev deployment
 # ------------------------------------------------------------------------------
-  dw-ami-dev:
+  web-frontend-ami-dev:
     if: github.event.inputs.account == 'dev'
-    uses: nationalarchives/ds-github-actions/.github/workflows/beta-dw-ami-build.yml@main
+    uses: nationalarchives/ds-github-actions/.github/workflows/web-frontend-ami-build.yml@main
     with:
       base_role: "arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL"
       playbook_role: "arn:aws:iam::846769538626:role/s-devops-ansible-amis"
@@ -42,9 +42,9 @@ jobs:
 # ------------------------------------------------------------------------------
 # staging deployment
 # ------------------------------------------------------------------------------
-  dw-ami-staging:
+  web-frontend-ami-staging:
     if: github.event.inputs.account == 'staging'
-    uses: nationalarchives/ds-github-actions/.github/workflows/web-frontend-ami-build.yml@vaishnavi/web-actions
+    uses: nationalarchives/ds-github-actions/.github/workflows/web-frontend-ami-build.yml@main
     with:
       base_role: "arn:aws:iam::337670467269:role/GitHubActionRole"
       playbook_role: "arn:aws:iam::337670467269:role/s-devops-ansible-amis"
@@ -62,9 +62,9 @@ jobs:
 # ------------------------------------------------------------------------------
 # staging deployment
 # ------------------------------------------------------------------------------
-  dw-ami-live:
+  web-frontend-ami-live:
     if: github.event.inputs.account == 'live'
-    uses: nationalarchives/ds-github-actions/.github/workflows/beta-dw-ami-build.yml@main
+    uses: nationalarchives/ds-github-actions/.github/workflows/web-frontend-ami-build.yml@main
     with:
       base_role: "arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0"
       playbook_role: "arn:aws:iam::968803923593:role/s-devops-ansible-amis"
