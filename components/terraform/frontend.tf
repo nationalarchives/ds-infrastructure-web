@@ -33,7 +33,7 @@ module "frontend" {
     asg_health_check_grace_period = var.frontend_asg_health_check_grace_period
     asg_health_check_type = var.frontend_asg_health_check_type
 
-    instance_type = "t3a-medium"
+    instance_type = var.frontend_instance_type
     key_name = "web-frontend-${var.environment}-eu-west-2"
     root_block_device_size = "100"
 

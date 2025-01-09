@@ -13,11 +13,6 @@ resource "aws_iam_role" "frontend_role" {
     assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
-resource "aws_iam_role_policy_attachment" "service_role_ssm" {
-    role       = aws_iam_role.frontend_role.name
-    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonSSMManagedInstanceCore"
-}
-
 resource "aws_iam_role_policy_attachment" "cloudwatch_agent" {
     role       = aws_iam_role.frontend_role.name
     policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
