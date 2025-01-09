@@ -1,11 +1,11 @@
 resource "aws_route53_record" "web-frontend" {
-    zone_id =
+    zone_id = var.route53_zone
     name    = "web-frontend.${var.environment}.local"
     type    = "CNAME"
     ttl     = 15
 
     records = [
-        module.django-wagtail.lb_internal_dns_name
+        aws_lb.web_frontend.dns_name
     ]
 }
 
