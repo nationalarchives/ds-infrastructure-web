@@ -37,7 +37,7 @@ module "frontend" {
     asg_health_check_type = var.frontend_asg_health_check_type
 
     instance_type = "t3a-medium"
-    key_name = "web-frontend-${environment}-eu-west-2"
+    key_name = "web-frontend-${var.environment}-eu-west-2"
     root_block_device_size = "100"
 
     instance_cidr = var.frontend_instance_cidr
@@ -51,5 +51,6 @@ module "frontend" {
     deployment_s3_bucket = var.frontend_deployment_s3_bucket
     folder_s3_key = var.frontend_folder_s3_key
 
+    asg_tags = []
     tags = local.asg_default_tags
 }

@@ -1,6 +1,7 @@
 ## -----------------------------------------------------------------------------
 ## Environment Specific Variables
 
+account = "staging"
 environment = "staging"
 region      = "eu-west-2"
 service     = "web-frontend"

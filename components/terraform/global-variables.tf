@@ -31,4 +31,5 @@ locals {
     ]
 }
 
+variable "account" {}
 variable "environment" {}
