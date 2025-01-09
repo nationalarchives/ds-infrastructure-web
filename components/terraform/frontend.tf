@@ -24,8 +24,8 @@ module "frontend" {
     route53_zone = data.aws_ssm_parameter.zone_id.value
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
-    private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id
-    private_subnet_b_id = data.aws_ssm_parameter.private_subnet_2b_id
+    private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
+    private_subnet_b_id = data.aws_ssm_parameter.private_subnet_2b_id.value
 
     asg_max_size = var.frontend_asg_max_size
     asg_min_size = var.frontend_asg_min_size
