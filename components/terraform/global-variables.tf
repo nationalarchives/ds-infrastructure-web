@@ -30,3 +30,5 @@ locals {
         },
     ]
 }
+
+variable "environment" {}

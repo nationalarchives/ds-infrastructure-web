@@ -13,8 +13,12 @@ locals {
             value               = var.auto_switch_on
         },
         {
-            key                 = "PatchGroup"
+            key                 = "Patch-Group"
             value               = var.patch_group
+        },
+        {
+            key                 = "Deployment-Group"
+            value               = var.deployment_group
         },
         {
             key                 = "DeploymentGroup"
@@ -23,10 +27,6 @@ locals {
         {
             key                 = "PatchGroup"
             value               = var.patch_group
-        },
-        {
-            key                 = "Deployment-Group"
-            value               = var.deployment_group
         },
     ])
 }
@@ -68,7 +68,7 @@ resource "aws_autoscaling_group" "web_frontend" {
     }
 
     dynamic "tag" {
-        for_each = var.asg_tags
+        for_each = local.asg_web_frontend_tags
         content {
             key                 = tag.value["key"]
             value               = tag.value["value"]
