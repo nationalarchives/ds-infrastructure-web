@@ -38,12 +38,12 @@ module "frontend" {
     root_block_device_size = "100"
 
     instance_cidr = [
-        data.aws_ssm_parameter.private_subnet_2a_cidr,
-        data.aws_ssm_parameter.private_subnet_2b_cidr,
+        data.aws_ssm_parameter.private_subnet_2a_cidr.value,
+        data.aws_ssm_parameter.private_subnet_2b_cidr.value,
     ]
     lb_cidr = [
-        data.aws_ssm_parameter.private_subnet_2a_cidr,
-        data.aws_ssm_parameter.private_subnet_2b_cidr,
+        data.aws_ssm_parameter.private_subnet_2a_cidr.value,
+        data.aws_ssm_parameter.private_subnet_2b_cidr.value,
     ]
 
     auto_switch_off = var.frontend_auto_switch_off
