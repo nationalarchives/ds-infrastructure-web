@@ -1,16 +1,24 @@
 {
-  "services": {
-    "frontend": {
-      "image": "ghcr.io/nationalarchives/ds-frontend",
-      "version": "25.01.10.922"
-    },
-    "cms": {
-      "image": "ghcr.io/nationalarchives/ds-wagtail",
-      "version": "25.01.09.537"
-    },
-    "search": {
-      "image": "ghcr.io/nationalarchives/ds-search",
-      "version": "25.01.08.164"
+    "services": {
+        "frontend": {
+            "image": "ghcr.io/nationalarchives/ds-frontend",
+            "version": "25.01.14.932"
+        },
+        "cms": {
+            "image": "ghcr.io/nationalarchives/ds-wagtail",
+            "version": "25.01.09.537"
+        },
+        "search": {
+            "image": "ghcr.io/nationalarchives/ds-search",
+            "version": "25.01.08.164"
+        },
+        "frontend-enrichment": {
+            "image": "ghcr.io/nationalarchives/ds-frontend-enrichment",
+            "version": "25.01.13.10"
+        },
+        "sitemap-search": {
+            "image": "ghcr.io/nationalarchives/ds-sitemap-search",
+            "version": "25.01.03.26"
+        }
     }
-  }
 }
