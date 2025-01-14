@@ -24,7 +24,7 @@ jobs:
           git config --global user.email "<>"
           cp config/staging.json config/production.json
           git add config/production.json
-          git commit -m "Release v$VERSION"
+          git commit -m "Release v$VERSION to production"
           git push
 
   deploy:
