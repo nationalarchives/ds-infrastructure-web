@@ -7,16 +7,16 @@
     
     on:
       workflow_dispatch:
-        # inputs:
-        #   deploy-environment:
-        #     type: choice
-        #     description: Environment
-        #     required: true
-        #     default: "dev"
-        #     options:
-        #       - dev
-        #       - staging
-        #       - live
+        inputs:
+          deploy-environment:
+            type: choice
+            description: Environment
+            required: true
+            default: "dev"
+            options:
+              - dev
+              - staging
+              - live
     
     jobs:
       plan-frontend-dev:
