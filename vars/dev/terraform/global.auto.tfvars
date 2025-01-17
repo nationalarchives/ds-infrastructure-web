@@ -13,3 +13,8 @@ logfile_s3_bucket     = "ds-dev-logfiles"
 
 frontend_deployment_s3_root = "web/frontend"
 frontend_logfile_s3_root    = "web/frontend"
+
+
+## Route53 Variables
+route53_zone = "Z07573952PBXBWGJCFARI"
+
