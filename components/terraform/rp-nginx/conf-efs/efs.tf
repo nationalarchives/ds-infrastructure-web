@@ -11,7 +11,7 @@ resource "aws_efs_file_system" "conf_efs" {
 }
 
 resource "aws_efs_mount_target" "conf_efs_private_sub" {
-    for_each = var.private_subs
+    for_each = tomap({ for idx, value in var.private_subs : idx => value })
 
     file_system_id = aws_efs_file_system.conf_efs.id
     subnet_id      = each.value

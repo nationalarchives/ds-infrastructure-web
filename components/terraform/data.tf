@@ -76,3 +76,8 @@ data "aws_ssm_parameter" "zone_id" {
     name = "/infrastructure/zone_id"
 }
 
+# cloudfront
+#
+data "aws_ssm_parameter" "cf_waf_ip_set" {
+    name = "/application/web/frontend/waf/ip_set"
+}
