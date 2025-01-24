@@ -1,6 +1,6 @@
 variable "email_address" {}
 
-module "cp-ses" {
+module "etna-ses" {
     source = "./ses"
 
     email_address = var.email_address
