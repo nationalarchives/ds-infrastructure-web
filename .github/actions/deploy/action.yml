@@ -11,9 +11,17 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: DEBUG
-      run: cat config/${{ inputs.config }}
+    - name: Check if config file exists
+      run: |
+        if [ -f config/${{ inputs.config }} ]; then
+          echo "File config/${{ inputs.config }} found, displaying contents"
+          cat config/${{ inputs.config }}
+        else
+          echo "Error: config/${{ inputs.config }} is not a valid file"
+          exit 1
       shell: bash
-    - name: DEBUG
+
+    - name: Deploy the environment
       run: echo "Deploy '${{ inputs.config }}' to '${{ inputs.environment }}'"
       shell: bash
+      
