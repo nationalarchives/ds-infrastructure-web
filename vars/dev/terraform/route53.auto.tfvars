@@ -1,3 +1,3 @@
-public_domain = "dev-beta.nationalarchives.gov.uk"
-private_record = "beta.dev.local"
-db_record = "beta-db.dev.local"
+public_domain = "dev-www.nationalarchives.gov.uk"
+private_record = "web-frontend.dev.local"
+db_record = "web-frontend-db.dev.local"
