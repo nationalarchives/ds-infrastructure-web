@@ -40,12 +40,13 @@ jobs:
       - env-name
     steps:
       - uses: actions/checkout@v4
+
       - name: Read the config file
         run: cat "config/${{ inputs.config }}"
         shell: bash
+        
       - name: Deploy
         uses: ./.github/actions/deploy
         with:
           config: ${{ inputs.config }}
           environment: ${{ needs.env-name.outputs.environment }}
-          
