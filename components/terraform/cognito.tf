@@ -1,12 +1,14 @@
 variable "user_pool_domain" {}
 variable "nationalarchives_callback_url" {}
 variable "nationalarchives_logout_url" {}
+variable "userpool" {}
+variable "client_name" {}
 
 module "etna-cognito" {
     source = "./cognito"
 
-    cognito_user_pool_name = "nationalarchives-user-pool"
-    user_pool_client_name = "nationalarchives-client"
+    cognito_user_pool_name = var.userpool
+    user_pool_client_name = var.client_name
 
     nationalarchives_callback_url = var.nationalarchives_callback_url
     nationalarchives_logout_url   = var.nationalarchives_logout_url
