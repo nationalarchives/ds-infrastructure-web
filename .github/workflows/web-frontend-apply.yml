@@ -1,0 +1,49 @@
+---
+    name: Web Frontend Apply
+    
+    permissions:
+      id-token: write
+      contents: write
+    
+    on:
+      workflow_dispatch:
+        inputs:
+          deploy-environment:
+            type: choice
+            description: Environment
+            required: true
+            default: "dev"
+            options:
+              - dev
+              - staging
+              - live
+    
+    jobs:
+      apply-frontend-dev:
+        if: ${{ inputs.deploy-environment  == 'dev' }}
+        uses: nationalarchives/ds-github-actions/.github/workflows/apply-web-frontend.yml@main
+        with:
+          deploy-environment: "${{ inputs.deploy-environment }}"
+          github-environment: "dev-deploy"
+          account_id: "846769538626"
+          role-to-assume: "arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL"
+          branch: "${{ github.event.inputs.branch }}"
+      apply-frontend-staging:
+        if: ${{ inputs.deploy-environment  == 'staging' }}
+        uses: nationalarchives/ds-github-actions/.github/workflows/apply-web-frontend.yml@main
+        with:
+          deploy-environment: "${{ inputs.deploy-environment }}"
+          github-environment: "staging-deploy"
+          account_id: "337670467269"
+          role-to-assume: "arn:aws:iam::337670467269:role/GitHubActionRole"
+          branch: "${{ github.event.inputs.branch }}"
+      apply-frontend-live:
+        if: ${{ inputs.deploy-environment  == 'live' }}
+        uses: nationalarchives/ds-github-actions/.github/workflows/apply-web-frontend.yml@main
+        with:
+          deploy-environment: "${{ inputs.deploy-environment }}"
+          github-environment: "live-deploy"
+          account_id: "968803923593"
+          role-to-assume: "arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0"
+          branch: "${{ github.event.inputs.branch }}"
+...
