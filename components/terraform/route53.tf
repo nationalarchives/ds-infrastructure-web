@@ -1,5 +1,3 @@
-variable "user_pool_domain" {}
-
 module "etna-route53" {
     source = "./route53"
 
@@ -9,7 +7,7 @@ module "etna-route53" {
 }
 
 resource "aws_route53_record" "web-frontend" {
-    zone_id = var.route53_zone                                # change later
+    zone_id = var.route53_zone                                
     name    = "web-frontend.${var.environment}.local"
     type    = "CNAME"
     ttl     = 300
