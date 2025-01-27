@@ -1,0 +1,133 @@
+#!/bin/bash
+
+# Update yum
+sudo yum update -y
+
+# create swap file
+sudo /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024
+sudo chmod 0600 /var/swap.1
+sudo /sbin/mkswap /var/swap.1
+sudo /sbin/swapon /var/swap.1
+
+# attach the volume to instance
+region="eu-west-2"
+volumeName="postgres-init"
+instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+attachedVolume=$(aws ec2 describe-volumes --region $region --filters Name=tag:Name,Values=postgres-init Name=attachment.instance-id,Values=$instanceid --query "Volumes[*].VolumeId" --output text)
+if [[ -z "$attachedVolume" ]]; then
+  echo "try to mount EBS"
+  avzone=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
+  ebsvolume=$(aws ec2 describe-volumes --region $region --filters Name=tag:Name,Values=$volumeName Name=availability-zone,Values=$avzone --query 'Volumes[*].[VolumeId, State==`available`]' --output text  | grep True | awk '{print $1}' | head -n 1)
+  if [[ -z "$ebsvolume" ]]; then
+    echo "error: no volume with name $volumeName found"
+    exit 1
+  else
+    if [ ! -d "/postgres" ]; then
+      sudo mkdir /postgres
+      sudo mkdir /postgres/data
+      sudo mkdir /postgres/log
+    fi
+    aws ec2 attach-volume --region $region --volume-id $ebsvolume --instance-id $instanceid --device /dev/sdf
+    sleep 10
+    sudo mkfs -t xfs /dev/xvdf
+    sudo mount /dev/xvdf /postgres
+    sudo chown -R postgres:postgres /postgres
+    sudo chmod -R 0700 /postgres/data
+  fi
+else
+  echo "Volume $attachedVolume already attached"
+fi
+avzone=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
+ebsvolume=$(aws ec2 describe-volumes --region eu-west-2 --filters Name=tag:Name,Values=postgres-init Name=availability-zone,Values=$avzone --query 'Volumes[*].[VolumeId, State==`available`]' --output text  | grep True | awk '{print $1}' | head -n 1)
+sudo mkdir /postgres
+
+
+aws ec2 attach-volume --region eu-west-2 --volume-id $ebsvolume --instance-id $instanceid --device /dev/sdf
+sleep 10    # mount ebs to /mnt
+sudo mkfs -t xfs /dev/xvdf
+sudo mount /dev/xvdf /postgres
+
+mntDriveID="$(sudo blkid /dev/xvdf | grep -oP 'UUID="(.*?)"' | grep -oP '"(.*?)"' | sed 's/"//g')"
+echo "UUID=$mntDriveID  /postgres  xfs  defaults,nofail  0  2" | sudo tee -a /etc/fstab > /dev/null
+
+# Install Cloudwatch agent
+sudo yum install amazon-cloudwatch-agent -y
+sudo amazon-linux-extras install -y collectd
+sudo aws s3 cp s3://{{ s3_deployment_bucket }}/{{ service }}/cloudwatch/cloudwatch-agent-config.json /opt/aws/amazon-cloudwatch-agent/bin/config.json
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json
+
+
+DATA_DIR="/postgres/data"
+LOG_DIR="/postgres/log"
+sudo chown -R postgres:postgres /postgres
+sudo chmod -R 0700 /postgres/data
+
+# Install PostgreSQL
+sudo amazon-linux-extras enable postgresql14
+sudo yum install postgresql-server -y
+sudo postgresql-setup initdb
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
+
+# Configure PostgreSQL for replication
+# the directories are specific for the version of postgres and linux 2 from AWS
+sudo sed -i "s|#data_directory = 'ConfigDir'|data_directory = '${DATA_DIR}'|" /var/lib/pgsql/data/postgresql.conf
+sudo sed -i "s|#logging_directory = 'log'|logging_directory = '${LOG_DIR}'|" /var/lib/pgsql/data/postgresql.conf
+sudo sed -i 's/#wal_level = replica/wal_level = logical/' /var/lib/pgsql/data/postgresql.conf
+sudo sed -i 's/#wal_log_hints = off/wal_log_hints = on/' /var/lib/pgsql/data/postgresql.conf
+sudo sed -i 's/#max_replication_slots = 10/max_replication_slots = 10/' /var/lib/pgsql/data/postgresql.conf
+sudo sed -i 's/#max_wal_senders = 10/max_wal_senders = 10/' /var/lib/pgsql/data/postgresql.conf
+
+# Set up access to postgres
+sudo sed -i "/# TYPE/a host all replica_admin 10.128.212.0/23 md5\n" /var/lib/pgsql/data/pg_hba.conf
+sudo sed -i "/# TYPE/a host all postgres 10.128.224.0/22 md5\n" /var/lib/pgsql/data/pg_hba.conf
+sudo sed -i "/# TYPE/a local all postgres trust\n" /var/lib/pgsql/data/pg_hba.conf
+
+sed -i "s|local all postgres trust|local all postgres md5" /var/lib/pgsql/data/pg_hba.conf
+
+# sql statements to secure the instance
+cat << EOF > ~/secure_installation.sql
+ALTER USER postgres PASSWORD '{{ postgres_password }}';
+EOF
+
+psql -U postgres < secure_installation.sql
+
+cat << EOF > ~/repl_user.sql
+CREATE ROLE replica_admin WITH REPLICATION LOGIN PASSWORD 'P@ssword321';
+EOF
+
+sudo sed -i "s/listen_addresses=/c\\\nlisten_addresses='{{ list_ips }}'\n/g" /etc/my.cnf
+echo "host    all          all            0.0.0.0/0  md5" | sudo tee -a /var/lib/pgsql/data/pg_hba.conf > /dev/null
+
+sudo systemctl restart postgresql
+
+cat << EOF > /var/finish-init.txt
+[status]
+finished = true
+EOF
+
+
+
+#########
+ Stop PostgreSQL service
+sudo systemctl stop postgresql
+
+# Remove existing PostgreSQL data
+sudo rm -rf ${DATA_DIR}
+
+# Initialize replica from primary server backup
+sudo -u postgres pg_basebackup -h primary_server_ip_address -D ${DATA_DIR} -U replication_user -v -P --wal-method=stream
+
+# Configure replica to connect to primary server
+sudo sed -i "s|#data_directory = '/var/lib/postgresql/14/main'|data_directory = '${DATA_DIR}'|" /etc/postgresql/14/main/postgresql.conf
+sudo sed -i "s|#logging_directory = '/var/log/postgresql'|logging_directory = '${LOG_DIR}'|" /etc/postgresql/14/main/postgresql.conf
+sudo sed -i "s|#primary_conninfo = ''|primary_conninfo = 'host=primary_server_ip_address port=5432 user=replication_user password=replication_password application_name=replica_server'|" /etc/postgresql/14/main/postgresql.conf
+
+# Restart PostgreSQL service
+sudo systemctl restart postgresql
+
+# Enable replication slots
+sudo -u postgres psql -c "SELECT * FROM pg_create_physical_replication_slot('replica_slot');"
+
+# Start PostgreSQL service
+sudo systemctl start postgresql

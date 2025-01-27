@@ -1,0 +1,9 @@
+---
+key_name: "web-frontend-live-eu-west-2"
+region: "eu-west-2"
+env: "live"
+service: "web"
+volume_size: 20
+s3_deployment_bucket: "ds-live-deployment-source"
+s3_deployment_root: "web"
+...

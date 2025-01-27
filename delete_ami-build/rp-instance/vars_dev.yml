@@ -1,0 +1,12 @@
+---
+key_name: "web-rp-dev-eu-west-2"
+region: "eu-west-2"
+service: "web"
+env: "dev"
+volume_size: 20
+s3_deployment_bucket: "ds-dev-deployment-source"
+s3_deployment_root: "web"
+s3_logfile_bucket: "ds-dev-wp-logfiles-v2"
+s3_logfile_root: "web"
+ssm_download_region: "eu-west-2"
+...
