@@ -1,5 +1,5 @@
 ---
-name: Reverse Proxy AMI
+name: Web Reverse Proxy AMI
 run-name: Web Reverse Proxy AMI web-rp-primer-(date-time) to ${{ inputs.account }} by @${{ github.actor }}
 
 permissions:
