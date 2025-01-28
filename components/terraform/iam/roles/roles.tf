@@ -1,6 +1,6 @@
-# Data resource for org-session-manager-logs policy
-data "aws_iam_policy" "org_session_manager_logs" {
-  arn = "arn:aws:iam::846769538626:policy/org-session-manager-logs"
+#Data resource for org-session-manager-logs policy
+ data "aws_iam_policy" "org_session_manager_logs" {
+ arn = "arn:aws:iam::846769538626:policy/org-session-manager-logs"
 }
 
 # Frontend Role

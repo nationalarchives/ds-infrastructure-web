@@ -23,7 +23,7 @@ sudo touch /var/log/start-up.log
 
 echo "$(date '+%Y-%m-%d %T') - system update" | sudo tee -a /var/log/start-up.log > /dev/null
 sudo dnf -y update
-
+# included parameter store for automation in startup.sh
 echo "$(date '+%Y-%m-%d %T') - call startup script" | sudo tee -a /var/log/start-up.log > /dev/null
 /usr/local/bin/startup.sh
 --//--
