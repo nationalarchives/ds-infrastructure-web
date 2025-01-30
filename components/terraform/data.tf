@@ -81,3 +81,10 @@ data "aws_ssm_parameter" "zone_id" {
 data "aws_ssm_parameter" "cf_waf_ip_set" {
     name = "/application/web/frontend/waf/ip_set"
 }
+# CloudFront custom headers
+data "aws_secretsmanager_secret" "beta_custom_header" {
+    name = "/infrastructure/beta/custom_header"
+}
+data "aws_secretsmanager_secret_version" "beta_custom_header" {
+    secret_id = data.aws_secretsmanager_secret.beta_custom_header.id
+}
