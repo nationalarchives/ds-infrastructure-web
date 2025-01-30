@@ -7,10 +7,10 @@ output "media_efs_sg_id" {
 }
 
 output "frontend_lb_sg_id" {
-    value = aws_security_group.frontend_lb.id
+   value = aws_security_group.frontend_lb.id
 }
 output "frontend_sg_id" {
-    value = aws_security_group.frontend.id
+   value = aws_security_group.frontend.id
 }
 
 output "rp_sg_id" {

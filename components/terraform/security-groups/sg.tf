@@ -110,7 +110,7 @@ resource "aws_vpc_security_group_ingress_rule" "rp_lc_https" {
 }
 
 # lambda - deployment
-#
+
 resource "aws_security_group" "lambda_web_deployment" {
     name        = "lambda-web-deployment-sg"
     description = "lambda private web deployment security group"
