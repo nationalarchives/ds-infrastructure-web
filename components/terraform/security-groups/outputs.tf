@@ -2,17 +2,6 @@ output "ec2_mount_efs_sg_id" {
     value = aws_security_group.ec2_mount_media_efs.id
 }
 
-output "media_efs_sg_id" {
-    value = aws_security_group.media_efs.id
-}
-
-output "frontend_lb_sg_id" {
-   value = aws_security_group.frontend_lb.id
-}
-output "frontend_sg_id" {
-   value = aws_security_group.frontend.id
-}
-
 output "rp_sg_id" {
     value = aws_security_group.rp.id
 }
