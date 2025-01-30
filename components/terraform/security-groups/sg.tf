@@ -30,26 +30,6 @@ resource "aws_security_group_rule" "ec2_mount_media_efs_egress" {
     cidr_blocks       = var.rp_instance_cidr
 }
 
-resource "aws_security_group" "media_efs" {
-    name        = "web-media-efs"
-    description = "media EFS"
-    vpc_id      = var.vpc_id
-
-    tags = merge(var.tags, {
-        Name = "web-media-efs"
-    })
-}
-
-resource "aws_security_group_rule" "media_efs_ingress" {
-    description              = "EFS mount target"
-    from_port                = 2049
-    protocol                 = "tcp"
-    security_group_id        = aws_security_group.media_efs.id
-    to_port                  = 2049
-    type                     = "ingress"
-    source_security_group_id = aws_security_group.ec2_mount_media_efs.id
-}
-
 resource "aws_security_group" "upload_efs" {
     name        = "web-upload-efs-access"
     description = "access to EFS storage"
