@@ -21,3 +21,14 @@ jobs:
         with:
           config: develop.json
           environment: develop
+
+  test:
+    runs-on: ubuntu-latest
+    needs:
+      - deploy
+    env:
+      GH_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN_TEST_RUNNER }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests
+        run: gh workflow run manual.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://dev-www.nationalarchives.gov.uk --raw-field notify-slack=true
