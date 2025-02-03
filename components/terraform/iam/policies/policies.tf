@@ -33,8 +33,10 @@ resource "aws_iam_policy" "lambda_web_docker_deployment_policy" {
 
 # iam policy for parameter store
 
-#resource "aws_iam_policy" "web_ssm" {
-#    name        = "web-frontend-ssm-policy"
-#    description = "SSM access to web frontend server"
-#    policy = templatefile("${path.module}/templates/instance-ssm-policy.json")
-#}
+resource "aws_iam_policy" "web_ssm" {
+   name        = "web-frontend-ssm-policy"
+   description = "SSM access to web frontend server"
+   policy = templatefile("${path.module}/templates/instance-ssm-policy.json", {
+       account_id = var.account_id
+   })
+}
