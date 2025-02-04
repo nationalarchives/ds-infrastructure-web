@@ -26,4 +26,4 @@ on_prem_cidrs = [
 
 
 ## Route53 Variables
-#route53_zone = "ZVBG0COLL5B66"
+route53_zone = "ZVBG0COLL5B66"
