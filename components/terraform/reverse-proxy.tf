@@ -92,8 +92,8 @@ module "reverse-proxy" {
     efs_dns_name  = module.media_efs.media_efs_dns_name
     efs_mount_dir = var.rp_efs_mount_dir
 
-    custom_header_name  = jsondecode(data.aws_secretsmanager_secret_version.beta_custom_header.secret_string)["header_name"]
-    custom_header_value = jsondecode(data.aws_secretsmanager_secret_version.beta_custom_header.secret_string)["header_value"]
+    custom_header_name  = jsondecode(data.aws_secretsmanager_secret_version.web_custom_header.secret_string)["header_name"]
+    custom_header_value = jsondecode(data.aws_secretsmanager_secret_version.web_custom_header.secret_string)["header_value"]
 
     # launch configuration
     #
