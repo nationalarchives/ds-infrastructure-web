@@ -15,6 +15,9 @@ s3_deployment_rp_nginx_runtime_key = "live"
 frontend_deployment_s3_root = "web/frontend"
 frontend_logfile_s3_root    = "web/frontend"
 
+rp_deployment_s3_root = "web/reverse-proxy"
+rp_logfile_s3_root    = "web/reverse-proxy"
+
 on_prem_cidrs = [
     "172.31.2.0/24",
     "172.31.6.0/24",
@@ -23,4 +26,4 @@ on_prem_cidrs = [
 
 
 ## Route53 Variables
-route53_zone = "Z0908079JT6PK81GYP0V"
+route53_zone = "ZVBG0COLL5B66"
