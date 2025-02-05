@@ -28,7 +28,7 @@ This are database or other secrets which are confidential and should not be save
 ### AMI builds
 Please read any documentation in the **ds-ami-build** repo in regards of the required build for further information.
 * NginX instance - web-rp-primer*
-* Wagtail instance - web-frontend-primer*
+* Frontend instance - web-frontend-primer*
 ### Sharing public files
 Public files uploaded to the web side are stored on EFS which is shared between the reverse proxy and Frontend instances. The mounting point for RP is _/var/nationalarchives.gov.uk_ and for Frontend _/app_ \
 There is no fixed directory structure in place but it is recommended to follow use root directories for the file families \

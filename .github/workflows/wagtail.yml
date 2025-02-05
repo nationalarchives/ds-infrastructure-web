@@ -1,0 +1,82 @@
+---
+name: Wagtail AMI
+run-name: Wagtail AMI wagtail-primer-(date-time) to ${{ inputs.account }} by @${{ github.actor }}
+
+permissions:
+  id-token: write
+  contents: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      account:
+        type: choice
+        description: Environment
+        required: true
+        options:
+        - dev
+        - staging
+        - live
+
+jobs:
+# ------------------------------------------------------------------------------
+# dev deployment
+# ------------------------------------------------------------------------------
+  wagtail-ami-dev:
+    if: github.event.inputs.account == 'dev'
+    uses: nationalarchives/ds-github-actions/.github/workflows/wagtail-ami-build.yml@main
+    with:
+      base_role: "arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL"
+      playbook_role: "arn:aws:iam::846769538626:role/s-devops-ansible-amis"
+      region: "eu-west-2"
+      branch: "${{ github.event.inputs.branch }}"
+      account: "${{ github.event.inputs.account }}"
+      key_name: "wagtail-${{ github.event.inputs.account }}-eu-west-2"
+      instance_type: 't3a.small'
+      volume_size: 20
+      s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
+      s3_deployment_root: "web/wagtail"
+    secrets:
+      vpc_id: ${{ secrets.VPC_ID_DEV }}
+      subnet_id: ${{ secrets.SUBNET_ID_2A_DEV }}
+# ------------------------------------------------------------------------------
+# staging deployment
+# ------------------------------------------------------------------------------
+  wagtail-ami-staging:
+    if: github.event.inputs.account == 'staging'
+    uses: nationalarchives/ds-github-actions/.github/workflows/wagtail-ami-build.yml@main
+    with:
+      base_role: "arn:aws:iam::337670467269:role/GitHubActionRole"
+      playbook_role: "arn:aws:iam::337670467269:role/s-devops-ansible-amis"
+      region: "eu-west-2"
+      branch: "${{ github.event.inputs.branch }}"
+      account: "${{ github.event.inputs.account }}"
+      key_name: "wagtail-${{ github.event.inputs.account }}-eu-west-2"
+      instance_type: 't3a.medium'
+      volume_size: 40
+      s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
+      s3_deployment_root: "web/wagtail"
+    secrets:
+      vpc_id: ${{ secrets.VPC_ID_STAGING }}
+      subnet_id: ${{ secrets.SUBNET_ID_2A_STAGING }}
+# ------------------------------------------------------------------------------
+# live deployment
+# ------------------------------------------------------------------------------
+  wagtail-ami-live:
+    if: github.event.inputs.account == 'live'
+    uses: nationalarchives/ds-github-actions/.github/workflows/wagtail-ami-build.yml@main
+    with:
+      base_role: "arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0"
+      playbook_role: "arn:aws:iam::968803923593:role/s-devops-ansible-amis"
+      region: "eu-west-2"
+      branch: "${{ github.event.inputs.branch }}"
+      account: "${{ github.event.inputs.account }}"
+      key_name: "wagtail-${{ github.event.inputs.account }}-eu-west-2"
+      instance_type: 't3a.large'
+      volume_size: 100
+      s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
+      s3_deployment_root: "web/wagtail"
+    secrets:
+      vpc_id: ${{ secrets.VPC_ID_LIVE }}
+      subnet_id: ${{ secrets.SUBNET_ID_2A_LIVE }}
+...
