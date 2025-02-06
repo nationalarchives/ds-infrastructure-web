@@ -60,4 +60,4 @@ jobs:
   #   steps:
   #     - uses: actions/checkout@v4
   #     - name: Run tests
-  #       run: gh workflow run manual.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://staging-www.nationalarchives.gov.uk --raw-field notify-slack=true
+  #       run: gh workflow run manual.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://staging-www.nationalarchives.gov.uk --raw-field notify-slack=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
