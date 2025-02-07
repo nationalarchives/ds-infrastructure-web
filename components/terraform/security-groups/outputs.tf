@@ -16,3 +16,15 @@ output "upload_efs_sg_id" {
 output "lambda_web_deployment_id" {
     value = aws_security_group.lambda_web_deployment.id
 }
+
+output "wagtail_sg_id" {
+    value = aws_security_group.wagtail.id
+}
+
+output "wagtail_lb_id" {
+    value = aws_security_group.wagtail_lb.id
+}
+
+output "wagtail_lb" {
+    value = aws_security_group.wagtail_lb.id
+}
