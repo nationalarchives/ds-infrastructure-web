@@ -9,7 +9,7 @@ on:
     inputs:
       deploy-environment:
         type: choice
-        description: Environment
+        description: "Choose Environment"
         required: true
         default: "develop"
         options:
@@ -18,43 +18,62 @@ on:
           - live
 
 jobs:
-  update-frontend-image-version:
+  update-frontend-image:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Set Account and Role based on Environment
+        id: set_env_details
+        run: |
+          if [ "${{ inputs.deploy-environment }}" == "develop" ]; then
+            echo "account_id=846769538626" >> $GITHUB_ENV
+            echo "role_to_assume=arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL" >> $GITHUB_ENV
+            echo "parameter_path=/application/web/frontend/docker_images" >> $GITHUB_ENV
+          elif [ "${{ inputs.deploy-environment }}" == "staging" ]; then
+            echo "account_id=337670467269" >> $GITHUB_ENV
+            echo "role_to_assume=arn:aws:iam::337670467269:role/GitHubActionRole" >> $GITHUB_ENV
+            echo "parameter_path=/application/web/frontend/docker_images" >> $GITHUB_ENV
+          elif [ "${{ inputs.deploy-environment }}" == "live" ]; then
+            echo "account_id=968803923593" >> $GITHUB_ENV
+            echo "role_to_assume=arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0" >> $GITHUB_ENV
+            echo "parameter_path=/application/web/frontend/docker_images" >> $GITHUB_ENV
+          fi
 
-      - name: Set up AWS credentials
+      - name: Checkout the Code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-region: eu-west-2
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.GITHUB_OIDC_ROLE }}
-     
-      - name: Get the current value from Parameter Store
-        id: get_param
-        run: |
-          aws ssm get-parameter --name /application/web/frontend/docker_images --query "Parameter.Value" --output text > current_value.json
+          role-to-assume: "${{ env.role_to_assume }}"
+          role-session-name: GitHubActionsSession
 
-      - name: Extract current version from current value
-        id: extract_version
+      - name: Get Frontend Image Version from Config File
+        id: get_version
         run: |
-          CURRENT_VERSION=$(jq -r '.["frontend-application"]' current_value.json | sed -e 's/^.*://')
-          echo "CURRENT_VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
+          echo "Fetching frontend version from config/${{ inputs.deploy-environment }}.json"
+          version=$(jq -r '.services.frontend.version' config/${{ inputs.deploy-environment }}.json)
+          echo "frontend_version=${version}" >> $GITHUB_ENV
 
-      - name: Update the image version
-        id: update_version
+      - name: Get Current Parameter Value from Parameter Store
+        id: get_current_value
         run: |
-          # Extract new version from the config based on the selected environment
-          NEW_VERSION=$(jq -r ".services.frontend.version" config/${{ inputs.deploy-environment }}.json)
-          UPDATED_VALUE=$(jq ".\"frontend-application\" |= \"ghcr.io/nationalarchives/ds-frontend:$NEW_VERSION\"" current_value.json)
+          echo "Fetching current parameter value from AWS Parameter Store"
+          aws ssm get-parameter --name "${{ env.parameter_path }}" --query "Parameter.Value" --output text > current_value.json
 
-          # Update the parameter in AWS Parameter Store
+      - name: Update Frontend Image Version in Parameter Store
+        run: |
+          echo "Updating frontend image version in AWS Parameter Store for environment: ${{ inputs.deploy-environment }} and version: ${{ env.frontend_version }}"
+          current_value=$(cat current_value.json)
+          updated_value=$(echo $current_value | jq ".\"frontend-application\" |= \"ghcr.io/nationalarchives/ds-frontend:${{ env.frontend_version }}\"")
+         
+          # Update the parameter in AWS Parameter Store with the new version
           aws ssm put-parameter \
-            --name /application/web/frontend/docker_images \
-            --value "$UPDATED_VALUE" \
-            --type String \
+            --name "${{ env.parameter_path }}" \
+            --value "$updated_value" \
+            --type "String" \
             --overwrite
 
-      - name: Verify the update
+      - name: Verify the Update
         run: |
-          aws ssm get-parameter --name /application/web/frontend/docker_images --query "Parameter.Value" --output text
+          aws ssm get-parameter --name "${{ env.parameter_path }}" --query "Parameter.Value" --output text
