@@ -1,0 +1,66 @@
+name: Update Frontend Image Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select the environment to update (dev, staging, production)'
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - production
+      branch:
+        description: 'Branch to use for this workflow (default: main)'
+        required: false
+        type: string
+        default: 'main'  
+
+jobs:
+  update-frontend-image:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout specific branch
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.inputs.branch }}  
+
+    - name: Set up AWS credentials using OIDC
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-region: eu-west-2 
+        role-to-assume: ${{ steps.set_role.outputs.role_arn }}  
+        role-session-name: GitHubActionsSession
+
+    - name: Set Role ARN based on environment
+      id: set_role
+      run: |
+        if [ "${{ github.event.inputs.environment }}" == "dev" ]; then
+          echo "role_arn=arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL" >> $GITHUB_ENV
+        elif [ "${{ github.event.inputs.environment }}" == "staging" ]; then
+          echo "role_arn=arn:aws:iam::337670467269:role/GitHubActionRole" >> $GITHUB_ENV
+        elif [ "${{ github.event.inputs.environment }}" == "production" ]; then
+          echo "role_arn=arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0" >> $GITHUB_ENV
+        fi
+
+    - name: Get frontend image version
+      id: get_version
+      run: |
+        if [ "${{ github.event.inputs.environment }}" == "dev" ]; then
+          VERSION=$(cat config/develop.json | jq -r '.services.frontend.version')
+        elif [ "${{ github.event.inputs.environment }}" == "staging" ]; then
+          VERSION=$(cat config/staging.json | jq -r '.services.frontend.version')
+        elif [ "${{ github.event.inputs.environment }}" == "production" ]; then
+          VERSION=$(cat config/production.json | jq -r '.services.frontend.version')
+        fi
+        echo "::set-output name=version::$VERSION"
+
+    - name: Update frontend image version in SSM
+      run: |
+        aws ssm put-parameter \
+          --name "/application/web/frontend/docker_images" \
+          --value "{\"frontend-application\":\"ghcr.io/nationalarchives/ds-frontend:${{ steps.get_version.outputs.version }}\",\"traefik\":\"traefik:v3.3\"}" \
+          --type "String" \
+          --overwrite
