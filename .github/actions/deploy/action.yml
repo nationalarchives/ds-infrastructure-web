@@ -41,7 +41,7 @@ runs:
           --overwrite
       shell: bash
 
-    - name: Verify the Update
+    - name: Verify the update
       run: |
         echo "Verifying the update..."
         aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text
