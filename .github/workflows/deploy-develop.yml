@@ -8,6 +8,10 @@ on:
 concurrency:
   group: deploy-develop
 
+permissions:
+  id-token: write
+  contents: write
+
 jobs:
   deploy-frontend:
     runs-on: ubuntu-latest
