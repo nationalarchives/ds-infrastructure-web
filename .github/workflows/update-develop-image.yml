@@ -1,0 +1,33 @@
+name: Update Develop Image Version 
+
+on:
+  workflow_dispatch:
+    inputs:
+      new_version:
+        description: 'The new version of the frontend application image for develop'
+        required: true
+        type: string
+
+jobs:
+  update-ssm:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Environment Variables
+        run: |
+          echo "NEW_VERSION=${{ inputs.new_version }}" >> $GITHUB_ENV
+          echo "PARAMETER_NAME=/application/web/frontend/docker_image" >> $GITHUB_ENV
+          echo "ENVIRONMENT=develop" >> $GITHUB_ENV
+
+      - name: Configure AWS Credentials (via EC2 IAM Role)
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-region: eu-west-2  
+
+      - name: Update SSM Parameter Store for Develop
+        run: |
+          NEW_IMAGE_TAG="ghcr.io/nationalarchives/ds-frontend:${{ env.NEW_VERSION }}"
+          aws ssm put-parameter --name ${{ env.PARAMETER_NAME }} --value "$NEW_IMAGE_TAG" --type String --overwrite
