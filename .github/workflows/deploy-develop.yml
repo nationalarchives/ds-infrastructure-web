@@ -9,18 +9,49 @@ concurrency:
   group: deploy-develop
 
 jobs:
-  deploy:
+  deploy-frontend:
     runs-on: ubuntu-latest
+
     environment:
       name: develop
       url: https://dev-www.nationalarchives.gov.uk/
+
+    env:
+      DEPLOY_ENVIRONMENT: dev
+      ACCOUNT_ID: 846769538626
+      ROLE_TO_ASSUME: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
+      PARAMETER_PATH: /application/web/frontend/docker_images
+
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy
-        uses: ./.github/actions/deploy
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          config: develop.json
-          environment: develop
+          aws-region: eu-west-2
+          role-to-assume: "${{ env.role_to_assume }}"
+          role-session-name: GitHubActionsSession
+
+      - name: Get Frontend version from config
+        id: get_version
+        run: |
+          echo "Fetching frontend version from config/${{ env.DEPLOY_ENVIRONMENT }}.json"
+          version=$(jq -r '.services.frontend.version' config/${{ env.DEPLOY_ENVIRONMENT }}.json)
+          echo "NEW_FRONTEND_VERSION=${version}" >> $GITHUB_OUTPUT
+
+      - name: Update AWS Parameter Store
+        run: |
+          OLD_FRONTEND_VERSION=$(aws ssm get-parameter --name "${{ env.PARAMETER_PATH }}" --query "Parameter.Value" --output text)
+          NEW_VALUE=$(echo $OLD_FRONTEND_VERSION | jq ".\"frontend-application\" |= \"ghcr.io/nationalarchives/ds-frontend:${{ steps.get_version.outputs.NEW_FRONTEND_VERSION }}\"")
+          aws ssm put-parameter \
+            --name "${{ env.PARAMETER_PATH }}" \
+            --value "$NEW_VALUE" \
+            --type "String" \
+            --overwrite
+
+      - name: Verify the Update
+        run: |
+          aws ssm get-parameter --name "${{ env.PARAMETER_PATH }}" --query "Parameter.Value" --output text
 
   # test:
   #   runs-on: ubuntu-latest
