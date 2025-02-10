@@ -29,7 +29,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: eu-west-2
-          role-to-assume: ${{ env.role_to_assume }}
+          role-to-assume: ${{ env.ROLE_TO_ASSUME }}
           role-session-name: GitHubActionsSession
 
       - name: Get Frontend version from config
