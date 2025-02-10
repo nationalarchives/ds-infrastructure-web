@@ -16,10 +16,6 @@ on:
           - dev
           - staging
           - live
-      image-version:
-        type: string
-        description: "Frontend Image Version"
-        required: true
 
 jobs:
   update-frontend-image:
@@ -57,13 +53,13 @@ jobs:
         run: |
           echo "Fetching frontend version from config/${{ inputs.deploy-environment }}.json"
           version=$(jq -r '.services.frontend.version' config/${{ inputs.deploy-environment }}.json)
-          echo "version=${version}" >> $GITHUB_ENV
+          echo "frontend_version=${version}" >> $GITHUB_ENV
 
       - name: Update Frontend Image Version in Parameter Store
         run: |
-          echo "Updating frontend image version in AWS Parameter Store for environment: ${{ inputs.deploy-environment }} and version: ${{ env.version }}"
+          echo "Updating frontend image version in AWS Parameter Store for environment: ${{ inputs.deploy-environment }} and version: ${{ env.frontend_version }}"
           aws ssm put-parameter \
             --name "${{ env.parameter_path }}" \
-            --value "ghcr.io/nationalarchives/ds-frontend:${{ env.version }}" \
+            --value "ghcr.io/nationalarchives/ds-frontend:${{ env.frontend_version }}" \
             --type "String" \
             --overwrite
