@@ -29,20 +29,24 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://www.nationalarchives.gov.uk/
     needs:
       - update
+    environment:
+      name: staging
+      url: https://www.nationalarchives.gov.uk/
+    strategy:
+      matrix:
+        service:
+          - frontend
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: main
-      - name: Deploy
+      - name: Deploy service
         uses: ./.github/actions/deploy
         with:
-          config: production.json
-          environment: production
+          config-file: production.json
+          service-name: ${{ matrix.service }}
+          aws-role: arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0
+          parameter-path: /application/web/${{ matrix.service }}/docker_images
 
   test:
     runs-on: ubuntu-latest

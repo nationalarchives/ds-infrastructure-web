@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - config/develop.json
+  workflow_dispatch:
 
 permissions:
   id-token: write
@@ -12,21 +15,17 @@ concurrency:
   group: deploy-develop
 
 jobs:
-  deploy-frontend:
+  deploy:
     runs-on: ubuntu-latest
-
     environment:
       name: develop
       url: https://dev-www.nationalarchives.gov.uk/
-
     strategy:
       matrix:
         service:
           - frontend
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Deploy service
         uses: ./.github/actions/deploy
         with:

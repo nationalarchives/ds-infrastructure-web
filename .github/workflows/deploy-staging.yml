@@ -3,6 +3,9 @@ name: Release to staging
 on:
   workflow_dispatch:
 
+permissions:
+  id-token: write
+
 concurrency:
   group: deploy-staging
 
@@ -36,20 +39,24 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    needs:
+      - release
     environment:
       name: staging
       url: https://staging-www.nationalarchives.gov.uk/
-    needs:
-      - release
+    strategy:
+      matrix:
+        service:
+          - frontend
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: main
-      - name: Deploy
+      - name: Deploy service
         uses: ./.github/actions/deploy
         with:
-          config: staging.json
-          environment: staging
+          config-file: staging.json
+          service-name: ${{ matrix.service }}
+          aws-role: arn:aws:iam::337670467269:role/GitHubActionRole
+          parameter-path: /application/web/${{ matrix.service }}/docker_images
 
   # test:
   #   runs-on: ubuntu-latest
