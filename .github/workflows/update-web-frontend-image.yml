@@ -11,11 +11,11 @@ on:
         type: choice
         description: "Choose Environment"
         required: true
-        default: "dev"
+        default: "develop"
         options:
-          - dev
+          - develop
           - staging
-          - live
+          - production
 
 jobs:
   update-frontend-image:
@@ -24,7 +24,7 @@ jobs:
       - name: Set Account and Role based on Environment
         id: set_env_details
         run: |
-          if [ "${{ inputs.deploy-environment }}" == "dev" ]; then
+          if [ "${{ inputs.deploy-environment }}" == "develop" ]; then
             echo "account_id=846769538626" >> $GITHUB_ENV
             echo "role_to_assume=arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL" >> $GITHUB_ENV
             echo "parameter_path=/application/web/frontend/docker_images" >> $GITHUB_ENV
@@ -32,7 +32,7 @@ jobs:
             echo "account_id=337670467269" >> $GITHUB_ENV
             echo "role_to_assume=arn:aws:iam::337670467269:role/GitHubActionRole" >> $GITHUB_ENV
             echo "parameter_path=/application/web/frontend/docker_images" >> $GITHUB_ENV
-          elif [ "${{ inputs.deploy-environment }}" == "live" ]; then
+          elif [ "${{ inputs.deploy-environment }}" == "production" ]; then
             echo "account_id=968803923593" >> $GITHUB_ENV
             echo "role_to_assume=arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0" >> $GITHUB_ENV
             echo "parameter_path=/application/web/frontend/docker_images" >> $GITHUB_ENV
