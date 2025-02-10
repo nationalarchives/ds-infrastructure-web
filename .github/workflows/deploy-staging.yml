@@ -23,7 +23,7 @@ jobs:
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
       - name: Copy config from develop to staging
         run: |
-          git config --global user.name "Release manager"
+          git config --global user.name "${{ github.triggering_actor }}"
           git config --global user.email "<>"
           cp config/develop.json config/staging.json
           git add config/staging.json
