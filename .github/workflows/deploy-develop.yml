@@ -21,6 +21,7 @@ jobs:
 
     env:
       DEPLOY_ENVIRONMENT: dev
+      CONFIG_FILE: develop.json
       ACCOUNT_ID: 846769538626
       ROLE_TO_ASSUME: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
       PARAMETER_PATH: /application/web/frontend/docker_images
@@ -38,8 +39,8 @@ jobs:
       - name: Get Frontend version from config
         id: get_version
         run: |
-          echo "Fetching frontend version from config/${{ env.DEPLOY_ENVIRONMENT }}.json"
-          version=$(jq -r '.services.frontend.version' config/${{ env.DEPLOY_ENVIRONMENT }}.json)
+          echo "Fetching frontend version from config/${{ env.CONFIG_FILE }}"
+          version=$(jq -r '.services.frontend.version' config/${{ env.CONFIG_FILE }})
           echo "NEW_FRONTEND_VERSION=${version}" >> $GITHUB_OUTPUT
 
       - name: Update AWS Parameter Store
