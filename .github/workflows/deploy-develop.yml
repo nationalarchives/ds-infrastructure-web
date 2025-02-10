@@ -47,6 +47,8 @@ jobs:
         run: |
           OLD_FRONTEND_VERSION=$(aws ssm get-parameter --name "${{ env.PARAMETER_PATH }}" --query "Parameter.Value" --output text)
           NEW_VALUE=$(echo $OLD_FRONTEND_VERSION | jq ".\"frontend-application\" |= \"ghcr.io/nationalarchives/ds-frontend:${{ steps.get_version.outputs.NEW_FRONTEND_VERSION }}\"")
+          echo "Update $OLD_FRONTEND_VERSION -> ${{ steps.get_version.outputs.NEW_FRONTEND_VERSION }}"
+          echo "$NEW_VALUE"
           aws ssm put-parameter \
             --name "${{ env.PARAMETER_PATH }}" \
             --value "$NEW_VALUE" \
