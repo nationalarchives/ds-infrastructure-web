@@ -8,9 +8,6 @@ on:
 concurrency:
   group: deploy-develop
 
-permissions:
-  id-token: write
-
 jobs:
   deploy-frontend:
     runs-on: ubuntu-latest
@@ -19,45 +16,21 @@ jobs:
       name: develop
       url: https://dev-www.nationalarchives.gov.uk/
 
-    env:
-      DEPLOY_ENVIRONMENT: dev
-      CONFIG_FILE: develop.json
-      ACCOUNT_ID: 846769538626
-      ROLE_TO_ASSUME: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
-      PARAMETER_PATH: /application/web/frontend/docker_images
+    strategy:
+      matrix:
+        service:
+          - frontend
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Deploy service
+        uses: ./.github/actions/deploy
         with:
-          aws-region: eu-west-2
-          role-to-assume: ${{ env.ROLE_TO_ASSUME }}
-          role-session-name: GitHubActionsSession
-
-      - name: Get Frontend version from config
-        id: get_version
-        run: |
-          echo "Fetching frontend version from config/${{ env.CONFIG_FILE }}"
-          version=$(jq -r '.services.frontend.version' config/${{ env.CONFIG_FILE }})
-          echo "NEW_FRONTEND_VERSION=${version}" >> $GITHUB_OUTPUT
-
-      - name: Update AWS Parameter Store
-        run: |
-          OLD_FRONTEND_VERSION=$(aws ssm get-parameter --name "${{ env.PARAMETER_PATH }}" --query "Parameter.Value" --output text)
-          NEW_VALUE=$(echo $OLD_FRONTEND_VERSION | jq ".\"frontend-application\" |= \"ghcr.io/nationalarchives/ds-frontend:${{ steps.get_version.outputs.NEW_FRONTEND_VERSION }}\"")
-          echo "Update $OLD_FRONTEND_VERSION -> ${{ steps.get_version.outputs.NEW_FRONTEND_VERSION }}"
-          echo "$NEW_VALUE"
-          aws ssm put-parameter \
-            --name "${{ env.PARAMETER_PATH }}" \
-            --value "$NEW_VALUE" \
-            --type "String" \
-            --overwrite
-
-      - name: Verify the Update
-        run: |
-          aws ssm get-parameter --name "${{ env.PARAMETER_PATH }}" --query "Parameter.Value" --output text
+          config-file: develop.json
+          service-name: ${{ matrix.service }}
+          aws-role: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
+          parameter-path: /application/web/${{ matrix.service }}/docker_images
 
   # test:
   #   runs-on: ubuntu-latest

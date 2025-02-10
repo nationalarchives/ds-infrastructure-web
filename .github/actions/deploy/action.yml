@@ -1,19 +1,61 @@
-name: Deploy
+name: Deploy service
 
 inputs:
-  config:
+  config-file:
     required: true
     type: string
-  environment:
+  service-name:
     required: true
     type: string
+  aws-role:
+    required: true
+    type: string
+  parameter-path:
+    required: true
+    type: string
+
+permissions:
+  id-token: write
 
 runs:
   using: "composite"
+
   steps:
-    - name: DEBUG
-      run: cat config/${{ inputs.config }}
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-region: eu-west-2
+        role-to-assume: ${{ inputs.aws-role }}
+        role-session-name: GitHubActionsSession
+
+    - name: Get version from config
+      id: get_version
+      run: |
+        echo "Fetching version from config/${{ inputs.config-file }}..."
+        NEW_VERSION=$(jq -r '.services.${{ inputs.service-name }}.version' config/${{ inputs.config-file }})
+        echo "NEW_VERSION=$NEW_VERSION"
+        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
+        IMAGE=$(jq -r '.services.${{ inputs.service-name }}.image' config/${{ inputs.config-file }})
+        echo "IMAGE=$IMAGE"
+        echo "IMAGE=$IMAGE" >> $GITHUB_OUTPUT
       shell: bash
-    - name: DEBUG
-      run: echo "Deploy '${{ inputs.config }}' to '${{ inputs.environment }}'"
+
+    - name: Update AWS Parameter Store
+      run: |
+        echo "Updating the AWS Parameter Store..."
+        OLD_VERSION=$(aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text)
+        NEW_VALUE=$(echo $OLD_VERSION | jq ".\"${{ inputs.service-name }}-application\" |= \"${{ steps.get_version.outputs.IMAGE }}:${{ steps.get_version.outputs.NEW_VERSION }}\"")
+        echo "Update $OLD_VERSION -> ${{ steps.get_version.outputs.NEW_VERSION }}"
+        echo "$NEW_VALUE"
+        aws ssm put-parameter \
+          --name "${{ inputs.parameter-path }}" \
+          --value "$NEW_VALUE" \
+          --type "String" \
+          --overwrite
+      shell: bash
+
+    - name: Verify the Update
+      run: |
+        echo "Verifying the update..."
+        aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text
       shell: bash
