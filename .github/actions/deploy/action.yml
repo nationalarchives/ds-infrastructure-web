@@ -25,25 +25,15 @@ runs:
         role-to-assume: ${{ inputs.aws-role }}
         role-session-name: GitHubActionsSession
 
-    - name: Get version from config
-      id: get_version
+    - name: Update AWS Parameter Store
       run: |
         echo "Fetching version from config/${{ inputs.config-file }}..."
         NEW_VERSION=$(jq -r '.services.${{ inputs.service-name }}.version' config/${{ inputs.config-file }})
-        echo "NEW_VERSION=$NEW_VERSION"
-        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
-        IMAGE=$(jq -r '.services.${{ inputs.service-name }}.image' config/${{ inputs.config-file }})
-        echo "IMAGE=$IMAGE"
-        echo "IMAGE=$IMAGE" >> $GITHUB_OUTPUT
-      shell: bash
-
-    - name: Update AWS Parameter Store
-      run: |
+        NEW_IMAGE=$(jq -r '.services.${{ inputs.service-name }}.image' config/${{ inputs.config-file }})
         echo "Updating the AWS Parameter Store..."
-        OLD_VERSION=$(aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text)
-        NEW_VALUE=$(echo $OLD_VERSION | jq ".\"${{ inputs.service-name }}-application\" |= \"${{ steps.get_version.outputs.IMAGE }}:${{ steps.get_version.outputs.NEW_VERSION }}\"")
-        echo "Update $OLD_VERSION -> ${{ steps.get_version.outputs.NEW_VERSION }}"
-        echo "$NEW_VALUE"
+        OLD_VALUE=$(aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text)
+        NEW_VALUE=$(echo $OLD_VALUE | jq ".\"${{ inputs.service-name }}-application\" |= \"$NEW_IMAGE:$NEW_VERSION\"")
+        echo "$OLD_VALUE -> $NEW_VALUE"
         aws ssm put-parameter \
           --name "${{ inputs.parameter-path }}" \
           --value "$NEW_VALUE" \
