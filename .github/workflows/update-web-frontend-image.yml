@@ -9,57 +9,52 @@ on:
     inputs:
       deploy-environment:
         type: choice
-        description: "Choose Environment"
+        description: Environment
         required: true
         default: "develop"
         options:
           - develop
           - staging
-          - production
+          - live
 
 jobs:
-  update-frontend-image:
+  update-frontend-image-version:
     runs-on: ubuntu-latest
     steps:
-      - name: Set Account and Role based on Environment
-        id: set_env_details
-        run: |
-          if [ "${{ inputs.deploy-environment }}" == "develop" ]; then
-            echo "account_id=846769538626" >> $GITHUB_ENV
-            echo "role_to_assume=arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL" >> $GITHUB_ENV
-            echo "parameter_path=/application/web/frontend/docker_images" >> $GITHUB_ENV
-          elif [ "${{ inputs.deploy-environment }}" == "staging" ]; then
-            echo "account_id=337670467269" >> $GITHUB_ENV
-            echo "role_to_assume=arn:aws:iam::337670467269:role/GitHubActionRole" >> $GITHUB_ENV
-            echo "parameter_path=/application/web/frontend/docker_images" >> $GITHUB_ENV
-          elif [ "${{ inputs.deploy-environment }}" == "production" ]; then
-            echo "account_id=968803923593" >> $GITHUB_ENV
-            echo "role_to_assume=arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0" >> $GITHUB_ENV
-            echo "parameter_path=/application/web/frontend/docker_images" >> $GITHUB_ENV
-          fi
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Checkout the Code
-        uses: actions/checkout@v2
-
-      - name: Configure AWS Credentials
+      - name: Set up AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-region: eu-west-2
-          role-to-assume: "${{ env.role_to_assume }}"
-          role-session-name: GitHubActionsSession
-
-      - name: Get Frontend Image Version from Config File
-        id: get_version
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.GITHUB_OIDC_ROLE }}
+     
+      - name: Get the current value from Parameter Store
+        id: get_param
         run: |
-          echo "Fetching frontend version from config/${{ inputs.deploy-environment }}.json"
-          version=$(jq -r '.services.frontend.version' config/${{ inputs.deploy-environment }}.json)
-          echo "frontend_version=${version}" >> $GITHUB_ENV
+          aws ssm get-parameter --name /application/web/frontend/docker_images --query "Parameter.Value" --output text > current_value.json
 
-      - name: Update Frontend Image Version in Parameter Store
+      - name: Extract current version from current value
+        id: extract_version
         run: |
-          echo "Updating frontend image version in AWS Parameter Store for environment: ${{ inputs.deploy-environment }} and version: ${{ env.frontend_version }}"
+          CURRENT_VERSION=$(jq -r '.["frontend-application"]' current_value.json | sed -e 's/^.*://')
+          echo "CURRENT_VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
+
+      - name: Update the image version
+        id: update_version
+        run: |
+          # Extract new version from the config based on the selected environment
+          NEW_VERSION=$(jq -r ".services.frontend.version" config/${{ inputs.deploy-environment }}.json)
+          UPDATED_VALUE=$(jq ".\"frontend-application\" |= \"ghcr.io/nationalarchives/ds-frontend:$NEW_VERSION\"" current_value.json)
+
+          # Update the parameter in AWS Parameter Store
           aws ssm put-parameter \
-            --name "${{ env.parameter_path }}" \
-            --value "ghcr.io/nationalarchives/ds-frontend:${{ env.frontend_version }}" \
-            --type "String" \
+            --name /application/web/frontend/docker_images \
+            --value "$UPDATED_VALUE" \
+            --type String \
             --overwrite
+
+      - name: Verify the update
+        run: |
+          aws ssm get-parameter --name /application/web/frontend/docker_images --query "Parameter.Value" --output text
