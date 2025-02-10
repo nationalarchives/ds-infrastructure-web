@@ -11,26 +11,21 @@ on:
           - dev
           - staging
           - production
-      branch:
-        description: 'Branch to use for this workflow (default: main)'
-        required: false
-        type: string
-        default: 'main'  
 
 jobs:
   update-frontend-image:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout specific branch
+    - name: Checkout main branch
       uses: actions/checkout@v2
       with:
-        ref: ${{ github.event.inputs.branch }}  
+        ref: 'main' 
 
     - name: Set up AWS credentials using OIDC
       uses: aws-actions/configure-aws-credentials@v2
       with:
-        aws-region: eu-west-2 
+        aws-region: eu-west-2  
         role-to-assume: ${{ steps.set_role.outputs.role_arn }}  
         role-session-name: GitHubActionsSession
 
