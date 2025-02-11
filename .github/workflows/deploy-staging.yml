@@ -54,7 +54,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ needs.create-release.outputs.verion }}
+          ref: v${{ needs.create-release.outputs.verion }}
       - name: Deploy service
         uses: ./.github/actions/deploy
         with:
