@@ -39,7 +39,7 @@ jobs:
       - update
     if: always()
     environment:
-      name: staging
+      name: production
       url: https://www.nationalarchives.gov.uk/
     strategy:
       matrix:
