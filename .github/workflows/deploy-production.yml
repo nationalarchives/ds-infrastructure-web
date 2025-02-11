@@ -33,7 +33,7 @@ jobs:
           git config --global user.email "<>"
           cp config/staging.json config/production.json
           git add config/production.json
-          git commit -m "Release v$VERSION to production"
+          git commit -m "Release v$VERSION to production" || true
           git push
           COMMIT_SHA=$(git log --format="%H" -n 1)
           echo "COMMIT_SHA=$COMMIT_SHA" >> "$GITHUB_OUTPUT"

@@ -30,7 +30,7 @@ jobs:
           git config --global user.email "<>"
           cp config/develop.json config/staging.json
           git add config/staging.json
-          git commit -m "Release v${{ steps.version-tag.outputs.VERSION }} to staging"
+          git commit -m "Release v${{ steps.version-tag.outputs.VERSION }} to staging" || true
           git push
       - name: Create tag and release
         if: always()
