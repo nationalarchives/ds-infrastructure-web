@@ -33,6 +33,7 @@ jobs:
           git commit -m "Release v${{ steps.version-tag.outputs.VERSION }} to staging"
           git push
       - name: Create tag and release
+        if: always()
         run: |
           git tag "v${{ steps.version-tag.outputs.VERSION }}" -m "Release ${{ steps.version-tag.outputs.VERSION }}"
           git push origin --tags
