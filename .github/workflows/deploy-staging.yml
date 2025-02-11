@@ -11,14 +11,14 @@ concurrency:
   group: deploy-staging
 
 jobs:
-  release:
+  create-release:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    outputs:
+      verion: ${{ steps.version-tag.outputs.VERSION }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: main
       - id: version-tag
         name: Create release version
         run: |
@@ -41,7 +41,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs:
-      - release
+      - create-release
     if: always()
     environment:
       name: staging
@@ -52,6 +52,8 @@ jobs:
           - frontend
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.create-release.outputs.verion }}
       - name: Deploy service
         uses: ./.github/actions/deploy
         with:

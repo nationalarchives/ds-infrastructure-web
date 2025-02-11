@@ -13,15 +13,18 @@ concurrency:
   group: deploy-production
 
 jobs:
-  update:
+  prepare:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    outputs:
+      commit-sha: ${{ steps.copy-config.outputs.COMMIT_SHA }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
       - name: Copy config from staging to production
+        id: copy-config
         run: |
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
           # Strip "v" prefix from tag name
@@ -32,11 +35,13 @@ jobs:
           git add config/production.json
           git commit -m "Release v$VERSION to production"
           git push
+          COMMIT_SHA=$(git log --format="%H" -n 1)
+          echo "COMMIT_SHA=$COMMIT_SHA" >> "$GITHUB_OUTPUT"
 
   deploy:
     runs-on: ubuntu-latest
     needs:
-      - update
+      - prepare
     if: always()
     environment:
       name: production
@@ -47,6 +52,8 @@ jobs:
           - frontend
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.prepare.outputs.commit-sha }}
       - name: Deploy service
         uses: ./.github/actions/deploy
         with:
