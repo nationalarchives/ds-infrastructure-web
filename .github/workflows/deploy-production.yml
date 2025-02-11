@@ -61,6 +61,7 @@ jobs:
           service-name: ${{ matrix.service }}
           aws-role: arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0
           parameter-path: /application/web/${{ matrix.service }}/docker_images
+          deployed-parameter-path: /application/web/${{ matrix.service }}/deployed_version
 
   test:
     runs-on: ubuntu-latest

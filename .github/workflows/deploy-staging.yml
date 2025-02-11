@@ -62,6 +62,7 @@ jobs:
           service-name: ${{ matrix.service }}
           aws-role: arn:aws:iam::337670467269:role/GitHubActionRole
           parameter-path: /application/web/${{ matrix.service }}/docker_images
+          deployed-parameter-path: /application/web/${{ matrix.service }}/deployed_version
 
   # test:
   #   runs-on: ubuntu-latest
