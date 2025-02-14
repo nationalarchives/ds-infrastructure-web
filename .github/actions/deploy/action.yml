@@ -34,10 +34,10 @@ runs:
         OLD_VERSION=$(jq '."${{ inputs.service-name }}-application"' <<< "$OLD_VALUE")
 
         echo "Fetching version from config/${{ inputs.config-file }}..."
-        NEW_VERSION=$(jq -r '.services.${{ inputs.service-name }}.version' config/${{ inputs.config-file }})
         NEW_IMAGE=$(jq -r '.services.${{ inputs.service-name }}.image' config/${{ inputs.config-file }})
+        NEW_VERSION=$(jq -r '.services.${{ inputs.service-name }}.version' config/${{ inputs.config-file }})
 
-        echo "$OLD_VERSION ---> $NEW_VERSION"
+        echo "$OLD_VERSION ---> $NEW_IMAGE:$NEW_VERSION"
 
         echo "Updating the AWS Parameter Store..."
         NEW_VALUE=$(echo $OLD_VALUE | jq ".\"${{ inputs.service-name }}-application\" |= \"$NEW_IMAGE:$NEW_VERSION\"")
