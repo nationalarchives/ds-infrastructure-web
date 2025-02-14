@@ -54,8 +54,8 @@ runs:
       run: |
         echo "Triggering lambda function ..."
         VERSION="${{ env.NEW_VERSION }}"
-        BASE64_PAYLOAD=$(echo -n "$VERSION" | base64)
-        aws lambda invoke --function-name AutoRunStartupScript --payload "$BASE64_PAYLOAD" response.json
+        PAYLOAD=$(jq -n --arg version "$VERSION" '{deployed_version:$version}')
+        aws lambda invoke --function-name AutoRunStartupScript --payload "$PAYLOAD" response.json
         cat response.json
       shell: bash
 
