@@ -9,7 +9,7 @@ on:
         required: true
         default: true
       notify-slack:
-        description: Send Slack message to alert of deployment
+        description: Send Slack message
         type: boolean
         required: true
         default: true
