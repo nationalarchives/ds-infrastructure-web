@@ -58,6 +58,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_ICON: https://raw.githubusercontent.com/nationalarchives/tna-frontend/main/src/nationalarchives/assets/images/apple-touch-icon.png
           SLACK_ICON_EMOJI: ":rocket:"
+          SLACK_COLOR: #666666
           MSG_MINIMAL: true
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
@@ -106,7 +107,7 @@ jobs:
           MSG_MINIMAL: true
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
-          SLACK_MESSAGE: "🧪 Release **${{ needs.create-release.outputs.verion }}** deployed to staging"
+          SLACK_MESSAGE: "🧪 Release **${{ needs.create-release.outputs.verion }}** deployed to staging: [staging-www.nationalarchives.gov.uk](http://staging-www.nationalarchives.gov.uk/)"
   
   notify-failed:
     runs-on: ubuntu-latest
