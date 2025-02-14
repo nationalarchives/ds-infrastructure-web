@@ -27,35 +27,59 @@ runs:
         aws-region: eu-west-2
         role-to-assume: ${{ inputs.aws-role }}
         role-session-name: GitHubActionsSession
+
     - name: Update AWS Parameter Store
       id: update
       run: |
         echo "Fetching version from config/${{ inputs.config-file }}..."
         NEW_VERSION=$(jq -r '.services.${{ inputs.service-name }}.version' config/${{ inputs.config-file }})
         NEW_IMAGE=$(jq -r '.services.${{ inputs.service-name }}.image' config/${{ inputs.config-file }})
+
         echo "Updating the AWS Parameter Store..."
         OLD_VALUE=$(aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text)
         NEW_VALUE=$(echo $OLD_VALUE | jq ".\"${{ inputs.service-name }}-application\" |= \"$NEW_IMAGE:$NEW_VERSION\"")
-        OLD_VERSION=$(jq '."${{ inputs.service-name }}-application"' <<< "$OLD_VALUE")
-        NEW_VERSION=$(jq '."${{ inputs.service-name }}-application"' <<< "$NEW_VALUE")
-        echo "$OLD_VERSION -> $NEW_VERSION"
-        echo "$OLD_VALUE"
-        echo "$NEW_VALUE"
-        aws ssm put-parameter \
-          --name "${{ inputs.parameter-path }}" \
-          --value "$NEW_VALUE" \
-          --type "String" \
-          --overwrite
-        echo "NEW_VERSION=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+
+        echo "Updating /application/web/${{ inputs.service-name }}/docker_images..."
+        aws ssm put-parameter --name "${{ inputs.parameter-path }}" --value "$NEW_VALUE" --type String --overwrite
+
+        echo "NEW_VERSION=$NEW_VERSION" >> "$GITHUB_ENV"
       shell: bash
+
     - name: Verify the update
       run: |
-        echo "Verifying the update..."
+        echo "Verifying the updated value..."
         aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text
       shell: bash
+
+    - name: Update the deployed version
+      run: |
+        echo "Extracting version for deployed parameter..."
+        DOCKER_IMAGES_JSON=$(aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text)
+        DEPLOYED_VERSION=$(echo "$DOCKER_IMAGES_JSON" | jq -r '."${{ inputs.service-name }}-application"' | awk -F ':' '{print $2}')
+
+        echo "Updating /application/web/${{ inputs.service-name }}/deployed_version with $DEPLOYED_VERSION..."
+
+        aws ssm put-parameter --name "${{ inputs.deployed-parameter-path }}" --value "$DEPLOYED_VERSION" --type String --overwrite
+
+        echo "Deployed version is $DEPLOYED_VERSION"
+      shell: bash
+
+
     - name: Wait for the deployment to complete
       run: |
         echo "Checking for the deployed version..."
-        while sleep 2 && DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text) && [[ "$DEPLOYED_VERSION" != "${{ steps.update.outputs.NEW_VERSION }}" ]]; do echo "Deployed version: $DEPLOYED_VERSION"; done
-        echo "Deployed version complete: $DEPLOYED_VERSION"
+        while sleep 2 && DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text) && [[ "$DEPLOYED_VERSION" != "$NEW_VERSION" ]]; do
+          echo "Deployed version: $DEPLOYED_VERSION"
+        done 
+        echo "Deployment completed successfully: $DEPLOYED_VERSION"
       shell: bash
+
+
+
+
+
+
+
+
+
+        
