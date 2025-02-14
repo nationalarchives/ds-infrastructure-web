@@ -24,6 +24,7 @@ jobs:
       matrix:
         service:
           - frontend
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - name: Deploy service

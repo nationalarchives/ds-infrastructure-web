@@ -52,6 +52,7 @@ jobs:
       - create-release
     if: always()
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/send-slack-notification
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK }}
@@ -70,6 +71,7 @@ jobs:
       matrix:
         service:
           - frontend
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -90,6 +92,7 @@ jobs:
       - deploy
     if: success()
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/send-slack-notification
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK }}
@@ -103,6 +106,7 @@ jobs:
       - deploy
     if: failure()
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/send-slack-notification
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK }}
