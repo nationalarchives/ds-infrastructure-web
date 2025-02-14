@@ -45,3 +45,48 @@ resource "aws_cloudwatch_log_group" "web_docker_deployment" {
     name              = "/aws/lambda/${aws_lambda_function.web_docker_deployment.function_name}"
     retention_in_days = 7
 }
+
+
+data "archive_file" "auto_run_startup_script" {
+  type        = "zip"
+  source_dir  = "${path.root}/lambda/auto-run-startup-script/source"
+  output_path = "${path.root}/lambda/auto-run-startup-script/auto-run-startup-script.zip"
+}
+
+# Lambda Function: AutoRunStartupScript
+resource "aws_lambda_function" "auto_run_startup_script" {
+  filename         = data.archive_file.auto_run_startup_script.output_path
+  source_code_hash = data.archive_file.auto_run_startup_script.output_base64sha256
+
+  function_name = "AutoRunStartupScript"
+  role          = var.auto_run_startup_script_role_arn
+
+  handler = "lambda_function.lambda_handler"  
+  runtime = "python3.13"
+
+  memory_size = 128
+  timeout     = 240
+
+  ephemeral_storage {
+    size = 512
+  }
+
+  vpc_config {
+    subnet_ids         = var.subnet_ids
+    security_group_ids = var.security_group_ids
+  }
+
+  tags = merge(var.tags, {
+    Role            = "serverless"
+    ApplicationType = "python"
+    CreatedBy       = "devops@nationalarchives.gov.uk"
+    Service         = "auto-run-startup-script"
+    Name            = "auto_run_startup_script"
+  })
+}
+
+# CloudWatch Log Group for AutoRunStartupScript Lambda
+resource "aws_cloudwatch_log_group" "auto_run_startup_script" {
+  name              = "/aws/lambda/AutoRunStartupScript"
+  retention_in_days = 7
+}

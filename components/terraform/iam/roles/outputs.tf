@@ -24,3 +24,6 @@ output "rp_role_id" {
 output "lambda_web_docker_deployment_role_arn" {
     value = aws_iam_role.lambda_web_docker_deployment_role.arn
 }
+output "lambda_auto_run_startup_script_role_arn" {
+    value = aws_iam_role.lambda_auto_run_startup_script_role.arn
+}
