@@ -19,6 +19,7 @@ inputs:
 
 runs:
   using: "composite"
+  timeout-minutes: 15
   steps:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
@@ -41,7 +42,7 @@ runs:
         echo "Updating /application/web/${{ inputs.service-name }}/docker_images..."
         aws ssm put-parameter --name "${{ inputs.parameter-path }}" --value "$NEW_VALUE" --type String --overwrite
 
-        echo "NEW_VERSION=$NEW_VERSION" >> "$GITHUB_ENV"
+        echo "NEW_VERSION=$NEW_VERSION" >> "$GITHUB_OUTPUT"
       shell: bash
 
     - name: Verify the update
@@ -53,7 +54,7 @@ runs:
     - name: Trigger Lambda function
       run: |
         echo "Triggering lambda function ..."
-        VERSION="${{ env.NEW_VERSION }}"
+        VERSION="${{ steps.update.outputs.NEW_VERSION }}"
         PAYLOAD=$(jq -n --arg version "$VERSION" '{deployed_version:$version}' | base64)
         aws lambda invoke --function-name AutoRunStartupScript --payload "$PAYLOAD" response.json
         cat response.json
@@ -62,8 +63,8 @@ runs:
     - name: Wait for the deployed version to update
       run: |
         echo "Checking for the deployed version..."
-        while sleep 2 && DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text) && [[ "$DEPLOYED_VERSION" != "${{ env.NEW_VERSION }}" ]]; do
-          echo "Current Deployed version: $DEPLOYED_VERSION"
+        while sleep 2 && DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text) && [[ "$DEPLOYED_VERSION" != "${{ steps.update.outputs.NEW_VERSION }}" ]]; do
+          echo "Currently deployed version: $DEPLOYED_VERSION"
         done 
         echo "Deployment completed successfully: $DEPLOYED_VERSION"
       shell: bash

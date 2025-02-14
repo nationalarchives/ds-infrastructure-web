@@ -1,0 +1,65 @@
+name: Send notification to Slack
+
+inputs:
+  webhook:
+    type: string
+    required: true
+  version:
+    type: string
+    required: true
+  status:
+    type: string
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Create notiofication
+      id: content
+      run: |
+        touch message.txt
+        if [[ "${{ inputs.status }}" == "releaseCreated" ]]
+        then
+          echo "🧑‍💻 Release ${{ inputs.version }} created and deploying to staging..." >> message.txt
+          echo "STATUS_COLOUR=#efefef" >> "$GITHUB_OUTPUT"
+        elif [[ "${{ inputs.status }}" == "releaseStaged" ]]
+        then
+          echo "🧪 Release ${{ inputs.version }} deployed to staging" >> message.txt
+          echo "STATUS_COLOUR=success" >> "$GITHUB_OUTPUT"
+        elif [[ "${{ inputs.status }}" == "releaseStageFailed" ]]
+        then
+          echo "❌ Release ${{ inputs.version }} failed to deploy to staging" >> message.txt
+          echo "STATUS_COLOUR=failure" >> "$GITHUB_OUTPUT"
+        elif [[ "${{ inputs.status }}" == "releaseToProductionStarted" ]]
+        then
+          echo "🚀 Release ${{ inputs.version }} deploying to production..." >> message.txt
+          echo "STATUS_COLOUR=#efefef" >> "$GITHUB_OUTPUT"
+        elif [[ "${{ inputs.status }}" == "releaseToProductionComplete" ]]
+        then
+          echo "🎉 Release ${{ inputs.version }} deployed to production" >> message.txt
+          echo "STATUS_COLOUR=success" >> "$GITHUB_OUTPUT"
+        elif [[ "${{ inputs.status }}" == "releaseToProductionFailed" ]]
+        then
+          echo "❌ Release ${{ inputs.version }} failed to deploy to production" >> message.txt
+          echo "STATUS_COLOUR=failure" >> "$GITHUB_OUTPUT"
+        else
+          echo "⚠️ Release ${{ inputs.version }}: Unknown status (${{ inputs.status }})" >> message.txt
+        fi
+        cat message.txt
+        {
+          echo 'MESSAGE<<EOF'
+          cat message.txt
+          echo EOF
+        } >> "$GITHUB_OUTPUT"
+      shell: bash
+    - uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_TITLE: Website deployment
+        SLACK_WEBHOOK: ${{ inputs.webhook }}
+        SLACK_ICON: https://raw.githubusercontent.com/nationalarchives/tna-frontend/main/src/nationalarchives/assets/images/apple-touch-icon.png
+        SLACK_ICON_EMOJI: ":rocket:"
+        MSG_MINIMAL: true
+        SLACK_COLOR: ${{ steps.content.outputs.STATUS_COLOUR }}
+        ENABLE_ESCAPES: true
+        SLACKIFY_MARKDOWN: true
+        SLACK_MESSAGE: ${{ steps.content.output.MESSAGE }}
