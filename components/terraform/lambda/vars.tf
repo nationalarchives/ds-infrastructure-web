@@ -6,3 +6,5 @@ variable "layers" {}
 variable "environment" {}
 
 variable "tags" {}
+
+variable "auto_run_startup_script_role_arn" {}

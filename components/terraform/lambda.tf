@@ -23,7 +23,8 @@ module "web_docker_deployment" {
     source = "./lambda"
 
     web_docker_deployment_role_arn = module.roles.lambda_web_docker_deployment_role_arn
-
+    auto_run_startup_script_role_arn = module.roles.lambda_auto_run_startup_script_role_arn
+    
     subnet_ids = [
         data.aws_ssm_parameter.private_subnet_2a_id.value,
         data.aws_ssm_parameter.private_subnet_2b_id.value,
@@ -42,3 +43,4 @@ module "web_docker_deployment" {
 
     tags = local.tags
 }
+

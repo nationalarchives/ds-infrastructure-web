@@ -89,3 +89,11 @@ resource "aws_iam_role_policy_attachment" "lambda_policy_attachment_2" {
   role       = aws_iam_role.lambda_web_docker_deployment_role.name
   policy_arn = var.lambda_web_docker_deployment_policy_arn
 }
+
+# Lambda AutoRunStartupScript Role
+resource "aws_iam_role" "lambda_auto_run_startup_script_role" {
+  name               = "LambdaSSMExecutionRole"
+  assume_role_policy = file("${path.root}/shared-templates/assume-role-lambda-policy.json")
+  description        = "allow lambda to call script on instances"
+  tags               = var.tags
+}
