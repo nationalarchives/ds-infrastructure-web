@@ -8,6 +8,11 @@ on:
         type: boolean
         required: true
         default: true
+      notify-slack:
+        description: Send Slack message to alert of deployment
+        type: boolean
+        required: true
+        default: true
 
 permissions:
   id-token: write
@@ -50,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - create-release
-    if: always()
+    if: always() && inputs.notify-slack
     steps:
       - uses: rtCamp/action-slack-notify@v2
         env:
@@ -95,7 +100,7 @@ jobs:
     needs:
       - create-release
       - deploy
-    if: success()
+    if: success() && inputs.notify-slack
     steps:
       - uses: rtCamp/action-slack-notify@v2
         env:
@@ -114,7 +119,7 @@ jobs:
     needs:
       - create-release
       - deploy
-    if: failure()
+    if: failure() && inputs.notify-slack
     steps:
       - uses: rtCamp/action-slack-notify@v2
         env:
