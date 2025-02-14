@@ -50,35 +50,19 @@ runs:
         aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text
       shell: bash
 
-    - name: Update the deployed version
+    - name: Trigger Lambda function
       run: |
-        echo "Extracting version for deployed parameter..."
-        DOCKER_IMAGES_JSON=$(aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text)
-        DEPLOYED_VERSION=$(echo "$DOCKER_IMAGES_JSON" | jq -r '."${{ inputs.service-name }}-application"' | awk -F ':' '{print $2}')
-
-        echo "Updating /application/web/${{ inputs.service-name }}/deployed_version with $DEPLOYED_VERSION..."
-
-        aws ssm put-parameter --name "${{ inputs.deployed-parameter-path }}" --value "$DEPLOYED_VERSION" --type String --overwrite
-
-        echo "Deployed version is $DEPLOYED_VERSION"
+        echo "Triggering lambda function ..."
+        aws lambda invoke --function-name AutoRunStartupScript --payload "{"deployed_version": "${{ env.NEW_VERSION }}"}" response.json
+        cat response.json
       shell: bash
 
 
-    - name: Wait for the deployment to complete
+    - name: Wait for the deployed version to update
       run: |
         echo "Checking for the deployed version..."
-        while sleep 2 && DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text) && [[ "$DEPLOYED_VERSION" != "$NEW_VERSION" ]]; do
-          echo "Deployed version: $DEPLOYED_VERSION"
+        while sleep 2 && DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text) && [[ "$DEPLOYED_VERSION" != "${{ env.NEW_VERSION }}" ]]; do
+          echo "Current Deployed version: $DEPLOYED_VERSION"
         done 
         echo "Deployment completed successfully: $DEPLOYED_VERSION"
       shell: bash
-
-
-
-
-
-
-
-
-
-        
