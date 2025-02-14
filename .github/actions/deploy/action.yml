@@ -54,10 +54,9 @@ runs:
       run: |
         echo "Triggering lambda function ..."
         VERSION="${{ env.NEW_VERSION }}"
-        aws lambda invoke --function-name AutoRunStartupScript --payload "\"$VERSION\"" response.json
+        aws lambda invoke --function-name AutoRunStartupScript --payload "{\"deployed_version\":\"$VERSION\"}" response.json
         cat response.json
       shell: bash
-
 
     - name: Wait for the deployed version to update
       run: |
