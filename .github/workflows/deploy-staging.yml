@@ -52,12 +52,16 @@ jobs:
       - create-release
     if: always()
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/send-slack-notification
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK }}
-          version: ${{ needs.create-release.outputs.verion }}
-          status: releaseCreated
+      - uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_TITLE: Website deployment
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_ICON: https://raw.githubusercontent.com/nationalarchives/tna-frontend/main/src/nationalarchives/assets/images/apple-touch-icon.png
+          SLACK_ICON_EMOJI: ":rocket:"
+          MSG_MINIMAL: true
+          ENABLE_ESCAPES: true
+          SLACKIFY_MARKDOWN: true
+          SLACK_MESSAGE: "🧑‍💻 Release **${{ needs.create-release.outputs.verion }}** created and deploying to staging..."
 
   deploy:
     runs-on: ubuntu-latest
@@ -92,12 +96,17 @@ jobs:
       - deploy
     if: success()
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/send-slack-notification
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK }}
-          version: ${{ needs.create-release.outputs.verion }}
-          status: releaseStaged
+      - uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_TITLE: Website deployment
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_ICON: https://raw.githubusercontent.com/nationalarchives/tna-frontend/main/src/nationalarchives/assets/images/apple-touch-icon.png
+          SLACK_ICON_EMOJI: ":rocket:"
+          SLACK_COLOR: success
+          MSG_MINIMAL: true
+          ENABLE_ESCAPES: true
+          SLACKIFY_MARKDOWN: true
+          SLACK_MESSAGE: "🧪 Release **${{ needs.create-release.outputs.verion }}** deployed to staging"
   
   notify-failed:
     runs-on: ubuntu-latest
@@ -106,12 +115,17 @@ jobs:
       - deploy
     if: failure()
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/send-slack-notification
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK }}
-          version: ${{ needs.create-release.outputs.verion }}
-          status: releaseStageFailed
+      - uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_TITLE: Website deployment
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_ICON: https://raw.githubusercontent.com/nationalarchives/tna-frontend/main/src/nationalarchives/assets/images/apple-touch-icon.png
+          SLACK_ICON_EMOJI: ":rocket:"
+          SLACK_COLOR: failure
+          MSG_MINIMAL: true
+          ENABLE_ESCAPES: true
+          SLACKIFY_MARKDOWN: true
+          SLACK_MESSAGE: "❌ Release **${{ needs.create-release.outputs.version }}** failed to deploy to staging"
   
   # test:
   #   runs-on: ubuntu-latest
