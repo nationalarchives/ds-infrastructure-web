@@ -67,6 +67,7 @@ def lambda_handler(event, context):
         # Step 4: Check final status
         if status == "Success":
             if deployed_version:
+                print(f"Deployed version: {deployed_version}")
                 ssm_client.put_parameter(
                     Name=parameter_name,
                     Value=deployed_version,
