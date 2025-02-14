@@ -61,7 +61,7 @@ resource "aws_lambda_function" "auto_run_startup_script" {
   function_name = "AutoRunStartupScript"
   role          = var.auto_run_startup_script_role_arn
 
-  handler = "lambda_function.lambda_handler"  
+  handler = "auto-run-startup-script.lambda_handler"  
   runtime = "python3.13"
 
   memory_size = 128
