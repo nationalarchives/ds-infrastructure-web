@@ -19,7 +19,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     outputs:
       commit-sha: ${{ steps.copy-config.outputs.COMMIT_SHA }}
-      verion: ${{ steps.copy-config.outputs.VERSION }}
+      version: ${{ steps.copy-config.outputs.VERSION }}
     steps:
       - uses: actions/checkout@v4
         with:
