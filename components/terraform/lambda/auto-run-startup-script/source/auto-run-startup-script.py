@@ -52,7 +52,7 @@ def lambda_handler(event, context):
         print(f"Command sent. ID: {command_id}")
 
         # Step 3: Wait for completion
-        for _ in range(30):  
+        for _ in range(20):  
             time.sleep(5)
             output_response = ssm_client.get_command_invocation(
                 CommandId=command_id,
