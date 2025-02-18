@@ -57,8 +57,19 @@ runs:
     - name: Wait for the deployed version to update
       run: |
         echo "Checking for the deployed version..."
-        while sleep 2 && DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text) && [[ "$DEPLOYED_VERSION" != "${{ steps.update.outputs.NEW_VERSION }}" ]]; do
-          echo "Currently deployed version: $DEPLOYED_VERSION"
+        RETRIES=5
+        COUNT=0
+        while [[ $COUNT -lt $RETRIES ]]; do
+          DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text)
+          if [[ "$DEPLOYED_VERSION" == "${{ steps.update.outputs.NEW_VERSION }}" ]]; then
+            echo "Deployed version: $DEPLOYED_VERSION"
+            break
+          fi
+          
+          COUNT=$((COUNT+1))
+          sleep 2
         done
-        echo "Deployed version: $DEPLOYED_VERSION"
-      shell: bash
+        if [[ "DEPLOYED_VERSION" != "${{ steps.update.outputs.NEW_VERSION }}" ]]; then
+          echo "Failed to deploy the new version"
+          exit 1
+        fi
