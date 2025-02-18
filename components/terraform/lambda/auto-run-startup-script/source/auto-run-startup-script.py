@@ -2,6 +2,7 @@ import json
 import time
 import boto3
 import os
+import re
 
 def get_instance_id_by_name(instance_name):
     ec2_client = boto3.client('ec2', region_name="eu-west-2")
@@ -28,7 +29,15 @@ def get_docker_image_version_from_ssm():
         return response['Parameter']['Value']
     except Exception as e:
         print(f"Error retrieving docker images version from SSM: {str(e)}")
-        return None
+        raise Exception("Failed to retrieve docker image version from SSM")
+
+def extract_version(docker_image_string):
+    # Regular expression to extract the version from the docker image string
+    version_pattern = r"(\d{2}\.\d{2}\.\d{2}\.\d{4})"
+    match = re.search(version_pattern, docker_image_string)
+    if match:
+        return match.group(0)
+    return None
 
 def lambda_handler(event, context):
     environment = os.getenv('ENVIRONMENT', 'dev')
@@ -36,13 +45,16 @@ def lambda_handler(event, context):
    
     try:
         # Get the current deployed version from the event
-        deployed_version = event.get("deployed_version", "").strip()
+        deployed_version = event.get("deployed_version")
+        if not deployed_version:
+            return {"statusCode": 400, "body": json.dumps("Error: deployed_version is required in the event.")}
 
         # Get the latest version from docker_images in SSM
-        latest_version = get_docker_image_version_from_ssm()
+        latest_version_string = get_docker_image_version_from_ssm()
+        latest_version = extract_version(latest_version_string)
 
         if not latest_version:
-            return {"statusCode": 500, "body": json.dumps("Error: Failed to retrieve latest docker image version from SSM.")}
+            return {"statusCode": 500, "body": json.dumps("Error: Failed to extract version from docker image string.")}
 
         if deployed_version == latest_version:
             print(f"No change in docker image version. Current deployed version: {deployed_version}")
@@ -65,7 +77,8 @@ def lambda_handler(event, context):
         print(f"Command sent. ID: {command_id}")
 
         # Wait for command to complete and check the status
-        for _ in range(10):
+        MAX_RETRIES = 12  # Adjust this for more time if needed
+        for attempt in range(MAX_RETRIES):
             time.sleep(5)
             output_response = ssm_client.get_command_invocation(
                 CommandId=command_id,
@@ -74,7 +87,7 @@ def lambda_handler(event, context):
             status = output_response['Status']
             output = output_response.get('StandardOutputContent', '')
 
-            print(f"Current Status: {status}")
+            print(f"Attempt {attempt+1}: Current Status: {status}")
             print(f"Command Output: {output}")
 
             if status in ["Success", "Failed", "TimedOut", "Cancelled"]:
@@ -97,3 +110,4 @@ def lambda_handler(event, context):
 
     except Exception as e:
         return {"statusCode": 500, "body": json.dumps(f"Error: {str(e)}")}
+    
