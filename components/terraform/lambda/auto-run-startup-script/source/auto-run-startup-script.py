@@ -44,7 +44,8 @@ def lambda_handler(event, context):
         command_id = response['Command']['CommandId']
         print(f"Command sent. ID: {command_id}")
 
-        for _ in range(15):  
+        # Wait for command to complete and check the status
+        for _ in range(10):
             time.sleep(5)
             output_response = ssm_client.get_command_invocation(
                 CommandId=command_id,
@@ -53,10 +54,12 @@ def lambda_handler(event, context):
             status = output_response['Status']
             print(f"Current Status: {status}")
 
+            # If command is complete (Success, Failed, TimedOut, Cancelled), break
             if status in ["Success", "Failed", "TimedOut", "Cancelled"]:
-                break  
+                break
 
         if status == "Success":
+            # Update deployed version in SSM if script executed successfully
             ssm_client.put_parameter(
                 Name=parameter_name,
                 Value=deployed_version,
@@ -65,8 +68,8 @@ def lambda_handler(event, context):
             )
             return {"statusCode": 200, "body": json.dumps(f"Deployed version {deployed_version} updated successfully.")}
         else:
+            # Handle failure of the startup.sh script
             return {"statusCode": 500, "body": json.dumps(f"Error: startup.sh failed with status {status}")}
 
     except Exception as e:
         return {"statusCode": 500, "body": json.dumps(f"Error: {str(e)}")}
-    
