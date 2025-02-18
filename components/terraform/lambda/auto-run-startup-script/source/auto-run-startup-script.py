@@ -22,14 +22,25 @@ def get_instance_id_by_name(instance_name):
 
 def get_docker_image_version_from_ssm():
     ssm_client = boto3.client("ssm", region_name="eu-west-2")
-    docker_images_param = "/application/web/frontend/docker_images"  # Updated path
-   
+    docker_images_param = "/application/web/frontend/docker_images"
+
     try:
         response = ssm_client.get_parameter(Name=docker_images_param)
         return response['Parameter']['Value']
     except Exception as e:
         print(f"Error retrieving docker images version from SSM: {str(e)}")
         raise Exception("Failed to retrieve docker image version from SSM")
+
+def get_deployed_version_from_ssm():
+    ssm_client = boto3.client("ssm", region_name="eu-west-2")
+    deployed_version_param = "/application/web/frontend/deployed_version"
+
+    try:
+        response = ssm_client.get_parameter(Name=deployed_version_param)
+        return response['Parameter']['Value']
+    except Exception as e:
+        print(f"Error retrieving deployed version from SSM: {str(e)}")
+        return None
 
 def extract_version(docker_image_string):
     # Regular expression to extract the version from the docker image string
@@ -44,10 +55,10 @@ def lambda_handler(event, context):
     instance_name = "web-frontend"
    
     try:
-        # Get the current deployed version from the event
-        deployed_version = event.get("deployed_version")
+        # Get the deployed version from SSM instead of the event
+        deployed_version = get_deployed_version_from_ssm()
         if not deployed_version:
-            return {"statusCode": 400, "body": json.dumps("Error: deployed_version is required in the event.")}
+            return {"statusCode": 500, "body": json.dumps("Error: Failed to retrieve deployed version from SSM.")}
 
         # Get the latest version from docker_images in SSM
         latest_version_string = get_docker_image_version_from_ssm()
@@ -60,10 +71,11 @@ def lambda_handler(event, context):
             print(f"No change in docker image version. Current deployed version: {deployed_version}")
             return {"statusCode": 200, "body": json.dumps("No new deployment needed. Current version is up-to-date.")}
 
-        # Instance found
+        # Get instance ID of the web frontend server
         instance_id = get_instance_id_by_name(instance_name)
         print(f"Found instance ID: {instance_id} for {environment} environment")
 
+        # Run startup.sh on the instance
         ssm_client = boto3.client("ssm", region_name="eu-west-2")
         command = "/usr/local/bin/startup.sh"
 
@@ -79,7 +91,7 @@ def lambda_handler(event, context):
         # Wait for command to complete and check the status
         MAX_RETRIES = 12  # Adjust this for more time if needed
         for attempt in range(MAX_RETRIES):
-            time.sleep(5)
+            time.sleep(10)
             output_response = ssm_client.get_command_invocation(
                 CommandId=command_id,
                 InstanceId=instance_id
@@ -97,9 +109,9 @@ def lambda_handler(event, context):
                 break
 
         if status == "Success":
-            # Once startup.sh has completed successfully, update the deployed version
+            # Update deployed version in SSM after successful startup
             ssm_client.put_parameter(
-                Name="/application/web/frontend/deployed_version",  # Updated path
+                Name="/application/web/frontend/deployed_version",
                 Value=latest_version,
                 Type="String",
                 Overwrite=True,
