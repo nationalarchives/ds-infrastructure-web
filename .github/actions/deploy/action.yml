@@ -68,7 +68,7 @@ runs:
     - name: Wait for the deployed version to update
       run: |
         echo "Checking for the deployed version..."
-        MAX_RETIRES=10
+        MAX_RETIRES=20
         RETRY_COUNT=0
         DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text)
         while [[ "$DEPLOYED_VERSION" != "${{ env.NEW_VERSION }}" ]] && [[ $RETRY_COUNT -lt $MAX_RETIRES ]]; do
