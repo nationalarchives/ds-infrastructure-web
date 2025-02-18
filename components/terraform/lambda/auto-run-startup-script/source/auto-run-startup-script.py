@@ -6,32 +6,24 @@ import os
 def get_instance_id_by_name(instance_name):
     ec2_client = boto3.client('ec2', region_name="eu-west-2")
 
-    # Fetch instances based on the tag Name
     response = ec2_client.describe_instances(
         Filters=[
-            {
-                'Name': 'tag:Name',  
-                'Values': [instance_name]
-            }
+            {'Name': 'tag:Name', 'Values': [instance_name]},
+            {'Name': 'instance-state-name', 'Values': ['running']}
         ]
     )
 
-    # Extract the instance ID from the response
     reservations = response['Reservations']
     if not reservations:
-        raise ValueError(f"No instances found with the name {instance_name}")
+        raise ValueError(f"No running instances found with the name {instance_name}")
 
-    # Assuming only one instance is returned per environment
-    instance_id = reservations[0]['Instances'][0]['InstanceId']
-   
-    return instance_id
+    return reservations[0]['Instances'][0]['InstanceId']
 
 def lambda_handler(event, context):
-    # Set your environment and instance name (web-frontend) dynamically, as needed
-    environment = os.getenv('ENVIRONMENT', 'dev')  
-    instance_name = "web-frontend"  
+    environment = os.getenv('ENVIRONMENT', 'dev')
+    instance_name = "web-frontend"
+
     try:
-        # Step 1: Get the EC2 instance ID based on the name tag
         instance_id = get_instance_id_by_name(instance_name)
         print(f"Found instance ID: {instance_id} for {environment} environment")
 
@@ -39,19 +31,19 @@ def lambda_handler(event, context):
         parameter_name = "/application/web/frontend/deployed_version"
         deployed_version = event.get("deployed_version", "").strip()
 
-        # Command to execute startup.sh
-        command = "/usr/local/bin/startup.sh"
+        if not deployed_version:
+            return {"statusCode": 400, "body": json.dumps("Error: deployed_version not provided.")}
 
-        # Step 2: Send command to run startup.sh
+        command = "/usr/local/bin/startup.sh"
         response = ssm_client.send_command(
             InstanceIds=[instance_id],
             DocumentName="AWS-RunShellScript",
             Parameters={"commands": [command]},
         )
+
         command_id = response['Command']['CommandId']
         print(f"Command sent. ID: {command_id}")
 
-        # Step 3: Wait for completion
         for _ in range(15):  
             time.sleep(5)
             output_response = ssm_client.get_command_invocation(
@@ -62,35 +54,19 @@ def lambda_handler(event, context):
             print(f"Current Status: {status}")
 
             if status in ["Success", "Failed", "TimedOut", "Cancelled"]:
-                break  # Exit loop if command execution is done
+                break  
 
-        # Step 4: Check final status
         if status == "Success":
-            if deployed_version:
-                print(f"Deployed version: {deployed_version}")
-                ssm_client.put_parameter(
-                    Name=parameter_name,
-                    Value=deployed_version,
-                    Type="String",
-                    Overwrite=True,
-                )
-                return {
-                    "statusCode": 200,
-                    "body": json.dumps(f"Deployed version {deployed_version} updated successfully.")
-                }
-            else:
-                return {
-                    "statusCode": 400,
-                    "body": json.dumps("No deployed_version provided.")
-                }
+            ssm_client.put_parameter(
+                Name=parameter_name,
+                Value=deployed_version,
+                Type="String",
+                Overwrite=True,
+            )
+            return {"statusCode": 200, "body": json.dumps(f"Deployed version {deployed_version} updated successfully.")}
         else:
-            return {
-                "statusCode": 500,
-                "body": json.dumps(f"Error: startup.sh failed with status {status}")
-            }
+            return {"statusCode": 500, "body": json.dumps(f"Error: startup.sh failed with status {status}")}
 
     except Exception as e:
-        return {
-            "statusCode": 500,
-            "body": json.dumps(f"Error: {str(e)}")
-        }
+        return {"statusCode": 500, "body": json.dumps(f"Error: {str(e)}")}
+    
