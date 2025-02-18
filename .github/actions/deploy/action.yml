@@ -54,20 +54,21 @@ runs:
         aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text
       shell: bash
 
-    - name: Trigger Lambda function
-      run: |
-        echo "Triggering lambda function ..."
-        VERSION="${{ steps.update.outputs.NEW_VERSION }}"
-        PAYLOAD=$(jq -n --arg version "$VERSION" '{deployed_version:$version}' | base64)
-        RESPONSE=$(aws lambda invoke --function-name AutoRunStartupScript --payload "$PAYLOAD" response.json --log-type Tail --query 'StatusCode' --output text)
-        echo "Lambda function response: $RESPONSE"
-        cat response.json
+#    - name: Trigger Lambda function
+#      run: |
+#        echo "Triggering lambda function ..."
+#        VERSION="${{ env.NEW_VERSION }}"
+#        PAYLOAD=$(jq -n --arg version "$VERSION" '{deployed_version:$version}' | base64)
+#        RESPONSE=$(aws lambda invoke --function-name AutoRunStartupScript --payload "$PAYLOAD" response.json --log-type Tail --query 'StatusCode' --output text)
+#        echo "Lambda function response: $RESPONSE"
+#        cat response.json
+#
+#        if [[ "$RESPONSE" -ne 200 ]]; then
+#          echo "Failed to trigger the lambda function"
+#          exit 1
+#        fi
+#      shell: bash
 
-        if [[ "$RESPONSE" -ne 200 ]]; then
-          echo "Failed to trigger the lambda function"
-          exit 1
-        fi
-      shell: bash
 
     - name: Wait for the deployed version to update
       run: |
