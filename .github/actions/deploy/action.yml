@@ -73,3 +73,4 @@ runs:
           echo "Failed to deploy the new version"
           exit 1
         fi
+      shell: bash
