@@ -8,6 +8,11 @@ on:
         type: boolean
         required: true
         default: true
+      notify-slack:
+        description: Send Slack message
+        type: boolean
+        required: true
+        default: true
 
 permissions:
   id-token: write
@@ -46,6 +51,24 @@ jobs:
           git push origin --tags
           gh release create "v${{ steps.version-tag.outputs.VERSION }}" --title "${{ steps.version-tag.outputs.VERSION }}" --draft --generate-notes --latest
 
+  notify-start:
+    runs-on: ubuntu-latest
+    needs:
+      - create-release
+    if: always() && inputs.notify-slack
+    steps:
+      - uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_TITLE: Website deployment
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_ICON: https://raw.githubusercontent.com/nationalarchives/tna-frontend/main/src/nationalarchives/assets/images/apple-touch-icon.png
+          SLACK_ICON_EMOJI: ":rocket:"
+          SLACK_COLOR: #888888
+          MSG_MINIMAL: true
+          ENABLE_ESCAPES: true
+          SLACKIFY_MARKDOWN: true
+          SLACK_MESSAGE: "🧑‍💻 Release **v${{ needs.create-release.outputs.verion }}** created and deploying to staging..."
+
   deploy:
     runs-on: ubuntu-latest
     needs:
@@ -58,6 +81,7 @@ jobs:
       matrix:
         service:
           - frontend
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -71,6 +95,44 @@ jobs:
           parameter-path: /application/web/${{ matrix.service }}/docker_images
           deployed-parameter-path: /application/web/${{ matrix.service }}/deployed_version
 
+  notify-complete:
+    runs-on: ubuntu-latest
+    needs:
+      - create-release
+      - deploy
+    if: success() && inputs.notify-slack
+    steps:
+      - uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_TITLE: Website deployment
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_ICON: https://raw.githubusercontent.com/nationalarchives/tna-frontend/main/src/nationalarchives/assets/images/apple-touch-icon.png
+          SLACK_ICON_EMOJI: ":rocket:"
+          SLACK_COLOR: success
+          MSG_MINIMAL: true
+          ENABLE_ESCAPES: true
+          SLACKIFY_MARKDOWN: true
+          SLACK_MESSAGE: "🧪 Release **v${{ needs.create-release.outputs.verion }}** deployed to staging: [staging-www.nationalarchives.gov.uk](http://staging-www.nationalarchives.gov.uk/)"
+  
+  notify-failed:
+    runs-on: ubuntu-latest
+    needs:
+      - create-release
+      - deploy
+    if: failure() && inputs.notify-slack
+    steps:
+      - uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_TITLE: Website deployment
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_ICON: https://raw.githubusercontent.com/nationalarchives/tna-frontend/main/src/nationalarchives/assets/images/apple-touch-icon.png
+          SLACK_ICON_EMOJI: ":rocket:"
+          SLACK_COLOR: failure
+          MSG_MINIMAL: true
+          ENABLE_ESCAPES: true
+          SLACKIFY_MARKDOWN: true
+          SLACK_MESSAGE: "❌ Release **v${{ needs.create-release.outputs.version }}** failed to deploy to staging"
+  
   # test:
   #   runs-on: ubuntu-latest
   #   needs:
@@ -80,4 +142,4 @@ jobs:
   #   steps:
   #     - uses: actions/checkout@v4
   #     - name: Run tests
-  #       run: gh workflow run manual.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://staging-www.nationalarchives.gov.uk --raw-field notify-slack=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
+  #       run: gh workflow run manual.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://staging-www.nationalarchives.gov.uk --raw-field notify-slack-on-pass=true --raw-field notify-slack-on-fail=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"

@@ -2,7 +2,7 @@ name: Destroy feature environment
 
 on:
   workflow_dispatch:
-  delete:
+  # delete:
 
 concurrency:
   group: deploy-feature-${{ github.ref }}
@@ -11,7 +11,7 @@ concurrency:
 jobs:
   destroy:
     runs-on: ubuntu-latest
-    if: (github.event.ref_type == 'branch' && startsWith(github.event.ref, 'feature/')) || startsWith(github.ref_name, 'feature/')
+    # if: (github.event.ref_type == 'branch' && startsWith(github.event.ref, 'feature/')) || startsWith(github.ref_name, 'feature/')
     steps:
       - uses: actions/checkout@v4
       - name: Get environment name
