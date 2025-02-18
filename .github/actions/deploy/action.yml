@@ -55,22 +55,14 @@ runs:
         echo "Triggering lambda function ..."
         VERSION="${{ env.NEW_VERSION }}"
         PAYLOAD=$(jq -n --arg version "$VERSION" '{deployed_version:$version}' | base64)
-        RETRIES=5
-        for i in $(seq 1 $RETRIES); do
-          RESPONSE=$(aws lambda invoke --function-name AutoRunStartupScript --payload "$PAYLOAD" response.json)
-          if [[ -f response.json && $( jq -r '.StatusCode' response.json) -eq 200 ]]; then
-            echo "Lambda function triggered successfully"
-            cat response.json
-            break
-          else
-            echo "Failed to trigger lambda function. Retrying..."
-            if [[ $i -eq $RETRIES ]]; then
-              echo "Failed to trigger lambda function after $RETRIES retries"
-              exit 1
-            fi
-            sleep 5
-          fi
-        done
+        RESPONSE=$(aws lambda invoke --function-name AutoRunStartupScript --payload "$PAYLOAD" response.json --log-type Tail --query 'StatusCode' --output text)
+        echo "Lambda function response: $RESPONSE"
+        cat response.json
+
+        if [[ "$RESPONSE" -ne 200 ]]; then
+          echo "Failed to trigger the lambda function"
+          exit 1
+        fi
       shell: bash
 
     - name: Wait for the deployed version to update
