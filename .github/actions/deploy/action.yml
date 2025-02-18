@@ -57,7 +57,7 @@ runs:
     - name: Wait for the deployed version to update
       run: |
         echo "Checking for the deployed version..."
-        RETRIES=5
+        RETRIES=15
         COUNT=0
         while [[ $COUNT -lt $RETRIES ]]; do
           DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text)
