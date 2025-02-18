@@ -59,4 +59,6 @@ runs:
         echo "Checking for the deployed version..."
         while sleep 2 && DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text) && [[ "$DEPLOYED_VERSION" != "${{ steps.update.outputs.NEW_VERSION }}" ]]; do
           echo "Currently deployed version: $DEPLOYED_VERSION"
+        done
+        echo "Deployed version: $DEPLOYED_VERSION"
       shell: bash
