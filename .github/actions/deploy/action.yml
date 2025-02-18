@@ -31,7 +31,7 @@ runs:
       id: update
       run: |
         OLD_VALUE=$(aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text)
-        OLD_VERSION=$(jq '."${{ inputs.service-name }}-application"' <<< "$OLD_VALUE")
+        OLD_VERSION=$(jq ".\"${{ inputs.service-name }}-application\"" <<< "$OLD_VALUE")
 
         echo "Fetching version from config/${{ inputs.config-file }}..."
         NEW_IMAGE=$(jq -r '.services.${{ inputs.service-name }}.image' config/${{ inputs.config-file }})
@@ -45,7 +45,7 @@ runs:
         echo "Updating /application/web/${{ inputs.service-name }}/docker_images..."
         aws ssm put-parameter --name "${{ inputs.parameter-path }}" --value "$NEW_VALUE" --type String --overwrite
 
-        echo "NEW_VERSION=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Verify the update
@@ -57,8 +57,22 @@ runs:
     - name: Wait for the deployed version to update
       run: |
         echo "Checking for the deployed version..."
-        while sleep 2 && DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text) && [[ "$DEPLOYED_VERSION" != "${{ env.NEW_VERSION }}" ]]; do
-          echo "Current Deployed version: $DEPLOYED_VERSION"
-        done 
-        echo "Deployment completed successfully: $DEPLOYED_VERSION"
+        TIMEOUT=120
+        START_TIME=$(date +%s)
+        while sleep 2; do
+          DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text | tr -d '[:space:]')
+          echo "Current deployed version: $DEPLOYED_VERSION"
+          echo "Expected version: ${{ env.NEW_VERSION }}"
+          if [ "$DEPLOYED_VERSION" == "$NEW_VERSION" ]; then
+            echo "Deployed version updated successfully! : $DEPLOYED_VERSION"
+            break
+          fi
+          CURRENT_TIME=$(date +%s)
+          if [ $((CURRENT_TIME - START_TIME)) -gt $TIMEOUT ]; then
+            echo "Timeout reached. Deployed version not updated."
+            exit 1
+          fi
+        done
       shell: bash
+      
+       
