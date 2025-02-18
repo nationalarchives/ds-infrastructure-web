@@ -19,6 +19,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     outputs:
       commit-sha: ${{ steps.copy-config.outputs.COMMIT_SHA }}
+      version: ${{ steps.copy-config.outputs.VERSION }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,6 +38,25 @@ jobs:
           git push
           COMMIT_SHA=$(git log --format="%H" -n 1)
           echo "COMMIT_SHA=$COMMIT_SHA" >> "$GITHUB_OUTPUT"
+          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
+
+  notify-start:
+    runs-on: ubuntu-latest
+    needs:
+      - prepare
+    if: always()
+    steps:
+      - uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_TITLE: Website deployment
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_ICON: https://raw.githubusercontent.com/nationalarchives/tna-frontend/main/src/nationalarchives/assets/images/apple-touch-icon.png
+          SLACK_ICON_EMOJI: ":rocket:"
+          SLACK_COLOR: #888888
+          MSG_MINIMAL: true
+          ENABLE_ESCAPES: true
+          SLACKIFY_MARKDOWN: true
+          SLACK_MESSAGE: "🚀 Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** deploying to production..."
 
   deploy:
     runs-on: ubuntu-latest
@@ -50,6 +70,7 @@ jobs:
       matrix:
         service:
           - frontend
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -63,6 +84,44 @@ jobs:
           parameter-path: /application/web/${{ matrix.service }}/docker_images
           deployed-parameter-path: /application/web/${{ matrix.service }}/deployed_version
 
+  notify-complete:
+    runs-on: ubuntu-latest
+    needs:
+      - prepare
+      - deploy
+    if: success()
+    steps:
+      - uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_TITLE: Website deployment
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_ICON: https://raw.githubusercontent.com/nationalarchives/tna-frontend/main/src/nationalarchives/assets/images/apple-touch-icon.png
+          SLACK_ICON_EMOJI: ":rocket:"
+          SLACK_COLOR: success
+          MSG_MINIMAL: true
+          ENABLE_ESCAPES: true
+          SLACKIFY_MARKDOWN: true
+          SLACK_MESSAGE: "🎉 Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** deployed to production: [www.nationalarchives.gov.uk](http://www.nationalarchives.gov.uk/)"
+  
+  notify-failed:
+    runs-on: ubuntu-latest
+    needs:
+      - prepare
+      - deploy
+    if: failure()
+    steps:
+      - uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_TITLE: Website deployment
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_ICON: https://raw.githubusercontent.com/nationalarchives/tna-frontend/main/src/nationalarchives/assets/images/apple-touch-icon.png
+          SLACK_ICON_EMOJI: ":rocket:"
+          SLACK_COLOR: failure
+          MSG_MINIMAL: true
+          ENABLE_ESCAPES: true
+          SLACKIFY_MARKDOWN: true
+          SLACK_MESSAGE: "❌ Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** failed to deploy to production"
+
   test:
     runs-on: ubuntu-latest
     needs:
@@ -72,4 +131,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run tests
-        run: gh workflow run manual.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://www.nationalarchives.gov.uk --raw-field notify-slack=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
+        run: gh workflow run manual.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://www.nationalarchives.gov.uk --raw-field notify-slack-on-pass=true --raw-field notify-slack-on-fail=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
