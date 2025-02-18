@@ -62,7 +62,7 @@ runs:
         RETRIES=5
         for i in $(seq 1 $RETRIES); do
           RESPONSE=$(aws lambda invoke --function-name AutoRunStartupScript --payload "$PAYLOAD" response.json)
-          if [ [$? -eq 0] ]; then
+          if [[ -f response.json && $( jq -r '.StatusCode' response.json) -eq 200 ]]; then
             echo "Lambda function triggered successfully"
             cat response.json
             break
