@@ -25,3 +25,12 @@ wagtail_asg_min_size                  = 1
 wagtail_asg_desired_capacity          = 1
 wagtail_asg_health_check_grace_period = 150
 wagtail_asg_health_check_type         = "EC2"
+
+enrichment_patch_group      = "enrichment-patchgroup"
+enrichment_deployment_group = "enrichment-deploygroup"
+
+enrichment_asg_max_size                  = 2
+enrichment_asg_min_size                  = 1
+enrichment_asg_desired_capacity          = 1
+enrichment_asg_health_check_grace_period = 150
+enrichment_asg_health_check_type         = "EC2"

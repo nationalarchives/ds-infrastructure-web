@@ -97,3 +97,17 @@ resource "aws_iam_role" "lambda_auto_run_startup_script_role" {
   description        = "allow lambda to call script on instances"
   tags               = var.tags
 }
+
+
+# Enrichment Role
+resource "aws_iam_role" "enrichment_role" {
+  name               = "web-enrichment-assume-role"
+  assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
+}
+
+# Instance Profile for Enrichment Role
+resource "aws_iam_instance_profile" "enrichment_profile" {
+  name = "web-enrichment-profile"
+  path = "/"
+  role = aws_iam_role.enrichment_role.name
+}

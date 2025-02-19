@@ -10,3 +10,9 @@ variable "db_instance_cidr" {}
 variable "tags" {}
 variable "wagtail_lb_cidr" {}
 variable "wagtail_instance_cidr" {}
+
+variable "enrichment_lb_cidr" {}
+variable "enrichment_instance_cidr" {}
+
+variable "enrichment_lb_id" {}
+variable "enrichment_sg_id" {}

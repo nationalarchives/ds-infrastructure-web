@@ -2,7 +2,6 @@ variable "wagtail_instance_type" {}
 variable "wagtail_key_name" {}
 variable "wagtail_root_block_device_size" {}
 
-
 variable "wagtail_asg_max_size" {}
 variable "wagtail_asg_min_size" {}
 variable "wagtail_asg_desired_capacity" {}

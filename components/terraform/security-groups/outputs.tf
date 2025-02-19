@@ -28,3 +28,10 @@ output "wagtail_lb_id" {
 output "wagtail_lb" {
     value = aws_security_group.wagtail_lb.id
 }
+
+output "enrichment_lb_id" {
+   value = aws_security_group.enrichment_lb.id
+}
+output "enrichment_sg_id" {
+   value = aws_security_group.enrichment.id
+}
