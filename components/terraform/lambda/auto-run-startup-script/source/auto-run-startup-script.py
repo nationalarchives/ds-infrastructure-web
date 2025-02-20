@@ -69,7 +69,7 @@ def lambda_handler(event, context):
 
         if deployed_version == latest_version:
             print(f"No change in docker image version. Current deployed version: {deployed_version}")
-            return {"statusCode": 200, "body": json.dumps("No new deployment needed. Current version is up-to-date.")}
+            return {"statusCode": 200, "body": json.dumps(f"Deployed version: {deployed_version}")}
 
         # Get instance ID of the web frontend server
         instance_id = get_instance_id_by_name(instance_name)
