@@ -1,6 +1,7 @@
 #Data resource for org-session-manager-logs policy
- data "aws_iam_policy" "org_session_manager_logs" {
- arn = "arn:aws:iam::846769538626:policy/org-session-manager-logs"
+data "aws_caller_identity" "current" {}
+data "aws_iam_policy" "org_session_manager_logs" {
+ arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
 
 # Frontend Role
