@@ -84,14 +84,14 @@ jobs:
           parameter-path: /application/web/${{ matrix.service }}/docker_images
           deployed-parameter-path: /application/web/${{ matrix.service }}/deployed_version
 
-  notify-complete:
+  notify-end-status:
     runs-on: ubuntu-latest
     needs:
       - prepare
       - deploy
-    if: success()
     steps:
       - uses: rtCamp/action-slack-notify@v2
+        if: success()
         env:
           SLACK_TITLE: Website deployment
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
@@ -102,15 +102,8 @@ jobs:
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
           SLACK_MESSAGE: "🎉 Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** deployed to production: [www.nationalarchives.gov.uk](http://www.nationalarchives.gov.uk/)"
-  
-  notify-failed:
-    runs-on: ubuntu-latest
-    needs:
-      - prepare
-      - deploy
-    if: failure()
-    steps:
       - uses: rtCamp/action-slack-notify@v2
+        if: failure()
         env:
           SLACK_TITLE: Website deployment
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

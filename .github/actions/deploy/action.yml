@@ -28,6 +28,7 @@ runs:
         role-session-name: GitHubActionsSession
 
     - name: Update AWS Parameter Store
+      shell: bash
       id: update
       run: |
         echo "Fetching version from config/${{ inputs.config-file }}..."
@@ -42,15 +43,15 @@ runs:
         aws ssm put-parameter --name "${{ inputs.parameter-path }}" --value "$NEW_VALUE" --type String --overwrite
 
         echo "NEW_VERSION=$NEW_VERSION" >> "$GITHUB_ENV"
-      shell: bash
 
     - name: Verify the update
+      shell: bash
       run: |
         echo "Verifying the updated value..."
         aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text
-      shell: bash
 
     - name: Trigger Lambda function
+      shell: bash
       run: |
         echo "Triggering lambda function ..."
         VERSION="${{ env.NEW_VERSION }}"
@@ -63,9 +64,9 @@ runs:
           echo "Failed to trigger the lambda function"
           exit 1
         fi
-      shell: bash
 
     - name: Wait for the deployed version to update
+      shell: bash
       run: |
         echo "Checking for the deployed version..."
         MAX_RETIRES=20
@@ -81,6 +82,5 @@ runs:
           echo "Failed to update the deployed version"
           exit 1
         fi
-      shell: bash
 
 
