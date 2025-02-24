@@ -55,7 +55,7 @@ resource "aws_iam_role" "rp_role" {
   assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
-# Attach Policies to Reverse Proxy Role
+# # Attach Policies to Reverse Proxy Role
 resource "aws_iam_role_policy_attachment" "rp_policy_attachment_1" {
   role       = aws_iam_role.rp_role.name
   policy_arn = var.rp_config_s3_policy_arn
