@@ -16,3 +16,14 @@ resource "aws_route53_record" "web-frontend" {
          module.frontend.lb_internal_dns_name
     ]
 }
+
+resource "aws_route53_record" "web-enrichment" {
+    zone_id = var.route53_zone
+    name    = "web-enrichment.${var.environment}.local"
+    type    = "CNAME"
+    ttl     = 15
+
+    records = [
+        module.enrichment.lb_internal_dns_name
+    ]    
+}
