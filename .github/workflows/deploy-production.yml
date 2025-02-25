@@ -124,4 +124,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run tests
-        run: gh workflow run manual.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://www.nationalarchives.gov.uk --raw-field notify-slack-on-pass=true --raw-field notify-slack-on-fail=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
+        run: gh workflow run manual.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://www.nationalarchives.gov.uk --raw-field exclude-tests=@wip --raw-field notify-slack-on-pass=true --raw-field notify-slack-on-fail=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
