@@ -73,7 +73,7 @@ runs:
         RETRY_COUNT=0
         DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text)
         while [[ "$DEPLOYED_VERSION" != "${{ env.NEW_VERSION }}" ]] && [[ $RETRY_COUNT -lt $MAX_RETIRES ]]; do
-          echo "Current Deployed version: $DEPLOYED_VERSION"
+          echo "Current deployed version: $DEPLOYED_VERSION"
           sleep 2
           DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text)
           RETRY_COUNT=$((RETRY_COUNT+1))
@@ -82,5 +82,4 @@ runs:
           echo "Failed to update the deployed version"
           exit 1
         fi
-
-
+        echo "Deployed version: $DEPLOYED_VERSION"
