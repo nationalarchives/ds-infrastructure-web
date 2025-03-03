@@ -32,6 +32,12 @@ runs:
       id: update
       run: |
         echo "Fetching version from config/${{ inputs.config-file }}..."
+
+        if [[ "$ {{ inputs.service-name }}" == "enrichment"]]; then
+          CONFIG_SERVICE_NAME="ds-frontend-enrichment"
+        else
+          CONFIG_SERVICE_NAME="${{ inputs.service-name }}"
+
         NEW_VERSION=$(jq -r '.services."${{ inputs.service-name }}".version' config/${{ inputs.config-file }})
         NEW_IMAGE=$(jq -r '.services."${{ inputs.service-name }}".image' config/${{ inputs.config-file }})
 
