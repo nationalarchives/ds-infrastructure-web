@@ -32,8 +32,10 @@ runs:
       id: update
       run: |
         echo "Fetching version from config/${{ inputs.config-file }}..."
+
         NEW_VERSION=$(jq -r ".services.\"${{ inputs.service-name }}\".version" config/${{ inputs.config-file }})
         NEW_IMAGE=$(jq -r ".services.\"${{ inputs.service-name }}\".image" config/${{ inputs.config-file }})
+
 
         echo "Updating the AWS Parameter Store..."
         OLD_VALUE=$(aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text)
@@ -78,9 +80,11 @@ runs:
         MAX_RETRIES=20
         RETRY_COUNT=0
         DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text)
+
         while [[ "$DEPLOYED_VERSION" != "${{ env.NEW_VERSION }}" ]] && [[ $RETRY_COUNT -lt $MAX_RETRIES ]]; do
           echo "Current deployed version: $DEPLOYED_VERSION"
           echo "Expected version: ${{ env.NEW_VERSION }}"
+
           sleep 2
           DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text)
           RETRY_COUNT=$((RETRY_COUNT+1))
@@ -89,4 +93,6 @@ runs:
           echo "Failed to update the deployed version after $MAX_RETRIES attempts"
           exit 1
         fi
+
         echo "Deployed version updated successfully: $DEPLOYED_VERSION"
+
