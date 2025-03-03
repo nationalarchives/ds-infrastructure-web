@@ -24,6 +24,7 @@ jobs:
       matrix:
         service:
           - frontend
+          - frontend-enrichment
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
