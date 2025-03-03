@@ -37,6 +37,7 @@ runs:
           CONFIG_SERVICE_NAME="ds-frontend-enrichment"
         else
           CONFIG_SERVICE_NAME="${{ inputs.service-name }}"
+        fi
 
         NEW_VERSION=$(jq -r '.services."${{ inputs.service-name }}".version' config/${{ inputs.config-file }})
         NEW_IMAGE=$(jq -r '.services."${{ inputs.service-name }}".image' config/${{ inputs.config-file }})
