@@ -65,7 +65,7 @@ resource "aws_lambda_function" "auto_run_startup_script" {
   runtime = "python3.13"
 
   memory_size = 128
-  timeout     = 240
+  timeout     = 900
 
   ephemeral_storage {
     size = 512
