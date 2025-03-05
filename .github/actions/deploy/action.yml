@@ -34,7 +34,7 @@ runs:
         echo "Fetching version from config/${{ inputs.config-file }}..."
 
         if [[ "${{ inputs.service-name }}" == "enrichment" ]]; then
-          CONFIG_SERVICE_NAME="ds-frontend-enrichment"
+          CONFIG_SERVICE_NAME="frontend-enrichment"
         else
           CONFIG_SERVICE_NAME="${{ inputs.service-name }}"
         fi
