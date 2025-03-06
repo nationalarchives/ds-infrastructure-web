@@ -2,23 +2,23 @@
     "services": {
         "frontend": {
             "image": "ghcr.io/nationalarchives/ds-frontend",
-            "version": "25.02.21.1038"
+            "version": "25.03.05.1065"
         },
         "cms": {
             "image": "ghcr.io/nationalarchives/ds-wagtail",
-            "version": "25.01.30.539"
+            "version": "25.02.25.542"
         },
         "search": {
             "image": "ghcr.io/nationalarchives/ds-search",
-            "version": "25.02.21.301"
+            "version": "25.03.06.367"
         },
         "frontend-enrichment": {
             "image": "ghcr.io/nationalarchives/ds-frontend-enrichment",
-            "version": "25.02.18.16"
+            "version": "25.03.05.21"
         },
         "sitemap-search": {
             "image": "ghcr.io/nationalarchives/ds-sitemap-search",
-            "version": "25.02.14.29"
+            "version": "25.03.05.36"
         }
     }
 }
