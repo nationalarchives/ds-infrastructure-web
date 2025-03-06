@@ -1,0 +1,33 @@
+name: Abandon a staged release
+
+on:
+  release:
+    types:
+      - deleted
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Get version number
+        id: version-number
+        run: |
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
+      - uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_TITLE: Website deployment
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_ICON: https://raw.githubusercontent.com/nationalarchives/tna-frontend/main/src/nationalarchives/assets/images/apple-touch-icon.png
+          SLACK_ICON_EMOJI: ":rocket:"
+          SLACK_COLOR: failure
+          MSG_MINIMAL: true
+          ENABLE_ESCAPES: true
+          SLACKIFY_MARKDOWN: true
+          SLACK_MESSAGE: "🛑 Staged release **v${{ steps.version-number.outputs.VERSION }}** abandoned"
+  
