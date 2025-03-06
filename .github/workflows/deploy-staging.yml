@@ -35,11 +35,13 @@ jobs:
         run: |
           VERSION=$(date +%y.%m.%d).${{ github.run_number }}
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
-      - name: Copy config from develop to staging
-        if: inputs.copy-develop
+      - name: Set up git
         run: |
           git config --global user.name "${{ github.triggering_actor }}"
           git config --global user.email "<>"
+      - name: Copy config from develop to staging
+        if: inputs.copy-develop
+        run: |
           cp config/develop.json config/staging.json
           git add config/staging.json
           git commit -m "Release v${{ steps.version-tag.outputs.VERSION }} to staging" || true
