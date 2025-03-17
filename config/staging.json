@@ -14,7 +14,7 @@
         },
         "frontend-enrichment": {
             "image": "ghcr.io/nationalarchives/ds-frontend-enrichment",
-            "version": "25.03.17.25"
+            "version": "25.03.17.26"
         },
         "sitemap-search": {
             "image": "ghcr.io/nationalarchives/ds-sitemap-search",
