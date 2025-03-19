@@ -13,6 +13,7 @@ permissions:
 
 concurrency:
   group: deploy-develop
+  cancel-in-progress: false
 
 jobs:
   deploy:
