@@ -204,3 +204,74 @@ terraform apply \
   ***5. Verify Deployment***
 
   * Check AWS console for resources.
+
+**4. Terraform Configuration**
+
+***File Structure***
+
+* backend.tf: Configures the S3 bucket for terraform state.
+* cognito.tf: Manages Cognito user pools and clients.
+* data-ami.tf: Defines AMIs for EC2 instances.
+* data.tf: Retrieves SSM Parameters and secrets.
+* enrichment.tf: Configures the enrichment service.
+* frontend.tf: Configures the frontend service.
+* lambda.tf: Manages lambda functions and layers.
+* media-efs.tf: Configures EFS and backups.
+* iam.tf: Defines IAm roles and policies.
+* provider.tf: Configures terraform providers (AWS and klayers).
+* nginx-conf.tf: Configures nginx runtime configurations.
+* reverse-proxy.tf: Configures the reverse proxy service.
+* rp-nginx.tf: Configures nginx for the reverse proxy.
+* security-groups.tf: Defines security groups for network access.
+* wagtail.tf: Configures the wagtail CMS service.
+* global-variables.tf: Defines global variables and tags used across all Terraform modules.
+* waf.tf: Configures AWS WAF (Web Application Firewall) to protect web services from common exploits (SQL injection, XSS, DDoS).
+* reverse-proxy.tf: Configures the NGINX reverse proxy service that routes and filters traffic between CloudFront and backend services (frontend, Wagtail, enrichment).
+
+***Best Practices***
+* Use modules for reusable components.
+* Add comments and documentation to Terraform code.
+* Validate Terraform configurations with ```terraform validate```.
+
+**5. Security Best Practices**
+
+***IAM Roles and Policies***
+* Follow the principle of least privilege.
+
+***Secrets Management***
+* Store secrets in AWS Secrets or Parameter store.
+* Rotate secrets regularly.
+
+***Network Security***
+* Use security groups to restrict access to resources.
+* Ensure public facing resources are properly secured.
+
+**6. Backup and Retention policies**
+
+**EFS Backups**
+* **Schedule**: Daily Backups.
+* **Retention**: 30 days.
+* **Cold storage**: After 7 days.
+* **Deletion**: After 90 days.
+
+**Terraform State**
+
+* Enable versioning for the S3 bucket.
+* Use state locking to prevent conflicts.
+
+**7. Troubleshooting**
+
+**Common Issues**
+
+1. **Terraform Apply fails**:
+* Check for syntax errors in terraform files.
+* Validate AWS permissions.
+* Resources already existing.
+
+2.**Lambda Function Fails**:
+* Check CloudWatch logs for errors.
+* Validate IAM permissions.
+
+3.**EFS Backup fails**:
+* Verify backup configuration in AWS Backup.
+* Check IAM permissions for AWS Backup.
