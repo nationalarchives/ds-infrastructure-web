@@ -1,15 +1,15 @@
-**DS Infrasructure Web Documentation**
+# **DS Infrastructure Web Documentation**
 
-**1. Overview**
+## **1. Overview**
 
 The ds-infrastructure-web repository contains terraform configurations for migrating the **Etna** application from **Platform.sh** to **AWS**. This documentation provides a detailed guide on the architecture, deployment process, security practices, and recovery procedures.
 
-**2. Architecture**
+## **2. Architecture**
 
 ![Architecture diagram](./general-web-infrastructure.png)
  
 
- **3. Components**
+ ## **3. Components**
 
  ***Frontend***
 
@@ -61,7 +61,7 @@ The ds-infrastructure-web repository contains terraform configurations for migra
  * Route53 is used for **DNS management** and **domain routing**, primarily to direct traffic to CloudFront distribution and other AWS services.   
 
 
-**3. Deployment Process**
+## **4. Deployment Process**
 
 ***Prerequisites***
 
@@ -206,7 +206,7 @@ terraform apply \
 
   * Check AWS console for resources.
 
-**4. Terraform Configuration**
+## **5. Terraform Configuration**
 
 ***File Structure***
 
@@ -234,7 +234,7 @@ terraform apply \
 * Add comments and documentation to Terraform code.
 * Validate Terraform configurations with ```terraform validate```.
 
-**5. Security Best Practices**
+## **6. Security Best Practices**
 
 ***IAM Roles and Policies***
 * Follow the principle of least privilege.
@@ -247,7 +247,7 @@ terraform apply \
 * Use security groups to restrict access to resources.
 * Ensure public facing resources are properly secured.
 
-**6. Backup and Retention policies**
+## **7. Backup and Retention policies**
 
 **EFS Backups**
 * **Schedule**: Daily Backups.
@@ -260,7 +260,7 @@ terraform apply \
 * Enable versioning for the S3 bucket.
 * Use state locking to prevent conflicts.
 
-**7. Troubleshooting**
+## **8. Troubleshooting**
 
 **Common Issues**
 
