@@ -1,6 +1,6 @@
 cf_dist = {
     "create_distribution"                            = true
-    "cfd_domain_name"                                = ""
+    "cfd_domain_name"                                = "internal-web-frontend-1356619265.eu-west-2.elb.amazonaws.com"
     "cfd_origin_id"                                  = "dev-beta.nationalarchives.gov.uk"
     "cfd_price_class"                                = "PriceClass_100"
     "cfd_enabled"                                    = true
