@@ -6,6 +6,7 @@ The ds-infrastructure-web repository contains terraform configurations for migra
 
 **2. Architecture**
 
+![Architecture diagram](./general-web-infrastructure.png)
  
 
  **3. Components**
