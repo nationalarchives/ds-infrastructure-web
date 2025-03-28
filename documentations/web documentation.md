@@ -1,5 +1,8 @@
 # **DS Infrastructure Web Documentation**
 
+
+**⚠️ Note:** This document is regularly updated to reflect the changes. Please check for the latest version to ensure you have the most accurate information.
+
 ## **1. Overview**
 
 The ds-infrastructure-web repository contains terraform configurations for migrating the **Etna** application from **Platform.sh** to **AWS**. This documentation provides a detailed guide on the architecture, deployment process, security practices, and recovery procedures.
@@ -69,7 +72,11 @@ The ds-infrastructure-web repository contains terraform configurations for migra
 * Terraform installed locally.
 * Access to the ds-infrastructure-web repository.
 
-***Steps***
+This project uses **GitHub Actions** for CI/CD automation. Github Actions helps in automating the deployment process by running workflows defined in `.github/workflows/` .
+
+For more details on our CI/CD pipleine, check our [GitHub Actions Workflow](https://github.com/nationalarchives/ds-infrastructure-web/actions).
+
+***Manual deployment Steps***
 
 ***1. Clone the repository***:
 
@@ -86,6 +93,8 @@ terraform init
 
 ***3. Terraform Plan***
 * Review the plan (additions, replacements and destroying of resources).
+
+
 
 ***Development Plan***
 ```bash
