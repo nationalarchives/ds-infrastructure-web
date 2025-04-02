@@ -32,3 +32,6 @@ variable "tags" {}
 variable "wagtail_sg_id" {}
 variable "wagtail_lb_id" {}
 
+variable "efs_mount_dir" {}
+variable "efs_dns_name" {}
+

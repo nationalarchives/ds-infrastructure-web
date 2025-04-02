@@ -10,10 +10,10 @@ services:
       - DATABASE_NAME=etna
       - DATABASE_USER=etna_app_user
       - DATABASE_PASSWORD=JHW25bZ2AVVX£qO!oySfGZhhr[v
-      - WAGTAILADMIN_BASE_URL=https://dev-beta.nationalarchives.gov.uk
-      - COOKIE_DOMAIN=dev-beta.nationalarchives.gov.uk
+      - WAGTAILADMIN_BASE_URL=https://dev-www.nationalarchives.gov.uk
+      - COOKIE_DOMAIN=dev-www.nationalarchives.gov.uk
       - DJANGO_SETTINGS_MODULE=config.settings.production
-      - CSRF_TRUSTED_ORIGINS=https://dev-beta.nationalarchives.gov.uk
+      - CSRF_TRUSTED_ORIGINS=https://dev-www.nationalarchives.gov.uk
       - DATABASE_ENGINE=django.db.backends.postgresql
       - KONG_CLIENT_BASE_URL=https://aa83a1e6831944fa8bcf17f5ce391b73-58be9fd587cba13e.elb.eu-west-2.amazonaws.com/api/v1/data
       - KONG_IMAGE_PREVIEW_BASE_URL=https://ciim-media.s3.eu-west-2.amazonaws.com/preview/
@@ -25,7 +25,7 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network='traefik_webgateway'"
       - "traefik.http.routers.web.entrypoints=web"
-      - "traefik.http.routers.web.rule=Host(`beta.dev.local`) || PathPrefix(`/`)"
+      - "traefik.http.routers.web.rule=Host(`web-frontend.dev.local`) || PathPrefix(`/`)"
       - "traefik.http.middlewares.test-retry.retry.attempts=5"
       - "traefik.http.middlewares.test-retry.retry.initialinterval=200ms"
       - "traefik.http.services.web.loadbalancer.healthCheck.path=/healthcheck/"

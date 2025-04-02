@@ -1,6 +1,7 @@
 variable "wagtail_instance_type" {}
 variable "wagtail_key_name" {}
 variable "wagtail_root_block_device_size" {}
+variable "wagtail_efs_mount_dir" {}
 
 variable "wagtail_asg_max_size" {}
 variable "wagtail_asg_min_size" {}
@@ -30,6 +31,9 @@ module "wagtail" {
     wagtail_sg_id = module.sgs.wagtail_sg_id
     wagtail_lb_id = module.sgs.wagtail_lb
     
+    efs_dns_name = module.media_efs.media_efs_dns_name
+
+    efs_mount_dir = var.wagtail_efs_mount_dir
 
     asg_max_size = var.wagtail_asg_max_size
     asg_min_size = var.wagtail_asg_min_size
