@@ -27,3 +27,14 @@ resource "aws_route53_record" "web-enrichment" {
         module.enrichment.lb_internal_dns_name
     ]    
 }
+
+resource "aws_route53_record" "wagtail" {
+    zone_id = var.route53_zone
+    name    = "wagtail.${var.environment}.local"
+    type    = "CNAME"
+    ttl     = 15
+
+    records = [
+        module.wagtail.lb_internal_dns_name
+    ]    
+}
