@@ -125,7 +125,7 @@
 
   * **Password**: Enter the password for the PostgreSQL user.
 
-4.**Save and Connect**:
+4. **Save and Connect**:
 
 * After filling out the connection details, click Save.
 
@@ -134,4 +134,143 @@
 5. **Test the Connection**:
 
 * Once the server is added, you can expand the connection, navigate through databases, and start querying your PostgreSQL instance.
+
+## **Upload the PostgreSQL dump file to the postgres-main-prime instance**
+
+1. **Connect to the PostgreSQL Instance**
+* Connect to the instance via session manager.
+
+2. **Navigate to the Root Directory and Check /tmp**
+
+* Once inside the server:
+
+    `cd /`
+
+    `ls`
+
+   `ls tmp`
+
+* This ensures that the /tmp directory is accessible and can store the database dump.
+
+3. **Copy the Dump File from S3 to the Server**
+
+* Use the following command to copy the dump file from the S3 bucket to the PostgreSQL instance:
+
+   `aws s3 cp s3://ds-dev-deployment-source/databases/postgres/<dumpfilename.sql> to /tmp/etna.sql
+`
+
+* 🔹 Replace <dumpfilename.sql> with the actual dump file name.
+
+* This will download the file into /tmp/etna.sql on the instance.
+
+4. **Verify the Dump File**
+
+* After the file is copied, confirm that it exists in /tmp:
+
+    `ls -lh /tmp/etna.sql`
+
+* If the file is listed, you're good to proceed with the database restoration.
+
+### **Create a Database Dump using pg_dump**
+* Run the following command to create a compressed dump of the etna database:
+
+  `sudo pg_dump -U postgres -Fc etna > /tmp/etna.sql
+`
+
+  🔹 PostgreSQL will prompt for a password.
+
+* The password is stored in AWS Secrets Manager.
+
+* Go to AWS Console → Secrets Manager and find the secret containing PostgreSQL credentials.
+
+* Copy the password and paste it when prompted.
+
+### **Verify the Dump File**
+
+* After the command completes, check if the dump file is created:
+
+  `pg_dump -U postgres -Fc etna > /tmp/etna.dump
+`
+
+### **Verify the Second Dump File**
+
+* Check if both etna.sql and etna.dump exist in /tmp/:
+
+   `ls -lh /tmp/`
+
+* You should now see both etna.sql and etna.dump.
+
+### **Delete the Existing etna Database in pgAdmin 4**
+
+* Open pgAdmin 4 and connect to the PostgreSQL server.
+
+* In the left sidebar, navigate to the Databases section.
+
+* Right-click on the etna database and select Delete/Drop.
+
+* Confirm the deletion when prompted.
+
+### Connect to the instance
+
+* Once connected, run the following command to log into PostgreSQL:
+
+   `psql -U postgres`
+
+* You will be prompted for a password. Copy the password from AWS Secrets Manager and paste it when prompted.
+
+### Create the New Database (etna)
+* Once you are inside the PostgreSQL shell, run the following commands:
+
+  -- Create the new database 'etna' with the owner 'etna_app_user'
+
+   `createdb -O etna_app_user etna;
+`
+* This command will create the etna database and assign the etna_app_user as the owner.
+
+### Refresh Databases in pgAdmin 4
+* After creating the database on the instance, go back to pgAdmin 4.
+
+* In the Databases section, right-click and select "Refresh".
+
+* You should now see the newly created etna database listed in the databases.
+
+### Exit the PostgreSQL Shell
+* To exit from the PostgreSQL shell, simply type:
+
+   `\q
+`
+
+### Run the pg_restore Command to Restore the Database
+* Now that you're back in the shell, use the following command to restore the dump:
+
+  `pg_restore -U postgres -d etna -f /tmp/etna.dump
+`
+
+* This will restore the contents of etna.dump into the etna database.
+
+* -U postgres: Specifies the PostgreSQL user to connect with (postgres in this case).
+
+* -d etna: Specifies the database to restore into (etna).
+
+* -f /tmp/etna.dump: Specifies the path to the dump file that you want to restore from.
+
+### Verify the Restoration in pgAdmin 4
+* Once the restoration process completes, go back to pgAdmin 4.
+
+* Right-click on the etna database and select Refresh.
+
+* Expand the database, and you should now see all the tables and data that were in the etna.dump file.
+
+### Verify Data in pgAdmin 4
+* You can now check the tables and run SQL queries to verify that the data has been restored successfully:
+
+  `SELECT * FROM your_table_name;`
+
+* This should show you the data restored into the etna database.
+
+
+ 
+
+
+
 
