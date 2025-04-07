@@ -15,6 +15,9 @@ s3_deployment_rp_nginx_runtime_key = "staging"
 frontend_deployment_s3_root = "web/frontend"
 frontend_logfile_s3_root    = "web/frontend"
 
+enrichment_deployment_s3_root = "web/enrichment"
+enrichment_logfile_s3_root = "web/enrichment"
+
 rp_deployment_s3_root = "web/reverse-proxy"
 rp_logfile_s3_root    = "web/reverse-proxy"
 
