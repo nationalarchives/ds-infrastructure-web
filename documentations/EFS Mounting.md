@@ -14,7 +14,9 @@ This document outlines the steps to mount Amazon Elastic File System (EFS) on an
 
 On the EC2 instance, run the following command to install the EFS utilities:
 
-`sudo yum install -y amazon-efs-utils`
+``` bash
+sudo yum install -y amazon-efs-utils
+```
 
 **Step 2**: **Configure Security Group Rules
 Security Groups for EC2 and EFS**:
@@ -27,13 +29,14 @@ Example Commands:
 
 To authorize inbound traffic on port 2049, run the following command:
 
-`sudo aws ec2 authorize-security-group-ingress \
+``` bash 
+sudo aws ec2 authorize-security-group-ingress \
     --group-id <EFS-Security-Group-ID> \
     --protocol tcp \
     --port 2049 \
     --source-group <EC2-Security-Group-ID> \
     --region <Region>
-`
+```
 
 Replace `<EFS-Security-Group-ID>` and `<EC2-Security-Group-ID>` with the appropriate security group IDs.
 
@@ -42,46 +45,57 @@ Replace `<EFS-Security-Group-ID>` and `<EC2-Security-Group-ID>` with the appropr
 **Mount Command**: Use the following command to mount the EFS filesystem to the desired directory (/app/media in this case):
 
 
-`sudo mount -t efs fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /app/media`
+``` bash
+sudo mount -t efs fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /app/media
+```
 
 Replace `<EFS-File-System-ID>` with your actual EFS file system ID and `<Region>` with the AWS region (e.g., eu-west-2).
 
 **Verify Mount**: After mounting, you can check the mounted filesystem using the `df -h` or `mount` command:
 
-`df -h`
+``` bash 
+df -h
+```
 
-`mount | grep efs`
+``` bash 
+mount | grep efs
+```
 
 The output should show that EFS is mounted at /app/media and is using the correct filesystem.
 
 **Step 4**: **Unmount EFS**
 
-If you need to unmount EFS from the EC2 instance:
+* If you need to unmount EFS from the EC2 instance:
 
-`sudo umount /app/media
-`
+``` bash 
+sudo umount /app/media
+```
 
 **Step 5**: **Verify and Troubleshoot Mounting Issues**
 
 1. **If the EFS mount shows as 127.0.0.1:/**: This can happen due to incorrect mount settings or DNS resolution issues. You can remount the file system using the FQDN:
 
-`sudo mount -t efs fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /app/media
-`
+``` bash
+sudo mount -t efs fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /app/media
+```
 
 2. **Check EFS Logs**: If mounting continues to fail, check the logs for errors related to EFS mounting:
 
-`sudo tail -f /var/log/messages
-`
+``` bash
+sudo tail -f /var/log/messages
+```
 
 3. **NFS Client Installation**: Ensure the nfs-utils package is installed on your EC2 instance:
 
-`sudo yum install -y nfs-utils
-`
+``` bash 
+sudo yum install -y nfs-utils
+```
 
 4. **Ensure Proper NFS Protocol**: EFS uses NFSv4, so make sure the client supports NFSv4. If there are issues with NFS versions, try specifying the NFS version explicitly:
 
-`sudo mount -t nfs4 fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /app/media
-`
+``` bash
+sudo mount -t nfs4 fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /app/media
+```
 
 **Step 6**: **Automate Mounting with /etc/fstab**
 

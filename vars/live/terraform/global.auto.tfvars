@@ -12,6 +12,9 @@ deployment_s3_bucket  = "ds-live-deployment-source"
 logfile_s3_bucket     = "ds-live-logfiles"
 s3_deployment_rp_nginx_runtime_key = "live"
 
+enrichment_deployment_s3_root = "web/enrichment"
+enrichment_logfile_s3_root = "web/enrichment"
+
 frontend_deployment_s3_root = "web/frontend"
 frontend_logfile_s3_root    = "web/frontend"
 
