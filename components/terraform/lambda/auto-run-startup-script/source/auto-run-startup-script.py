@@ -123,7 +123,7 @@ def lambda_handler(event, context):
     environment = os.getenv('ENVIRONMENT', 'dev')
 
     # List of services to deploy
-    services = ["frontend", "enrichment"]
+    services = ["frontend", "enrichment", "wagtail"]
 
     results = {}
     for service in services:
