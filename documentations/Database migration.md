@@ -125,7 +125,7 @@
 
   * **Port**: The default PostgreSQL port is 5432, but if your instance uses a different port, provide that.
 
-  * **Maintenance database**: Enter the name of the database you want to connect to (e.g., postgres)
+  * **Maintenance database**: Enter the name of the database you want to connect to (e.g., etna)
 
   * **Username**: Provide the PostgreSQL username (Get the details from secret manager).
 
