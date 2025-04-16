@@ -50,13 +50,16 @@ def extract_all_versions(docker_image_string):
 
 def deploy_service(service, instance_name):
     try:
+        # Map 'cms' to 'wagtail' for SSM parameters
+        ssm_service_name = "wagtail" if service == "cms" else service
+
         # Get the deployed version from SSM
-        deployed_version = get_deployed_version_from_ssm(service)
+        deployed_version = get_deployed_version_from_ssm(ssm_service_name)
         if not deployed_version:
             return {"statusCode": 500, "body": json.dumps(f"Error: Failed to retrieve deployed version for {service} from SSM.")}
 
         # Get the latest version string from docker_images in SSM
-        latest_version_string = get_docker_image_version_from_ssm(service)
+        latest_version_string = get_docker_image_version_from_ssm(ssm_service_name)
         latest_versions = extract_all_versions(latest_version_string)
 
         if not latest_versions:
@@ -107,7 +110,7 @@ def deploy_service(service, instance_name):
             # Update the deployed version in SSM after successful startup
             latest_version = latest_versions[0]  # Take the first version from the list
             ssm_client.put_parameter(
-                Name=f"/application/web/{service}/deployed_version",
+                Name=f"/application/web/{ssm_service_name}/deployed_version",
                 Value=latest_version,
                 Type="String",
                 Overwrite=True,
@@ -122,12 +125,15 @@ def deploy_service(service, instance_name):
 def lambda_handler(event, context):
     environment = os.getenv('ENVIRONMENT', 'dev')
 
-    # List of services to deploy
-    services = ["frontend", "enrichment", "wagtail"]
+    # List of services and their instance names
+    services = {
+        "frontend": "web-frontend",
+        "enrichment": "web-enrichment",
+        "cms": "wagtail"
+    }
 
     results = {}
-    for service in services:
-        instance_name = f"web-{service}"
+    for service, instance_name in services.items():
         results[service] = deploy_service(service, instance_name)
 
     return results
