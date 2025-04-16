@@ -26,7 +26,7 @@ jobs:
         service:
           - frontend
           - enrichment
-          
+          - cms
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
