@@ -70,7 +70,7 @@ Once the parameters are updated in the AWS Parameter Store, the following steps 
 
 * It restarts the Docker container with the latest image.
 
-# 3. Automatic Deployment:
+### 3. Automatic Deployment:
 
 After the startup.sh script executes, the updated Docker image is deployed automatically, and the service is running with the latest version.
 
