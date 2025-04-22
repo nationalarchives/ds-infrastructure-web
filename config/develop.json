@@ -10,7 +10,7 @@
         },
         "search": {
             "image": "ghcr.io/nationalarchives/ds-search",
-            "version": "25.04.22.505"
+            "version": "25.04.22.511"
         },
         "frontend-enrichment": {
             "image": "ghcr.io/nationalarchives/ds-frontend-enrichment",
