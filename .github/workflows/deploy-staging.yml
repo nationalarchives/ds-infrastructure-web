@@ -25,19 +25,28 @@ concurrency:
 jobs:
   compare:
     runs-on: ubuntu-latest
+    outputs:
+      version-summary: ${{ steps.build-comparison.outputs.VERSION_SUMMARY }}
     steps:
       - uses: actions/checkout@v4
       - name: Compare develop to staging
+        id: build-comparison
         run: |
           SOURCE=develop
           TARGET=staging
-          echo "## Changes" >> $GITHUB_STEP_SUMMARY
-          echo >> $GITHUB_STEP_SUMMARY
-          echo "\`develop\` -> \`staging\`" >> $GITHUB_STEP_SUMMARY
-          echo >> $GITHUB_STEP_SUMMARY
-          echo "| Service | Source | Target | Changes |" >> $GITHUB_STEP_SUMMARY
-          echo "| ------- | ------ | ------ | ------- |" >> $GITHUB_STEP_SUMMARY
-          jq --raw-output '.services | keys[]' "config/$SOURCE.json" | while read -r SERVICE_NAME; do SERVICE_SOURCE=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/$SOURCE.json") && SERVICE_TARGET=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/$TARGET.json") && [ "$SERVICE_SOURCE" != "$SERVICE_TARGET" ] && echo "| $SERVICE_NAME | \`$SERVICE_SOURCE\` | \`$SERVICE_TARGET\` | [Compare](https://github.com/nationalarchives/ds-$SERVICE_NAME/compare/v$SERVICE_TARGET...v$SERVICE_SOURCE) |" >> $GITHUB_STEP_SUMMARY || echo "| $SERVICE_NAME | \`$SERVICE_SOURCE\` | \`$SERVICE_TARGET\` | [No changes] |" >> $GITHUB_STEP_SUMMARY; done
+          VERSION_SUMMARY="## Changes"
+          echo >> $VERSION_SUMMARY
+          echo "\`develop\` -> \`staging\`" >> $VERSION_SUMMARY
+          echo >> $VERSION_SUMMARY
+          echo "| Service | Source | Target | Changes |" >> $VERSION_SUMMARY
+          echo "| ------- | ------ | ------ | ------- |" >> $VERSION_SUMMARY
+          jq --raw-output '.services | keys[]' "config/$SOURCE.json" | while read -r SERVICE_NAME; do SERVICE_SOURCE=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/$SOURCE.json") && SERVICE_TARGET=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/$TARGET.json") && [ "$SERVICE_SOURCE" != "$SERVICE_TARGET" ] && echo "| $SERVICE_NAME | \`$SERVICE_SOURCE\` | \`$SERVICE_TARGET\` | [Compare](https://github.com/nationalarchives/ds-$SERVICE_NAME/compare/v$SERVICE_TARGET...v$SERVICE_SOURCE) |" >> $VERSION_SUMMARY || echo "| $SERVICE_NAME | \`$SERVICE_SOURCE\` | \`$SERVICE_TARGET\` | [No changes] |" >> $VERSION_SUMMARY; done
+          echo "$VERSION_SUMMARY" >> $GITHUB_STEP_SUMMARY
+          {
+            echo 'VERSION_SUMMARY<<EOF'
+            echo "${VERSION_SUMMARY}"
+            echo EOF
+          } >> $GITHUB_OUTPUT
 
   create-release:
     runs-on: ubuntu-latest
@@ -45,7 +54,6 @@ jobs:
       - compare
     environment:
       name: staging
-      url: https://staging-www.nationalarchives.gov.uk/
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     outputs:
@@ -73,7 +81,8 @@ jobs:
         run: |
           git tag "v${{ steps.version-tag.outputs.VERSION }}" -m "Release ${{ steps.version-tag.outputs.VERSION }}"
           git push origin --tags
-          gh release create "v${{ steps.version-tag.outputs.VERSION }}" --title "v${{ steps.version-tag.outputs.VERSION }}" --draft --generate-notes --latest
+          echo "${{ needs.compare.outputs.version-summary }}" > release-notes.md
+          gh release create "v${{ steps.version-tag.outputs.VERSION }}" --title "v${{ steps.version-tag.outputs.VERSION }}" --draft -F release-notes.md --latest
 
   notify-start:
     runs-on: ubuntu-latest
