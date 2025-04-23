@@ -54,13 +54,7 @@ runs:
 
         echo "Updating the AWS Parameter Store..."
 
-        if [[ "${{ inputs.service-name }}" == "cms" ]]; then
-          PARAMETER_NAME="/application/web/wagtail/docker_images"
-        else
-          PARAMETER_NAME="${{ inputs.parameter-path }}"
-        fi
-
-        OLD_VALUE=$(aws ssm get-parameter --name "$PARAMETER_NAME" --query "Parameter.Value" --output text)
+        OLD_VALUE=$(aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text)
 
         echo "Current parameter value: $OLD_VALUE"
 
@@ -68,8 +62,8 @@ runs:
 
         echo "New parameter value: $NEW_VALUE"
 
-        echo "Updating $PARAMETER_NAME..."
-        aws ssm put-parameter --name "$PARAMETER_NAME" --value "$NEW_VALUE" --type String --overwrite
+        echo "Updating ${{ inputs.parameter-path }}..."
+        aws ssm put-parameter --name "${{ inputs.parameter-path }}" --value "$NEW_VALUE" --type String --overwrite
 
         echo "NEW_VERSION=$NEW_VERSION" >> "$GITHUB_ENV"
 
@@ -77,12 +71,7 @@ runs:
       shell: bash
       run: |
         echo "Verifying the updated value..."
-        if [[ "${{ inputs.service-name }}" == "cms" ]]; then
-          PARAMETER_NAME="/application/web/wagtail/docker_images"
-        else
-          PARAMETER_NAME="${{ inputs.parameter-path }}"
-        fi
-        aws ssm get-parameter --name "$PARAMETER_NAME" --query "Parameter.Value" --output text
+        aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text
 
     - name: Trigger Lambda function
       shell: bash
@@ -106,18 +95,12 @@ runs:
         MAX_RETRIES=20
         RETRY_COUNT=0
 
-        if [[ "${{ inputs.service-name }}" == "cms" ]]; then
-          DEPLOYED_PATH="/application/web/wagtail/deployed_version"
-        else
-          DEPLOYED_PATH="${{ inputs.deployed-parameter-path }}"
-        fi
-
-        DEPLOYED_VERSION=$(aws ssm get-parameter --name "$DEPLOYED_PATH" --query "Parameter.Value" --output text)
+        DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text)
 
         while [[ "$DEPLOYED_VERSION" != "${{ env.NEW_VERSION }}" ]] && [[ $RETRY_COUNT -lt $MAX_RETRIES ]]; do
           echo "Current deployed version: $DEPLOYED_VERSION"
           sleep 2
-          DEPLOYED_VERSION=$(aws ssm get-parameter --name "$DEPLOYED_PATH" --query "Parameter.Value" --output text)
+          DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text)
           RETRY_COUNT=$((RETRY_COUNT+1))
         done
 

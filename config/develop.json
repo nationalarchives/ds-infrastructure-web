@@ -4,7 +4,7 @@
             "image": "ghcr.io/nationalarchives/ds-frontend",
             "version": "25.04.22.1146"
         },
-        "cms": {
+        "wagtail": {
             "image": "ghcr.io/nationalarchives/ds-wagtail",
             "version": "25.04.23.556"
         },
