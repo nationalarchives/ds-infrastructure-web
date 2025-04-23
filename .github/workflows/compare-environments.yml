@@ -19,7 +19,7 @@ on:
           - production
 
 jobs:
-  create-release:
+  compare:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.source != github.event.inputs.target }}
     steps:
@@ -27,4 +27,4 @@ jobs:
       - name: Compare develop to staging
         run: |
           echo "# Changes" >> $GITHUB_STEP_SUMMARY
-          jq --raw-output '.services | keys[]' "config/${{ github.event.inputs.source }}.json" | while read -r SERVICE_NAME; do SERVICE_SOURCE=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/${{ github.event.inputs.source }}.json") && SERVICE_TARGET=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/${{ github.event.inputs.target }}.json") && [ "$SERVICE_SOURCE" != "$SERVICE_TARGET" ] && echo "`$SERVICE_NAME`: https://github.com/nationalarchives/ds-$SERVICE_NAME/compare/v$SERVICE_TARGET...v$SERVICE_SOURCE" >> $GITHUB_STEP_SUMMARY || echo "`$SERVICE_NAME`: No change" >> $GITHUB_STEP_SUMMARY; done
+          jq --raw-output '.services | keys[]' "config/${{ github.event.inputs.source }}.json" | while read -r SERVICE_NAME; do SERVICE_SOURCE=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/${{ github.event.inputs.source }}.json") && SERVICE_TARGET=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/${{ github.event.inputs.target }}.json") && [ "$SERVICE_SOURCE" != "$SERVICE_TARGET" ] && echo "$SERVICE_NAME: https://github.com/nationalarchives/ds-$SERVICE_NAME/compare/v$SERVICE_TARGET...v$SERVICE_SOURCE" >> $GITHUB_STEP_SUMMARY || echo "$SERVICE_NAME: No change" >> $GITHUB_STEP_SUMMARY; done
