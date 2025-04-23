@@ -26,5 +26,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Compare develop to staging
         run: |
-          echo "# Changes" >> $GITHUB_STEP_SUMMARY
-          jq --raw-output '.services | keys[]' "config/${{ github.event.inputs.source }}.json" | while read -r SERVICE_NAME; do SERVICE_SOURCE=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/${{ github.event.inputs.source }}.json") && SERVICE_TARGET=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/${{ github.event.inputs.target }}.json") && [ "$SERVICE_SOURCE" != "$SERVICE_TARGET" ] && echo "$SERVICE_NAME: https://github.com/nationalarchives/ds-$SERVICE_NAME/compare/v$SERVICE_TARGET...v$SERVICE_SOURCE" >> $GITHUB_STEP_SUMMARY || echo "$SERVICE_NAME: No change" >> $GITHUB_STEP_SUMMARY; done
+          echo "## Changes" >> $GITHUB_STEP_SUMMARY
+          echo "| Service | Source | Target | Changes |" >> $GITHUB_STEP_SUMMARY
+          echo "| ------- | ------ | ------ | ------- |" >> $GITHUB_STEP_SUMMARY
+          jq --raw-output '.services | keys[]' "config/${{ github.event.inputs.source }}.json" | while read -r SERVICE_NAME; do SERVICE_SOURCE=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/${{ github.event.inputs.source }}.json") && SERVICE_TARGET=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/${{ github.event.inputs.target }}.json") && [ "$SERVICE_SOURCE" != "$SERVICE_TARGET" ] && echo "| $SERVICE_NAME | $SERVICE_SOURCE | $SERVICE_TARGET | [Compare](https://github.com/nationalarchives/ds-$SERVICE_NAME/compare/v$SERVICE_TARGET...v$SERVICE_SOURCE) |" >> $GITHUB_STEP_SUMMARY || echo "| $SERVICE_NAME | $SERVICE_SOURCE | $SERVICE_TARGET | [No change] |" >> $GITHUB_STEP_SUMMARY; done
