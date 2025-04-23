@@ -16,6 +16,9 @@ concurrency:
 jobs:
   prepare:
     runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.nationalarchives.gov.uk/
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     outputs:
@@ -64,9 +67,6 @@ jobs:
     needs:
       - prepare
     if: always()
-    environment:
-      name: production
-      url: https://www.nationalarchives.gov.uk/
     strategy:
       matrix:
         service:
