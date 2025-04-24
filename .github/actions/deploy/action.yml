@@ -35,8 +35,6 @@ runs:
 
         if [[ "${{ inputs.service-name }}" == "enrichment" ]]; then
           CONFIG_SERVICE_NAME="frontend-enrichment"
-        elif [[ "${{ inputs.service-name }}" == "cms" ]]; then
-          CONFIG_SERVICE_NAME="cms"
         else
           CONFIG_SERVICE_NAME="${{ inputs.service-name }}"
         fi

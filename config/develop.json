@@ -6,11 +6,11 @@
         },
         "wagtail": {
             "image": "ghcr.io/nationalarchives/ds-wagtail",
-            "version": "25.04.23.556"
+            "version": "25.04.23.557"
         },
         "search": {
             "image": "ghcr.io/nationalarchives/ds-search",
-            "version": "25.04.22.513"
+            "version": "25.04.24.524"
         },
         "frontend-enrichment": {
             "image": "ghcr.io/nationalarchives/ds-frontend-enrichment",
