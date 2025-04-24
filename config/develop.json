@@ -22,7 +22,7 @@
         },
         "feedback": {
             "image": "ghcr.io/nationalarchives/ds-feedback",
-            "version": "25.04.24.224"
+            "version": "25.04.24.225"
         }
     }
 }
