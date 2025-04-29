@@ -6,7 +6,10 @@
 2. Go to **Route 53** → **Hosted Zones**.
 3. Click on **"Create hosted zone"**.
 4. Fill in the details:
-   - **Domain name**: `dev-wagtail.nationalarchives.gov.uk`
+   - **Domain name**: 
+   * Dev- `dev-wagtail.nationalarchives.gov.uk`
+   * Staging-`staging-wagtail.nationalarchives.gov.uk`
+   * Live-`wagtail.nationalarchives.gov.uk`
    - **Type**: Public Hosted Zone
 5. Click **"Create hosted zone"**.
 
@@ -33,6 +36,8 @@ Once the nameservers are updated, verify that the hosted zone is correctly set u
 
 ```bash
 dig dev-wagtail.nationalarchives.gov.uk NS
+dig staging-wagtail.nationalarchives.gov.uk NS
+dig wagtail.nationalarchives.gov.uk NS
 ```
 
 ## Set Up CloudFront Distribution for Wagtail Domain
@@ -59,7 +64,7 @@ dig dev-wagtail.nationalarchives.gov.uk NS
 ### 3. Add Alternate Domain Name (CNAME)
 
 - **Alternate domain name (CNAME)**:  
-  Add `dev-wagtail.nationalarchives.gov.uk`
+  Add `dev-wagtail.nationalarchives.gov.uk` for dev and similarly for staging and live
 
 ---
 
@@ -67,7 +72,7 @@ dig dev-wagtail.nationalarchives.gov.uk NS
 
 - **Custom SSL certificate (
 *.nationalarchives.gov.uk)**:  
-  Choose the certificate for `dev-wagtail.nationalarchives.gov.uk` from **ACM** (AWS Certificate Manager).
+  Choose the certificate for `dev-wagtail.nationalarchives.gov.uk` for dev and other environments from **ACM** (AWS Certificate Manager).
   
 
 ---
@@ -81,10 +86,10 @@ dig dev-wagtail.nationalarchives.gov.uk NS
 
 ### 6. Update DNS in Route 53
 
-1. Go back to **Route 53** → hosted zone for `dev-wagtail.nationalarchives.gov.uk`.
+1. Go back to **Route 53** → hosted zone for `dev-wagtail.nationalarchives.gov.uk`in dev and other environments.
 2. Click **"Create Record"**.
 3. Add an **A Record (Alias)** pointing to the CloudFront distribution:
-   - **Record name**: `dev-wagtail.nationalarchives.gov.uk`
+   - **Record name**: `dev-wagtail.nationalarchives.gov.uk` for dev and similarly for staging and live
    - **Record type**: `A - IPv4 address`
    - **Alias**: Yes
    - **Alias target**: Select your CloudFront distribution from the dropdown.
@@ -99,6 +104,8 @@ After DNS propagation (a few minutes to hours):
 
 ```bash
 curl -I https://dev-wagtail.nationalarchives.gov.uk
+curl -I https://staging-wagtail.nationalarchives.gov.uk
+curl -I https://wagtail.nationalarchives.gov.uk
 ```
 
 ## Configure NGINX Reverse Proxy for Wagtail on website-reverse-proxy-dev
@@ -130,11 +137,32 @@ After editing
 
 Open the browser and go to:
 
+For Dev:
+
 http://dev-wagtail.nationalarchives.gov.uk/admin/login/
 
 http://dev-wagtail.nationalarchives.gov.uk/static/
 
 http://dev-wagtail.nationalarchives.gov.uk/media/imagename
 
+For Staging:
 
-* Make sure all routes are properly working.
+http://staging-wagtail.nationalarchives.gov.uk/admin/login/
+
+http://staging-wagtail.nationalarchives.gov.uk/media/imagename
+
+http://staging-wagtail.nationalarchives.gov.uk/static
+
+For Live:
+
+http://wagtail.nationalarchives.gov.uk/admin/login/
+
+http://wagtail.nationalarchives.gov.uk/media/imagename
+
+http://wagtail.nationalarchives.gov.uk/static/
+
+
+
+
+
+* Make sure all routes are properly working in all environments

@@ -19,3 +19,9 @@ This document contains links to various resources related to the project.
 - [Web Frontend Terraform Plan](https://github.com/nationalarchives/ds-infrastructure-web/actions/workflows/web-frontend-plan.yml)
 
 - [Web Frontend Terraform Apply](https://github.com/nationalarchives/ds-infrastructure-web/actions/workflows/web-frontend-apply.yml)
+
+- [Deploy to Develop](https://github.com/nationalarchives/ds-infrastructure-web/actions/workflows/deploy-develop.yml)
+
+- [Release to staging](https://github.com/nationalarchives/ds-infrastructure-web/actions/workflows/deploy-staging.yml)
+
+- [Release to production](https://github.com/nationalarchives/ds-infrastructure-web/actions/workflows/deploy-production.yml)
