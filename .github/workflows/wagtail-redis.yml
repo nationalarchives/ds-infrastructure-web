@@ -62,7 +62,7 @@
   # ------------------------------------------------------------------------------
   # live deployment
   # ------------------------------------------------------------------------------
-    wagtail-ami-live:
+    wagtail-redis-ami-live:
       if: github.event.inputs.account == 'live'
       uses: nationalarchives/ds-github-actions/.github/workflows/wagtail-redis-ami-build.yml@main
       with:
