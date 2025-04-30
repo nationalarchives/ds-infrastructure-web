@@ -79,5 +79,4 @@
       secrets:
         vpc_id: ${{ secrets.VPC_ID_LIVE }}
         subnet_id: ${{ secrets.SUBNET_ID_2A_LIVE }}
-  ...
-  
+...
