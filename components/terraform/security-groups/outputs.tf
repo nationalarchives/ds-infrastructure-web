@@ -35,3 +35,10 @@ output "enrichment_lb_id" {
 output "enrichment_sg_id" {
    value = aws_security_group.enrichment.id
 }
+
+output "redis_lb_id" {
+    value = aws_security_group.redis_lb.id
+}
+output "redis_sg_id" {
+   value = aws_security_group.redis.id
+}
