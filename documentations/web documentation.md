@@ -111,7 +111,8 @@ terraform plan \
   -var-file="../../vars/dev/terraform/cognito.auto.tfvars" \
   -var-file="../../vars/dev/terraform/ses.auto.tfvars" \
   -var-file="../../vars/dev/terraform/wagtail.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/enrichment.auto.tfvars"
+  -var-file="../../vars/dev/terraform/enrichment.auto.tfvars" \
+  -var-file="../../vars/dev/terraform/redis.auto.tfvars"
   ```
 
 ***Staging plan***

@@ -16,3 +16,10 @@ variable "enrichment_instance_cidr" {}
 
 variable "enrichment_lb_id" {}
 variable "enrichment_sg_id" {}
+
+
+variable "redis_lb_cidr" {}
+variable "redis_instance_cidr" {}
+
+variable "redis_lb_id" {}
+variable "redis_sg_id" {}
