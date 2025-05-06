@@ -8,3 +8,4 @@ variable "environment" {}
 variable "tags" {}
 
 variable "auto_run_startup_script_role_arn" {}
+variable "wagtail_cron_trigger_role_arn"{}

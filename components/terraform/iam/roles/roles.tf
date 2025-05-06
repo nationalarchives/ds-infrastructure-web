@@ -112,3 +112,11 @@ resource "aws_iam_instance_profile" "enrichment_profile" {
   path = "/"
   role = aws_iam_role.enrichment_role.name
 }
+
+# Lambda WagtailCronTrigger Role
+resource "aws_iam_role" "lambda_wagtail_cron_trigger_role" {
+  name               = "WagtailLambdaExecutionRole"
+  assume_role_policy = file("${path.root}/shared-templates/assume-role-lambda-policy.json")
+  description        = "Allows Lambda functions to call AWS services on your behalf"
+  tags               = var.tags
+}

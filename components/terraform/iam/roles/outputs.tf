@@ -27,3 +27,6 @@ output "lambda_web_docker_deployment_role_arn" {
 output "lambda_auto_run_startup_script_role_arn" {
     value = aws_iam_role.lambda_auto_run_startup_script_role.arn
 }
+output "lambda_wagtail_cron_trigger_role_arn"{
+    value = aws_iam_role.lambda_wagtail_cron_trigger_role.arn
+}

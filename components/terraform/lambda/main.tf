@@ -90,3 +90,49 @@ resource "aws_cloudwatch_log_group" "auto_run_startup_script" {
   name              = "/aws/lambda/AutoRunStartupScript"
   retention_in_days = 7
 }
+
+data "archive_file" "wagtail_cron_trigger" {
+  type        = "zip"
+  source_dir  = "${path.root}/lambda/wagtail-cron-trigger/source"
+  output_path = "${path.root}/lambda/wagtail-cron-trigger/wagtail-cron-trigger.zip"
+}
+
+# Lambda Function: WagtailCronTrigger
+resource "aws_lambda_function" "wagtail_cron_trigger" {
+  filename         = data.archive_file.wagtail_cron_trigger.output_path
+  source_code_hash = data.archive_file.wagtail_cron_trigger.output_base64sha256
+
+  function_name = "WagtailCronTrigger"
+  role          = var.wagtail_cron_trigger_role_arn
+
+  handler = "wagtail-cron-trigger.wagtail_cron_trigger"  
+  runtime = "python3.13"
+
+  memory_size = 128
+  timeout     = 900
+
+  ephemeral_storage {
+    size = 512
+  }
+
+  vpc_config {
+    subnet_ids         = var.subnet_ids
+    security_group_ids = var.security_group_ids
+  }
+
+  tags = merge(var.tags, {
+    Role            = "serverless"
+    ApplicationType = "python"
+    CreatedBy       = "devops@nationalarchives.gov.uk"
+    Service         = "wagtail-cron-trigger"
+    Name            = "wagtail_cron_trigger"
+  })
+}
+
+# CloudWatch Log Group for WagtailCronTrigger Lambda
+resource "aws_cloudwatch_log_group" "wagtail_cron_trigger" {
+  name              = "/aws/lambda/WagtailCronTrigger"
+  retention_in_days = 7
+}
+
+
