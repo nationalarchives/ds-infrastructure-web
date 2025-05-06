@@ -94,7 +94,7 @@ def deploy_service(service, instance_name):
             print(f"Command Output: {output}")
 
             if status in ["Success", "Failed", "TimedOut", "Cancelled"]:
-                if "startup completed" in output:
+                if any(phrase in output for phrase in ["Traefik recognizes green-web as healthy", "Traefik recognizes blue-web as healthy"]):
                     status = "Success"
                 break
 
