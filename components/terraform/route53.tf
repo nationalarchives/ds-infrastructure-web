@@ -38,3 +38,15 @@ resource "aws_route53_record" "wagtail" {
         module.wagtail.lb_internal_dns_name
     ]    
 }
+
+resource "aws_route53_record" "platform-redis" {
+    zone_id = var.route53_zone
+    name    = "platform-redis.${var.environment}.local"
+    type    = "CNAME"
+    ttl     = 15
+
+    records = [
+        module.redis.lb_internal_dns_name
+    ]    
+}
+
