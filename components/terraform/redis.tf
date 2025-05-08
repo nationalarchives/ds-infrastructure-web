@@ -39,7 +39,7 @@ module "redis" {
     asg_health_check_type = var.redis_asg_health_check_type
 
     instance_type = var.redis_instance_type
-    key_name = "wagtail-redis-${var.environment}-eu-west-2"
+    key_name = "platform-redis-${var.environment}-eu-west-2"
     root_block_device_size = "100"
 
     instance_cidr = [

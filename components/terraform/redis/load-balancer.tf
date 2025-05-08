@@ -1,8 +1,8 @@
 # -----------------------------------------------------------------------------
 # Internal Load Balancer
 # -----------------------------------------------------------------------------
-resource "aws_lb" "wagtail_redis" {
-    name               = "wagtail-redis"
+resource "aws_lb" "platform_redis" {
+    name               = "platform-redis"
     internal           = true
     load_balancer_type = "application"
 
@@ -18,8 +18,8 @@ resource "aws_lb" "wagtail_redis" {
     tags = var.tags
 }
 
-resource "aws_lb_target_group" "wagtail_redis" {
-    name     = "wagtail-redis"
+resource "aws_lb_target_group" "platform_redis" {
+    name     = "platform-redis"
     port     = 80
     protocol = "HTTP"
     vpc_id   = var.vpc_id
@@ -40,9 +40,9 @@ resource "aws_lb_target_group" "wagtail_redis" {
 resource "aws_lb_listener" "internal_http" {
     default_action {
         type             = "forward"
-        target_group_arn = aws_lb_target_group.wagtail_redis.arn
+        target_group_arn = aws_lb_target_group.platform_redis.arn
     }
     protocol          = "HTTP"
-    load_balancer_arn = aws_lb.wagtail_redis.arn
+    load_balancer_arn = aws_lb.platform_redis.arn
     port              = 80
 }

@@ -96,7 +96,7 @@ data "aws_ami" "redis_ami" {
     filter {
         name   = "name"
         values = [
-            "wagtail-redis-primer*"
+            "platform-redis-primer*"
         ]
     }
 

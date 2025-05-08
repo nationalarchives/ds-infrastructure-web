@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "redis_deployment_s3" {
-    name        = "wagtail-redis-source-s3-policy"
+    name        = "platform-redis-source-s3-policy"
     description = "deployment S3 access for web redis"
 
     policy = templatefile("${path.module}/templates/deployment-source-s3-access.json", {
@@ -9,7 +9,7 @@ resource "aws_iam_policy" "redis_deployment_s3" {
 }
 
 resource "aws_iam_role" "redis_role" {
-    name = "wagtail-redis-assume-role"
+    name = "platform-redis-assume-role"
     assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
@@ -28,7 +28,7 @@ resource "aws_iam_role_policy_attachment" "service_role_ssm" {
     policy_arn = aws_iam_policy.redis_deployment_s3.arn
 }
 
-resource "aws_iam_instance_profile" "wagtail_redis_profile" {
-    name = "wagtail-redis-profile"
+resource "aws_iam_instance_profile" "platform_redis_profile" {
+    name = "platform-redis-profile"
     role = aws_iam_role.redis_role.name
 }

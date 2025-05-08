@@ -1,11 +1,11 @@
 # -----------------------------------------------------------------------------
 # Launch Template
 # -----------------------------------------------------------------------------
-resource "aws_launch_template" "wagtail_redis" {
-    name = "wagtail-redis"
+resource "aws_launch_template" "platform_redis" {
+    name = "platform-redis"
 
     iam_instance_profile {
-        arn = aws_iam_instance_profile.wagtail_redis_profile.arn
+        arn = aws_iam_instance_profile.platform_redis_profile.arn
     }
 
     image_id               = var.ami_id
