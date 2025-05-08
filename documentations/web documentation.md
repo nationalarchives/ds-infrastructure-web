@@ -130,6 +130,7 @@ terraform plan \
   -var-file="../../vars/staging/terraform/cloudfront.auto.tfvars" \
   -var-file="../../vars/staging/terraform/enrichment.auto.tfvars" \
   -var-file="../../vars/staging/terraform/wagtail.auto.tfvars" \
+  -var-file="../../vars/staging/terraform/redis.auto.tfvars" \
   -var-file="../../vars/staging/terraform/cognito.auto.tfvars" \
   -var-file="../../vars/staging/terraform/ses.auto.tfvars"
   ```
@@ -149,6 +150,7 @@ terraform plan \
   -var-file="../../vars/live/terraform/cloudfront.auto.tfvars" \
   -var-file="../../vars/live/terraform/enrichment.auto.tfvars" \
   -var-file="../../vars/live/terraform/wagtail.auto.tfvars" \
+  -var-file="../../vars/live/terraform/redis.auto.tfvars"
   -var-file="../../vars/live/terraform/cognito.auto.tfvars" \
   -var-file="../../vars/live/terraform/ses.auto.tfvars"
   ```
@@ -171,7 +173,8 @@ terraform apply \
   -var-file="../../vars/dev/terraform/cognito.auto.tfvars" \
   -var-file="../../vars/dev/terraform/ses.auto.tfvars" \
   -var-file="../../vars/dev/terraform/wagtail.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/enrichment.auto.tfvars"
+  -var-file="../../vars/dev/terraform/enrichment.auto.tfvars" \
+  -var-file="../../vars/dev/terraform/redis.auto.tfvars"
   ```
 
   ***Staging apply***
@@ -190,7 +193,8 @@ terraform apply \
   -var-file="../../vars/staging/terraform/cognito.auto.tfvars" \
   -var-file="../../vars/staging/terraform/ses.auto.tfvars" \
   -var-file="../../vars/staging/terraform/wagtail.auto.tfvars" \
-  -var-file="../../vars/staging/terraform/enrichment.auto.tfvars"
+  -var-file="../../vars/staging/terraform/enrichment.auto.tfvars" \
+  -var-file="../../vars/staging/terraform/redis.auto.tfvars"
   ```
 
   ***Live apply***
@@ -209,7 +213,8 @@ terraform apply \
   -var-file="../../vars/live/terraform/enrichment.auto.tfvars" \
   -var-file="../../vars/live/terraform/wagtail.auto.tfvars" \
   -var-file="../../vars/live/terraform/cognito.auto.tfvars" \
-  -var-file="../../vars/live/terraform/ses.auto.tfvars"
+  -var-file="../../vars/live/terraform/ses.auto.tfvars" \
+  -var-file="../../vars/live/terraform/redis.auto.tfvars"
   ```
 
   ***5. Verify Deployment***

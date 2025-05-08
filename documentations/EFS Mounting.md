@@ -42,11 +42,11 @@ Replace `<EFS-Security-Group-ID>` and `<EC2-Security-Group-ID>` with the appropr
 
 **Step 3**: **Mount EFS**
 
-**Mount Command**: Use the following command to mount the EFS filesystem to the desired directory (/app/media in this case):
+**Mount Command**: Use the following command to mount the EFS filesystem to the desired directory (/media in this case):
 
 
 ``` bash
-sudo mount -t efs fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /app/media
+sudo mount -t efs fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /media
 ```
 
 Replace `<EFS-File-System-ID>` with your actual EFS file system ID and `<Region>` with the AWS region (e.g., eu-west-2).
@@ -61,14 +61,14 @@ df -h
 mount | grep efs
 ```
 
-The output should show that EFS is mounted at /app/media and is using the correct filesystem.
+The output should show that EFS is mounted at /media and is using the correct filesystem.
 
 **Step 4**: **Unmount EFS**
 
 * If you need to unmount EFS from the EC2 instance:
 
 ``` bash 
-sudo umount /app/media
+sudo umount /media
 ```
 
 **Step 5**: **Verify and Troubleshoot Mounting Issues**
@@ -76,7 +76,7 @@ sudo umount /app/media
 1. **If the EFS mount shows as 127.0.0.1:/**: This can happen due to incorrect mount settings or DNS resolution issues. You can remount the file system using the FQDN:
 
 ``` bash
-sudo mount -t efs fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /app/media
+sudo mount -t efs fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /media
 ```
 
 2. **Check EFS Logs**: If mounting continues to fail, check the logs for errors related to EFS mounting:
@@ -94,7 +94,7 @@ sudo yum install -y nfs-utils
 4. **Ensure Proper NFS Protocol**: EFS uses NFSv4, so make sure the client supports NFSv4. If there are issues with NFS versions, try specifying the NFS version explicitly:
 
 ``` bash
-sudo mount -t nfs4 fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /app/media
+sudo mount -t nfs4 fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /media
 ```
 
 **Step 6**: **Automate Mounting with /etc/fstab**
@@ -102,7 +102,7 @@ sudo mount -t nfs4 fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /app/med
 To automatically mount EFS on boot, add the following line to /etc/fstab:
 
 `
-fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /app/media efs defaults,_netdev 0 0`
+fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /media efs defaults,_netdev 0 0`
 
 This ensures that the EFS mount persists across reboots.
 
