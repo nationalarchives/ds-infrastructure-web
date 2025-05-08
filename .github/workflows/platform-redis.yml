@@ -1,6 +1,6 @@
 ---
-  name: Wagtail Redis AMI
-  run-name: Wagtail Redis AMI wagtail-redis-primer-(date-time) to ${{ inputs.account }} by @${{ github.actor }}
+  name: Platform Redis AMI
+  run-name: platform Redis AMI platform-redis-primer-(date-time) to ${{ inputs.account }} by @${{ github.actor }}
   
   permissions:
     id-token: write
@@ -22,16 +22,16 @@
   # ------------------------------------------------------------------------------
   # dev deployment
   # ------------------------------------------------------------------------------
-    wagtail-redis-ami-dev:
+    platform-redis-ami-dev:
       if: github.event.inputs.account == 'dev'
-      uses: nationalarchives/ds-github-actions/.github/workflows/wagtail-redis-ami-build.yml@main
+      uses: nationalarchives/ds-github-actions/.github/workflows/platform-redis-ami-build.yml@main
       with:
         base_role: "arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL"
         playbook_role: "arn:aws:iam::846769538626:role/s-devops-ansible-amis"
         region: "eu-west-2"
         branch: "${{ github.event.inputs.branch }}"
         account: "${{ github.event.inputs.account }}"
-        key_name: "wagtail-redis-${{ github.event.inputs.account }}-eu-west-2"
+        key_name: "platform-redis-${{ github.event.inputs.account }}-eu-west-2"
         instance_type: 't3a.small'
         volume_size: 20
         s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
@@ -42,16 +42,16 @@
   # ------------------------------------------------------------------------------
   # staging deployment
   # ------------------------------------------------------------------------------
-    wagtail-redis-ami-staging:
+    platform-redis-ami-staging:
       if: github.event.inputs.account == 'staging'
-      uses: nationalarchives/ds-github-actions/.github/workflows/wagtail-redis-ami-build.yml@main
+      uses: nationalarchives/ds-github-actions/.github/workflows/platform-redis-ami-build.yml@main
       with:
         base_role: "arn:aws:iam::337670467269:role/GitHubActionRole"
         playbook_role: "arn:aws:iam::337670467269:role/s-devops-ansible-amis"
         region: "eu-west-2"
         branch: "${{ github.event.inputs.branch }}"
         account: "${{ github.event.inputs.account }}"
-        key_name: "wagtail-redis-${{ github.event.inputs.account }}-eu-west-2"
+        key_name: "platform-redis-${{ github.event.inputs.account }}-eu-west-2"
         instance_type: 't3a.medium'
         volume_size: 40
         s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
@@ -62,16 +62,16 @@
   # ------------------------------------------------------------------------------
   # live deployment
   # ------------------------------------------------------------------------------
-    wagtail-redis-ami-live:
+    platform-redis-ami-live:
       if: github.event.inputs.account == 'live'
-      uses: nationalarchives/ds-github-actions/.github/workflows/wagtail-redis-ami-build.yml@main
+      uses: nationalarchives/ds-github-actions/.github/workflows/platform-redis-ami-build.yml@main
       with:
         base_role: "arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0"
         playbook_role: "arn:aws:iam::968803923593:role/s-devops-ansible-amis"
         region: "eu-west-2"
         branch: "${{ github.event.inputs.branch }}"
         account: "${{ github.event.inputs.account }}"
-        key_name: "wagtail-redis-${{ github.event.inputs.account }}-eu-west-2"
+        key_name: "platform-redis-${{ github.event.inputs.account }}-eu-west-2"
         instance_type: 't3a.medium'
         volume_size: 100
         s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"

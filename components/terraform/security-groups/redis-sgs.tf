@@ -4,12 +4,12 @@
 # load balancer
 #
 resource "aws_security_group" "redis_lb" {
-    name        = "wagtail-redis-lb"
+    name        = "platform-redis-lb"
     description = "Reverse Proxy Security Group HTTP access"
     vpc_id      = var.vpc_id
 
     tags = merge(var.tags, {
-        Name = "wagtail-redis-lb"
+        Name = "platform-redis-lb"
     })
 }
 
@@ -35,12 +35,12 @@ resource "aws_security_group_rule" "redis_lb_http_egress" {
 # instance
 #
 resource "aws_security_group" "redis" {
-    name        = "wagtail-redis"
+    name        = "platform-redis"
     description = "access to application"
     vpc_id      = var.vpc_id
 
     tags = merge(var.tags, {
-        Name = "wagtail-redis"
+        Name = "platform-redis"
     })
 }
 
