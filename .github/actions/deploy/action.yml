@@ -33,20 +33,14 @@ runs:
       run: |
         echo "Fetching version from config/${{ inputs.config-file }}..."
 
-        if [[ "${{ inputs.service-name }}" == "enrichment" ]]; then
-          CONFIG_SERVICE_NAME="frontend-enrichment"
-        else
-          CONFIG_SERVICE_NAME="${{ inputs.service-name }}"
-        fi
-
-        NEW_VERSION=$(jq -r '.services."'$CONFIG_SERVICE_NAME'".version' config/${{ inputs.config-file }})
-        NEW_IMAGE=$(jq -r '.services."'$CONFIG_SERVICE_NAME'".image' config/${{ inputs.config-file }})
+        NEW_VERSION=$(jq -r '.services."'${{ inputs.service-name }}'".version' config/${{ inputs.config-file }})
+        NEW_IMAGE=$(jq -r '.services."'${{ inputs.service-name }}'".image' config/${{ inputs.config-file }})
 
         echo "Extracted NEW_IMAGE=$NEW_IMAGE"
         echo "Extracted NEW_VERSION=$NEW_VERSION"
 
         if [[ -z "$NEW_VERSION" || "$NEW_VERSION" == "null" || -z "$NEW_IMAGE" || "$NEW_IMAGE" == "null" ]]; then
-          echo "Error: Could not retrieve version or image for $CONFIG_SERVICE_NAME"
+          echo "Error: Could not retrieve version or image for ${{ inputs.service-name }}"
           exit 1
         fi
 
