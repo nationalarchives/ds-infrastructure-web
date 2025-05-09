@@ -35,8 +35,8 @@ jobs:
           SOURCE=develop
           TARGET=staging
           VERSION_SUMMARY="| Service | Source | Target | Changes |"
-          echo "| ------- | ------ | ------ | ------- |" >> $VERSION_SUMMARY
-          jq --raw-output '.services | keys[]' "config/$SOURCE.json" | while read -r SERVICE_NAME; do SERVICE_SOURCE=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/$SOURCE.json") && SERVICE_TARGET=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/$TARGET.json") && [ "$SERVICE_SOURCE" != "$SERVICE_TARGET" ] && echo "| $SERVICE_NAME | \`$SERVICE_SOURCE\` | \`$SERVICE_TARGET\` | [Compare](https://github.com/nationalarchives/ds-$SERVICE_NAME/compare/v$SERVICE_TARGET...v$SERVICE_SOURCE) |" >> $VERSION_SUMMARY || echo "| $SERVICE_NAME | \`$SERVICE_SOURCE\` | \`$SERVICE_TARGET\` | [No changes] |" >> $VERSION_SUMMARY; done
+          VERSION_SUMMARY+=$(echo "\n| ------- | ------ | ------ | ------- |")
+          jq --raw-output '.services | keys[]' "config/$SOURCE.json" | while read -r SERVICE_NAME; do SERVICE_SOURCE=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/$SOURCE.json") && SERVICE_TARGET=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/$TARGET.json") && [ "$SERVICE_SOURCE" != "$SERVICE_TARGET" ] && VERSION_SUMMARY+=$(echo "\n| $SERVICE_NAME | \`$SERVICE_SOURCE\` | \`$SERVICE_TARGET\` | [Compare](https://github.com/nationalarchives/ds-$SERVICE_NAME/compare/v$SERVICE_TARGET...v$SERVICE_SOURCE) |") || VERSION_SUMMARY+=$(echo "\n| $SERVICE_NAME | \`$SERVICE_SOURCE\` | \`$SERVICE_TARGET\` | [No changes] |"); done
           echo "## Changes" >> $GITHUB_STEP_SUMMARY
           echo "\`develop\` -> \`staging\`" >> $GITHUB_STEP_SUMMARY
           echo "$VERSION_SUMMARY" >> $GITHUB_STEP_SUMMARY
