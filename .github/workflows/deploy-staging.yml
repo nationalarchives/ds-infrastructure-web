@@ -45,9 +45,11 @@ jobs:
           echo "\`develop\` -> \`staging\`" >> $GITHUB_STEP_SUMMARY
           echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
 
-          echo 'VERSION_SUMMARY<<EOF' >> $GITHUB_OUTPUT
-          echo $SUMMARY >> $GITHUB_OUTPUT
-          echo EOF >> $GITHUB_OUTPUT
+          {
+            echo 'VERSION_SUMMARY<<EOF'
+            echo "$SUMMARY"
+            echo EOF
+          } >> $GITHUB_OUTPUT
 
   create-release:
     runs-on: ubuntu-latest
