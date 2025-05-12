@@ -42,7 +42,7 @@ jobs:
 
           SUMMARY=$(<version-summary.md)
           echo "## Changes" >> $GITHUB_STEP_SUMMARY
-          echo "`develop\` -> \`staging\`" >> $GITHUB_STEP_SUMMARY
+          echo "\`develop\` -> \`staging\`" >> $GITHUB_STEP_SUMMARY
           echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
 
           echo 'VERSION_SUMMARY<<EOF' >> $GITHUB_OUTPUT
