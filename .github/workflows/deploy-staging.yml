@@ -29,11 +29,11 @@ jobs:
       version-summary: ${{ steps.build-comparison.outputs.VERSION_SUMMARY }}
     steps:
       - uses: actions/checkout@v4
-      - name: Compare develop to staging
+      - name: Compare develop to production
         id: build-comparison
         run: |
           SOURCE=develop
-          TARGET=staging
+          TARGET=production
           touch version-summary.md
 
           echo "| Service | New | Current | Changes |" >> version-summary.md
