@@ -1,4 +1,4 @@
-name: Compare dev to production
+name: Compare develop to production
 
 on:
   workflow_dispatch:
