@@ -41,10 +41,10 @@ jobs:
           echo "## Changes" >> $GITHUB_STEP_SUMMARY
           echo "\`develop\` -> \`staging\`" >> $GITHUB_STEP_SUMMARY
           $VERSION_SUMMARY=$(cat version-summary.md)
-          echo "$VERSION_SUMMARY" >> $GITHUB_STEP_SUMMARY
+          $(cat version-summary.md) >> $GITHUB_STEP_SUMMARY
           {
             echo 'VERSION_SUMMARY<<EOF'
-            echo "${VERSION_SUMMARY}"
+            cat version-summary.md
             echo EOF
           } >> $GITHUB_OUTPUT
 
