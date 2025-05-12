@@ -45,9 +45,10 @@ jobs:
           echo "\`develop\` -> \`staging\`" >> $GITHUB_STEP_SUMMARY
           echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
 
+          SUMMARY_CLEAN=$(sed -e "s/\`/\\\\\`/g" version-summary.md)
           {
             echo 'VERSION_SUMMARY<<EOF'
-            echo $SUMMARY
+            echo "$SUMMARY_CLEAN"
             echo EOF
           } >> $GITHUB_OUTPUT
 
