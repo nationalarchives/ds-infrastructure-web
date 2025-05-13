@@ -72,7 +72,7 @@
         branch: "${{ github.event.inputs.branch }}"
         account: "${{ github.event.inputs.account }}"
         key_name: "platform-redis-${{ github.event.inputs.account }}-eu-west-2"
-        instance_type: 't3a.medium'
+        instance_type: 'r5.large'
         volume_size: 100
         s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
         s3_deployment_root: "web/redis"
