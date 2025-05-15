@@ -150,7 +150,7 @@ terraform plan \
   -var-file="../../vars/live/terraform/cloudfront.auto.tfvars" \
   -var-file="../../vars/live/terraform/enrichment.auto.tfvars" \
   -var-file="../../vars/live/terraform/wagtail.auto.tfvars" \
-  -var-file="../../vars/live/terraform/redis.auto.tfvars"
+  -var-file="../../vars/live/terraform/redis.auto.tfvars" \
   -var-file="../../vars/live/terraform/cognito.auto.tfvars" \
   -var-file="../../vars/live/terraform/ses.auto.tfvars"
   ```
