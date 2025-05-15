@@ -33,3 +33,12 @@ wagtail_asg_min_size                  = 1
 wagtail_asg_desired_capacity          = 1
 wagtail_asg_health_check_grace_period = 150
 wagtail_asg_health_check_type         = "EC2"
+
+redis_patch_group      = "redis-patchgroup"
+redis_deployment_group = "redis-deploygroup"
+
+redis_asg_max_size                  = 2
+redis_asg_min_size                  = 1
+redis_asg_desired_capacity          = 1
+redis_asg_health_check_grace_period = 150
+redis_asg_health_check_type         = "EC2"
