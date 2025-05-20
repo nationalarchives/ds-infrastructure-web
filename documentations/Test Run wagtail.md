@@ -53,31 +53,31 @@
    ```
 * This will display the files in the `ds-dev-deployment-source` bucket, confirming that your zip file is successfully uploaded.
 
-### Copy the Zip File to Wagtail Instance's /app/media Directory
+### Copy the Zip File to Wagtail Instance's /media Directory
 
 1. **Connect to the Wagtail Instance:**
    Use Session Manager to connect to the Wagtail instance where you want to copy the zip file. 
 
-2. **Download the Zip File from S3 Directly to /app/media:** Once you're connected to the Wagtail instance, use the AWS CLI to download the wagtail-content.zip file directly to the /app/media directory on the instance.
+2. **Download the Zip File from S3 Directly to /media:** Once you're connected to the Wagtail instance, use the AWS CLI to download the wagtail-content.zip file directly to the /media directory on the instance.
 
     ``` bash
-    aws s3 cp s3://ds-dev-deployment-source/wagtail-content.zip /app/media/
+    aws s3 cp s3://ds-dev-deployment-source/wagtail-content.zip /media/
     ```
-* This command will download the zip file directly into the `/app/media` directory.
+* This command will download the zip file directly into the `/media` directory.
 
-3. **Extract the Zip File in /app/media:** After downloading the file, extract the contents of the zip file into the `/app/media` directory.
+3. **Extract the Zip File in /media:** After downloading the file, extract the contents of the zip file into the `/media` directory.
 
      ```bash
-    sudo unzip /app/media/wagtail-content.zip -d /app/media
+    sudo unzip /media/wagtail-content.zip -d /media
     ```
-* This will unzip the contents directly into the `/app/media` directory.
+* This will unzip the contents directly into the `/media` directory.
 
-4. **Verify the Files:** Check the `/app/media` directory to ensure the files were copied successfully.
+4. **Verify the Files:** Check the `/media` directory to ensure the files were copied successfully.
 
       ```bash
-      ls /app/media
+      ls /media
     ```
-* This will list the files in the `/app/media` directory, confirming that the files from the zip have been extracted properly.
+* This will list the files in the `/media` directory, confirming that the files from the zip have been extracted properly.
 
 ### Update Wagtail Content-Related Parameters in AWS Parameter Store
 
