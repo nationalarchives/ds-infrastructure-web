@@ -32,6 +32,3 @@ variable "tags" {}
 
 variable "redis_sg_id" {}
 variable "redis_lb_id" {}
-
-
-
