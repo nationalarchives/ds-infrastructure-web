@@ -22,7 +22,7 @@
         },
         "sitemap-search": {
             "image": "ghcr.io/nationalarchives/ds-sitemap-search",
-            "version": "25.05.07.45",
+            "version": "25.05.20.46",
             "repo": "https://github.com/nationalarchives/ds-sitemap-search"
         },
         "feedback": {
