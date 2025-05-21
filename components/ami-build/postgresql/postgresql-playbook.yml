@@ -1,120 +1,123 @@
 # PostgreSQL playbook
 ---
-
 - name: create PostgreSQL AMI
   hosts: localhost
   gather_facts: false
 
   tasks:
+    - name: load variables
+      ansible.builtin.include_vars:
+        file: "{{ ansible_var_file }}"
 
-  - name: load variables
-    ansible.builtin.include_vars:
-      file: "{{ ansible_var_file }}"
+    - name: get AWS session token
+      community.aws.sts_session_token:
+        duration_seconds: 3600
+      register: session_credentials
 
-  - name: get AWS session token
-    community.aws.sts_session_token:
-      duration_seconds: 3600
-    register: session_credentials
+    - name: switch role credentials
+      community.aws.sts_assume_role:
+        aws_access_key: "{{ session_credentials.sts_creds.access_key }}"
+        aws_secret_key: "{{ session_credentials.sts_creds.secret_key }}"
+        security_token: "{{ session_credentials.sts_creds.session_token }}"
+        role_arn: "{{ lookup ('env', 'AWS_ROLE_ARN') }}"
+        role_session_name: "s-devops"
+      register: assumed_role
 
-  - name: switch role credentials
-    community.aws.sts_assume_role:
-      aws_access_key: "{{ session_credentials.sts_creds.access_key }}"
-      aws_secret_key: "{{ session_credentials.sts_creds.secret_key }}"
-      security_token: "{{ session_credentials.sts_creds.session_token }}"
-      role_arn: "{{ lookup ('env', 'AWS_ROLE_ARN') }}"
-      role_session_name: "s-devops"
-    register: assumed_role
+    - name: get linux2 AMI
+      amazon.aws.ec2_ami_info:
+        aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+        aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
+        security_token: "{{ assumed_role.sts_creds.session_token }}"
+        owners: amazon
+        region: "{{ region }}"
+        filters:
+          name: "amzn2-ami-hvm*"
+      register: findami
 
-  - name: get linux2 AMI
-    amazon.aws.ec2_ami_info:
-      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
-      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
-      security_token: "{{ assumed_role.sts_creds.session_token }}"
-      owners: amazon
-      region: "{{ region }}"
-      filters:
-        name: "amzn2-ami-hvm*"
-    register: findami
+    - name: set latest AMI
+      set_fact:
+        latest_ami: >
+          {{ findami.images | sort(attribute='creation_date') | last }}
 
-  - name: set latest AMI
-    set_fact:
-      latest_ami: >
-        {{ findami.images | sort(attribute='creation_date') | last }}
+    - name: template deployment policy
+      template:
+        src: "./templates/instance-role-policy.json.j2"
+        dest: "./instance-role-policy.json"
+        force: yes
 
-  - name: template deployment policy
-    template:
-      src: "./templates/instance-role-policy.json.j2"
-      dest: "./instance-role-policy.json"
-      force: yes
+    - name: create deployment policy
+      community.aws.iam_managed_policy:
+        aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+        aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
+        security_token: "{{ assumed_role.sts_creds.session_token }}"
+        policy_name: "ansible-aim-posgres-s3-policy"
+        policy: "{{ lookup('file', './instance-role-policy.json') }}"
+        state: "present"
+      register: s3_policy
 
-  - name: create deployment policy
-    community.aws.iam_managed_policy:
-      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
-      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
-      security_token: "{{ assumed_role.sts_creds.session_token }}"
-      policy_name: "ansible-aim-posgres-s3-policy"
-      policy: "{{ lookup('file', './instance-role-policy.json') }}"
-      state: "present"
-    register: s3_policy
+    - name: create postgres IAM role
+      community.aws.iam_role:
+        aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+        aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
+        security_token: "{{ assumed_role.sts_creds.session_token }}"
+        name: "ansible-ami-postgres-role"
+        region: "{{ region }}"
+        assume_role_policy_document: "{{ lookup('file', './instance-role-policy.json') }}"
+        managed_policies:
+          [
+            "{{ s3_policy.policy.arn }}",
+            "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM",
+            "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
+          ]
+        create_instance_profile: yes
+        delete_instance_profile: yes
+        purge_policies: yes
+        state: "present"
+      register: ec2_iam_role
 
-  - name: create postgres IAM role
-    community.aws.iam_role:
-      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
-      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
-      security_token: "{{ assumed_role.sts_creds.session_token }}"
-      name: "ansible-ami-postgres-role"
-      region: "{{ region }}"
-      assume_role_policy_document: "{{ lookup('file', './instance-role-policy.json') }}"
-      managed_policies: ["{{ s3_policy.policy.arn }}", "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM", "arn:aws:iam::aws:policy/SecretsManagerReadWrite"]
-      create_instance_profile: yes
-      delete_instance_profile: yes
-      purge_policies: yes
-      state: "present"
-    register: ec2_iam_role
+    - name: create security group - allowing updates and downloads
+      amazon.aws.ec2_group:
+        aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+        aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
+        security_token: "{{ assumed_role.sts_creds.session_token }}"
+        name: "ansible-ami-postgres-sg"
+        description: "security group allowing updates and downloads"
+        region: "{{ region }}"
+        vpc_id: "{{ lookup( 'env', 'VPC_ID') }}"
+        rules:
+          - proto: "tcp"
+            from_port: 22
+            to_port: 22
+            cidr_ip: "0.0.0.0/0"
+            rule_desc: "allow incoming ssh connections"
+          - proto: "tcp"
+            from_port: 1024
+            to_port: 65535
+            cidr_ip: "0.0.0.0/0"
+            rule_desc: "for updates and downloads"
+        rules_egress:
+          - proto: "tcp"
+            from_port: 80
+            to_port: 80
+            cidr_ip: "0.0.0.0/0"
+            rule_desc: "allow updates and downloads"
+          - proto: "tcp"
+            from_port: 443
+            to_port: 443
+            cidr_ip: "0.0.0.0/0"
+            rule_desc: "allow updates and downloads"
+          - proto: "tcp"
+            from_port: 1024
+            to_port: 65535
+            cidr_ip: "0.0.0.0/0"
+            rule_desc: "allow replies"
+        state: "present"
+      register: ec2_sec_group
 
-  - name: create security group - allowing updates and downloads
-    amazon.aws.ec2_group:
-      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
-      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
-      security_token: "{{ assumed_role.sts_creds.session_token }}"
-      name: "ansible-ami-postgres-sg"
-      description: "security group allowing updates and downloads"
-      region: "{{ region }}"
-      vpc_id: "{{ lookup( 'env', 'VPC_ID') }}"
-      rules:
-        - proto: "tcp"
-          from_port: 22
-          to_port: 22
-          cidr_ip: "0.0.0.0/0"
-          rule_desc: "allow incoming ssh connections"
-        - proto: "tcp"
-          from_port: 1024
-          to_port: 65535
-          cidr_ip: "0.0.0.0/0"
-          rule_desc: "for updates and downloads"
-      rules_egress:
-        - proto: "tcp"
-          from_port: 80
-          to_port: 80
-          cidr_ip: "0.0.0.0/0"
-          rule_desc: "allow updates and downloads"
-        - proto: "tcp"
-          from_port: 443
-          to_port: 443
-          cidr_ip: "0.0.0.0/0"
-          rule_desc: "allow updates and downloads"
-        - proto: "tcp"
-          from_port: 1024
-          to_port: 65535
-          cidr_ip: "0.0.0.0/0"
-          rule_desc: "allow replies"
-      state: "present"
-    register: ec2_sec_group
-
-  - name: set secrets
-    vars:
-      secret_data: "{{ lookup('amazon.aws.aws_secret', '{{ credentials_key }}', region=region, aws_access_key=assumed_role.sts_creds.access_key, aws_secret_key=assumed_role.sts_creds.secret_key, aws_security_token=assumed_role.sts_creds.session_token, on_denied='warn') | from_json }}"
-    set_fact:
+    - name: set secrets
+      vars:
+        secret_data: "{{ lookup('amazon.aws.aws_secret', '{{ credentials_key }}', region=region, aws_access_key=assumed_role.sts_creds.access_key, aws_secret_key=assumed_role.sts_creds.secret_key, aws_security_token=assumed_role.sts_creds.session_token, on_denied='warn') | from_json }}"
+      set_fact:
         root_password: "{{ secret_data.root_password }}"
         admin_user: "{{ secret_data.admin_user }}"
         admin_pass: "{{ secret_data.admin_password }}"
@@ -122,183 +125,186 @@
         repl_pass: "{{ secret_data.repl_password }}"
         network_cidr: "{{ secret_data.network_cidr }}"
 
-  - name: template userdata source
-    vars:
-      s3_deployment_bucket: "{{ s3_deployment_bucket }}"
-      s3_deployment_root: "{{ s3_deployment_root }}"
-      root_password: "{{ root_password }}"
-      admin_user: "{{ admin_user }}"
-      admin_password: "{{ admin_password }}"
-      repl_user: "{{ repl_user }}"
-      repl_password: "{{ repl_password }}"
-      network_cidr: "{{ network_cidr }}"
-    template:
-      src: "./templates/userdata.sh.j2"
-      dest: "./userdata.sh"
-      force: yes
+    - name: template userdata source
+      vars:
+        s3_deployment_bucket: "{{ s3_deployment_bucket }}"
+        s3_deployment_root: "{{ s3_deployment_root }}"
+        root_password: "{{ root_password }}"
+        admin_user: "{{ admin_user }}"
+        admin_password: "{{ admin_password }}"
+        repl_user: "{{ repl_user }}"
+        repl_password: "{{ repl_password }}"
+        network_cidr: "{{ network_cidr }}"
+      template:
+        src: "./templates/userdata.sh.j2"
+        dest: "./userdata.sh"
+        force: yes
 
-  - name: provisioning primer instance
-    amazon.aws.ec2_instance:
-      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
-      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
-      security_token: "{{ assumed_role.sts_creds.session_token }}"
-      key_name: "{{ key_name }}"
-      image_id: "{{ latest_ami.image_id }}"#
-      instance_role: "ansible-ami-postgres-role"
-      instance_type: "t3a.small"
-      metadata_options:
-        http_endpoint: "enabled"
-        http_tokens: "required"
-      name : "postgres-primer-{{ env }}"
-      network:
-        assign_public_ip: yes
-        delete_on_termination: yes
-        subnet_id: "{{ lookup('env', 'SUBNET_ID') }}"
-      region: "{{ region }}"
-      security_groups: ["{{ ec2_sec_group.group_id }}", "{{ db_sg.security_groups[0].group_id }}"]
-      state: "running"
-      termination_protection: no
-      user_data: "{{ lookup('file', './userdata.sh') }}"
-      wait: true
-      volumes:
-        - device_name: "/dev/xvda"
-          ebs:
-            delete_on_termination: true
-            encrypted: true
-            volume_size: "{{ volume_size }}"
-      vpc_subnet_id: "{{ lookup('env', 'SUBNET_ID') }}"
-      tags:
-        Environment: "{{ env }}"
-        Service: "{{ service }}"
-        Owner: "Digital Services"
-        CreatedBy: "ansible"
-        CostCentre: 53
-        Terraform: false
-    register: ec2
+    - name: provisioning primer instance
+      amazon.aws.ec2_instance:
+        aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+        aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
+        security_token: "{{ assumed_role.sts_creds.session_token }}"
+        key_name: "{{ key_name }}"
+        image_id: "{{ latest_ami.image_id }}"
+        instance_role: "ansible-ami-postgres-role"
+        instance_type: "t3a.small"
+        metadata_options:
+          http_endpoint: "enabled"
+          http_tokens: "required"
+        name: "postgres-primer-{{ env }}"
+        network:
+          assign_public_ip: yes
+          delete_on_termination: yes
+          subnet_id: "{{ lookup('env', 'SUBNET_ID') }}"
+        region: "{{ region }}"
+        security_groups:
+          [
+            "{{ ec2_sec_group.group_id }}",
+            "{{ db_sg.security_groups[0].group_id }}",
+          ]
+        state: "running"
+        termination_protection: no
+        user_data: "{{ lookup('file', './userdata.sh') }}"
+        wait: true
+        volumes:
+          - device_name: "/dev/xvda"
+            ebs:
+              delete_on_termination: true
+              encrypted: true
+              volume_size: "{{ volume_size }}"
+        vpc_subnet_id: "{{ lookup('env', 'SUBNET_ID') }}"
+        tags:
+          Environment: "{{ env }}"
+          Service: "{{ service }}"
+          Owner: "Digital Services"
+          CreatedBy: "ansible"
+          CostCentre: 53
+          Terraform: false
+      register: ec2
 
-  - name: get instance ip address
-    set_fact:
-      private_ip: "{{ ec2.instances[0].private_ip_address }}"
-      public_ip: "{{ ec2.instances[0].public_ip_address }}"
-      id: "{{ ec2.instances[0].instance_id }}"
+    - name: get instance ip address
+      set_fact:
+        private_ip: "{{ ec2.instances[0].private_ip_address }}"
+        public_ip: "{{ ec2.instances[0].public_ip_address }}"
+        id: "{{ ec2.instances[0].instance_id }}"
 
-  - ansible.builtin.debug:
-      msg:
-        - "====================================================================="
-        - "instance started up"
-        - "instance private ip: {{ private_ip }}"
-        - "instance id: {{ id }}"
-        - "instance public ip {{ public_ip }}"
-        - "====================================================================="
+    - ansible.builtin.debug:
+        msg:
+          - "====================================================================="
+          - "instance started up"
+          - "instance private ip: {{ private_ip }}"
+          - "instance id: {{ id }}"
+          - "instance public ip {{ public_ip }}"
+          - "====================================================================="
 
-  - name: add source ebs to ec2
-    ansible.aws.ec2_vol:
-      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
-      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
-      security_token: "{{ assumed_role.sts_creds.session_token }}"
-      instance: id
-      device_name: "{{ ebs_device_name }}"
-      delete_on_termination: true
-      encrypted: true
-      volume_size: {{ ebs_size }}
-      volume_type: {{ ebs_type }}
-      tags:
-        Name: "postgres-source-ebs-primer"
-    register: source_ebs
+    - name: add source ebs to ec2
+      ansible.aws.ec2_vol:
+        aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+        aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
+        security_token: "{{ assumed_role.sts_creds.session_token }}"
+        instance: id
+        device_name: "{{ ebs_device_name }}"
+        delete_on_termination: true
+        encrypted: true
+        volume_size: { { ebs_size } }
+        volume_type: { { ebs_type } }
+        tags:
+          Name: "postgres-source-ebs-primer"
+      register: source_ebs
 
-  - name: register new ec2 as host
-    add_host:
-      hostname: "{{ public_ip }}"
-      groups: ec2hosts
-      ansible_user: ec2-user
-      remote_user: ec2-user
-      gather_facts: no
+    - name: register new ec2 as host
+      add_host:
+        hostname: "{{ public_ip }}"
+        groups: ec2hosts
+        ansible_user: ec2-user
+        remote_user: ec2-user
+        gather_facts: no
 
-  - name: wait for SSH service to bind on new instance
-    wait_for:
-      host: "{{ public_ip }}"
-      port: 22
-      delay: 90
-      timeout: 600
-      state: started
-    tags: [ami]
+    - name: wait for SSH service to bind on new instance
+      wait_for:
+        host: "{{ public_ip }}"
+        port: 22
+        delay: 90
+        timeout: 600
+        state: started
+      tags: [ami]
 
 - name: switch to ec2hosts - checking if setup has finished
   hosts: ec2hosts
   gather_facts: false
   tasks:
-  - ansible.builtin.debug:
-      msg:
-        - "====================================================================="
-        - "checking status of new instance before ami can be build"
-        - "20 second interval with max duration of 15 minutes"
-        - "====================================================================="
+    - ansible.builtin.debug:
+        msg:
+          - "====================================================================="
+          - "checking status of new instance before ami can be build"
+          - "20 second interval with max duration of 15 minutes"
+          - "====================================================================="
 
-  - name: check if ec2 instance is ready
-    ansible.builtin.stat:
-      path: "/var/finish-init.txt"
-    remote_user: ec2-user
-    register: init_finished
-    until: "init_finished.stat.exists"
-    retries: 45
-    delay: 20
+    - name: check if ec2 instance is ready
+      ansible.builtin.stat:
+        path: "/var/finish-init.txt"
+      remote_user: ec2-user
+      register: init_finished
+      until: "init_finished.stat.exists"
+      retries: 45
+      delay: 20
 
 - name: switch to localhost
   hosts: localhost
   gather_facts: true
 
   tasks:
-  - name: create PostgresSQL AMI
-    amazon.aws.ec2_ami:
-      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
-      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
-      security_token: "{{ assumed_role.sts_creds.session_token }}"
-      instance_id: "{{ prime_id }}"
-      name: "postgres-primer-{{ env }}-{{ ansible_date_time.date }} {{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}-{{ ansible_date_time.second }}"
-      description: "PostgreSQL Instance - ready for deployment"
-      region: "{{ region }}"
-      state: "present"
-      wait: yes
-      tags:
-        Name: "postgres-primer-{{ env }}-{{ ansible_date_time.date }} {{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}-{{ ansible_date_time.second }}"
-        Service: "{{ service }}"
-        Owner: "Digital Services"
-        CreatedBy: "ansible"
-        CostCentre: 53
-        Terraform: false
+    - name: create PostgresSQL AMI
+      amazon.aws.ec2_ami:
+        aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+        aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
+        security_token: "{{ assumed_role.sts_creds.session_token }}"
+        instance_id: "{{ prime_id }}"
+        name: "postgres-primer-{{ env }}-{{ ansible_date_time.date }} {{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}-{{ ansible_date_time.second }}"
+        description: "PostgreSQL Instance - ready for deployment"
+        region: "{{ region }}"
+        state: "present"
+        wait: yes
+        tags:
+          Name: "postgres-primer-{{ env }}-{{ ansible_date_time.date }} {{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}-{{ ansible_date_time.second }}"
+          Service: "{{ service }}"
+          Owner: "Digital Services"
+          CreatedBy: "ansible"
+          CostCentre: 53
+          Terraform: false
 
-  - name: terminate instance
-    ec2_instance:
-      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
-      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
-      security_token: "{{ assumed_role.sts_creds.session_token }}"
-      instance_ids: ["{{ id }}"]
-      region: "{{ region }}"
-      state: "absent"
-  - name: remove security group
-    amazon.aws.ec2_group:
-      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
-      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
-      security_token: "{{ assumed_role.sts_creds.session_token }}"
-      name: "ansible-ami-postgres-sg"
-      region: "{{ region }}"
-      state: "absent"
+    - name: terminate instance
+      ec2_instance:
+        aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+        aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
+        security_token: "{{ assumed_role.sts_creds.session_token }}"
+        instance_ids: ["{{ id }}"]
+        region: "{{ region }}"
+        state: "absent"
+    - name: remove security group
+      amazon.aws.ec2_group:
+        aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+        aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
+        security_token: "{{ assumed_role.sts_creds.session_token }}"
+        name: "ansible-ami-postgres-sg"
+        region: "{{ region }}"
+        state: "absent"
 
-  - name: remove IAM role
-    community.aws.iam_role:
-      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
-      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
-      security_token: "{{ assumed_role.sts_creds.session_token }}"
-      name: "ansible-ami-postgres-role"
-      region: "{{ region }}"
-      delete_instance_profile: yes
-      state: "absent"
+    - name: remove IAM role
+      community.aws.iam_role:
+        aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+        aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
+        security_token: "{{ assumed_role.sts_creds.session_token }}"
+        name: "ansible-ami-postgres-role"
+        region: "{{ region }}"
+        delete_instance_profile: yes
+        state: "absent"
 
-  - name: remove deployment policy
-    community.aws.iam_managed_policy:
-      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
-      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
-      security_token: "{{ assumed_role.sts_creds.session_token }}"
-      policy_name: "ansible-ami-postgres-s3-policy"
-      state: "absent"
-...
+    - name: remove deployment policy
+      community.aws.iam_managed_policy:
+        aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+        aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
+        security_token: "{{ assumed_role.sts_creds.session_token }}"
+        policy_name: "ansible-ami-postgres-s3-policy"
+        state: "absent"

@@ -9,4 +9,3 @@ s3_deployment_root: "web"
 s3_logfile_bucket: "ds-staging-wp-logfiles"
 s3_logfile_root: "web"
 ssm_download_region: "eu-west-2"
-...

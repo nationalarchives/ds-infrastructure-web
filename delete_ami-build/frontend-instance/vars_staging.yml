@@ -6,4 +6,3 @@ service: "web"
 volume_size: 20
 s3_deployment_bucket: "ds-staging-deployment-source"
 s3_deployment_root: "web"
-...

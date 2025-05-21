@@ -44,7 +44,7 @@ jobs:
       - name: Read the config file
         run: cat "config/${{ inputs.config }}"
         shell: bash
-        
+
       - name: Deploy
         uses: ./.github/actions/deploy
         with:
