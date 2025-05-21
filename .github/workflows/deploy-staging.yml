@@ -38,7 +38,7 @@ jobs:
 
           echo "| Service | New ($SOURCE) | Current ($TARGET) | Changes |" >> version-summary.md
           echo "| --- | --- | --- | --- |" >> version-summary.md
-          jq --raw-output '.services | keys[]' "config/$SOURCE.json" | while read -r SERVICE_NAME; do SERVICE_REPO=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].repo' "config/$SOURCE.json") && SERVICE_SOURCE=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/$SOURCE.json") && SERVICE_TARGET=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/$TARGET.json") && echo "| $SERVICE_NAME | \`$SERVICE_SOURCE\` | \`$SERVICE_TARGET\` | [Compare]($SERVICE_REPO/compare/v$SERVICE_TARGET...v$SERVICE_SOURCE) |" >> version-summary.md; done
+          jq --raw-output '.services | keys[]' "config/$SOURCE.json" | while read -r SERVICE_NAME; do SERVICE_REPO=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].repo' "config/$SOURCE.json") && SERVICE_SOURCE=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/$SOURCE.json") && SERVICE_TARGET=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/$TARGET.json") && [ "$SERVICE_SOURCE" != "$SERVICE_TARGET" ] && echo "| $SERVICE_NAME | \`$SERVICE_SOURCE\` | \`$SERVICE_TARGET\` | [Compare]($SERVICE_REPO/compare/v$SERVICE_TARGET...v$SERVICE_SOURCE) |" >> version-summary.md || echo "| $SERVICE_NAME | \`$SERVICE_SOURCE\` | \`$SERVICE_TARGET\` | [No changes] |" >> version-summary.md; done
 
           SUMMARY=$(<version-summary.md)
           echo "## Changes" >> $GITHUB_STEP_SUMMARY
