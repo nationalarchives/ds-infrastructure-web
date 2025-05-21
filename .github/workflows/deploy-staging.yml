@@ -128,11 +128,26 @@ jobs:
           parameter-path: /application/web/${{ matrix.service }}/docker_images
           deployed-parameter-path: /application/web/${{ matrix.service }}/deployed_version
 
+  # tests:
+  #   runs-on: ubuntu-latest
+  #   needs:
+  #     - deploy
+  #   env:
+  #     GH_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN_TEST_RUNNER }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Run tests
+  #       run: |
+  #         gh workflow run manual.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://staging-www.nationalarchives.gov.uk --raw-field notify-slack-on-pass=true --raw-field notify-slack-on-fail=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
+  #         sleep 5
+  #         gh run watch --repo nationalarchives/ds-tna-website-tests $(gh run list --repo nationalarchives/ds-tna-website-tests --workflow manual.yml -L1 --json databaseId --jq .[0].databaseId)
+
   notify-end-status:
     runs-on: ubuntu-latest
     needs:
       - create-release
-      - deploy
+      - deploy  # Remove when tests are added
+      # - tests
     if: inputs.notify-slack
     steps:
       - uses: rtCamp/action-slack-notify@v2
@@ -159,14 +174,3 @@ jobs:
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
           SLACK_MESSAGE: "❌ Release **v${{ needs.create-release.outputs.version }}** failed to deploy to staging"
-
-  # tests:
-  #   runs-on: ubuntu-latest
-  #   needs:
-  #     - deploy
-  #   env:
-  #     GH_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN_TEST_RUNNER }}
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Run tests
-  #       run: gh workflow run manual.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://staging-www.nationalarchives.gov.uk --raw-field notify-slack-on-pass=true --raw-field notify-slack-on-fail=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
