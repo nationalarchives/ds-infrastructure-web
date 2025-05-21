@@ -86,28 +86,11 @@ jobs:
           parameter-path: /application/web/${{ matrix.service }}/docker_images
           deployed-parameter-path: /application/web/${{ matrix.service }}/deployed_version
 
-  tests:
-    runs-on: ubuntu-latest
-    needs:
-      - prepare
-      - deploy
-    env:
-      GH_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN_TEST_RUNNER }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ needs.prepare.outputs.commit-sha }}
-      - name: Run tests
-        run: |
-          gh workflow run manual.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://www.nationalarchives.gov.uk --raw-field exclude-tests=@wip --raw-field notify-slack-on-pass=true --raw-field notify-slack-on-fail=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
-          sleep 5
-          gh run watch --repo nationalarchives/ds-tna-website-tests $(gh run list --repo nationalarchives/ds-tna-website-tests --workflow manual.yml -L1 --json databaseId --jq .[0].databaseId)
-
   notify-end-status:
     runs-on: ubuntu-latest
     needs:
       - prepare
-      - tests
+      - deploy
     if: always()
     steps:
       - uses: rtCamp/action-slack-notify@v2
@@ -134,3 +117,20 @@ jobs:
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
           SLACK_MESSAGE: "❌ Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** failed to deploy to production"
+
+  tests:
+    runs-on: ubuntu-latest
+    needs:
+      - prepare
+      - notify-end-status
+    env:
+      GH_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN_TEST_RUNNER }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.prepare.outputs.commit-sha }}
+      - name: Run tests
+        run: |
+          gh workflow run manual.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://www.nationalarchives.gov.uk --raw-field exclude-tests=@wip --raw-field notify-slack-on-pass=true --raw-field notify-slack-on-fail=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
+          sleep 5
+          gh run watch --exit-status --repo nationalarchives/ds-tna-website-tests $(gh run list --repo nationalarchives/ds-tna-website-tests --workflow manual.yml -L1 --json databaseId --jq .[0].databaseId)
