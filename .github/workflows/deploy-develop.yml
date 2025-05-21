@@ -39,7 +39,7 @@ jobs:
           parameter-path: /application/web/${{ matrix.service }}/docker_images
           deployed-parameter-path: /application/web/${{ matrix.service }}/deployed_version
 
-  test:
+  tests:
     runs-on: ubuntu-latest
     needs:
       - deploy

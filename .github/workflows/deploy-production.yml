@@ -117,7 +117,7 @@ jobs:
           SLACKIFY_MARKDOWN: true
           SLACK_MESSAGE: "❌ Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** failed to deploy to production"
 
-  test:
+  tests:
     runs-on: ubuntu-latest
     needs:
       - prepare
