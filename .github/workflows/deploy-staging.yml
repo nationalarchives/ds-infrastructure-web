@@ -114,6 +114,7 @@ jobs:
         service:
           - frontend
           - enrichment
+          - wagtail
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
