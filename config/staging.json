@@ -10,7 +10,7 @@
       "version": "25.05.20.607",
       "repo": "https://github.com/nationalarchives/ds-wagtail"
     },
-    "search": {
+    "catalogue": {
       "image": "ghcr.io/nationalarchives/ds-search",
       "version": "25.05.21.601",
       "repo": "https://github.com/nationalarchives/ds-search"
