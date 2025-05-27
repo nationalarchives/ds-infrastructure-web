@@ -16,6 +16,8 @@ This document contains links to various resources related to the project.
 
 - [Wagtail AMI](https://github.com/nationalarchives/ds-infrastructure-web/actions/workflows/wagtail.yml)
 
+- [Redis AMI](https://github.com/nationalarchives/ds-infrastructure-web/actions/workflows/platform-redis.yml)
+
 - [Web Frontend Terraform Plan](https://github.com/nationalarchives/ds-infrastructure-web/actions/workflows/web-frontend-plan.yml)
 
 - [Web Frontend Terraform Apply](https://github.com/nationalarchives/ds-infrastructure-web/actions/workflows/web-frontend-apply.yml)
