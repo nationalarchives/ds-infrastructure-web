@@ -165,7 +165,7 @@
 * Use the following command to copy the dump file from the S3 bucket to the PostgreSQL instance:
 
    ``` bash 
-   aws s3 cp s3://ds-dev-deployment-source/databases/postgres/<dumpfilename.sql> to /tmp/etna.sql
+   aws s3 cp s3://ds-dev-deployment-source/databases/postgres/<dumpfilename.sql>  /tmp/etna.sql
   ```
 
 * 🔹 Replace <dumpfilename.sql> with the actual dump file name.
