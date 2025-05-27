@@ -1,4 +1,5 @@
 # Test Run Wagtail Migration
+
 ### Download Media from Wagtail
 
 1. **Create a Directory:**
@@ -13,12 +14,14 @@
    ```bash
    cd ~/temp/wagtail-content
    ```
+
 3. **Download Media:** To download the media files, use the platform mount:download command with the appropriate options. This will mount the media and download the files to your current directory.
 
-   ``` bash
+   ```bash
    platform mount:download --mount media --target .
-   ```   
-* This will download the media files into the `~/temp/wagtail-content` directory.
+   ```
+
+- This will download the media files into the `~/temp/wagtail-content` directory.
 
 ### Zip the Downloaded Files
 
@@ -28,7 +31,9 @@
    ```bash
    zip -r wagtail-content.zip .
    ```
-* This will create a `wagtail-content.zip` file containing all the files in the current directory.
+
+- This will create a `wagtail-content.zip` file containing all the files in the current directory.
+
 ### Upload the Zip File to an S3 Bucket
 
 1. **Set up AWS CLI:**
@@ -39,45 +44,51 @@
    ```bash
    aws configure
    ```
+
 2. **Upload the Zip File to S3:** Use the aws s3 cp command to upload the wagtail-content.zip file to the `ds-dev-deployment-source` S3 bucket. Replace <bucket-name> with your actual S3 bucket name if different.
 
-   ``` bash
+   ```bash
    aws s3 cp wagtail-content.zip s3://ds-dev-deployment-source/
    ```
-* This command uploads the `wagtail-content.zip` file to the specified S3 bucket.
+
+- This command uploads the `wagtail-content.zip` file to the specified S3 bucket.
 
 3. **Verify the Upload:** You can verify that the file has been uploaded to the S3 bucket by listing the contents:
 
    ```bash
    aws s3 ls s3://ds-dev-deployment-source/
    ```
-* This will display the files in the `ds-dev-deployment-source` bucket, confirming that your zip file is successfully uploaded.
+
+- This will display the files in the `ds-dev-deployment-source` bucket, confirming that your zip file is successfully uploaded.
 
 ### Copy the Zip File to Wagtail Instance's /media Directory
 
 1. **Connect to the Wagtail Instance:**
-   Use Session Manager to connect to the Wagtail instance where you want to copy the zip file. 
+   Use Session Manager to connect to the Wagtail instance where you want to copy the zip file.
 
 2. **Download the Zip File from S3 Directly to /media:** Once you're connected to the Wagtail instance, use the AWS CLI to download the wagtail-content.zip file directly to the /media directory on the instance.
 
-    ``` bash
-    aws s3 cp s3://ds-dev-deployment-source/wagtail-content.zip /media/
-    ```
-* This command will download the zip file directly into the `/media` directory.
+   ```bash
+   aws s3 cp s3://ds-dev-deployment-source/wagtail-content.zip /media/
+   ```
+
+- This command will download the zip file directly into the `/media` directory.
 
 3. **Extract the Zip File in /media:** After downloading the file, extract the contents of the zip file into the `/media` directory.
 
-     ```bash
-    sudo unzip /media/wagtail-content.zip -d /media
-    ```
-* This will unzip the contents directly into the `/media` directory.
+   ```bash
+   sudo unzip /media/wagtail-content.zip -d /media
+   ```
+
+- This will unzip the contents directly into the `/media` directory.
 
 4. **Verify the Files:** Check the `/media` directory to ensure the files were copied successfully.
 
-      ```bash
-      ls /media
-    ```
-* This will list the files in the `/media` directory, confirming that the files from the zip have been extracted properly.
+   ```bash
+   ls /media
+   ```
+
+- This will list the files in the `/media` directory, confirming that the files from the zip have been extracted properly.
 
 ### Update Wagtail Content-Related Parameters in AWS Parameter Store
 
@@ -86,26 +97,25 @@
 2. **Update the Parameters in Parameter Store:** For each relevant parameter, update it with Wagtail-specific values.
 3. **Restart the web-frontend service**:
 
-   ***Stop and Remove Existing Containers:***
-   ``` bash
+   **_Stop and Remove Existing Containers:_**
+
+   ```bash
    sudo docker ps -a
    sudo docker stop <container-id>
    sudo docker rm <container-id>
    ```
-   ***Run the startup script***
-   * This will reload environment variables from the Parameter Store and reinitialize the containers.
 
-      ```bash
-      startup.sh
-      ```
-4. **Verify Application Behavior:** Check the container logs and access the application to confirm the Wagtail content is working correctly.
+   **_Run the startup script_**
 
-     ``` bash
-     sudo docker ps
-     sudo docker logs <container-name>
+   - This will reload environment variables from the Parameter Store and reinitialize the containers.
+
+     ```bash
+     startup.sh
      ```
 
+4. **Verify Application Behavior:** Check the container logs and access the application to confirm the Wagtail content is working correctly.
 
-
-
-
+   ```bash
+   sudo docker ps
+   sudo docker logs <container-name>
+   ```

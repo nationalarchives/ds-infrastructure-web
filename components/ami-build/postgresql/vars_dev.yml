@@ -9,4 +9,3 @@ s3_deployment_root: "postgresql"
 ebs_size: 20
 ebs_type: "gp3"
 ebs_device_name: "/dev/sdf"
-...

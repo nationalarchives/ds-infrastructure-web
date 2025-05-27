@@ -14,14 +14,14 @@ on:
         description: AWS account
         required: true
         options:
-        - dev
-        - staging
-        - live
+          - dev
+          - staging
+          - live
 
 jobs:
-# ------------------------------------------------------------------------------
-# dev deployment
-# ------------------------------------------------------------------------------
+  # ------------------------------------------------------------------------------
+  # dev deployment
+  # ------------------------------------------------------------------------------
   rp-ami-dev:
     if: github.event.inputs.account == 'dev'
     uses: nationalarchives/ds-github-actions/.github/workflows/web-rp-ami-build.yml@main
@@ -32,7 +32,7 @@ jobs:
       branch: "${{ github.event.inputs.branch }}"
       account: "${{ github.event.inputs.account }}"
       key_name: "web-rp-${{ github.event.inputs.account }}-eu-west-2"
-      instance_type: 't3a.small'
+      instance_type: "t3a.small"
       volume_size: 20
       s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
       s3_deployment_root: "web/rp"
@@ -41,9 +41,9 @@ jobs:
     secrets:
       vpc_id: ${{ secrets.VPC_ID_DEV }}
       subnet_id: ${{ secrets.SUBNET_ID_2A_DEV }}
-# ------------------------------------------------------------------------------
-# staging deployment
-# ------------------------------------------------------------------------------
+  # ------------------------------------------------------------------------------
+  # staging deployment
+  # ------------------------------------------------------------------------------
   rp-ami-staging:
     if: github.event.inputs.account == 'staging'
     uses: nationalarchives/ds-github-actions/.github/workflows/web-rp-ami-build.yml@main
@@ -54,7 +54,7 @@ jobs:
       branch: "${{ github.event.inputs.branch }}"
       account: "${{ github.event.inputs.account }}"
       key_name: "web-rp-${{ github.event.inputs.account }}-eu-west-2"
-      instance_type: 't3a.medium'
+      instance_type: "t3a.medium"
       volume_size: 20
       s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
       s3_deployment_root: "web/rp"
@@ -63,9 +63,9 @@ jobs:
     secrets:
       vpc_id: ${{ secrets.VPC_ID_STAGING }}
       subnet_id: ${{ secrets.SUBNET_ID_2A_STAGING }}
-# ------------------------------------------------------------------------------
-# live deployment
-# ------------------------------------------------------------------------------
+  # ------------------------------------------------------------------------------
+  # live deployment
+  # ------------------------------------------------------------------------------
   rp-ami-live:
     if: github.event.inputs.account == 'live'
     uses: nationalarchives/ds-github-actions/.github/workflows/web-rp-ami-build.yml@main
@@ -76,7 +76,7 @@ jobs:
       branch: "${{ github.event.inputs.branch }}"
       account: "${{ github.event.inputs.account }}"
       key_name: "web-rp-${{ github.event.inputs.account }}-eu-west-2"
-      instance_type: 't3a.medium'
+      instance_type: "t3a.medium"
       volume_size: 20
       s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
       s3_deployment_root: "web/rp"
@@ -85,4 +85,3 @@ jobs:
     secrets:
       vpc_id: ${{ secrets.VPC_ID_LIVE }}
       subnet_id: ${{ secrets.SUBNET_ID_2A_LIVE }}
-...

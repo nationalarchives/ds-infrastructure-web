@@ -6,7 +6,7 @@
 2. Go to **Route 53** → **Hosted Zones**.
 3. Click on **"Create hosted zone"**.
 4. Fill in the details:
-   - **Domain name**: 
+   - **Domain name**:
    * Dev- `dev-wagtail.nationalarchives.gov.uk`
    * Staging-`staging-wagtail.nationalarchives.gov.uk`
    * Live-`wagtail.nationalarchives.gov.uk`
@@ -71,9 +71,8 @@ dig wagtail.nationalarchives.gov.uk NS
 ### 4. Attach SSL Certificate
 
 - **Custom SSL certificate (
-*.nationalarchives.gov.uk)**:  
-  Choose the certificate for `dev-wagtail.nationalarchives.gov.uk` for dev and other environments from **ACM** (AWS Certificate Manager).
-  
+  \*.nationalarchives.gov.uk)**:  
+   Choose the certificate for `dev-wagtail.nationalarchives.gov.uk` for dev and other environments from **ACM** (AWS Certificate Manager).
 
 ---
 
@@ -89,6 +88,7 @@ dig wagtail.nationalarchives.gov.uk NS
 1. Go back to **Route 53** → hosted zone for `dev-wagtail.nationalarchives.gov.uk`in dev and other environments.
 2. Click **"Create Record"**.
 3. Add an **A Record (Alias)** pointing to the CloudFront distribution:
+
    - **Record name**: `dev-wagtail.nationalarchives.gov.uk` for dev and similarly for staging and live
    - **Record type**: `A - IPv4 address`
    - **Alias**: Yes
@@ -113,15 +113,16 @@ curl -I https://wagtail.nationalarchives.gov.uk
 Update the NGINX configuration to route Wagtail requests (`admin`, `static`, and `media`) through the reverse proxy.
 
 **1. Connect to the Reverse Proxy Server:**
- Connect to the `website-reverse-proxy` instance via session manager.
+Connect to the `website-reverse-proxy` instance via session manager.
 
-**2. Edit NGINX Configuration**: 
+**2. Edit NGINX Configuration**:
 
-  Open the NGINX config file:
+Open the NGINX config file:
 
-   ```bash
-    sudo vi /etc/nginx/nginx.conf
-   ```
+```bash
+ sudo vi /etc/nginx/nginx.conf
+```
+
 **3. Add a Server Block for `dev-wagtail.nationalarchives.gov.uk`**:
 Inside the http block or in the respective site config, add server block for the domain. (Refer the code in the instance).
 
@@ -161,8 +162,4 @@ http://wagtail.nationalarchives.gov.uk/media/imagename
 
 http://wagtail.nationalarchives.gov.uk/static/
 
-
-
-
-
-* Make sure all routes are properly working in all environments
+- Make sure all routes are properly working in all environments

@@ -9,8 +9,8 @@ services:
       #- "--api.insecure=true"
       - "--providers.docker=true"
     labels:
-       - "traefik.http.routers.dashbord.rule=Host(`dev-web-frontend.dev.local`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
-       - "traefik.http.routers.api.service=api@internal"
+      - "traefik.http.routers.dashbord.rule=Host(`dev-web-frontend.dev.local`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      - "traefik.http.routers.api.service=api@internal"
     networks:
       - webgateway
     ports:

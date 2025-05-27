@@ -19,7 +19,8 @@ services:
       - KONG_IMAGE_PREVIEW_BASE_URL=https://ciim-media.s3.eu-west-2.amazonaws.com/preview/
       - KONG_CLIENT_KEY=kjsd8242wdbjy827hwbryqr
       - KONG_CLIENT_VERIFY_CERTIFICATES=false
-    image: ghcr.io/nationalarchives/national-archives-website:latest
+    image:
+      ghcr.io/nationalarchives/national-archives-website:latest
       #image: traefik/whoami
     labels:
       - "traefik.enable=true"

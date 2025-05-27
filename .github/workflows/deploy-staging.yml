@@ -38,7 +38,7 @@ jobs:
 
           echo "| Service | New ($SOURCE) | Current ($TARGET) | Changes |" >> version-summary.md
           echo "| --- | --- | --- | --- |" >> version-summary.md
-          jq --raw-output '.services | keys[]' "config/$SOURCE.json" | while read -r SERVICE_NAME; do SERVICE_REPO=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].repo' "config/$SOURCE.json") && SERVICE_SOURCE=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/$SOURCE.json") && SERVICE_TARGET=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/$TARGET.json") && echo "| $SERVICE_NAME | \`$SERVICE_SOURCE\` | \`$SERVICE_TARGET\` | [Compare]($SERVICE_REPO/compare/v$SERVICE_TARGET...v$SERVICE_SOURCE) |" >> version-summary.md; done
+          jq --raw-output '.services | keys[]' "config/$SOURCE.json" | while read -r SERVICE_NAME; do SERVICE_REPO=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].repo' "config/$SOURCE.json") && SERVICE_SOURCE=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/$SOURCE.json") && SERVICE_TARGET=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/$TARGET.json") && [ "$SERVICE_SOURCE" != "$SERVICE_TARGET" ] && echo "| $SERVICE_NAME | \`$SERVICE_SOURCE\` | \`$SERVICE_TARGET\` | [Compare]($SERVICE_REPO/compare/v$SERVICE_TARGET...v$SERVICE_SOURCE) |" >> version-summary.md || echo "| $SERVICE_NAME | \`$SERVICE_SOURCE\` | \`$SERVICE_TARGET\` | [No changes] |" >> version-summary.md; done
 
           SUMMARY=$(<version-summary.md)
           echo "## Changes" >> $GITHUB_STEP_SUMMARY
@@ -81,7 +81,6 @@ jobs:
           git commit -m "Release v${{ steps.version-tag.outputs.VERSION }} to staging" || true
           git push
       - name: Create tag and release
-        if: always()
         run: |
           git tag "v${{ steps.version-tag.outputs.VERSION }}" -m "Release ${{ steps.version-tag.outputs.VERSION }}"
           git push origin --tags
@@ -110,12 +109,12 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - create-release
-    if: always()
     strategy:
       matrix:
         service:
           - frontend
           - enrichment
+          - wagtail
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
@@ -130,14 +129,29 @@ jobs:
           parameter-path: /application/web/${{ matrix.service }}/docker_images
           deployed-parameter-path: /application/web/${{ matrix.service }}/deployed_version
 
+  tests:
+    runs-on: ubuntu-latest
+    needs:
+      - deploy
+    env:
+      GH_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN_TEST_RUNNER }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests
+        run: |
+          gh workflow run manual.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://staging-www.nationalarchives.gov.uk --raw-field exclude-tests=@wip --raw-field notify-slack-on-pass=${{ inputs.notify-slack }} --raw-field notify-slack-on-fail=${{ inputs.notify-slack }} --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
+          sleep 5
+          gh run watch --exit-status --repo nationalarchives/ds-tna-website-tests $(gh run list --repo nationalarchives/ds-tna-website-tests --workflow manual.yml -L1 --json databaseId --jq .[0].databaseId)
+
   notify-end-status:
     runs-on: ubuntu-latest
     needs:
       - create-release
-      - deploy
+      - tests
+    if: always() && inputs.notify-slack
     steps:
       - uses: rtCamp/action-slack-notify@v2
-        if: success() && inputs.notify-slack
+        if: success()
         env:
           SLACK_TITLE: Website deployment
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
@@ -149,7 +163,7 @@ jobs:
           SLACKIFY_MARKDOWN: true
           SLACK_MESSAGE: "🧪 Release **v${{ needs.create-release.outputs.verion }}** deployed to staging: [staging-www.nationalarchives.gov.uk](http://staging-www.nationalarchives.gov.uk/)"
       - uses: rtCamp/action-slack-notify@v2
-        if: failure() && inputs.notify-slack
+        if: failure()
         env:
           SLACK_TITLE: Website deployment
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
@@ -160,14 +174,3 @@ jobs:
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
           SLACK_MESSAGE: "❌ Release **v${{ needs.create-release.outputs.version }}** failed to deploy to staging"
-
-  # test:
-  #   runs-on: ubuntu-latest
-  #   needs:
-  #     - deploy
-  #   env:
-  #     GH_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN_TEST_RUNNER }}
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Run tests
-  #       run: gh workflow run manual.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://staging-www.nationalarchives.gov.uk --raw-field notify-slack-on-pass=true --raw-field notify-slack-on-fail=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
