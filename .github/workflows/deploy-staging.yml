@@ -58,6 +58,7 @@ jobs:
       - compare
     environment:
       name: staging
+      url: https://staging-www.nationalarchives.gov.uk/
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     outputs:
