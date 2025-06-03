@@ -33,7 +33,7 @@ module "wagtail" {
     
     efs_dns_name = module.media_efs.media_efs_dns_name
 
-    efs_mount_dir = var.wagtail_efs_mount_dir
+    wagtail_efs_mount_dir = var.wagtail_efs_mount_dir
 
     asg_max_size = var.wagtail_asg_max_size
     asg_min_size = var.wagtail_asg_min_size

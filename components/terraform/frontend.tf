@@ -15,6 +15,7 @@ variable "frontend_patch_group" {}
 variable "frontend_deployment_s3_bucket" {}
 variable "frontend_folder_s3_key" {}
 
+
 module "frontend" {
     source = "./frontend"
 
@@ -45,6 +46,7 @@ module "frontend" {
         data.aws_ssm_parameter.private_subnet_2a_cidr.value,
         data.aws_ssm_parameter.private_subnet_2b_cidr.value,
     ]
+    
 
     auto_switch_off = var.frontend_auto_switch_off
     auto_switch_on = var.frontend_auto_switch_on

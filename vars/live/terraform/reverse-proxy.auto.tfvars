@@ -1,4 +1,4 @@
-rp_efs_mount_dir = "/app/media"
+rp_efs_mount_dir = "/media"
 rp_folder_s3_key = "nginx"
 
 rp_instance_type = "t3a.medium"

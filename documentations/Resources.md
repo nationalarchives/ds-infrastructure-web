@@ -8,6 +8,10 @@ This document contains links to various resources related to the project.
 
 - [Web documentation](https://github.com/nationalarchives/ds-infrastructure-web/blob/main/documentations/web%20documentation.md)
 
+- [Database Migration Documentation](https://github.com/nationalarchives/ds-infrastructure-web/blob/main/documentations/Database%20migration.md)
+
+- [Wagtail Media Migration Documentation](https://github.com/nationalarchives/ds-infrastructure-web/blob/main/documentations/Test%20Run%20wagtail.md)
+
 ## GitHub Actions
 
 - [Web Frontend AMI](https://github.com/nationalarchives/ds-infrastructure-web/actions/workflows/web-frontend.yml)

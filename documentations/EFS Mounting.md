@@ -47,7 +47,7 @@ Replace `<EFS-Security-Group-ID>` and `<EC2-Security-Group-ID>` with the appropr
 **Mount Command**: Use the following command to mount the EFS filesystem to the desired directory (/media in this case):
 
 ```bash
-sudo mount -t efs fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /media
+sudo mount -t nfs4 -o nfsvers=4.1 fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /media
 ```
 
 Replace `<EFS-File-System-ID>` with your actual EFS file system ID and `<Region>` with the AWS region (e.g., eu-west-2).
@@ -77,7 +77,7 @@ sudo umount /media
 1. **If the EFS mount shows as 127.0.0.1:/**: This can happen due to incorrect mount settings or DNS resolution issues. You can remount the file system using the FQDN:
 
 ```bash
-sudo mount -t efs fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /media
+sudo mount -t nfs4 -o nfsvers=4.1 fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /media
 ```
 
 2. **Check EFS Logs**: If mounting continues to fail, check the logs for errors related to EFS mounting:
@@ -95,7 +95,7 @@ sudo yum install -y nfs-utils
 4. **Ensure Proper NFS Protocol**: EFS uses NFSv4, so make sure the client supports NFSv4. If there are issues with NFS versions, try specifying the NFS version explicitly:
 
 ```bash
-sudo mount -t nfs4 fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /media
+sudo mount -t nfs4 -o nfsvers=4.1 fs-<EFS-File-System-ID>.efs.<Region>.amazonaws.com:/ /media
 ```
 
 **Step 6**: **Automate Mounting with /etc/fstab**

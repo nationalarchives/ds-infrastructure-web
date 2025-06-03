@@ -19,6 +19,14 @@ Content-Disposition: attachment; filename="userdata.txt"
 
 #!/bin/bash
 
+echo "Creating mount directory..."
+
+# Mount EFS storage
+sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 ${mount_target}:/ ${wagtail_efs_mount_dir}
+
+# Auto mount EFS storage on reboot
+sudo echo "${mount_target}:/ ${wagtail_efs_mount_dir} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,fsc,_netdev 0 0" >> /etc/fstab
+
 sudo touch /var/log/start-up.log
 
 echo "$(date '+%Y-%m-%d %T') - system update" | sudo tee -a /var/log/start-up.log > /dev/null

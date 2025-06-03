@@ -3,7 +3,7 @@ frontend_folder_s3_key = "web/frontend"
 
 
 
-frontend_efs_mount_dir = "/app/media"
+frontend_efs_mount_dir = "/media"
 frontend_key_name      = "web-frontend-live-eu-west-2"
 frontend_instance_type = "t3a.large"
 

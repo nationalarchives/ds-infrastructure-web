@@ -187,7 +187,7 @@
 - Run the following command to create a compressed dump of the etna database:
 
   ```bash
-  sudo pg_dump -U postgres -Fc etna > /tmp/etna.sql
+  sudo pg_dump -U postgres -Fc etna > /tmp/etna.dump
   ```
 
   🔹 PostgreSQL will prompt for a password.
@@ -228,22 +228,14 @@
 
 ### Connect to the instance
 
-- Once connected, run the following command to log into PostgreSQL:
-
-  ```bash
-  psql -U postgres
-  ```
-
-- You will be prompted for a password. Copy the password from AWS Secrets Manager and paste it when prompted.
-
 ### Create the New Database (etna)
 
-- Once you are inside the PostgreSQL shell, run the following commands:
+- Once you are connected, run the following commands:
 
   -- Create the new database 'etna' with the owner 'etna_app_user'
 
   ```bash
-  createdb -O etna_app_user etna;
+  createdb -U postgres -O etna_app_user etna
   ```
 
 - This command will create the etna database and assign the etna_app_user as the owner.
@@ -256,29 +248,36 @@
 
 - You should now see the newly created etna database listed in the databases.
 
-### Exit the PostgreSQL Shell
 
-- To exit from the PostgreSQL shell, simply type:
+### Run the Command to Restore the Database
 
-  ```bash
-  \q
-  ```
-
-### Run the pg_restore Command to Restore the Database
-
-- Now that you're back in the shell, use the following command to restore the dump:
+- Now that you're back in the terminal, use the following command to restore the dump:
 
   ```bash
-  pg_restore -U postgres -d etna -f /tmp/etna.dump
+  psql -U postgres -d etna -f /tmp/etna.sql
+
   ```
 
-- This will restore the contents of etna.dump into the etna database.
+- This will restore the contents of etna.sql into the etna database.
 
 - -U postgres: Specifies the PostgreSQL user to connect with (postgres in this case).
 
 - -d etna: Specifies the database to restore into (etna).
 
-- -f /tmp/etna.dump: Specifies the path to the dump file that you want to restore from.
+- -f /tmp/etna.sql: Specifies the path to the dump file that you want to restore from.
+
+- If successful, you'll see output like:
+  
+    ``` 
+    Password for user postgres:
+
+     SET
+
+     SET
+     ...
+    
+  ```
+
 
 ### Verify the Restoration in pgAdmin 4
 
@@ -297,3 +296,85 @@
   ```
 
 - This should show you the data restored into the etna database.
+
+###  Change Ownership of all tables, views, and sequences in a PostgreSQL database (etna) to a specific user (etna_app_user)
+
+- This script updates the ownership of all tables, views, and sequences in a PostgreSQL database (etna) to a specific user (etna_app_user).
+
+- Save the following script in a file (change_ownership.sh) and run it.
+
+```bash
+
+#!/bin/bash
+
+while getopts p: flag
+do
+    case "${flag}" in
+        p) password=${OPTARG};;
+    esac
+done
+
+if [[ $password == "" ]]; then
+    echo "ownership settings in postgress"
+    echo ""
+    echo "-p [password]"
+    echo ""
+    echo "Please enter the parameters."
+    echo ""
+
+    read -p "Password " password
+
+    if [[ $password == "" ]]; then
+        exit
+    fi
+fi
+
+for tbl in $(PGPASSWORD=$password psql -U postgres -qAt -c "SELECT tablename FROM pg_tables WHERE schemaname = 'public';" etna); do
+    PGPASSWORD=$password psql -U postgres -d etna -c "ALTER TABLE \"$tbl\" OWNER TO etna_app_user;"
+done
+
+for tbl in $(PGPASSWORD=$password psql -U postgres -qAt -c "SELECT table_name FROM information_schema.views WHERE table_schema = 'public';" etna); do
+    PGPASSWORD=$password psql -U postgres -d etna -c "ALTER view \"$tbl\" OWNER TO etna_app_user;"
+done
+
+for tbl in $(PGPASSWORD=$password psql -U postgres -qAt -c "SELECT sequence_name FROM information_schema.sequences WHERE sequence_schema = 'public';" etna); do
+    PGPASSWORD=$password psql -U postgres -d etna -c "ALTER sequence \"$tbl\" OWNER TO etna_app_user;"
+done
+```
+
+
+#### Usage
+Option 1: Pass password as a flag
+
+``` 
+./change_ownership.sh -p your_postgres_password
+```
+Option 2: Let the script prompt you
+
+```
+/change_ownership.sh
+```
+
+
+You’ll see:
+
+```
+ownership settings in postgress
+
+-p [password]
+
+Please enter the parameters.
+
+Password:
+```
+
+### ✅ Expected Output
+
+For each object, you will see confirmation messages from psql like:
+
+```
+ALTER TABLE
+ALTER VIEW
+ALTER SEQUENCE
+```
+

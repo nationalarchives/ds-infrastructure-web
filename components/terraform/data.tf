@@ -88,3 +88,7 @@ data "aws_secretsmanager_secret" "web_custom_header" {
 data "aws_secretsmanager_secret_version" "web_custom_header" {
     secret_id = data.aws_secretsmanager_secret.web_custom_header.id
 }
+
+data "aws_ssm_parameter" "wagtail_efs_media_dns_name" {
+  name = "/infrastructure/wagtail-efs/media-dns-name"
+}
