@@ -7,7 +7,7 @@
         },
         "wagtail": {
             "image": "ghcr.io/nationalarchives/ds-wagtail",
-            "version": "25.06.04.655",
+            "version": "25.06.04.657",
             "repo": "https://github.com/nationalarchives/ds-wagtail"
         },
         "catalogue": {
