@@ -4,7 +4,7 @@ import boto3
 import os
 import re
 
-def get_instance_id_by_name(instance_name):
+def get_instance_ids_by_name(instance_name):
     ec2_client = boto3.client('ec2', region_name="eu-west-2")
 
     response = ec2_client.describe_instances(
@@ -14,11 +14,15 @@ def get_instance_id_by_name(instance_name):
         ]
     )
 
-    reservations = response['Reservations']
-    if not reservations:
+    instance_ids = []
+    for reservation in response['Reservations']:
+        for instance in reservation['Instances']:
+            instance_ids.append(instance['InstanceId'])
+
+    if not instance_ids:
         raise ValueError(f"No running instances found with the name {instance_name}")
 
-    return reservations[0]['Instances'][0]['InstanceId']
+    return instance_ids
 
 def get_docker_image_version_from_ssm(service):
     ssm_client = boto3.client("ssm", region_name="eu-west-2")
@@ -47,6 +51,51 @@ def extract_all_versions(docker_image_string):
     match = re.findall(version_pattern, docker_image_string)
     return match
 
+def run_command_on_instances(instance_ids, command):
+    ssm_client = boto3.client("ssm", region_name="eu-west-2")
+    command_ids = {}
+
+    # Send command to all instances
+    for instance_id in instance_ids:
+        response = ssm_client.send_command(
+            InstanceIds=[instance_id],
+            DocumentName="AWS-RunShellScript",
+            Parameters={"commands": [command]},
+        )
+        command_id = response['Command']['CommandId']
+        command_ids[instance_id] = command_id
+        print(f"Sent command to instance {instance_id}. Command ID: {command_id}")
+
+    return command_ids
+
+def wait_for_commands(command_ids):
+    ssm_client = boto3.client("ssm", region_name="eu-west-2")
+    MAX_RETRIES = 18
+    results = {}
+
+    for instance_id, command_id in command_ids.items():
+        for attempt in range(MAX_RETRIES):
+            time.sleep(10)
+            output_response = ssm_client.get_command_invocation(
+                CommandId=command_id,
+                InstanceId=instance_id
+            )
+            status = output_response['Status']
+            output = output_response.get('StandardOutputContent', '')
+
+            print(f"Attempt {attempt+1} for instance {instance_id}: Status: {status}")
+            print(f"Output: {output}")
+
+            if status in ["Success", "Failed", "TimedOut", "Cancelled"]:
+                if "Traefik recognizes" in output:
+                    status = "Success"
+                results[instance_id] = (status, output)
+                break
+        else:
+            results[instance_id] = ("Timeout", "")
+
+    return results
+
 def deploy_service(service, instance_name):
     try:
         ssm_service_name = service
@@ -65,50 +114,26 @@ def deploy_service(service, instance_name):
             print(f"Docker image version for {service}. Current deployed version: {deployed_version}")
             return {"statusCode": 200, "body": json.dumps(f"Deployed version for {service}: {deployed_version}")}
 
-        instance_id = get_instance_id_by_name(instance_name)
-        print(f"Found instance ID: {instance_id} for {service}")
+        instance_ids = get_instance_ids_by_name(instance_name)
+        print(f"Found {len(instance_ids)} running instance(s) for {service}: {instance_ids}")
 
-        ssm_client = boto3.client("ssm", region_name="eu-west-2")
-        command = "/usr/local/bin/startup.sh"
+        command_ids = run_command_on_instances(instance_ids, "/usr/local/bin/startup.sh")
+        results = wait_for_commands(command_ids)
 
-        response = ssm_client.send_command(
-            InstanceIds=[instance_id],
-            DocumentName="AWS-RunShellScript",
-            Parameters={"commands": [command]},
-        )
+        all_success = all(status == "Success" for status, _ in results.values())
 
-        command_id = response['Command']['CommandId']
-        print(f"Command sent for {service}. ID: {command_id}")
-
-        MAX_RETRIES = 18
-        for attempt in range(MAX_RETRIES):
-            time.sleep(10)
-            output_response = ssm_client.get_command_invocation(
-                CommandId=command_id,
-                InstanceId=instance_id
-            )
-            status = output_response['Status']
-            output = output_response.get('StandardOutputContent', '')
-
-            print(f"Attempt {attempt+1} for {service}: Current Status: {status}")
-            print(f"Command Output: {output}")
-
-            if status in ["Success", "Failed", "TimedOut", "Cancelled"]:
-                if any(phrase in output for phrase in ["Traefik recognizes green-web as healthy", "Traefik recognizes blue-web as healthy"]):
-                    status = "Success"
-                break
-
-        if status == "Success":
+        if all_success:
             latest_version = latest_versions[0]
-            ssm_client.put_parameter(
+            boto3.client("ssm", region_name="eu-west-2").put_parameter(
                 Name=f"/application/web/{ssm_service_name}/deployed_version",
                 Value=latest_version,
                 Type="String",
                 Overwrite=True,
             )
-            return {"statusCode": 200, "body": json.dumps(f"Deployment successful for {service}. Deployed version updated to {latest_version}.")}
+            return {"statusCode": 200, "body": json.dumps(f"Deployment successful for {service}. Updated to version {latest_version}.")}
         else:
-            return {"statusCode": 500, "body": json.dumps(f"Error: startup.sh failed for {service} with status {status}. Output: {output}")}
+            failed_instances = {iid: res for iid, res in results.items() if res[0] != "Success"}
+            return {"statusCode": 500, "body": json.dumps(f"Deployment failed on some instances for {service}: {failed_instances}")}
 
     except Exception as e:
         return {"statusCode": 500, "body": json.dumps(f"Error deploying {service}: {str(e)}")}
