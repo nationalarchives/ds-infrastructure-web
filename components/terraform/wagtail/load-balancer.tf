@@ -26,7 +26,7 @@ resource "aws_lb_target_group" "wagtail" {
 
     health_check {
         interval            = 30
-        path                = "/"
+        path                = "/healthcheck/"
         port                = "traffic-port"
         timeout             = 5
         healthy_threshold   = 2
