@@ -66,18 +66,20 @@ runs:
       shell: bash
       run: |
         echo "🚀 Triggering Lambda function..."
-        SERVICE="${{ inputs.service-name }}"
+          SERVICE="${{ inputs.service-name }}"
 
-        PAYLOAD_JSON=$(jq -n --arg service "$SERVICE" '{service: $service}')
-        echo "Payload: $PAYLOAD_JSON"
+          jq -n --arg service "$SERVICE" '{service: $service}' > payload.json
+          echo "Payload:"
+          cat payload.json
 
-        aws lambda invoke \
-          --function-name AutoRunStartupScript \
-          --payload "$PAYLOAD_JSON" \
-          response.json \
-          --log-type Tail \
-          --query 'StatusCode' \
-          --output text > lambda_status.txt
+          aws lambda invoke \
+            --function-name AutoRunStartupScript \
+            --payload file://payload.json \
+            response.json \
+            --log-type Tail \
+            --query 'StatusCode' \
+            --output text > lambda_status.txt
+
 
         RESPONSE=$(cat lambda_status.txt)
         echo "Lambda HTTP Status: $RESPONSE"
