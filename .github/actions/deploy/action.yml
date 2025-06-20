@@ -69,8 +69,7 @@ runs:
       shell: bash
       run: |
         echo "Triggering lambda function ..."
-        VERSION="${{ env.NEW_VERSION }}"
-        PAYLOAD=$(jq -n --arg version "$VERSION" '{DEPLOYED_VERSION:$version}' | base64)
+        PAYLOAD=$(jq -n --arg service "${{ inputs.service-name }}" '{service:$service}' | base64)
         RESPONSE=$(aws lambda invoke --function-name AutoRunStartupScript --payload "$PAYLOAD" response.json --log-type Tail --query 'StatusCode' --output text --cli-read-timeout 0)
         echo "Lambda function response: $RESPONSE"
         cat response.json
