@@ -6,28 +6,23 @@ import re
 
 def get_instance_ids_by_name(instance_name):
     ec2_client = boto3.client('ec2', region_name="eu-west-2")
-
     response = ec2_client.describe_instances(
         Filters=[
             {'Name': 'tag:Name', 'Values': [instance_name]},
             {'Name': 'instance-state-name', 'Values': ['running']}
         ]
     )
-
     instance_ids = []
     for reservation in response['Reservations']:
         for instance in reservation['Instances']:
             instance_ids.append(instance['InstanceId'])
-
     if not instance_ids:
         raise ValueError(f"No running instances found with the name {instance_name}")
-
     return instance_ids
 
 def get_docker_image_version_from_ssm(service):
     ssm_client = boto3.client("ssm", region_name="eu-west-2")
     docker_images_param = f"/application/web/{service}/docker_images"
-
     try:
         response = ssm_client.get_parameter(Name=docker_images_param)
         return response['Parameter']['Value']
@@ -35,27 +30,23 @@ def get_docker_image_version_from_ssm(service):
         print(f"Error retrieving docker images version for {service} from SSM: {str(e)}")
         raise Exception(f"Failed to retrieve docker image version for {service} from SSM")
 
-def get_deployed_version_from_ssm(service):
-    ssm_client = boto3.client("ssm", region_name="eu-west-2")
-    deployed_version_param = f"/application/web/{service}/deployed_version"
+def extract_versions_from_image_string(docker_image_string):
+    lines = docker_image_string.split("\n")
+    versions = []
+    for line in lines:
+        if ":" in line:
+            _, tag = line.strip().rsplit(":", 1)
+            clean_tag = re.sub(r'[^a-zA-Z0-9\.\-_]', '', tag)
+            versions.append(clean_tag)
+    return versions
 
-    try:
-        response = ssm_client.get_parameter(Name=deployed_version_param)
-        return response['Parameter']['Value']
-    except Exception as e:
-        print(f"Error retrieving deployed version for {service} from SSM: {str(e)}")
-        return None
-
-def extract_all_versions(docker_image_string):
-    version_pattern = r"(\d{2}\.\d{2}\.\d{2}\.\d+)"
-    match = re.findall(version_pattern, docker_image_string)
-    return match
+def extract_first_version(docker_image_string):
+    versions = extract_versions_from_image_string(docker_image_string)
+    return versions[0] if versions else None
 
 def run_command_on_instances(instance_ids, command):
     ssm_client = boto3.client("ssm", region_name="eu-west-2")
     command_ids = {}
-
-    # Send command to all instances
     for instance_id in instance_ids:
         response = ssm_client.send_command(
             InstanceIds=[instance_id],
@@ -65,14 +56,12 @@ def run_command_on_instances(instance_ids, command):
         command_id = response['Command']['CommandId']
         command_ids[instance_id] = command_id
         print(f"Sent command to instance {instance_id}. Command ID: {command_id}")
-
     return command_ids
 
 def wait_for_commands(command_ids):
     ssm_client = boto3.client("ssm", region_name="eu-west-2")
     MAX_RETRIES = 18
     results = {}
-
     for instance_id, command_id in command_ids.items():
         for attempt in range(MAX_RETRIES):
             time.sleep(10)
@@ -93,26 +82,15 @@ def wait_for_commands(command_ids):
                 break
         else:
             results[instance_id] = ("Timeout", "")
-
     return results
 
 def deploy_service(service, instance_name):
     try:
-        ssm_service_name = service
+        latest_version_string = get_docker_image_version_from_ssm(service)
+        latest_version = extract_first_version(latest_version_string)
 
-        deployed_version = get_deployed_version_from_ssm(ssm_service_name)
-        if not deployed_version:
-            return {"statusCode": 500, "body": json.dumps(f"Error: Failed to retrieve deployed version for {service} from SSM.")}
-
-        latest_version_string = get_docker_image_version_from_ssm(ssm_service_name)
-        latest_versions = extract_all_versions(latest_version_string)
-
-        if not latest_versions:
-            return {"statusCode": 500, "body": json.dumps(f"Error: Failed to extract version from docker image string for {service}.")}
-
-        if deployed_version in latest_versions:
-            print(f"Docker image version for {service}. Current deployed version: {deployed_version}")
-            return {"statusCode": 200, "body": json.dumps(f"Deployed version for {service}: {deployed_version}")}
+        if not latest_version:
+            return {"statusCode": 500, "body": json.dumps(f"Error: Failed to extract version for {service}.")}
 
         instance_ids = get_instance_ids_by_name(instance_name)
         print(f"Found {len(instance_ids)} running instance(s) for {service}: {instance_ids}")
@@ -123,9 +101,8 @@ def deploy_service(service, instance_name):
         all_success = all(status == "Success" for status, _ in results.values())
 
         if all_success:
-            latest_version = latest_versions[0]
             boto3.client("ssm", region_name="eu-west-2").put_parameter(
-                Name=f"/application/web/{ssm_service_name}/deployed_version",
+                Name=f"/application/web/{service}/deployed_version",
                 Value=latest_version,
                 Type="String",
                 Overwrite=True,
@@ -134,21 +111,21 @@ def deploy_service(service, instance_name):
         else:
             failed_instances = {iid: res for iid, res in results.items() if res[0] != "Success"}
             return {"statusCode": 500, "body": json.dumps(f"Deployment failed on some instances for {service}: {failed_instances}")}
-
     except Exception as e:
         return {"statusCode": 500, "body": json.dumps(f"Error deploying {service}: {str(e)}")}
 
 def lambda_handler(event, context):
-    environment = os.getenv('ENVIRONMENT', 'dev')
-
     services = {
         "frontend": "web-frontend",
         "enrichment": "web-enrichment",
         "wagtail": "wagtail"
     }
 
-    results = {}
-    for service, instance_name in services.items():
-        results[service] = deploy_service(service, instance_name)
+    if 'service' in event:
+        service = event['service']
+        if service not in services:
+            return {"statusCode": 400, "body": json.dumps(f"Unknown service: {service}")}
+        result = deploy_service(service, services[service])
+        return {service: result}
 
-    return results
+
