@@ -40,18 +40,21 @@ runs:
         echo "Extracted NEW_VERSION=$NEW_VERSION"
 
         if [[ -z "$NEW_VERSION" || "$NEW_VERSION" == "null" || -z "$NEW_IMAGE" || "$NEW_IMAGE" == "null" ]]; then
-          echo "❌ Error: Could not retrieve version or image for ${{ inputs.service-name }}"
+          echo "Error: Could not retrieve version or image for ${{ inputs.service-name }}"
           exit 1
         fi
 
         echo "Updating the AWS Parameter Store..."
 
         OLD_VALUE=$(aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text)
+
         echo "Current parameter value: $OLD_VALUE"
 
         NEW_VALUE=$(echo $OLD_VALUE | jq '.["'${{ inputs.service-name }}'-application"] = "'$NEW_IMAGE:$NEW_VERSION'"')
+
         echo "New parameter value: $NEW_VALUE"
 
+        echo "Updating ${{ inputs.parameter-path }}..."
         aws ssm put-parameter --name "${{ inputs.parameter-path }}" --value "$NEW_VALUE" --type String --overwrite
 
         echo "NEW_VERSION=$NEW_VERSION" >> "$GITHUB_ENV"
@@ -59,63 +62,44 @@ runs:
     - name: Verify the update
       shell: bash
       run: |
-        echo "✅ Verifying the updated value..."
+        echo "Verifying the updated value..."
         aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text
 
     - name: Trigger Lambda function
       shell: bash
       run: |
-        echo "🚀 Triggering Lambda function..."
-          SERVICE="${{ inputs.service-name }}"
-
-          jq -n --arg service "$SERVICE" '{service: $service}' > payload.json
-          echo "Payload:"
-          cat payload.json
-
-          aws lambda invoke \
-            --function-name AutoRunStartupScript \
-            --payload file://payload.json \
-            response.json \
-            --log-type Tail \
-            --query 'StatusCode' \
-            --output text > lambda_status.txt
-
-
-        RESPONSE=$(cat lambda_status.txt)
-        echo "Lambda HTTP Status: $RESPONSE"
-        echo "Lambda raw response:"
+        echo "Triggering lambda function ..."
+        SERVICE="${{ env.SERVICE_NAME }}"
+        PAYLOAD=$(jq -n --arg service "$SERVICE" '{service: $service}' | base64)
+        RESPONSE=$(aws lambda invoke --function-name AutoRunStartupScript --payload "$PAYLOAD" response.json --log-type Tail --query 'StatusCode' --output text --cli-read-timeout 0)
+        echo "Lambda function response: $RESPONSE"
         cat response.json
 
-        # Get actual service status from Lambda's response
-        STATUS_CODE=$(jq -r --arg svc "$SERVICE" '.[$svc].statusCode // 200' response.json)
-
-        if [[ "$STATUS_CODE" -ne 200 ]]; then
-          echo "❌ Lambda deployment failed for $SERVICE with statusCode: $STATUS_CODE"
+        if [[ "$RESPONSE" -ne 200 ]]; then
+          echo "Failed to trigger the lambda function"
           exit 1
         fi
+
 
     - name: Wait for the deployed version to update
       shell: bash
       run: |
-        echo "⏳ Waiting for the deployed version to update..."
+        echo "Checking for the deployed version..."
         MAX_RETRIES=20
         RETRY_COUNT=0
 
-        while true; do
-          DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text)
+        DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text)
 
-          if [[ "$DEPLOYED_VERSION" == "${{ env.NEW_VERSION }}" ]]; then
-            echo "✅ Deployed version matches expected version: $DEPLOYED_VERSION"
-            break
-          fi
-
-          echo "Current deployed version: $DEPLOYED_VERSION (Expected: ${{ env.NEW_VERSION }})"
-          RETRY_COUNT=$((RETRY_COUNT + 1))
-
-          if [[ $RETRY_COUNT -ge $MAX_RETRIES ]]; then
-            echo "❌ Timed out waiting for deployed version to update."
-            exit 1
-          fi
-
+        while [[ "$DEPLOYED_VERSION" != "${{ env.NEW_VERSION }}" ]] && [[ $RETRY_COUNT -lt $MAX_RETRIES ]]; do
+          echo "Current deployed version: $DEPLOYED_VERSION"
           sleep 2
+          DEPLOYED_VERSION=$(aws ssm get-parameter --name "${{ inputs.deployed-parameter-path }}" --query "Parameter.Value" --output text)
+          RETRY_COUNT=$((RETRY_COUNT+1))
         done
+
+        if [[ $RETRY_COUNT -eq $MAX_RETRIES ]]; then
+          echo "Failed to update the deployed version"
+          exit 1
+        fi
+
+        echo "Deployed version: $DEPLOYED_VERSION"
