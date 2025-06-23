@@ -148,7 +148,7 @@ jobs:
           MSG_MINIMAL: true
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
-          SLACK_MESSAGE: "🧪 Release **v${{ needs.create-release.outputs.verion }}** deployed to staging: [staging-www.nationalarchives.gov.uk](http://staging-www.nationalarchives.gov.uk/)"
+          SLACK_MESSAGE: "🧪 Release **v${{ needs.create-release.outputs.version }}** deployed to staging: [staging-www.nationalarchives.gov.uk](http://staging-www.nationalarchives.gov.uk/)"
       - uses: rtCamp/action-slack-notify@v2
         if: failure()
         env:

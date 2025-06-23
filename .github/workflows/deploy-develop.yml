@@ -6,11 +6,7 @@ on:
       - main
     paths:
       - config/develop.json
-  workflow_dispatch:
-    inputs:
-      service-number:
-        description: 'Type 1 for frontend, 2 for enrichment, 3 for wagtail'
-        required: true
+  workflow_dispatch:  
 
 permissions:
   id-token: write
@@ -25,31 +21,23 @@ jobs:
     environment:
       name: develop
       url: https://dev-www.nationalarchives.gov.uk/
+    strategy:
+      matrix:
+        service:
+          - frontend
+          - enrichment
+          - wagtail
     timeout-minutes: 15
-
     steps:
       - uses: actions/checkout@v4
-
-      - name: Map service number to service name
-        id: map_service
-        run: |
-          case "${{ github.event.inputs.service-number }}" in
-            1) SERVICE_NAME="frontend" ;;
-            2) SERVICE_NAME="enrichment" ;;
-            3) SERVICE_NAME="wagtail" ;;
-            *) echo "Invalid input: ${{ github.event.inputs.service-number }}"; exit 1 ;;
-          esac
-          echo "SERVICE_NAME=$SERVICE_NAME" >> $GITHUB_ENV
-          echo "Mapped service number ${{ github.event.inputs.service-number }} to $SERVICE_NAME"
-
       - name: Deploy service
         uses: ./.github/actions/deploy
         with:
           config-file: develop.json
-          service-name: ${{ env.SERVICE_NAME }}
+          service-name: ${{ matrix.service }}
           aws-role: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
-          parameter-path: /application/web/${{ env.SERVICE_NAME }}/docker_images
-          deployed-parameter-path: /application/web/${{ env.SERVICE_NAME }}/deployed_version
+          parameter-path: /application/web/${{ matrix.service }}/docker_images
+          deployed-parameter-path: /application/web/${{ matrix.service }}/deployed_version
 
   tests:
     runs-on: ubuntu-latest
