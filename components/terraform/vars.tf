@@ -13,7 +13,7 @@ variable "frontend_logfile_s3_root" {}
 variable "public_domain" {}
 variable "region" {}
 variable "db_record" {}
-#variable "cf_dist" {}
+variable "cf_dist" {}
 variable "internal_domain_name" {}
 variable "enrichment_efs_mount_dir" {}
 variable "frontend_efs_mount_dir" {}

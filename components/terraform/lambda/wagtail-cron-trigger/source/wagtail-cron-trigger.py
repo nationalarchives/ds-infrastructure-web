@@ -78,9 +78,9 @@ def wagtail_cron_trigger(event, context):
 
     task = event.get('task')
     if task == 'publish_scheduled':
-        cron_command = f"sudo docker-compose -f /var/docker/compose.yml exec {active_container} manage publish_scheduled"
+        cron_command = f"sudo docker-compose -f /var/docker/compose.yml exec {active_container} poetry run python manage.py publish_scheduled"
     elif task == 'clearsessions':
-        cron_command = f"sudo docker-compose -f /var/docker/compose.yml exec {active_container} manage clearsessions"
+        cron_command = f"sudo docker-compose -f /var/docker/compose.yml exec {active_container} poetry run python manage.py clearsessions"
     else:
         return {
             'statusCode': 400,
