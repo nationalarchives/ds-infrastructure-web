@@ -2,7 +2,7 @@
     "services": {
         "frontend": {
             "image": "ghcr.io/nationalarchives/ds-frontend",
-            "version": "25.06.30.1241",
+            "version": "25.06.30.1242",
             "repo": "https://github.com/nationalarchives/ds-frontend"
         },
         "wagtail": {
