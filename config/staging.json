@@ -20,7 +20,7 @@
             "version": "25.06.09.38",
             "repo": "https://github.com/nationalarchives/ds-frontend-enrichment"
         },
-        "sitemap-search": {
+        "search": {
             "image": "ghcr.io/nationalarchives/ds-sitemap-search",
             "version": "25.05.23.47",
             "repo": "https://github.com/nationalarchives/ds-sitemap-search"
