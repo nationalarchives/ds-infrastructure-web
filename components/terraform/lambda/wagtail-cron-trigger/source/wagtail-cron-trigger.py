@@ -43,7 +43,7 @@ def wagtail_cron_trigger(event, context):
             'body': f"Error sending command to EC2: {str(e)}"
         }
 
-    time.sleep(30)  # Adjust or implement a loop with a timeout
+    time.sleep(30) 
 
     try:
         output = ssm_client.get_command_invocation(CommandId=command_id, InstanceId=instance_id)
