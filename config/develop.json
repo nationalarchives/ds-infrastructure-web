@@ -11,9 +11,9 @@
             "repo": "https://github.com/nationalarchives/ds-wagtail"
         },
         "catalogue": {
-            "image": "ghcr.io/nationalarchives/ds-search",
+            "image": "ghcr.io/nationalarchives/ds-catalogue",
             "version": "25.07.07.820",
-            "repo": "https://github.com/nationalarchives/ds-search"
+            "repo": "https://github.com/nationalarchives/ds-catalogue"
         },
         "enrichment": {
             "image": "ghcr.io/nationalarchives/ds-frontend-enrichment",
