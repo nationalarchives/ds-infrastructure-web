@@ -62,7 +62,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     outputs:
-      verion: ${{ steps.version-tag.outputs.VERSION }}
+      version: ${{ steps.version-tag.outputs.VERSION }}
     steps:
       - uses: actions/checkout@v4
       - id: version-tag
@@ -104,7 +104,7 @@ jobs:
           MSG_MINIMAL: true
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
-          SLACK_MESSAGE: "🧑‍💻 Release **v${{ needs.create-release.outputs.verion }}** created and deploying to staging..."
+          SLACK_MESSAGE: "🧑‍💻 Release **v${{ needs.create-release.outputs.version }}** created and deploying to staging..."
 
   deploy:
     runs-on: ubuntu-latest
@@ -120,7 +120,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: v${{ needs.create-release.outputs.verion }}
+          ref: v${{ needs.create-release.outputs.version }}
       - name: Deploy service
         uses: ./.github/actions/deploy
         with:
