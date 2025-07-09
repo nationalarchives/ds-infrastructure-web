@@ -3,7 +3,7 @@ data "klayers_package_latest_version" "boto3" {
     name   = "boto3"
     region = "eu-west-2"
 
-    python_version = "3.11"
+    python_version = "3.12"
 }
 
 resource "aws_lambda_layer_version" "datetime" {
@@ -13,9 +13,9 @@ resource "aws_lambda_layer_version" "datetime" {
     s3_key    = "lambda/layers/datetime-5.2.zip"
 
     compatible_runtimes = [
-        "python3.9",
         "python3.10",
         "python3.11",
+        "python3.12",
     ]
 }
 

@@ -16,7 +16,7 @@ resource "aws_lambda_function" "web_docker_deployment" {
     layers = var.layers
 
     handler = "web-docker-deployment.web_docker_deployment"
-    runtime = "python3.11"
+    runtime = "python3.12"
 
     memory_size = 512
     timeout     = 300
@@ -62,7 +62,7 @@ resource "aws_lambda_function" "auto_run_startup_script" {
   role          = var.auto_run_startup_script_role_arn
 
   handler = "auto-run-startup-script.lambda_handler"  
-  runtime = "python3.13"
+  runtime = "python3.12"
 
   memory_size = 128
   timeout     = 900
@@ -106,7 +106,7 @@ resource "aws_lambda_function" "wagtail_cron_trigger" {
   role          = var.wagtail_cron_trigger_role_arn
 
   handler = "wagtail-cron-trigger.wagtail_cron_trigger"  
-  runtime = "python3.13"
+  runtime = "python3.12"
 
   memory_size = 128
   timeout     = 900
