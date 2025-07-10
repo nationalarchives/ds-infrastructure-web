@@ -44,3 +44,7 @@ test-results
 .idea
 .vscode
 .DS_Store
+
+#ignore lambda zip files
+components/terraform/lambda/**/*.zip
+
