@@ -38,3 +38,15 @@ resource "aws_route53_record" "wagtail" {
         module.wagtail.lb_internal_dns_name
     ]    
 }
+
+resource "aws_route53_record" "catalogue" {
+    zone_id = var.route53_zone
+    name    = "catalogue.${var.environment}.local"
+    type    = "CNAME"
+    ttl     = 15
+
+    records = [
+        module.catalogue.lb_internal_dns_name
+    ]    
+}
+

@@ -42,3 +42,14 @@ output "redis_lb_id" {
 output "redis_sg_id" {
    value = aws_security_group.redis.id
 }
+output "catalogue_sg_id" {
+    value = aws_security_group.catalogue.id
+}
+
+output "catalogue_lb_id" {
+    value = aws_security_group.catalogue_lb.id
+}
+
+output "catalogue_lb" {
+    value = aws_security_group.catalogue_lb.id
+}

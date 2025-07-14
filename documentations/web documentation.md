@@ -112,7 +112,8 @@ terraform plan \
   -var-file="../../vars/dev/terraform/ses.auto.tfvars" \
   -var-file="../../vars/dev/terraform/wagtail.auto.tfvars" \
   -var-file="../../vars/dev/terraform/enrichment.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/redis.auto.tfvars"
+  -var-file="../../vars/dev/terraform/redis.auto.tfvars" \
+  -var-file="../../vars/dev/terraform/catalogue.auto.tfvars"
 ```
 
 **_Staging plan_**
@@ -174,7 +175,8 @@ terraform apply \
   -var-file="../../vars/dev/terraform/ses.auto.tfvars" \
   -var-file="../../vars/dev/terraform/wagtail.auto.tfvars" \
   -var-file="../../vars/dev/terraform/enrichment.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/redis.auto.tfvars"
+  -var-file="../../vars/dev/terraform/redis.auto.tfvars" \
+  -var-file="../../vars/dev/terraform/catalogue.auto.tfvars"
 ```
 
 **_Staging apply_**

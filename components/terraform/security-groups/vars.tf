@@ -23,3 +23,6 @@ variable "redis_instance_cidr" {}
 
 variable "redis_lb_id" {}
 variable "redis_sg_id" {}
+
+variable "catalogue_lb_cidr"{}
+variable "catalogue_instance_cidr"{}
