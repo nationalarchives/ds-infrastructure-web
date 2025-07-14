@@ -16,6 +16,14 @@ resource "aws_iam_role" "wagtail_role" {
   assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
+# Catalogue Role
+resource "aws_iam_role" "catalogue_role" {
+  name               = "catalogue-assume-role"
+  assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
+}
+
+
+
 # Attach Policies to Frontend Role
 resource "aws_iam_role_policy_attachment" "frontend_policy_attachment_1" {
   role       = aws_iam_role.frontend_role.name
