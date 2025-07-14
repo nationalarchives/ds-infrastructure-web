@@ -56,9 +56,9 @@ jobs:
       volume_size: 40
       s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
       s3_deployment_root: "web/catalogue"
-    secrets:
-      vpc_id: ${{ secrets.VPC_ID_STAGING }}
-      subnet_id: ${{ secrets.SUBNET_ID_2A_STAGING }}
+    # secrets:
+    #   vpc_id: ${{ secrets.VPC_ID_STAGING }}
+    #   subnet_id: ${{ secrets.SUBNET_ID_2A_STAGING }}
   # ------------------------------------------------------------------------------
   # live deployment
   # ------------------------------------------------------------------------------
