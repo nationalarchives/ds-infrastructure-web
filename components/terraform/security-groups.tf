@@ -70,5 +70,18 @@ module "sgs" {
     redis_sg_id = module.sgs.redis_sg_id
     redis_lb_id = module.sgs.redis_lb_id
 
+    catalogue_lb_cidr = [
+        data.aws_ssm_parameter.private_subnet_2a_cidr.value,
+        data.aws_ssm_parameter.private_subnet_2b_cidr.value,
+    ]
+
+    catalogue_instance_cidr = [
+        data.aws_ssm_parameter.private_subnet_2a_cidr.value,
+        data.aws_ssm_parameter.private_subnet_2b_cidr.value,
+        data.aws_ssm_parameter.private_db_subnet_2a_cidr.value,
+        data.aws_ssm_parameter.private_db_subnet_2b_cidr.value,
+        data.aws_ssm_parameter.client_vpn_cidr.value,
+    ]
+
     tags = local.tags
 }
