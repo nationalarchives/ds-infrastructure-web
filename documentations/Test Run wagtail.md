@@ -106,7 +106,6 @@
    ```
 
    **_Run the startup script_**
-
    - This will reload environment variables from the Parameter Store and reinitialize the containers.
 
      ```bash

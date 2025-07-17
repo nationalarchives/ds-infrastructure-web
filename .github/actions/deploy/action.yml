@@ -80,7 +80,6 @@ runs:
           exit 1
         fi
 
-
     - name: Wait for the deployed version to update
       shell: bash
       run: |

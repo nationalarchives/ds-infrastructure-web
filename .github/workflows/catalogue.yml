@@ -36,7 +36,7 @@ jobs:
       volume_size: 20
       s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
       s3_deployment_root: "web/catalogue"
-  
+
   # ------------------------------------------------------------------------------
   # staging deployment
   # ------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ jobs:
       volume_size: 40
       s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
       s3_deployment_root: "web/catalogue"
-    
+
   # ------------------------------------------------------------------------------
   # live deployment
   # ------------------------------------------------------------------------------
@@ -72,4 +72,3 @@ jobs:
       volume_size: 100
       s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
       s3_deployment_root: "web/catalogue"
-   

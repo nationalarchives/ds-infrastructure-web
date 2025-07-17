@@ -88,7 +88,6 @@ dig wagtail.nationalarchives.gov.uk NS
 1. Go back to **Route 53** → hosted zone for `dev-wagtail.nationalarchives.gov.uk`in dev and other environments.
 2. Click **"Create Record"**.
 3. Add an **A Record (Alias)** pointing to the CloudFront distribution:
-
    - **Record name**: `dev-wagtail.nationalarchives.gov.uk` for dev and similarly for staging and live
    - **Record type**: `A - IPv4 address`
    - **Alias**: Yes

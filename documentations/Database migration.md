@@ -115,11 +115,9 @@
 3. **Fill in the Server Details**: In the Create - Server window, you'll need to provide the following details:
 
 - **General Tab**:
-
   - Name: Give a name to your connection (e.g., Postgres Main Prime).
 
 - **Connection Tab**:
-
   - **Host name/address**: Enter the hostname for your PostgreSQL server. In our case, it is postgres-main-prime.dev.local.
 
   - **Port**: The default PostgreSQL port is 5432, but if your instance uses a different port, provide that.
@@ -248,7 +246,6 @@
 
 - You should now see the newly created etna database listed in the databases.
 
-
 ### Run the Command to Restore the Database
 
 - Now that you're back in the terminal, use the following command to restore the dump:
@@ -267,17 +264,16 @@
 - -f /tmp/etna.sql: Specifies the path to the dump file that you want to restore from.
 
 - If successful, you'll see output like:
-  
-    ``` 
-    Password for user postgres:
 
-     SET
-
-     SET
-     ...
-    
   ```
+  Password for user postgres:
 
+   SET
+
+   SET
+   ...
+
+  ```
 
 ### Verify the Restoration in pgAdmin 4
 
@@ -297,7 +293,7 @@
 
 - This should show you the data restored into the etna database.
 
-###  Change Ownership of all tables, views, and sequences in a PostgreSQL database (etna) to a specific user (etna_app_user)
+### Change Ownership of all tables, views, and sequences in a PostgreSQL database (etna) to a specific user (etna_app_user)
 
 - This script updates the ownership of all tables, views, and sequences in a PostgreSQL database (etna) to a specific user (etna_app_user).
 
@@ -342,19 +338,19 @@ for tbl in $(PGPASSWORD=$password psql -U postgres -qAt -c "SELECT sequence_name
 done
 ```
 
-
 #### Usage
+
 Option 1: Pass password as a flag
 
-``` 
+```
 ./change_ownership.sh -p your_postgres_password
 ```
+
 Option 2: Let the script prompt you
 
 ```
 /change_ownership.sh
 ```
-
 
 You’ll see:
 
@@ -377,4 +373,3 @@ ALTER TABLE
 ALTER VIEW
 ALTER SEQUENCE
 ```
-

@@ -1,34 +1,34 @@
 {
-    "services": {
-        "frontend": {
-            "image": "ghcr.io/nationalarchives/ds-frontend",
-            "version": "25.07.16.1299",
-            "repo": "https://github.com/nationalarchives/ds-frontend"
-        },
-        "wagtail": {
-            "image": "ghcr.io/nationalarchives/ds-wagtail",
-            "version": "25.07.15.812",
-            "repo": "https://github.com/nationalarchives/ds-wagtail"
-        },
-        "catalogue": {
-            "image": "ghcr.io/nationalarchives/ds-catalogue",
-            "version": "25.07.15.853",
-            "repo": "https://github.com/nationalarchives/ds-catalogue"
-        },
-        "enrichment": {
-            "image": "ghcr.io/nationalarchives/ds-frontend-enrichment",
-            "version": "25.07.03.40",
-            "repo": "https://github.com/nationalarchives/ds-frontend-enrichment"
-        },
-        "search": {
-            "image": "ghcr.io/nationalarchives/ds-sitemap-search",
-            "version": "25.07.15.72",
-            "repo": "https://github.com/nationalarchives/ds-sitemap-search"
-        },
-        "feedback": {
-            "image": "ghcr.io/nationalarchives/ds-feedback",
-            "version": "25.04.24.227",
-            "repo": "https://github.com/nationalarchives/ds-feedback"
-        }
+  "services": {
+    "frontend": {
+      "image": "ghcr.io/nationalarchives/ds-frontend",
+      "version": "25.07.16.1299",
+      "repo": "https://github.com/nationalarchives/ds-frontend"
+    },
+    "wagtail": {
+      "image": "ghcr.io/nationalarchives/ds-wagtail",
+      "version": "25.07.15.812",
+      "repo": "https://github.com/nationalarchives/ds-wagtail"
+    },
+    "catalogue": {
+      "image": "ghcr.io/nationalarchives/ds-catalogue",
+      "version": "25.07.15.853",
+      "repo": "https://github.com/nationalarchives/ds-catalogue"
+    },
+    "enrichment": {
+      "image": "ghcr.io/nationalarchives/ds-frontend-enrichment",
+      "version": "25.07.03.40",
+      "repo": "https://github.com/nationalarchives/ds-frontend-enrichment"
+    },
+    "search": {
+      "image": "ghcr.io/nationalarchives/ds-sitemap-search",
+      "version": "25.07.15.72",
+      "repo": "https://github.com/nationalarchives/ds-sitemap-search"
+    },
+    "feedback": {
+      "image": "ghcr.io/nationalarchives/ds-feedback",
+      "version": "25.04.24.227",
+      "repo": "https://github.com/nationalarchives/ds-feedback"
     }
+  }
 }
