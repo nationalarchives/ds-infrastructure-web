@@ -132,6 +132,7 @@ terraform plan \
   -var-file="../../vars/staging/terraform/enrichment.auto.tfvars" \
   -var-file="../../vars/staging/terraform/wagtail.auto.tfvars" \
   -var-file="../../vars/staging/terraform/redis.auto.tfvars" \
+  -var-file="../../vars/staging/terraform/catalogue.auto.tfvars" \ 
   -var-file="../../vars/staging/terraform/cognito.auto.tfvars" \
   -var-file="../../vars/staging/terraform/ses.auto.tfvars"
 ```
