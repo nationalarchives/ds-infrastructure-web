@@ -30,8 +30,6 @@ runs:
     - name: Update AWS Parameter Store
       shell: bash
       id: update
-      output:
-        updated: ${{ steps.update.outputs.UPDATED }}
       run: |
         echo "Fetching version from config/${{ inputs.config-file }}..."
 
@@ -75,14 +73,14 @@ runs:
 
     - name: Verify the update
       shell: bash
-      if: steps.update.outputs.updated == 'true'
+      if: steps.update.outputs.UPDATED == 'true'
       run: |
         echo "Verifying the updated value..."
         aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text
 
     - name: Trigger Lambda function
       shell: bash
-      if: steps.update.outputs.updated == 'true'
+      if: steps.update.outputs.UPDATED == 'true'
       run: |
         echo "Triggering lambda function ..."
         SERVICE="${{ inputs.service-name }}"
@@ -98,7 +96,7 @@ runs:
 
     - name: Wait for the deployed version to update
       shell: bash
-      if: steps.update.outputs.updated == 'true'
+      if: steps.update.outputs.UPDATED == 'true'
       run: |
         echo "Checking for the deployed version..."
         MAX_RETRIES=20
