@@ -116,6 +116,7 @@ jobs:
           - frontend
           - enrichment
           - wagtail
+          - catalogue
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
