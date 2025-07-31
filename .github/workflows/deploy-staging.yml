@@ -32,7 +32,7 @@ jobs:
       - name: Compare develop to production
         id: build-comparison
         run: |
-          [[ if ${{ inputs.copy-develop }} == 'true' ]] && SOURCE=develop || SOURCE=staging
+          SOURCE=develop
           TARGET=production
           touch version-summary.md
 
@@ -42,7 +42,7 @@ jobs:
 
           SUMMARY=$(<version-summary.md)
           echo "## Changes" >> $GITHUB_STEP_SUMMARY
-          echo "\`$SOURCE\` -> \`$TARGET\`" >> $GITHUB_STEP_SUMMARY
+          echo "\`develop\` -> \`production\`" >> $GITHUB_STEP_SUMMARY
           echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
 
           SUMMARY_CLEAN=$(sed -e "s/\`/\\\\\`/g" version-summary.md)

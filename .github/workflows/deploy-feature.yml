@@ -12,9 +12,9 @@ on:
           - develop.json
           - staging.json
           - production.json
-  # push:
-  #   branches:
-  #     - "feature/**"
+  push:
+    branches:
+      - "feature/**"
 
 concurrency:
   group: deploy-feature-${{ github.ref }}

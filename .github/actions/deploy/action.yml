@@ -54,33 +54,19 @@ runs:
 
         echo "New parameter value: $NEW_VALUE"
 
-        SHOULD_UPDATE=true
-
-        if [[ "$NEW_VALUE" == "$OLD_VALUE" ]]; then
-          echo "No changes detected in the parameter value."
-          echo "Skipping update."
-          SHOULD_UPDATE=false
-        fi
-
-        if $SHOULD_UPDATE
-        then
-          echo "Updating ${{ inputs.parameter-path }}..."
-          aws ssm put-parameter --name "${{ inputs.parameter-path }}" --value "$NEW_VALUE" --type String --overwrite
-        fi
+        echo "Updating ${{ inputs.parameter-path }}..."
+        aws ssm put-parameter --name "${{ inputs.parameter-path }}" --value "$NEW_VALUE" --type String --overwrite
 
         echo "NEW_VERSION=$NEW_VERSION" >> "$GITHUB_ENV"
-        echo "UPDATED=$SHOULD_UPDATE" >> "$GITHUB_ENV"
 
     - name: Verify the update
       shell: bash
-      if: steps.update.outputs.UPDATED == 'true'
       run: |
         echo "Verifying the updated value..."
         aws ssm get-parameter --name "${{ inputs.parameter-path }}" --query "Parameter.Value" --output text
 
     - name: Trigger Lambda function
       shell: bash
-      if: steps.update.outputs.UPDATED == 'true'
       run: |
         echo "Triggering lambda function ..."
         SERVICE="${{ inputs.service-name }}"
@@ -96,7 +82,6 @@ runs:
 
     - name: Wait for the deployed version to update
       shell: bash
-      if: steps.update.outputs.UPDATED == 'true'
       run: |
         echo "Checking for the deployed version..."
         MAX_RETRIES=20
