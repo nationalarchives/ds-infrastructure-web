@@ -32,7 +32,7 @@ jobs:
       - name: Compare develop to production
         id: build-comparison
         run: |
-          [[ if ${{ inputs.copy-develop }} == 'true' ]] && SOURCE=develop || SOURCE=staging
+          [[ ${{ inputs.copy-develop }} == 'true' ]] && SOURCE=develop || SOURCE=staging
           TARGET=production
           touch version-summary.md
 
