@@ -29,7 +29,7 @@ jobs:
       version-summary: ${{ steps.build-comparison.outputs.VERSION_SUMMARY }}
     steps:
       - uses: actions/checkout@v4
-      - name: Compare develop to production
+      - name: Compare to production
         id: build-comparison
         run: |
           [[ ${{ inputs.copy-develop }} == 'true' ]] && SOURCE=develop || SOURCE=staging
