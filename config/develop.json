@@ -27,7 +27,7 @@
         },
         "feedback": {
             "image": "ghcr.io/nationalarchives/ds-feedback",
-            "version": "25.08.06.252",
+            "version": "25.08.07.260",
             "repo": "https://github.com/nationalarchives/ds-feedback"
         },
         "requestservicerecord": {
