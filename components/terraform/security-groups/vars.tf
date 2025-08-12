@@ -26,3 +26,6 @@ variable "redis_sg_id" {}
 
 variable "catalogue_lb_cidr"{}
 variable "catalogue_instance_cidr"{}
+
+variable "search_lb_cidr"{}
+variable "search_instance_cidr"{}

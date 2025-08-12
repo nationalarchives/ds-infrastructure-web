@@ -51,3 +51,12 @@ catalogue_asg_min_size                  = 1
 catalogue_asg_desired_capacity          = 1
 catalogue_asg_health_check_grace_period = 150
 catalogue_asg_health_check_type         = "EC2"
+
+search_patch_group      = "search-patchgroup"
+search_deployment_group = "search-deploygroup"
+
+search_asg_max_size                  = 2
+search_asg_min_size                  = 1
+search_asg_desired_capacity          = 1
+search_asg_health_check_grace_period = 150
+search_asg_health_check_type         = "EC2"

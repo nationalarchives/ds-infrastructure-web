@@ -53,3 +53,14 @@ output "catalogue_lb_id" {
 output "catalogue_lb" {
     value = aws_security_group.catalogue_lb.id
 }
+
+output "search_sg_id" {
+    value = aws_security_group.search.id
+}
+
+output "search_lb_id" {
+    value = aws_security_group.search_lb.id
+}
+output "search_lb" {
+    value = aws_security_group.search_lb.id
+}
