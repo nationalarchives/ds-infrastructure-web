@@ -86,7 +86,7 @@ jobs:
           git tag "v${{ steps.version-tag.outputs.VERSION }}" -m "Release ${{ steps.version-tag.outputs.VERSION }}"
           git push origin --tags
           echo "${{ needs.compare.outputs.version-summary }}" > release-notes.md
-          gh release create "v${{ steps.version-tag.outputs.VERSION }}" --title "v${{ steps.version-tag.outputs.VERSION }}" --draft -F release-notes.md --latest
+          gh release create "v${{ steps.version-tag.outputs.VERSION }}" --title "v${{ steps.version-tag.outputs.VERSION }}" --draft --notes-file release-notes.md --latest
 
   notify-start:
     runs-on: ubuntu-latest
