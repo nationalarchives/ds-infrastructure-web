@@ -50,6 +50,6 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run tests
         run: |
-          gh workflow run manual.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://dev-www.nationalarchives.gov.uk --raw-field exclude-tests=@wip,@requires-wordpress --raw-field notify-slack-on-pass=false --raw-field notify-slack-on-fail=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
+          gh workflow run manual.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://dev-www.nationalarchives.gov.uk --raw-field exclude-tests=@wip|@requires-wordpress --raw-field notify-slack-on-pass=false --raw-field notify-slack-on-fail=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
           sleep 5
           gh run watch --exit-status --repo nationalarchives/ds-tna-website-tests $(gh run list --repo nationalarchives/ds-tna-website-tests --workflow manual.yml -L1 --json databaseId --jq .[0].databaseId)
