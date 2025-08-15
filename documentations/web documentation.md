@@ -156,6 +156,7 @@ terraform plan \
 -var-file="../../vars/live/terraform/wagtail.auto.tfvars" \
 -var-file="../../vars/live/terraform/redis.auto.tfvars" \
 -var-file="../../vars/live/terraform/catalogue.auto.tfvars" \
+-var-file="../../vars/live/terraform/search.auto.tfvars" \ 
 -var-file="../../vars/live/terraform/cognito.auto.tfvars" \
 -var-file="../../vars/live/terraform/ses.auto.tfvars"
 ```
@@ -180,7 +181,8 @@ terraform apply \
   -var-file="../../vars/dev/terraform/wagtail.auto.tfvars" \
   -var-file="../../vars/dev/terraform/enrichment.auto.tfvars" \
   -var-file="../../vars/dev/terraform/redis.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/catalogue.auto.tfvars"
+  -var-file="../../vars/dev/terraform/catalogue.auto.tfvars" \
+  -var-file="../../vars/dev/terraform/search.auto.tfvars"
 ```
 
 **_Staging apply_**
@@ -200,7 +202,8 @@ terraform apply \
 -var-file="../../vars/staging/terraform/ses.auto.tfvars" \
 -var-file="../../vars/staging/terraform/wagtail.auto.tfvars" \
 -var-file="../../vars/staging/terraform/enrichment.auto.tfvars" \
--var-file="../../vars/staging/terraform/redis.auto.tfvars"
+-var-file="../../vars/staging/terraform/redis.auto.tfvars" \
+-var-file="../../vars/staging/terraform/search.auto.tfvars"
 ```
 
 **_Live apply_**
@@ -219,6 +222,7 @@ terraform apply \
 -var-file="../../vars/live/terraform/enrichment.auto.tfvars" \
 -var-file="../../vars/live/terraform/wagtail.auto.tfvars" \
 -var-file="../../vars/live/terraform/catalogue.auto.tfvars" \
+-var-file="../../vars/live/terraform/search.auto.tfvars" \
 -var-file="../../vars/live/terraform/cognito.auto.tfvars" \
 -var-file="../../vars/live/terraform/ses.auto.tfvars" \
 -var-file="../../vars/live/terraform/redis.auto.tfvars"
