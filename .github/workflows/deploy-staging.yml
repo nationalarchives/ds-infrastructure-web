@@ -117,6 +117,7 @@ jobs:
           - enrichment
           - wagtail
           - catalogue
+          - search
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
