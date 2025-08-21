@@ -56,9 +56,9 @@ jobs:
           if [ "$HOUR" -ge 9 ] && [ "$HOUR" -le 17 ] && [ "$DAY_OF_WEEK" -ge 1 ] && [ "$DAY_OF_WEEK" -le 5 ];
           then
             echo "Running tests during working hours"
-            gh workflow run manual.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://dev-www.nationalarchives.gov.uk --raw-field exclude-tests="@wip|@requires-wordpress" --raw-field notify-slack-on-pass=false --raw-field notify-slack-on-fail=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
+            gh workflow run run.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://dev-www.nationalarchives.gov.uk --raw-field exclude-tests="@wip|@requires-wordpress" --raw-field notify-slack-on-pass=false --raw-field notify-slack-on-fail=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
             sleep 5
-            gh run watch --exit-status --repo nationalarchives/ds-tna-website-tests $(gh run list --repo nationalarchives/ds-tna-website-tests --workflow manual.yml -L1 --json databaseId --jq .[0].databaseId)
+            gh run watch --exit-status --repo nationalarchives/ds-tna-website-tests $(gh run list --repo nationalarchives/ds-tna-website-tests --workflow run.yml -L1 --json databaseId --jq .[0].databaseId)
           else
             echo "Skipping tests outside working hours"
           fi
