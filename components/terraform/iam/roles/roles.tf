@@ -42,6 +42,12 @@ resource "aws_iam_role" "enrichment_role" {
   assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
+# wagtaildocs Role
+resource "aws_iam_role" "wagtaildocs_role" {
+  name               = "wagtaildocs-assume-role"
+  assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
+}
+
 # Lambda Web Docker Deployment Role
 resource "aws_iam_role" "lambda_web_docker_deployment_role" {
   name               = "lambda-web-docker-deployment-role"
@@ -88,6 +94,13 @@ resource "aws_iam_instance_profile" "enrichment_profile" {
   name = "web-enrichment-profile"
   path = "/"
   role = aws_iam_role.enrichment_role.name
+}
+
+# Instance Profile for Wagatildocs Role
+resource "aws_iam_instance_profile" "wagtaildocs_profile" {
+  name = "wagtaildocs-profile"
+  path = "/"
+  role = aws_iam_role.wagtaildocs_role.name
 }
 
 
@@ -223,8 +236,31 @@ resource "aws_iam_role_policy_attachment" "wagtail_policy_attachment_5" {
   policy_arn = var.deployment_s3_policy
 }
 
+# Attach Policies to Wagtaildocs Role
+resource "aws_iam_role_policy_attachment" "wagtaildocs_policy_attachment_1" {
+  role       = aws_iam_role.wagtaildocs_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+}
 
+resource "aws_iam_role_policy_attachment" "wagtaildocs_policy_attachment_2" {
+  role       = aws_iam_role.wagtaildocs_role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
 
+resource "aws_iam_role_policy_attachment" "wagtaildocs_policy_attachment_3" {
+  role       = aws_iam_role.wagtaildocs_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_role_policy_attachment" "wagtaildocs_policy_attachment_4" {
+  role       = aws_iam_role.wagtaildocs_role.name
+  policy_arn = data.aws_iam_policy.org_session_manager_logs.arn
+}
+
+resource "aws_iam_role_policy_attachment" "wagtaildocs_policy_attachment_5" {
+  role       = aws_iam_role.wagtaildocs_role.name
+  policy_arn = var.deployment_s3_policy
+}
 
 
 
