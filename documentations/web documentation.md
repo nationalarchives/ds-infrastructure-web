@@ -114,7 +114,8 @@ terraform plan \
   -var-file="../../vars/dev/terraform/enrichment.auto.tfvars" \
   -var-file="../../vars/dev/terraform/redis.auto.tfvars" \
   -var-file="../../vars/dev/terraform/catalogue.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/search.auto.tfvars"
+  -var-file="../../vars/dev/terraform/search.auto.tfvars" \
+  -var-file="../../vars/dev/terraform/wagtaildocs.auto.tfvars"
 ```
 
 **_Staging plan_**

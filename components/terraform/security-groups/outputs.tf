@@ -64,3 +64,14 @@ output "search_lb_id" {
 output "search_lb" {
     value = aws_security_group.search_lb.id
 }
+output "wagtaildocs_sg_id" {
+    value = aws_security_group.wagtaildocs.id
+}
+
+output "wagtaildocs_lb_id" {
+    value = aws_security_group.wagtaildocs_lb.id
+}
+
+output "wagtaildocs_lb" {
+    value = aws_security_group.wagtaildocs_lb.id
+}

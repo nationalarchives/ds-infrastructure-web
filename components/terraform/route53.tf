@@ -61,3 +61,14 @@ resource "aws_route53_record" "search" {
     ]    
 }
 
+resource "aws_route53_record" "wagtaildocs" {
+    zone_id = var.route53_zone
+    name    = "wagtaildocs.${var.environment}.local"
+    type    = "CNAME"
+    ttl     = 15
+
+    records = [
+        module.wagtaildocs.lb_internal_dns_name
+    ]    
+}
+

@@ -29,3 +29,6 @@ variable "catalogue_instance_cidr"{}
 
 variable "search_lb_cidr"{}
 variable "search_instance_cidr"{}
+
+variable "wagtaildocs_lb_cidr" {}
+variable "wagtaildocs_instance_cidr" {}
