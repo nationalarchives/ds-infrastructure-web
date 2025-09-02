@@ -261,6 +261,10 @@ resource "aws_iam_role_policy_attachment" "wagtaildocs_policy_attachment_5" {
   role       = aws_iam_role.wagtaildocs_role.name
   policy_arn = var.deployment_s3_policy
 }
+resource "aws_iam_role_policy_attachment" "wagtaildocs_policy_attachment_6" {
+  role       = aws_iam_role.wagtaildocs_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
+}
 
 
 
