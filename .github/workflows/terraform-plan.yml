@@ -19,7 +19,7 @@ on:
           - live
 
 jobs:
-  plan-frontend-dev:
+  plan-dev:
     if: ${{ inputs.deploy-environment  == 'dev' }}
     uses: nationalarchives/ds-github-actions/.github/workflows/plan-web-frontend.yml@main
     with:
@@ -28,7 +28,7 @@ jobs:
       account_id: "846769538626"
       role-to-assume: "arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL"
       branch: "${{ github.event.inputs.branch }}"
-  plan-frontend-staging:
+  plan-staging:
     if: ${{ inputs.deploy-environment  == 'staging' }}
     uses: nationalarchives/ds-github-actions/.github/workflows/plan-web-frontend.yml@main
     with:
@@ -37,7 +37,7 @@ jobs:
       account_id: "337670467269"
       role-to-assume: "arn:aws:iam::337670467269:role/GitHubActionRole"
       branch: "${{ github.event.inputs.branch }}"
-  plan-frontend-live:
+  plan-live:
     if: ${{ inputs.deploy-environment  == 'live' }}
     uses: nationalarchives/ds-github-actions/.github/workflows/plan-web-frontend.yml@main
     with:
