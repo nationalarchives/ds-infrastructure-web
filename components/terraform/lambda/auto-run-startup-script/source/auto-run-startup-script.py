@@ -120,7 +120,8 @@ def lambda_handler(event, context):
         "enrichment": "web-enrichment",
         "wagtail": "wagtail",
         "catalogue": "catalogue",
-        "search":"search"
+        "search":"search",
+        "wagtaildocs":"wagtaildocs"
     }
 
     if 'service' in event:
