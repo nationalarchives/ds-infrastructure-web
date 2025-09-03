@@ -55,9 +55,6 @@ module "catalogue" {
         data.aws_ssm_parameter.private_subnet_2b_cidr.value,
     ]
 
-    
-
-
     auto_switch_off = var.catalogue_auto_switch_off
     auto_switch_on = var.catalogue_auto_switch_on
     deployment_group = var.catalogue_deployment_group
