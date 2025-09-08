@@ -30,11 +30,6 @@ resource "aws_iam_role" "search_role" {
   assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
-# Reverse Proxy Role
-resource "aws_iam_role" "rp_role" {
-  name               = "web-rp-role"
-  assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
-}
 
 # Enrichment Role
 resource "aws_iam_role" "enrichment_role" {
@@ -83,11 +78,6 @@ resource "aws_iam_instance_profile" "frontend_profile" {
   role = aws_iam_role.frontend_role.name
 }
 
-# Instance Profile for Reverse Proxy Role
-resource "aws_iam_instance_profile" "rp_profile" {
-  name = "web-rp-profile"
-  role = aws_iam_role.rp_role.name
-}
 
 # Instance Profile for Enrichment Role
 resource "aws_iam_instance_profile" "enrichment_profile" {
@@ -130,18 +120,6 @@ resource "aws_iam_role_policy_attachment" "frontend_policy_attachment_4" {
 resource "aws_iam_role_policy_attachment" "frontend_policy_attachment_5" {
   role       = aws_iam_role.frontend_role.name
   policy_arn = var.deployment_s3_policy
-}
-
-
-# Attach Policies to Reverse Proxy Role
-resource "aws_iam_role_policy_attachment" "rp_policy_attachment_1" {
-  role       = aws_iam_role.rp_role.name
-  policy_arn = var.rp_config_s3_policy_arn
-}
-
-resource "aws_iam_role_policy_attachment" "rp_policy_attachment_2" {
-  role       = aws_iam_role.rp_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 
