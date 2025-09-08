@@ -45,7 +45,7 @@ This are database or other secrets which are confidential and should not be save
 
 Please read any documentation in the **ds-ami-build** repo in regards of the required build for further information.
 
-- NginX instance - web-rp-primer\*
+- NginX instance - website-reverse-proxy-primer\*
 - Frontend instance - web-frontend-primer\*
 
 ### Sharing public files

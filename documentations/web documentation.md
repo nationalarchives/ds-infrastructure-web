@@ -41,7 +41,7 @@ The ds-infrastructure-web repository contains terraform configurations for migra
 **_Reverse Proxy_**
 
 - Hosted on EC2 instances in an ASG.
-- Uses AMI for deployment (web-rp-primer\*).
+- Uses AMI for deployment (website-reverse-proxy-primer\*).
 - Configured with NGINX for routing traffic.
 
 **_Security Groups_**
@@ -102,8 +102,6 @@ terraform plan \
   -var-file="../../vars/dev/terraform/autoscalinggroup.auto.tfvars" \
   -var-file="../../vars/dev/terraform/frontend.auto.tfvars" \
   -var-file="../../vars/dev/terraform/global.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/nginx-conf.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/reverse-proxy.auto.tfvars" \
   -var-file="../../vars/dev/terraform/waf.auto.tfvars" \
   -var-file="../../vars/dev/terraform/route53.auto.tfvars" \
   -var-file="../../vars/dev/terraform/media-efs.auto.tfvars" \
@@ -125,8 +123,6 @@ terraform plan \
   -var-file="../../vars/staging/terraform/autoscalinggroup.auto.tfvars" \
   -var-file="../../vars/staging/terraform/frontend.auto.tfvars" \
   -var-file="../../vars/staging/terraform/global.auto.tfvars" \
-  -var-file="../../vars/staging/terraform/nginx-conf.auto.tfvars" \
-  -var-file="../../vars/staging/terraform/reverse-proxy.auto.tfvars" \
   -var-file="../../vars/staging/terraform/waf.auto.tfvars" \
   -var-file="../../vars/staging/terraform/route53.auto.tfvars" \
   -var-file="../../vars/staging/terraform/media-efs.auto.tfvars" \
@@ -148,8 +144,6 @@ terraform plan \
 -var-file="../../vars/live/terraform/autoscalinggroup.auto.tfvars" \
 -var-file="../../vars/live/terraform/frontend.auto.tfvars" \
 -var-file="../../vars/live/terraform/global.auto.tfvars" \
--var-file="../../vars/live/terraform/nginx-conf.auto.tfvars" \
--var-file="../../vars/live/terraform/reverse-proxy.auto.tfvars" \
 -var-file="../../vars/live/terraform/waf.auto.tfvars" \
 -var-file="../../vars/live/terraform/route53.auto.tfvars" \
 -var-file="../../vars/live/terraform/media-efs.auto.tfvars" \
@@ -173,8 +167,6 @@ terraform apply \
   -var-file="../../vars/dev/terraform/autoscalinggroup.auto.tfvars" \
   -var-file="../../vars/dev/terraform/frontend.auto.tfvars" \
   -var-file="../../vars/dev/terraform/global.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/nginx-conf.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/reverse-proxy.auto.tfvars" \
   -var-file="../../vars/dev/terraform/waf.auto.tfvars" \
   -var-file="../../vars/dev/terraform/route53.auto.tfvars" \
   -var-file="../../vars/dev/terraform/media-efs.auto.tfvars" \
@@ -196,8 +188,6 @@ terraform apply \
 -var-file="../../vars/staging/terraform/autoscalinggroup.auto.tfvars" \
 -var-file="../../vars/staging/terraform/frontend.auto.tfvars" \
 -var-file="../../vars/staging/terraform/global.auto.tfvars" \
--var-file="../../vars/staging/terraform/nginx-conf.auto.tfvars" \
--var-file="../../vars/staging/terraform/reverse-proxy.auto.tfvars" \
 -var-file="../../vars/staging/terraform/waf.auto.tfvars" \
 -var-file="../../vars/staging/terraform/route53.auto.tfvars" \
 -var-file="../../vars/staging/terraform/media-efs.auto.tfvars" \
@@ -218,8 +208,6 @@ terraform apply \
 -var-file="../../vars/live/terraform/autoscalinggroup.auto.tfvars" \
 -var-file="../../vars/live/terraform/frontend.auto.tfvars" \
 -var-file="../../vars/live/terraform/global.auto.tfvars" \
--var-file="../../vars/live/terraform/nginx-conf.auto.tfvars" \
--var-file="../../vars/live/terraform/reverse-proxy.auto.tfvars" \
 -var-file="../../vars/live/terraform/waf.auto.tfvars" \
 -var-file="../../vars/live/terraform/route53.auto.tfvars" \
 -var-file="../../vars/live/terraform/media-efs.auto.tfvars" \
