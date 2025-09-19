@@ -9,7 +9,7 @@ resource "aws_route53_record" "user_pool" {
     alias {
         evaluate_target_health = false
 
-        name    = var.cloudfront_distribution
-        zone_id = var.cloudfront_distribution_zone_id
+        name    = aws_cognito_user_pool_domain.user_pool.cloudfront_distribution
+        zone_id = aws_cognito_user_pool_domain.user_pool.cloudfront_distribution_zone_id
     }
 }
