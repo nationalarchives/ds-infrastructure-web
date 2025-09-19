@@ -1,1 +1,1 @@
-email_address = "no-reply+staging@nationalarchives.gov.uk"
+email_address = "no-reply+staging-web@nationalarchives.gov.uk"
