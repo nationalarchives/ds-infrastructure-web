@@ -1,3 +1,6 @@
+variable "create_cognito" {
+    default = false
+}
 variable "user_pool_domain" {}
 variable "nationalarchives_callback_url" {}
 variable "nationalarchives_logout_url" {}
@@ -5,10 +8,11 @@ variable "userpool" {}
 variable "client_name" {}
 
 module "etna-cognito" {
+    count  = var.create_cognito ? 1 : 0
     source = "./cognito"
 
     cognito_user_pool_name = var.userpool
-    user_pool_client_name = var.client_name
+    user_pool_client_name  = var.client_name
 
     nationalarchives_callback_url = var.nationalarchives_callback_url
     nationalarchives_logout_url   = var.nationalarchives_logout_url
