@@ -24,7 +24,7 @@ jobs:
   # ------------------------------------------------------------------------------
   platform-redis-ami-dev:
     if: github.event.inputs.account == 'dev'
-    uses: nationalarchives/ds-github-actions/.github/workflows/platform-redis-ami-build.yml@main
+    uses: nationalarchives/ds-github-actions/.github/workflows/platform-redis-ami-build.yml@redis-actions
     with:
       base_role: "arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL"
       playbook_role: "arn:aws:iam::846769538626:role/s-devops-ansible-amis"
