@@ -17,7 +17,7 @@
         },
         "catalogue": {
             "image": "ghcr.io/nationalarchives/ds-catalogue",
-            "version": "25.10.09.1272",
+            "version": "25.10.13.1280",
             "repo": "https://github.com/nationalarchives/ds-catalogue"
         },
         "enrichment": {
