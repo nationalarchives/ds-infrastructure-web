@@ -36,9 +36,7 @@ jobs:
       volume_size: 20
       s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
       s3_deployment_root: "web/wagtaildocs"
-    secrets:
-      vpc_id: ${{ secrets.VPC_ID_DEV }}
-      subnet_id: ${{ secrets.SUBNET_ID_2A_DEV }}
+
   # ------------------------------------------------------------------------------
   # staging deployment
   # ------------------------------------------------------------------------------
@@ -56,9 +54,7 @@ jobs:
       volume_size: 40
       s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
       s3_deployment_root: "web/wagtaildocs"
-    secrets:
-      vpc_id: ${{ secrets.VPC_ID_STAGING }}
-      subnet_id: ${{ secrets.SUBNET_ID_2A_STAGING }}
+    
   # ------------------------------------------------------------------------------
   # live deployment
   # ------------------------------------------------------------------------------
@@ -76,6 +72,3 @@ jobs:
       volume_size: 100
       s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
       s3_deployment_root: "web/wagtaildocs"
-    secrets:
-      vpc_id: ${{ secrets.VPC_ID_LIVE }}
-      subnet_id: ${{ secrets.SUBNET_ID_2A_LIVE }}
