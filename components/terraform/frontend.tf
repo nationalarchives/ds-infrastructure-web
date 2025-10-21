@@ -19,10 +19,7 @@ variable "frontend_folder_s3_key" {}
 module "frontend" {
     source = "./frontend"
 
-    environment = var.environment
     ami_id = data.aws_ami.frontend_ami.id
-
-    route53_zone = data.aws_ssm_parameter.zone_id.value
 
     lb_arn = module.load-balancer.load_balancer_arn
     lb_security_group_id = module.load-balancer.lb_security_group_id
@@ -47,11 +44,6 @@ module "frontend" {
         data.aws_ssm_parameter.private_subnet_2a_cidr.value,
         data.aws_ssm_parameter.private_subnet_2b_cidr.value,
     ]
-    lb_cidr = [
-        data.aws_ssm_parameter.private_subnet_2a_cidr.value,
-        data.aws_ssm_parameter.private_subnet_2b_cidr.value,
-    ]
-
 
     auto_switch_off = var.frontend_auto_switch_off
     auto_switch_on = var.frontend_auto_switch_on
