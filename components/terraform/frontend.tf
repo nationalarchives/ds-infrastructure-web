@@ -24,9 +24,14 @@ module "frontend" {
 
     route53_zone = data.aws_ssm_parameter.zone_id.value
 
+    lb_arn = module.load-balancer.load_balancer_arn
+    lb_security_group_id = module.load-balancer.lb_security_group_id
+
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
     private_subnet_b_id = data.aws_ssm_parameter.private_subnet_2b_id.value
+
+    origin_header = "http://web-frontend.${var.environment}.local"
 
     asg_max_size = var.frontend_asg_max_size
     asg_min_size = var.frontend_asg_min_size
@@ -46,7 +51,7 @@ module "frontend" {
         data.aws_ssm_parameter.private_subnet_2a_cidr.value,
         data.aws_ssm_parameter.private_subnet_2b_cidr.value,
     ]
-    
+
 
     auto_switch_off = var.frontend_auto_switch_off
     auto_switch_on = var.frontend_auto_switch_on
