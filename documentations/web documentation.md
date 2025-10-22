@@ -99,63 +99,63 @@ terraform init
 
 ```bash
 terraform plan \
-  -var-file="../../vars/dev/terraform/autoscalinggroup.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/frontend.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/global.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/waf.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/route53.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/media-efs.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/cloudfront.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/cognito.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/ses.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/wagtail.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/enrichment.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/redis.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/catalogue.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/search.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/wagtaildocs.auto.tfvars"
+  -var-file="vars/dev/autoscalinggroup.auto.tfvars" \
+  -var-file="vars/dev/frontend.auto.tfvars" \
+  -var-file="vars/dev/global.auto.tfvars" \
+  -var-file="vars/dev/waf.auto.tfvars" \
+  -var-file="vars/dev/route53.auto.tfvars" \
+  -var-file="vars/dev/media-efs.auto.tfvars" \
+  -var-file="vars/dev/cloudfront.auto.tfvars" \
+  -var-file="vars/dev/cognito.auto.tfvars" \
+  -var-file="vars/dev/ses.auto.tfvars" \
+  -var-file="vars/dev/wagtail.auto.tfvars" \
+  -var-file="vars/dev/enrichment.auto.tfvars" \
+  -var-file="vars/dev/redis.auto.tfvars" \
+  -var-file="vars/dev/catalogue.auto.tfvars" \
+  -var-file="vars/dev/search.auto.tfvars" \
+  -var-file="vars/dev/wagtaildocs.auto.tfvars"
 ```
 
 **_Staging plan_**
 
 ```bash
 terraform plan \
-  -var-file="../../vars/staging/terraform/autoscalinggroup.auto.tfvars" \
-  -var-file="../../vars/staging/terraform/frontend.auto.tfvars" \
-  -var-file="../../vars/staging/terraform/global.auto.tfvars" \
-  -var-file="../../vars/staging/terraform/waf.auto.tfvars" \
-  -var-file="../../vars/staging/terraform/route53.auto.tfvars" \
-  -var-file="../../vars/staging/terraform/media-efs.auto.tfvars" \
-  -var-file="../../vars/staging/terraform/cloudfront.auto.tfvars" \
-  -var-file="../../vars/staging/terraform/enrichment.auto.tfvars" \
-  -var-file="../../vars/staging/terraform/wagtail.auto.tfvars" \
-  -var-file="../../vars/staging/terraform/redis.auto.tfvars" \
-  -var-file="../../vars/staging/terraform/catalogue.auto.tfvars" \
-  -var-file="../../vars/staging/terraform/search.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/wagtaildocs.auto.tfvars" \
-  -var-file="../../vars/staging/terraform/cognito.auto.tfvars" \
-  -var-file="../../vars/staging/terraform/ses.auto.tfvars"
+  -var-file="vars/staging/autoscalinggroup.auto.tfvars" \
+  -var-file="vars/staging/frontend.auto.tfvars" \
+  -var-file="vars/staging/global.auto.tfvars" \
+  -var-file="vars/staging/waf.auto.tfvars" \
+  -var-file="vars/staging/route53.auto.tfvars" \
+  -var-file="vars/staging/media-efs.auto.tfvars" \
+  -var-file="vars/staging/cloudfront.auto.tfvars" \
+  -var-file="vars/staging/enrichment.auto.tfvars" \
+  -var-file="vars/staging/wagtail.auto.tfvars" \
+  -var-file="vars/staging/redis.auto.tfvars" \
+  -var-file="vars/staging/catalogue.auto.tfvars" \
+  -var-file="vars/staging/search.auto.tfvars" \
+  -var-file="vars/dev/wagtaildocs.auto.tfvars" \
+  -var-file="vars/staging/cognito.auto.tfvars" \
+  -var-file="vars/staging/ses.auto.tfvars"
 ```
 
 **_Live plan_**
 
 ```bash
 terraform plan \
--var-file="../../vars/live/terraform/autoscalinggroup.auto.tfvars" \
--var-file="../../vars/live/terraform/frontend.auto.tfvars" \
--var-file="../../vars/live/terraform/global.auto.tfvars" \
--var-file="../../vars/live/terraform/waf.auto.tfvars" \
--var-file="../../vars/live/terraform/route53.auto.tfvars" \
--var-file="../../vars/live/terraform/media-efs.auto.tfvars" \
--var-file="../../vars/live/terraform/cloudfront.auto.tfvars" \
--var-file="../../vars/live/terraform/enrichment.auto.tfvars" \
--var-file="../../vars/live/terraform/wagtail.auto.tfvars" \
--var-file="../../vars/live/terraform/redis.auto.tfvars" \
--var-file="../../vars/live/terraform/catalogue.auto.tfvars" \
--var-file="../../vars/live/terraform/search.auto.tfvars" \
--var-file="../../vars/live/terraform/wagtaildocs.auto.tfvars" \
--var-file="../../vars/live/terraform/cognito.auto.tfvars" \
--var-file="../../vars/live/terraform/ses.auto.tfvars"
+-var-file="vars/live/autoscalinggroup.auto.tfvars" \
+-var-file="vars/live/frontend.auto.tfvars" \
+-var-file="vars/live/global.auto.tfvars" \
+-var-file="vars/live/waf.auto.tfvars" \
+-var-file="vars/live/route53.auto.tfvars" \
+-var-file="vars/live/media-efs.auto.tfvars" \
+-var-file="vars/live/cloudfront.auto.tfvars" \
+-var-file="vars/live/enrichment.auto.tfvars" \
+-var-file="vars/live/wagtail.auto.tfvars" \
+-var-file="vars/live/redis.auto.tfvars" \
+-var-file="vars/live/catalogue.auto.tfvars" \
+-var-file="vars/live/search.auto.tfvars" \
+-var-file="vars/live/wagtaildocs.auto.tfvars" \
+-var-file="vars/live/cognito.auto.tfvars" \
+-var-file="vars/live/ses.auto.tfvars"
 ```
 
 **_4. Apply Configuration_**
@@ -164,62 +164,62 @@ terraform plan \
 
 ```bash
 terraform apply \
-  -var-file="../../vars/dev/terraform/autoscalinggroup.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/frontend.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/global.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/waf.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/route53.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/media-efs.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/cloudfront.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/cognito.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/ses.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/wagtail.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/enrichment.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/redis.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/catalogue.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/search.auto.tfvars" \
-  -var-file="../../vars/dev/terraform/wagtaildocs.auto.tfvars"
+  -var-file="vars/dev/autoscalinggroup.auto.tfvars" \
+  -var-file="vars/dev/frontend.auto.tfvars" \
+  -var-file="vars/dev/global.auto.tfvars" \
+  -var-file="vars/dev/waf.auto.tfvars" \
+  -var-file="vars/dev/route53.auto.tfvars" \
+  -var-file="vars/dev/media-efs.auto.tfvars" \
+  -var-file="vars/dev/cloudfront.auto.tfvars" \
+  -var-file="vars/dev/cognito.auto.tfvars" \
+  -var-file="vars/dev/ses.auto.tfvars" \
+  -var-file="vars/dev/wagtail.auto.tfvars" \
+  -var-file="vars/dev/enrichment.auto.tfvars" \
+  -var-file="vars/dev/redis.auto.tfvars" \
+  -var-file="vars/dev/catalogue.auto.tfvars" \
+  -var-file="vars/dev/search.auto.tfvars" \
+  -var-file="vars/dev/wagtaildocs.auto.tfvars"
 ```
 
 **_Staging apply_**
 
 ```bash
 terraform apply \
--var-file="../../vars/staging/terraform/autoscalinggroup.auto.tfvars" \
--var-file="../../vars/staging/terraform/frontend.auto.tfvars" \
--var-file="../../vars/staging/terraform/global.auto.tfvars" \
--var-file="../../vars/staging/terraform/waf.auto.tfvars" \
--var-file="../../vars/staging/terraform/route53.auto.tfvars" \
--var-file="../../vars/staging/terraform/media-efs.auto.tfvars" \
--var-file="../../vars/staging/terraform/cloudfront.auto.tfvars" \
--var-file="../../vars/staging/terraform/cognito.auto.tfvars" \
--var-file="../../vars/staging/terraform/ses.auto.tfvars" \
--var-file="../../vars/staging/terraform/wagtail.auto.tfvars" \
--var-file="../../vars/staging/terraform/enrichment.auto.tfvars" \
--var-file="../../vars/staging/terraform/redis.auto.tfvars" \
--var-file="../../vars/staging/terraform/search.auto.tfvars" \
--var-file="../../vars/staging/terraform/wagtaildocs.auto.tfvars"
+-var-file="vars/staging/autoscalinggroup.auto.tfvars" \
+-var-file="vars/staging/frontend.auto.tfvars" \
+-var-file="vars/staging/global.auto.tfvars" \
+-var-file="vars/staging/waf.auto.tfvars" \
+-var-file="vars/staging/route53.auto.tfvars" \
+-var-file="vars/staging/media-efs.auto.tfvars" \
+-var-file="vars/staging/cloudfront.auto.tfvars" \
+-var-file="vars/staging/cognito.auto.tfvars" \
+-var-file="vars/staging/ses.auto.tfvars" \
+-var-file="vars/staging/wagtail.auto.tfvars" \
+-var-file="vars/staging/enrichment.auto.tfvars" \
+-var-file="vars/staging/redis.auto.tfvars" \
+-var-file="vars/staging/search.auto.tfvars" \
+-var-file="vars/staging/wagtaildocs.auto.tfvars"
 ```
 
 **_Live apply_**
 
 ```bash
 terraform apply \
--var-file="../../vars/live/terraform/autoscalinggroup.auto.tfvars" \
--var-file="../../vars/live/terraform/frontend.auto.tfvars" \
--var-file="../../vars/live/terraform/global.auto.tfvars" \
--var-file="../../vars/live/terraform/waf.auto.tfvars" \
--var-file="../../vars/live/terraform/route53.auto.tfvars" \
--var-file="../../vars/live/terraform/media-efs.auto.tfvars" \
--var-file="../../vars/live/terraform/cloudfront.auto.tfvars" \
--var-file="../../vars/live/terraform/enrichment.auto.tfvars" \
--var-file="../../vars/live/terraform/wagtail.auto.tfvars" \
--var-file="../../vars/live/terraform/catalogue.auto.tfvars" \
--var-file="../../vars/live/terraform/search.auto.tfvars" \
--var-file="../../vars/live/terraform/cognito.auto.tfvars" \
--var-file="../../vars/live/terraform/ses.auto.tfvars" \
--var-file="../../vars/live/terraform/redis.auto.tfvars" \
--var-file="../../vars/live/terraform/wagtaildocs.auto.tfvars"
+-var-file="vars/live/autoscalinggroup.auto.tfvars" \
+-var-file="vars/live/frontend.auto.tfvars" \
+-var-file="vars/live/global.auto.tfvars" \
+-var-file="vars/live/waf.auto.tfvars" \
+-var-file="vars/live/route53.auto.tfvars" \
+-var-file="vars/live/media-efs.auto.tfvars" \
+-var-file="vars/live/cloudfront.auto.tfvars" \
+-var-file="vars/live/enrichment.auto.tfvars" \
+-var-file="vars/live/wagtail.auto.tfvars" \
+-var-file="vars/live/catalogue.auto.tfvars" \
+-var-file="vars/live/search.auto.tfvars" \
+-var-file="vars/live/cognito.auto.tfvars" \
+-var-file="vars/live/ses.auto.tfvars" \
+-var-file="vars/live/redis.auto.tfvars" \
+-var-file="vars/live/wagtaildocs.auto.tfvars"
 ```
 
 **_5. Verify Deployment_**
