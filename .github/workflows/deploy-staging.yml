@@ -138,7 +138,7 @@ jobs:
     needs:
       - create-release
       - deploy
-    if: always() && inputs.notify-slack
+    if: (success() || failure()) && inputs.notify-slack
     steps:
       - uses: rtCamp/action-slack-notify@v2
         if: success()

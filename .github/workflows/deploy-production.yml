@@ -95,7 +95,7 @@ jobs:
     needs:
       - prepare
       - deploy
-    if: always()
+    if: success() || failure()
     steps:
       - uses: rtCamp/action-slack-notify@v2
         if: success()
