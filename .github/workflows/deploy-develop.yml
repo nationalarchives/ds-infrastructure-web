@@ -30,10 +30,11 @@ jobs:
           - catalogue
           - search
           - wagtaildocs
-          
+          - requestservicerecord
+
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Deploy service
         uses: ./.github/actions/deploy
         with:
@@ -50,7 +51,7 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN_TEST_RUNNER }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Run tests
         run: |
           HOUR=$(date +"%H")
