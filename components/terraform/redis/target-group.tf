@@ -23,7 +23,7 @@ resource "aws_lb_listener" "internal_http" {
         target_group_arn = aws_lb_target_group.platform_redis.arn
     }
     protocol          = "HTTP"
-    load_balancer_arn = aws_lb.platform_redis.arn
+    load_balancer_arn = var.lb_arn
     port              = 80
 }
 
