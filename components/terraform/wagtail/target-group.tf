@@ -24,7 +24,7 @@ resource "aws_lb_listener" "internal_http" {
     }
     protocol          = "HTTP"
     load_balancer_arn = var.lb_arn
-    port              = 80
+    port              = 81
 
     routing_http_response_access_control_allow_origin_header_value = var.origin_header
 }
