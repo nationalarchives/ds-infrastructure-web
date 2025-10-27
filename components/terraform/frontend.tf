@@ -22,7 +22,7 @@ module "frontend" {
     ami_id = data.aws_ami.frontend_ami.id
 
     lb_listener_arn = module.load-balancer.lb_listener_arn
-    origin_header = "http://web-frontend.${var.environment}.local"
+    origin_header = "web-frontend.${var.environment}.local"
 
     lb_security_group_id = module.load-balancer.lb_security_group_id
 

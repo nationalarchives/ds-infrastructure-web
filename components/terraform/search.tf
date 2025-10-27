@@ -22,7 +22,7 @@ module "search" {
     ami_id = data.aws_ami.search_ami.id
 
     lb_listener_arn = module.load-balancer.lb_listener_arn
-    origin_header = "http://web-frontend.${var.environment}.local"
+    origin_header = "search.${var.environment}.local"
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value

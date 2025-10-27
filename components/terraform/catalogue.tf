@@ -22,7 +22,7 @@ module "catalogue" {
     ami_id = data.aws_ami.catalogue_ami.id
 
     lb_listener_arn = module.load-balancer.lb_listener_arn
-    origin_header = "http://web-frontend.${var.environment}.local"
+    origin_header = "catalogue.${var.environment}.local"
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
