@@ -24,6 +24,8 @@ module "frontend" {
     lb_listener_arn = module.load-balancer.lb_listener_arn
     origin_header = "http://web-frontend.${var.environment}.local"
 
+    lb_security_group_id = module.load-balancer.lb_security_group_id
+
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
     private_subnet_b_id = data.aws_ssm_parameter.private_subnet_2b_id.value
