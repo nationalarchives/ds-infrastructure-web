@@ -1,4 +1,36 @@
 #!/bin/bash
+
+json_to_env_file() {
+    local json_string="$1"        # JSON text
+    local output_file="$2"        # e.g. ./app.env
+    local prefix="${3:-}"         # optional prefix, e.g. APP_
+    if [[ -z "$json_string" || -z "$output_file" ]]; then
+        echo "Usage: json_to_env_file <json_string> <output_file> [PREFIX]" >&2
+        return 1
+    fi
+    if ! command -v jq >/dev/null 2>&1; then
+        echo "jq not found (install: brew install jq)" >&2
+        return 1
+    fi
+
+    : > "$output_file" || return 1
+    chmod 644 "$output_file" 2>/dev/null || true
+
+    jq -r --arg p "$prefix" '
+        paths(scalars) as $path |
+        ($path | map(tostring)) as $parts |
+        ($parts
+        | map(gsub("[^A-Za-z0-9_]"; "_"))
+        | map(sub("^([0-9])"; "_\\1"))
+        | map(ascii_upcase)
+        | join("_")
+        ) as $base |
+        ($p + $base) as $var |
+        # Always shell-escape; yields safe single-quoted strings for non-numeric scalars
+        "\($var)=\(getpath($path)|@sh)"
+        ' <<<"$json_string" >> "$output_file"
+}
+
 # update instance
 
 while getopts t: flag
