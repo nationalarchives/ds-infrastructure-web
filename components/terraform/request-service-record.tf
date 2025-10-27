@@ -1,19 +1,19 @@
-variable "request_service_record_instance_type" {}
-variable "request_service_record_key_name" {}
-variable "request_service_record_root_block_device_size" {}
-
-variable "request_service_record_asg_max_size" {}
-variable "request_service_record_asg_min_size" {}
-variable "request_service_record_asg_desired_capacity" {}
-variable "request_service_record_asg_health_check_grace_period" {}
-variable "request_service_record_asg_health_check_type" {}
-
-variable "request_service_record_auto_switch_off" {}
-variable "request_service_record_auto_switch_on" {}
-variable "request_service_record_deployment_group" {}
-variable "request_service_record_patch_group" {}
-variable "request_service_record_deployment_s3_bucket" {}
-variable "request_service_record_folder_s3_key" {}
+#variable "request_service_record_instance_type" {}
+#variable "request_service_record_key_name" {}
+#variable "request_service_record_root_block_device_size" {}
+#
+#variable "request_service_record_asg_max_size" {}
+#variable "request_service_record_asg_min_size" {}
+#variable "request_service_record_asg_desired_capacity" {}
+#variable "request_service_record_asg_health_check_grace_period" {}
+#variable "request_service_record_asg_health_check_type" {}
+#
+#variable "request_service_record_auto_switch_off" {}
+#variable "request_service_record_auto_switch_on" {}
+#variable "request_service_record_deployment_group" {}
+#variable "request_service_record_patch_group" {}
+#variable "request_service_record_deployment_s3_bucket" {}
+#variable "request_service_record_folder_s3_key" {}
 
 
 #module "mod-foi-frontend" {
