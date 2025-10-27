@@ -8,7 +8,7 @@ variable "subnet_ids" {
 }
 variable "lb_cidr" {
   description = "cidr from which ingress is allowed"
-  type = string
+  type = list(string)
 }
 variable "tags" {
   type = map(string)

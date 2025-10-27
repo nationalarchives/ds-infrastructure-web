@@ -19,10 +19,10 @@ variable "search_folder_s3_key" {}
 module "search" {
     source = "./search"
 
-    environment = var.environment
     ami_id = data.aws_ami.search_ami.id
 
-    route53_zone = data.aws_ssm_parameter.zone_id.value
+    lb_arn = module.load-balancer.load_balancer_arn
+    lb_security_group_id = module.load-balancer.lb_security_group_id
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
@@ -30,10 +30,12 @@ module "search" {
 
     search_sg_id = module.sgs.search_sg_id
     search_lb_id = module.sgs.search_lb
-    
+
     efs_dns_name = module.media_efs.media_efs_dns_name
 
     search_efs_mount_dir = var.search_efs_mount_dir
+
+    origin_header = "http://search.${var.environment}.local"
 
     asg_max_size = var.search_asg_max_size
     asg_min_size = var.search_asg_min_size
@@ -44,19 +46,6 @@ module "search" {
     instance_type = var.search_instance_type
     key_name = "search-${var.environment}-eu-west-2"
     root_block_device_size = "100"
-
-   
-    instance_cidr = [
-        data.aws_ssm_parameter.private_subnet_2a_cidr.value,
-        data.aws_ssm_parameter.private_subnet_2b_cidr.value,
-    ]
-    lb_cidr = [
-        data.aws_ssm_parameter.private_subnet_2a_cidr.value,
-        data.aws_ssm_parameter.private_subnet_2b_cidr.value,
-    ]
-
-    
-
 
     auto_switch_off = var.search_auto_switch_off
     auto_switch_on = var.search_auto_switch_on
