@@ -19,7 +19,7 @@ resource "aws_lb_target_group" "platform_redis" {
 
 resource "aws_lb_listener_rule" "host_based_routing" {
     listener_arn = var.lb_listener_arn
-    priority     = 20
+    priority     = 50
 
     action {
         type             = "forward"

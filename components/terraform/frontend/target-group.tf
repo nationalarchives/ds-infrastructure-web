@@ -19,7 +19,7 @@ resource "aws_lb_target_group" "web_frontend" {
 
 resource "aws_lb_listener_rule" "host_based_routing" {
     listener_arn = var.lb_listener_arn
-    priority     = 20
+    priority     = 10
 
     action {
         type             = "forward"
