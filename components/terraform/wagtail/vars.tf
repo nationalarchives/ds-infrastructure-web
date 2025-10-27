@@ -5,8 +5,6 @@ variable "vpc_id" {}
 variable "private_subnet_a_id" {}
 variable "private_subnet_b_id" {}
 
-variable "lb_cidr" {}
-
 variable "origin_header" {}
 variable "ami_id" {}
 variable "instance_type" {}

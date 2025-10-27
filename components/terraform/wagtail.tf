@@ -47,14 +47,6 @@ module "wagtail" {
     key_name = "wagtail-${var.environment}-eu-west-2"
     root_block_device_size = "100"
 
-    lb_cidr = [
-        data.aws_ssm_parameter.private_subnet_2a_cidr.value,
-        data.aws_ssm_parameter.private_subnet_2b_cidr.value,
-    ]
-
-
-
-
     auto_switch_off = var.wagtail_auto_switch_off
     auto_switch_on = var.wagtail_auto_switch_on
     deployment_group = var.wagtail_deployment_group

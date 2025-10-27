@@ -1,23 +1,3 @@
-# -----------------------------------------------------------------------------
-# Internal Load Balancer
-# -----------------------------------------------------------------------------
-resource "aws_lb" "wagtaildocs" {
-    name               = "wagtaildocs"
-    internal           = true
-    load_balancer_type = "application"
-
-    security_groups = [
-        var.wagtaildocs_lb_id
-    ]
-
-    subnets = [
-        var.private_subnet_a_id,
-        var.private_subnet_b_id
-    ]
-
-    tags = var.tags
-}
-
 resource "aws_lb_target_group" "wagtaildocs" {
     name     = "wagtaildocs"
     port     = 80
@@ -43,6 +23,8 @@ resource "aws_lb_listener" "internal_http" {
         target_group_arn = aws_lb_target_group.wagtaildocs.arn
     }
     protocol          = "HTTP"
-    load_balancer_arn = aws_lb.wagtaildocs.arn
+    load_balancer_arn = var.lb_arn
     port              = 80
+
+    routing_http_response_access_control_allow_origin_header_value = var.origin_header
 }
