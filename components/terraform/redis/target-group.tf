@@ -1,23 +1,3 @@
-# -----------------------------------------------------------------------------
-# Internal Load Balancer
-# -----------------------------------------------------------------------------
-resource "aws_lb" "platform_redis" {
-    name               = "platform-redis"
-    internal           = true
-    load_balancer_type = "application"
-
-    security_groups = [
-        var.redis_lb_id,
-    ]
-
-    subnets = [
-        var.private_subnet_a_id,
-        var.private_subnet_b_id
-    ]
-
-    tags = var.tags
-}
-
 resource "aws_lb_target_group" "platform_redis" {
     name     = "platform-redis"
     port     = 80
@@ -45,4 +25,22 @@ resource "aws_lb_listener" "internal_http" {
     protocol          = "HTTP"
     load_balancer_arn = aws_lb.platform_redis.arn
     port              = 80
+}
+
+resource "aws_lb_listener_rule" "host_based_routing" {
+    listener_arn = aws_lb_listener.internal_http.arn
+    priority     = 20
+
+    action {
+        type             = "forward"
+        target_group_arn = aws_lb_target_group.platform_redis.arn
+    }
+
+    condition {
+        host_header {
+            values = [
+                var.origin_header
+            ]
+        }
+    }
 }
