@@ -9,5 +9,5 @@ output "lb_security_group_id" {
 }
 
 output "lb_listener_arn" {
-    value = aws_lb_listener.internal_http.arnvalue = ""
+    value = aws_lb_listener.internal_http.arn
 }
