@@ -20,13 +20,12 @@ module "enrichment" {
 
     ami_id = data.aws_ami.enrichment_ami.id
 
-    lb_arn = module.load-balancer.load_balancer_arn
+    lb_listener_arn = module.load-balancer.lb_listener_arn
+    origin_header = "http://web-frontend.${var.environment}.local"
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
     private_subnet_b_id = data.aws_ssm_parameter.private_subnet_2b_id.value
-
-    origin_header = "http://web-frontend.${var.environment}.local"
 
     enrichment_sg_id = module.sgs.enrichment_sg_id
     enrichment_lb_id = module.sgs.enrichment_lb_id

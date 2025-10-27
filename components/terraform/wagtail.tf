@@ -21,8 +21,8 @@ module "wagtail" {
 
     ami_id = data.aws_ami.wagtail_ami.id
 
-    lb_arn = module.load-balancer.load_balancer_arn
-    lb_security_group_id = module.load-balancer.lb_security_group_id
+    lb_listener_arn = module.load-balancer.lb_listener_arn
+    origin_header = "http://web-frontend.${var.environment}.local"
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
@@ -34,8 +34,6 @@ module "wagtail" {
     efs_dns_name = module.media_efs.media_efs_dns_name
 
     wagtail_efs_mount_dir = var.wagtail_efs_mount_dir
-
-    origin_header = "http://wagtail.${var.environment}.local"
 
     asg_max_size = var.wagtail_asg_max_size
     asg_min_size = var.wagtail_asg_min_size

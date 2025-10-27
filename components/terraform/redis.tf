@@ -20,9 +20,7 @@ module "redis" {
 
     ami_id = data.aws_ami.redis_ami.id
 
-    lb_arn = module.load-balancer.load_balancer_arn
-    lb_security_group_id = module.load-balancer.lb_security_group_id
-
+    lb_listener_arn = module.load-balancer.lb_listener_arn
     origin_header = "http://web-frontend.${var.environment}.local"
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value

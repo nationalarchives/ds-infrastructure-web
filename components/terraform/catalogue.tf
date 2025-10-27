@@ -21,7 +21,8 @@ module "catalogue" {
 
     ami_id = data.aws_ami.catalogue_ami.id
 
-    lb_arn = module.load-balancer.load_balancer_arn
+    lb_listener_arn = module.load-balancer.lb_listener_arn
+    origin_header = "http://web-frontend.${var.environment}.local"
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
@@ -33,8 +34,6 @@ module "catalogue" {
     efs_dns_name = module.media_efs.media_efs_dns_name
 
     catalogue_efs_mount_dir = var.catalogue_efs_mount_dir
-
-    origin_header = "http://catalogue.${var.environment}.local"
 
     asg_max_size = var.catalogue_asg_max_size
     asg_min_size = var.catalogue_asg_min_size

@@ -12,6 +12,21 @@ resource "aws_lb" "web_services" {
   tags = var.tags
 }
 
+resource "aws_lb_listener" "internal_http" {
+    default_action {
+        type = "fixed-response"
+
+        fixed_response {
+            content_type = "text/plain"
+            message_body = "Listener is online"
+            status_code  = "200"
+        }
+    }
+    protocol          = "HTTP"
+    load_balancer_arn = aws_lb.web_services.arn
+    port              = 80
+}
+
 resource "aws_security_group" "web_services_lb" {
   name        = "web-services-lb"
   description = "Reverse Proxy Security Group HTTP access"

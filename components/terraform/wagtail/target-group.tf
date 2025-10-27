@@ -17,18 +17,8 @@ resource "aws_lb_target_group" "wagtail" {
     tags = var.tags
 }
 
-resource "aws_lb_listener" "internal_http" {
-    default_action {
-        type             = "forward"
-        target_group_arn = aws_lb_target_group.wagtail.arn
-    }
-    protocol          = "HTTP"
-    load_balancer_arn = var.lb_arn
-    port              = 81
-}
-
 resource "aws_lb_listener_rule" "host_based_routing" {
-    listener_arn = aws_lb_listener.internal_http.arn
+    listener_arn = var.lb_listener_arn
     priority     = 20
 
     action {

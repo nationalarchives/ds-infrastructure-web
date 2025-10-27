@@ -1,11 +1,10 @@
-variable "lb_arn" {}
-variable "lb_security_group_id" {}
+variable "lb_listener_arn" {}
+variable "origin_header" {}
 
 variable "vpc_id" {}
 variable "private_subnet_a_id" {}
 variable "private_subnet_b_id" {}
 
-variable "origin_header" {}
 variable "instance_cidr" {}
 variable "ami_id" {}
 variable "instance_type" {}
