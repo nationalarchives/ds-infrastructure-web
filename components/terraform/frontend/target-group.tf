@@ -27,10 +27,9 @@ resource "aws_lb_listener_rule" "host_based_routing" {
     }
 
     condition {
-        host_header {
-            values = [
-                var.origin_header
-            ]
+        http_header {
+            http_header_name = "x-target"
+            values = ["web-frontend"]
         }
     }
 }
