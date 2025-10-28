@@ -1,6 +1,4 @@
 variable "frontend_instance_type" {}
-variable "frontend_key_name" {}
-variable "frontend_root_block_device_size" {}
 
 variable "frontend_asg_max_size" {}
 variable "frontend_asg_min_size" {}
