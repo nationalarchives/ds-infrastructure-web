@@ -30,7 +30,6 @@ module "search" {
     private_subnet_b_id = data.aws_ssm_parameter.private_subnet_2b_id.value
 
     search_sg_id = module.sgs.search_sg_id
-    search_lb_id = module.sgs.search_lb
 
     efs_dns_name = module.media_efs.media_efs_dns_name
 

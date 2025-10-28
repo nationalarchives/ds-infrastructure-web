@@ -28,7 +28,6 @@ variable "folder_s3_key" {}
 variable "asg_tags" {}
 variable "tags" {}
 variable "wagtail_sg_id" {}
-variable "wagtail_lb_id" {}
 
 variable "wagtail_efs_mount_dir" {}
 variable "efs_dns_name" {}

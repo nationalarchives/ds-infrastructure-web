@@ -30,7 +30,6 @@ module "catalogue" {
     private_subnet_b_id = data.aws_ssm_parameter.private_subnet_2b_id.value
 
     catalogue_sg_id = module.sgs.catalogue_sg_id
-    catalogue_lb_id = module.sgs.catalogue_lb
 
     efs_dns_name = module.media_efs.media_efs_dns_name
 

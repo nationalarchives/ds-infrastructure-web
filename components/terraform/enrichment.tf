@@ -29,7 +29,6 @@ module "enrichment" {
     private_subnet_b_id = data.aws_ssm_parameter.private_subnet_2b_id.value
 
     enrichment_sg_id = module.sgs.enrichment_sg_id
-    enrichment_lb_id = module.sgs.enrichment_lb_id
 
     asg_max_size = var.enrichment_asg_max_size
     asg_min_size = var.enrichment_asg_min_size

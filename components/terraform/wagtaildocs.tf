@@ -30,7 +30,6 @@ module "wagtaildocs" {
     private_subnet_b_id = data.aws_ssm_parameter.private_subnet_2b_id.value
 
     wagtaildocs_sg_id = module.sgs.wagtaildocs_sg_id
-    wagtaildocs_lb_id = module.sgs.wagtaildocs_lb
 
     efs_dns_name = module.media_efs.media_efs_dns_name
 

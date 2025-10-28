@@ -29,8 +29,6 @@ variable "folder_s3_key" {}
 variable "asg_tags" {}
 variable "tags" {}
 variable "catalogue_sg_id" {}
-variable "catalogue_lb_id" {}
 
 variable "catalogue_efs_mount_dir" {}
 variable "efs_dns_name" {}
-

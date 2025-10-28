@@ -28,7 +28,6 @@ module "redis" {
     private_subnet_b_id = data.aws_ssm_parameter.private_subnet_2b_id.value
 
     redis_sg_id = module.sgs.redis_sg_id
-    redis_lb_id = module.sgs.redis_lb_id
 
     asg_max_size = var.redis_asg_max_size
     asg_min_size = var.redis_asg_min_size

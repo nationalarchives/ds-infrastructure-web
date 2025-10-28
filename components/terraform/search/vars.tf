@@ -31,7 +31,6 @@ variable "tags" {}
 variable "efs_dns_name" {}
 
 variable "search_sg_id" {}
-variable "search_lb_id" {}
 
 variable "search_efs_mount_dir" {}
 

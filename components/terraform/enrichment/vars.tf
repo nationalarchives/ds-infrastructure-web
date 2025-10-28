@@ -29,7 +29,3 @@ variable "asg_tags" {}
 variable "tags" {}
 
 variable "enrichment_sg_id" {}
-variable "enrichment_lb_id" {}
-
-
-
