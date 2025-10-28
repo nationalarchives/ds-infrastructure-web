@@ -1,5 +1,5 @@
 variable "lb_listener_arn" {}
-variable "origin_header" {}
+variable "x_target_header" {}
 variable "lb_security_group_id" {}
 
 variable "vpc_id" {}

@@ -22,7 +22,7 @@ module "wagtail" {
     ami_id = data.aws_ami.wagtail_ami.id
 
     lb_listener_arn = module.load-balancer.lb_listener_arn
-    origin_header = "wagtail.${var.environment}.local"
+    x_target_header = "wagtail"
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
