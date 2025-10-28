@@ -1,6 +1,6 @@
 resource "aws_lb_target_group" "platform_redis" {
     name     = "platform-redis"
-    port     = 80
+    port     = 50
     protocol = "HTTP"
     vpc_id   = var.vpc_id
 
@@ -19,7 +19,7 @@ resource "aws_lb_target_group" "platform_redis" {
 
 resource "aws_lb_listener_rule" "host_based_routing" {
     listener_arn = var.lb_listener_arn
-    priority     = 85
+    priority     = 55
 
     action {
         type             = "forward"
