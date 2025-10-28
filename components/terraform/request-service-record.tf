@@ -24,6 +24,7 @@ module "request-service-record" {
     lb_listener_arn = module.load-balancer.lb_listener_arn
     x_target_header = "request-service-record"
     host_header = "request-service-record.${var.environment}.local"
+    lb_security_group_id = module.load-balancer.lb_security_group_id
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
