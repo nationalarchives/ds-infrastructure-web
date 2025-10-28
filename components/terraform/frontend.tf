@@ -23,6 +23,7 @@ module "frontend" {
 
     lb_listener_arn = module.load-balancer.lb_listener_arn
     x_target_header = "web-frontend"
+    host_header = "web-frontend.${var.environment}.local"
 
     lb_security_group_id = module.load-balancer.lb_security_group_id
 

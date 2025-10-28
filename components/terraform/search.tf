@@ -23,6 +23,7 @@ module "search" {
 
     lb_listener_arn = module.load-balancer.lb_listener_arn
     x_target_header = "search"
+    host_header = "search.${var.environment}.local"
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value

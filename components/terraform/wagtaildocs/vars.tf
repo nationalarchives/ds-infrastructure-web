@@ -1,5 +1,6 @@
 variable "lb_listener_arn" {}
 variable "x_target_header" {}
+variable "host_header" {}
 
 variable "vpc_id" {}
 variable "private_subnet_a_id" {}
