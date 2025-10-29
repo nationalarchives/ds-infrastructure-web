@@ -1,5 +1,4 @@
 variable "request_service_record_instance_type" {}
-variable "request_service_record_key_name" {}
 variable "request_service_record_root_block_device_size" {}
 
 variable "request_service_record_asg_max_size" {}
@@ -37,7 +36,7 @@ module "request-service-record" {
     asg_health_check_type = var.request_service_record_asg_health_check_type
 
     instance_type = var.request_service_record_instance_type
-    key_name = "request-service-record-${var.environment}-eu-west-2"
+    key_name = "web-frontend-${var.environment}-eu-west-2"
     root_block_device_size = "100"
 
     instance_cidr = [
