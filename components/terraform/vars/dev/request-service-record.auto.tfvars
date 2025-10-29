@@ -1,7 +1,6 @@
 request_service_record_deployment_s3_bucket = "ds-dev-deployment-source"
 request_service_record_folder_s3_key = "web/frontend"
 
-request_service_record_efs_mount_dir = "/media"
 request_service_record_key_name      = "mod-foi-frontend-dev-eu-west-2"
 request_service_record_instance_type = "t3a.medium"
 
