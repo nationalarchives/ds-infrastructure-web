@@ -14,7 +14,7 @@ resource "aws_launch_template" "request_service_record" {
     update_default_version = true
 
     vpc_security_group_ids = [
-        aws_security_group.request_service_record.id,
+        var.request_service_record_sg_id,
     ]
 
     user_data = base64encode(templatefile("${path.module}/scripts/userdata.sh", {

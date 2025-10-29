@@ -23,7 +23,8 @@ module "request-service-record" {
     lb_listener_arn = module.load-balancer.lb_listener_arn
     x_target_header = "request-service-record"
     host_header = "request-service-record.${var.environment}.local"
-    lb_security_group_id = module.load-balancer.lb_security_group_id
+
+    request_service_record_sg_id = module.sgs.request_service_record_sg_id
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
@@ -38,16 +39,6 @@ module "request-service-record" {
     instance_type = var.request_service_record_instance_type
     key_name = "web-frontend-${var.environment}-eu-west-2"
     root_block_device_size = "100"
-
-    instance_cidr = [
-        data.aws_ssm_parameter.private_subnet_2a_cidr.value,
-        data.aws_ssm_parameter.private_subnet_2b_cidr.value,
-    ]
-    lb_cidr = [
-        data.aws_ssm_parameter.private_subnet_2a_cidr.value,
-        data.aws_ssm_parameter.private_subnet_2b_cidr.value,
-    ]
-
 
     auto_switch_off = var.request_service_record_auto_switch_off
     auto_switch_on = var.request_service_record_auto_switch_on

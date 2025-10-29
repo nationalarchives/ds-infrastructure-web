@@ -20,6 +20,9 @@ output "enrichment_sg_id" {
 output "redis_sg_id" {
    value = aws_security_group.redis.id
 }
+output "request_service_record_sg_id" {
+    value = aws_security_group.request_service_record.id
+}
 output "search_sg_id" {
     value = aws_security_group.search.id
 }
