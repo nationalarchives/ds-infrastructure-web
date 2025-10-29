@@ -6,7 +6,7 @@ resource "aws_lb_target_group" "web_frontend" {
 
     health_check {
         interval            = 30
-        path                = "/"
+        path                = "/healthcheck/live/"
         port                = "traffic-port"
         timeout             = 5
         healthy_threshold   = 2
