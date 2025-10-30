@@ -12,7 +12,7 @@ module "policies" {
 module "roles" {
     source = "./iam/roles"
 
-    deployment_s3_policy                     = module.policies.deployment_s3_policy_arn
+    deployment_s3_policy                    = module.policies.deployment_s3_policy_arn
     lambda_web_docker_deployment_policy_arn = module.policies.lambda_web_docker_deployment_policy_arn
 
     tags = local.tags

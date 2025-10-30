@@ -93,6 +93,13 @@ resource "aws_iam_instance_profile" "wagtaildocs_profile" {
   role = aws_iam_role.wagtaildocs_role.name
 }
 
+# Instance Profile for Wagatildocs Role
+resource "aws_iam_instance_profile" "request_service_record_profile" {
+  name = "request-service-record-profile"
+  path = "/"
+  role = aws_iam_role.request_service_record_role.name
+}
+
 
 ## Policies
 
@@ -244,5 +251,35 @@ resource "aws_iam_role_policy_attachment" "wagtaildocs_policy_attachment_6" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
 }
 
-
-
+# Request Service Record Role - MoD FoI
+#
+resource "aws_iam_role" "request_service_record_role" {
+    name = "request-service-record-role"
+    assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
+}
+resource "aws_iam_instance_profile" "request_service_record_profile" {
+    name = "request-service-record-profile"
+    path = "/"
+    role = aws_iam_role.request_service_record_role.name
+}
+# Attach Policies to Request Service Record Role
+resource "aws_iam_role_policy_attachment" "rsr_policy_attachment_1" {
+    role       = aws_iam_role.request_service_record_role.name
+    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+}
+resource "aws_iam_role_policy_attachment" "rsr_policy_attachment_2" {
+    role       = aws_iam_role.request_service_record_role.name
+    policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
+resource "aws_iam_role_policy_attachment" "rsr_policy_attachment_3" {
+    role       = aws_iam_role.request_service_record_role.name
+    policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+resource "aws_iam_role_policy_attachment" "rsr_policy_attachment_4" {
+    role       = aws_iam_role.request_service_record_role.name
+    policy_arn = data.aws_iam_policy.org_session_manager_logs.arn
+}
+resource "aws_iam_role_policy_attachment" "rsr_policy_attachment_5" {
+    role       = aws_iam_role.request_service_record_role.name
+    policy_arn = var.deployment_s3_policy
+}
