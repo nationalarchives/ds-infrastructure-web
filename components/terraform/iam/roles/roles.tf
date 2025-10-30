@@ -93,13 +93,6 @@ resource "aws_iam_instance_profile" "wagtaildocs_profile" {
   role = aws_iam_role.wagtaildocs_role.name
 }
 
-# Instance Profile for Wagatildocs Role
-resource "aws_iam_instance_profile" "request_service_record_profile" {
-  name = "request-service-record-profile"
-  path = "/"
-  role = aws_iam_role.request_service_record_role.name
-}
-
 
 ## Policies
 
