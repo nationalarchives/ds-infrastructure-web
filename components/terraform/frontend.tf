@@ -12,7 +12,7 @@ variable "frontend_deployment_group" {}
 variable "frontend_patch_group" {}
 variable "frontend_deployment_s3_bucket" {}
 variable "frontend_folder_s3_key" {}
-
+variable frontend_root_block_device_size {}
 
 module "frontend" {
     source = "./frontend"
@@ -37,7 +37,7 @@ module "frontend" {
 
     instance_type = var.frontend_instance_type
     key_name = "web-frontend-${var.environment}-eu-west-2"
-    root_block_device_size = "100"
+    root_block_device_size = var.frontend_root_block_device_size
 
     instance_cidr = [
         data.aws_ssm_parameter.private_subnet_2a_cidr.value,
