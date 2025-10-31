@@ -2,22 +2,22 @@
     "services": {
         "frontend": {
             "image": "ghcr.io/nationalarchives/ds-frontend",
-            "version": "25.10.23.1458",
+            "version": "25.10.31.1467",
             "repo": "https://github.com/nationalarchives/ds-frontend"
         },
         "wagtail": {
             "image": "ghcr.io/nationalarchives/ds-wagtail",
-            "version": "25.10.23.1008",
+            "version": "25.10.31.1012",
             "repo": "https://github.com/nationalarchives/ds-wagtail"
         },
         "wagtaildocs": {
             "image": "ghcr.io/nationalarchives/ds-frontend",
-            "version": "25.10.23.1458",
+            "version": "25.10.31.1467",
             "repo": "https://github.com/nationalarchives/ds-frontend"
         },
         "catalogue": {
             "image": "ghcr.io/nationalarchives/ds-catalogue",
-            "version": "25.10.23.1366",
+            "version": "25.10.30.1427",
             "repo": "https://github.com/nationalarchives/ds-catalogue"
         },
         "enrichment": {
@@ -37,7 +37,7 @@
         },
         "requestservicerecord": {
             "image": "ghcr.io/nationalarchives/ds-request-service-record",
-            "version": "25.10.23.256",
+            "version": "25.10.24.258",
             "repo": "https://github.com/nationalarchives/ds-request-service-record"
         },
         "forms": {
