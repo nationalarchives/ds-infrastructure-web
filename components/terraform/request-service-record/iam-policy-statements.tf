@@ -17,7 +17,7 @@ data "aws_iam_policy_document" "ec2_access" {
             "ssm:GetParametersByPath",
         ]
         resources = [
-            "arn:aws:ssm:::parameter/application/web/requestservicerecord",
+            "arn:aws:ssm:eu-west-2:${var.account_id}:parameter/application/web/requestservicerecord",
         ]
     }
 }

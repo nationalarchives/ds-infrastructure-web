@@ -18,6 +18,7 @@ variable "request_service_record_folder_s3_key" {}
 module "request-service-record" {
     source = "./request-service-record"
 
+    account_id = data.aws_caller_identity.current.account_id
     ami_id = data.aws_ami.request_service_record_ami.id
 
     lb_listener_arn = module.load-balancer.lb_listener_arn

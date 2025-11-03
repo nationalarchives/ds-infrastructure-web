@@ -2,6 +2,8 @@ locals {
     service_name = "request-service-record"
 }
 
+variable "account_id" {}
+
 variable "lb_listener_arn" {}
 variable "x_target_header" {}
 variable "host_header" {}
