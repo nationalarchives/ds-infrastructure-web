@@ -1,4 +1,7 @@
 data "aws_caller_identity" "current" {}
+data "aws_iam_policy" "org_session_manager_logs_arn" {
+    arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
+}
 
 # certificates
 #
@@ -90,5 +93,5 @@ data "aws_secretsmanager_secret_version" "web_custom_header" {
 }
 
 data "aws_ssm_parameter" "wagtail_efs_media_dns_name" {
-  name = "/infrastructure/wagtail-efs/media-dns-name"
+    name = "/infrastructure/wagtail-efs/media-dns-name"
 }

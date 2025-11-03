@@ -25,8 +25,7 @@ module "request-service-record" {
     host_header = "request-service-record.${var.environment}.local"
 
     request_service_record_sg_id = module.sgs.request_service_record_sg_id
-    instance_profile_name = module.roles.request_service_record_profile_name
-    role_name = module.roles.request_service_record_role_name
+    org_level_logging_arn = data.aws_iam_policy.org_session_manager_logs_arn
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value

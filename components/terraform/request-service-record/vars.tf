@@ -29,5 +29,4 @@ variable "asg_tags" {}
 variable "tags" {}
 
 variable "request_service_record_sg_id" {}
-variable "role_name" {}
-variable "instance_profile_name" {}
+variable "org_level_logging_arn" {}
