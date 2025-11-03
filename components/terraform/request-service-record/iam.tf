@@ -30,7 +30,7 @@ resource "aws_iam_role_policy_attachment" "rsr_policy_attachment_5" {
 }
 
 resource "aws_iam_policy" "ec2_access" {
-    name        = "request-service-record-source-s3-policy"
+    name        = "request-service-record-ec2-access-policy"
     description = "ec2 access for request-service-record"
     policy      = data.aws_iam_policy_document.ec2_access.json
 }
