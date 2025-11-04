@@ -96,7 +96,7 @@ jobs:
           cache-dependency-path: '**/base-python-req.txt'
 
       - run: |
-          pip install -r ${{ github.workspace }}/.github/workflows/base-python-req.txt
+          pip install -r /.github/workflows/base-python-req.txt
 
       - name: run ansible playbook
         env:
