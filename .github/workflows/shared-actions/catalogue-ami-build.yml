@@ -1,0 +1,123 @@
+---
+name: Build Catalogue AMI
+
+on:
+  workflow_call:
+    inputs:
+      base_role:
+        type: string
+        required: true
+      playbook_role:
+        type: string
+        required: true
+      region:
+        type: string
+        required: true
+      account:
+        type: string
+        required: true
+      branch:
+        type: string
+        required: true
+      key_name:
+        type: string
+        required: true
+      instance_type:
+        type: string
+        required: true
+      volume_size:
+        type: string
+        required: true
+      s3_deployment_bucket:
+        type: string
+        required: true
+      s3_deployment_root:
+        type: string
+        required: true
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  create-ami:
+    runs-on: "ubuntu-latest"
+    environment: ${{ inputs.account }}
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+        with:
+          path: main
+          ref: "${{ inputs.branch }}"
+
+      # - name: Checkout ds-github-actions
+      #   uses: actions/checkout@v4
+      #   with:
+      #     repository: nationalarchives/ds-github-actions
+      #     path: actions
+
+      - name: Configure AWS Credentials
+        id: creds
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: "${{ inputs.region }}"
+          role-to-assume: "${{ inputs.base_role }}"
+          output-credentials: true
+
+      - name: Get VPC ID from SSM
+        id: vpc
+        run: |
+          VPC_ID=$(aws ssm get-parameter --name "/infrastructure/${{ inputs.account }}/VPC_ID" --with-decryption --query "Parameter.Value" --output text)
+          echo "vpc_id=$VPC_ID" >> $GITHUB_OUTPUT
+
+      - name: Get Subnet ID from SSM
+        id: subnet
+        run: |
+          SUBNET_ID=$(aws ssm get-parameter --name "/infrastructure/${{ inputs.account }}/SUBNET_ID_2A" --with-decryption --query "Parameter.Value" --output text)
+          echo "subnet_id=$SUBNET_ID" >> $GITHUB_OUTPUT
+
+      - name: download key file
+        uses: keithweaver/aws-s3-github-action@v1.0.0
+        with:
+          command: cp
+          source: s3://ds-${{ inputs.account }}-kpf-administration/web/${{ inputs.key_name }}
+          destination: ${{ inputs.key_name }}
+          aws_access_key_id: ${{ steps.creds.outputs.aws-access-key-id }}
+          aws_secret_access_key: ${{ steps.creds.outputs.aws-secret-access-key }}
+          aws_session_token: ${{ steps.creds.outputs.aws-session-token }}
+          aws_region: ${{ inputs.region }}
+
+      - name: install python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: '**/base-python-req.txt'
+
+      - run: |
+          pip install -r ${{ github.workspace }}/actions/.github/workflows/base-python-req.txt
+
+      - name: run ansible playbook
+        env:
+          VPC_ID: ${{ steps.vpc.outputs.vpc_id }}
+          SUBNET_ID: ${{ steps.subnet.outputs.subnet_id }}
+        run: |
+          cur_dir=$(pwd)
+          cd $cur_dir/actions/ansible-playbooks/catalogue
+          export AWS_ACCESS_KEY_ID=${{ steps.creds.outputs.aws-access-key-id }}
+          export AWS_SECRET_ACCESS_KEY=${{ steps.creds.outputs.aws-secret-access-key }}
+          export AWS_SESSION_TOKEN=${{ steps.creds.outputs.aws-session-token }}
+          export AWS_DEFAULT_REGION=${{ inputs.region }}
+          ansible-playbook \
+          --extra-vars " \
+          key_name='${{ inputs.key_name }}' \
+          role_arn='${{ inputs.playbook_role }}' \
+          account='${{ inputs.account }}' \
+          region='${{ inputs.region }}' \
+          instance_type='${{ inputs.instance_type }}' \
+          volume_size='${{ inputs.volume_size }}' \
+          s3_deployment_bucket='${{ inputs.s3_deployment_bucket }}' \
+          s3_deployment_root='${{ inputs.s3_deployment_root }}'" \
+          --private-key $cur_dir/${{ inputs.key_name }} \
+          catalogue-playbook.yml

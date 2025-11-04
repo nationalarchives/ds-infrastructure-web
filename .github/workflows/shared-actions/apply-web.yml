@@ -1,0 +1,99 @@
+---
+  name: Web Terraform Apply
+  
+  permissions:
+        id-token: write
+        contents: write
+  
+  on:
+    workflow_call:
+      inputs:
+        deploy-environment:
+          type: string
+          required: true
+        github-environment:
+          type: string
+          required: true
+        account_id:
+          type: string
+          required: true
+        role-to-assume:
+          type: string
+          required: true
+        branch:
+          type: string
+          required: false
+          default: ""
+  
+  jobs:
+     terraform:
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        env:
+            environment: "${{ inputs.deploy-environment }}"
+            working-directory: components/terraform
+            account_id: "${{ inputs.account_id }}"
+            region: eu-west-2
+        steps:
+            - name: Configure AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  aws-region: eu-west-2
+                  role-to-assume: "${{ inputs.role-to-assume }}"
+                  role-session-name: MySessionName
+  
+            - uses: actions/setup-python@v5
+              with:
+                python-version: '3.10' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+                architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+  
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                ref: ${{ env.branch }}
+  
+            - uses: hashicorp/setup-terraform@v2
+  # only use if version freeze is in place
+  #            with:
+  #              terraform_version: 1.2.7
+  
+            - name: Check Python
+              run: |
+                python --version
+  
+            - name: Create Backend S3 Bucket
+              run: |
+                if 
+                 aws s3 ls "s3://tna-terraform-backend-state-${{ env.region }}-${{ env.account_id }}" 2>&1 | grep -q 'NoSuchBucket' 
+                then 
+                 aws s3api create-bucket \
+                    --bucket tna-terraform-backend-state-${{ env.region }}-${{ env.account_id }} \
+                    --region ${{ env.region }} \
+                    --create-bucket-configuration LocationConstraint=${{ env.region }}
+  
+                 aws s3api put-public-access-block \
+                    --bucket tna-terraform-backend-state-${{ env.region }}-${{ env.account_id }} \
+                    --public-access-block-configuration "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"
+                else
+                 echo 'Bucket Already Exists'
+                fi
+  
+            - name: Copy Environment Vars
+              run: |
+                echo 'test'
+                cp ./components/terraform/vars/${{ env.environment }}/* ./components/terraform/
+  
+            - name: Terraform init
+              id: init
+              run: terraform init -upgrade
+              working-directory: ${{ env.working-directory }}
+  
+            - name: Terraform plan
+              id: plan
+              run: terraform plan 
+              working-directory: ${{ env.working-directory }}
+
+            - name: Terraform apply
+              id: apply
+              run: terraform apply -auto-approve -input=false
+              working-directory: ${{ env.working-directory }}
