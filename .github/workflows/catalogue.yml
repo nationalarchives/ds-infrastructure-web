@@ -24,7 +24,7 @@ jobs:
   # ------------------------------------------------------------------------------
   catalogue-ami-dev:
     if: github.event.inputs.account == 'dev'
-    uses: nationalarchives/ds-infrastructure-web/.github/workflows/shared-actions/catalogue-ami-build.yml@main
+    uses: nationalarchives/ds-infrastructure-web/.github/workflows/catalogue-ami-build.yml@main
     with:
       base_role: "arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL"
       playbook_role: "arn:aws:iam::846769538626:role/s-devops-ansible-amis"
@@ -42,7 +42,7 @@ jobs:
   # ------------------------------------------------------------------------------
   catalogue-ami-staging:
     if: github.event.inputs.account == 'staging'
-    uses: nationalarchives/ds-infrastructure-web/.github/workflows/shared-actions/catalogue-ami-build.yml@main
+    uses: nationalarchives/ds-infrastructure-web/.github/workflows/catalogue-ami-build.yml@main
     with:
       base_role: "arn:aws:iam::337670467269:role/GitHubActionRole"
       playbook_role: "arn:aws:iam::337670467269:role/s-devops-ansible-amis"
@@ -60,7 +60,7 @@ jobs:
   # ------------------------------------------------------------------------------
   catalogue-ami-live:
     if: github.event.inputs.account == 'live'
-    uses: nationalarchives/ds-infrastructure-web/.github/workflows/shared-actions/catalogue-ami-build.yml@main
+    uses: nationalarchives/ds-infrastructure-web/.github/workflows/catalogue-ami-build.yml@main
     with:
       base_role: "arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0"
       playbook_role: "arn:aws:iam::968803923593:role/s-devops-ansible-amis"
