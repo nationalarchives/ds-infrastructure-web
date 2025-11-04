@@ -21,7 +21,7 @@ on:
 jobs:
   apply-dev:
     if: ${{ inputs.deploy-environment  == 'dev' }}
-    uses: nationalarchives/ds-github-actions/.github/workflows/apply-web.yml@main
+    uses: nationalarchives/ds-infrastructure-web/.github/workflows/apply-web.yml@main
     with:
       deploy-environment: "${{ inputs.deploy-environment }}"
       github-environment: "dev-deploy"
@@ -30,7 +30,7 @@ jobs:
       branch: "${{ github.event.inputs.branch }}"
   apply-staging:
     if: ${{ inputs.deploy-environment  == 'staging' }}
-    uses: nationalarchives/ds-github-actions/.github/workflows/apply-web.yml@main
+    uses: nationalarchives/ds-infrastructure-web/.github/workflows/apply-web.yml@main
     with:
       deploy-environment: "${{ inputs.deploy-environment }}"
       github-environment: "staging-deploy"
@@ -39,7 +39,7 @@ jobs:
       branch: "${{ github.event.inputs.branch }}"
   apply-live:
     if: ${{ inputs.deploy-environment  == 'live' }}
-    uses: nationalarchives/ds-github-actions/.github/workflows/apply-web.yml@main
+    uses: nationalarchives/ds-infrastructure-web/.github/workflows/apply-web.yml@main
     with:
       deploy-environment: "${{ inputs.deploy-environment }}"
       github-environment: "live-deploy"
