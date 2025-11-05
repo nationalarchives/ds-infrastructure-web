@@ -1,5 +1,5 @@
 ---
-name: Build Catalogue AMI
+# name: Build Catalogue AMI
 
 on:
   workflow_call:
@@ -104,7 +104,7 @@ jobs:
           SUBNET_ID: ${{ steps.subnet.outputs.subnet_id }}
         run: |
           cur_dir=$(pwd)
-          cd $cur_dir/actions/ansible-playbooks/catalogue
+          cd $cur_dir/.github/ansible-playbooks/catalogue
           export AWS_ACCESS_KEY_ID=${{ steps.creds.outputs.aws-access-key-id }}
           export AWS_SECRET_ACCESS_KEY=${{ steps.creds.outputs.aws-secret-access-key }}
           export AWS_SESSION_TOKEN=${{ steps.creds.outputs.aws-session-token }}
