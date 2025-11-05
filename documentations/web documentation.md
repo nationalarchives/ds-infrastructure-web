@@ -134,7 +134,8 @@ terraform plan \
   -var-file="vars/staging/search.auto.tfvars" \
   -var-file="vars/dev/wagtaildocs.auto.tfvars" \
   -var-file="vars/staging/cognito.auto.tfvars" \
-  -var-file="vars/staging/ses.auto.tfvars"
+  -var-file="vars/staging/ses.auto.tfvars" \
+  -var-file="vars/staging/request-service-record.auto.tfvars"
 ```
 
 **_Live plan_**

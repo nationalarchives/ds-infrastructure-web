@@ -13,9 +13,11 @@ variable "request_service_record_deployment_group" {}
 variable "request_service_record_patch_group" {}
 variable "request_service_record_deployment_s3_bucket" {}
 variable "request_service_record_folder_s3_key" {}
+variable "request_service_record_deploy"{}
 
 
 module "request-service-record" {
+    count = var.request_service_record_deploy
     source = "./request-service-record"
 
     account_id = data.aws_caller_identity.current.account_id
