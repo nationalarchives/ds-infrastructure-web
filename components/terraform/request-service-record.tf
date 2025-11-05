@@ -25,6 +25,9 @@ module "request-service-record" {
     x_target_header = "request-service-record"
     host_header = "request-service-record.${var.environment}.local"
 
+    lb_name = module.load-balancer.load_balancer_dns_name
+    route53_zone = var.route53_zone
+
     request_service_record_sg_id = module.sgs.request_service_record_sg_id
     org_level_logging_arn = data.aws_iam_policy.org_session_manager_logs.arn
 
