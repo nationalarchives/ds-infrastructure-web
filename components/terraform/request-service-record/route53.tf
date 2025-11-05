@@ -1,6 +1,6 @@
 resource "aws_route53_record" "web_rsr_cname" {
     zone_id = var.route53_zone
-    name    = "web-rsr.${var.environment}.local"
+    name    = var.c_name
     type    = "CNAME"
     ttl     = 15
 

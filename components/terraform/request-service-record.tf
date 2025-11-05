@@ -27,6 +27,7 @@ module "request-service-record" {
 
     lb_name = module.load-balancer.load_balancer_dns_name
     route53_zone = var.route53_zone
+    c_name = "web-rsr.${var.environment}.local"
 
     request_service_record_sg_id = module.sgs.request_service_record_sg_id
     org_level_logging_arn = data.aws_iam_policy.org_session_manager_logs.arn

@@ -10,6 +10,7 @@ variable "host_header" {}
 
 variable "lb_name" {}
 variable "route53_zone" {}
+variable "c_name" {}
 
 variable "vpc_id" {}
 variable "private_subnet_a_id" {}
