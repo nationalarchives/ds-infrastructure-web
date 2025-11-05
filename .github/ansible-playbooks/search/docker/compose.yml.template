@@ -1,0 +1,26 @@
+services:
+  blue-web: &search
+    container_name: blue-web
+    env_file: /var/docker/search.env
+    image: "ghcr.io/nationalarchives/ds-sitemap-search:25.07.16.74"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network='traefik_webgateway'"
+      - "traefik.http.routers.web.entrypoints=web"
+      - "traefik.http.routers.web.rule=Host(`search.dev.local`) || PathPrefix(`/`)"
+      - "traefik.http.middlewares.test-retry.retry.attempts=5"
+      - "traefik.http.middlewares.test-retry.retry.initialinterval=200ms"
+      - "traefik.http.services.web.loadbalancer.healthCheck.path=/healthcheck/live/"
+      - "traefik.http.services.web.loadbalancer.healthCheck.interval=10s"
+      - "traefik.http.services.web.loadbalancer.healthCheck.timeout=1s"
+    restart: "always"
+    networks:
+      - traefik
+  green-web:
+    !!merge <<: *search
+    container_name: green-web
+networks:
+  traefik:
+    name: traefik_webgateway
+    external: true
+    

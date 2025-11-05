@@ -50,7 +50,7 @@ jobs:
       branch: "${{ github.event.inputs.branch }}"
       account: "${{ github.event.inputs.account }}"
       key_name: "web-frontend-${{ github.event.inputs.account }}-eu-west-2"
-      instance_type: "t3a.medium"
+      instance_type: "t3a.small"
       volume_size: 40
       s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
       s3_deployment_root: "web/frontend"
@@ -68,7 +68,7 @@ jobs:
       branch: "${{ github.event.inputs.branch }}"
       account: "${{ github.event.inputs.account }}"
       key_name: "web-frontend-${{ github.event.inputs.account }}-eu-west-2"
-      instance_type: "t3a.large"
+      instance_type: "t3a.small"
       volume_size: 100
       s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
       s3_deployment_root: "web/frontend"

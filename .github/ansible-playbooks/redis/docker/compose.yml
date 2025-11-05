@@ -1,0 +1,14 @@
+services:
+  redis:
+    image: redis/redis-stack-server:7.2.0-v19
+
+    ports:
+      - 6379:6379
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+    volumes:
+      - redis_data:/data
+volumes:
+  redis_data:
+  

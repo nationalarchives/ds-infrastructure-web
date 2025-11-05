@@ -1,0 +1,28 @@
+services:
+  blue-web: &wagtail
+    container_name: blue-web
+    env_file: /var/docker/wagtail.env
+    image: "ghcr.io/nationalarchives/ds-wagtail:25.05.30.635"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network='traefik_webgateway'"
+      - "traefik.http.routers.web.entrypoints=web"
+      - "traefik.http.routers.web.rule=Host(`wagtail.dev.local`) || PathPrefix(`/`)"
+      - "traefik.http.middlewares.test-retry.retry.attempts=5"
+      - "traefik.http.middlewares.test-retry.retry.initialinterval=200ms"
+      - "traefik.http.services.web.loadbalancer.healthCheck.path=/healthcheck/"
+      - "traefik.http.services.web.loadbalancer.healthCheck.interval=10s"
+      - "traefik.http.services.web.loadbalancer.healthCheck.timeout=1s"
+    restart: "always"
+    networks:
+      - traefik
+    volumes:
+      - /media:/media
+  green-web:
+    !!merge <<: *wagtail
+    container_name: green-web
+networks:
+  traefik:
+    name: traefik_webgateway
+    external: true
+    

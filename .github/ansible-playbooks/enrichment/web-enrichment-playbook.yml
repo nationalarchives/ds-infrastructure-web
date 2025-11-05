@@ -1,0 +1,287 @@
+# Web enrichment playbook
+---
+- name: create web enrichment AMI
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+  - name: set vpc and subnet id
+    set_fact:
+      vpc_id: "{{ lookup( 'env', 'VPC_ID') }}"
+      subnet_id: "{{ lookup( 'env', 'SUBNET_ID') }}"
+
+  - name: switch role credentials
+    community.aws.sts_assume_role:
+      role_arn: "{{ role_arn }}"
+      role_session_name: "s-devops-web-enrichment"
+    register: assumed_role
+
+  - name: get linux 2023 AMI
+    amazon.aws.ec2_ami_info:
+      owners: amazon
+      region: "{{ region }}"
+      filters:
+        name: "al2023-ami-2023*"
+        architecture: "x86_64"
+    register: findami
+
+  - name: set latest AMI
+    set_fact:
+      latest_ami: >
+        {{ findami.images | sort(attribute='creation_date') | last }}
+
+  - name: template deployment policy
+    template:
+      src: "./templates/instance-role-policy.json.j2"
+      dest: "./instance-role-policy.json"
+      force: yes
+
+  - name: create deployment policy
+    community.aws.iam_managed_policy:
+      policy_name: "ansible-ami-web-enrichment-s3-policy"
+      policy: "{{ lookup('file', './instance-role-policy.json') }}"
+      state: "present"
+    register: s3_policy
+
+  - name: create base web IAM role
+    community.aws.iam_role:
+      name: "ansible-ami-web-enrichment-role"
+      region: "{{ region }}"
+      assume_role_policy_document: "{{ lookup('file', './ec2-role-policy.json') }}"
+      managed_policies: ["{{ s3_policy.policy.arn }}", "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM", "arn:aws:iam::aws:policy/SecretsManagerReadWrite"]
+      create_instance_profile: yes
+      delete_instance_profile: yes
+      purge_policies: yes
+      state: "present"
+    register: ec2_iam_role
+
+  - name: create security group - allowing updates and downloads
+    amazon.aws.ec2_security_group:
+      name: "ansible-ami-web-enrichment-sg"
+      description: "security group allowing updates and downloads"
+      region: "{{ region }}"
+      vpc_id: "{{ vpc_id }}"
+      rules:
+        - proto: "tcp"
+          from_port: 22
+          to_port: 22
+          cidr_ip: "0.0.0.0/0"
+          rule_desc: "allow incoming ssh connections"
+        - proto: "tcp"
+          from_port: 1024
+          to_port: 65535
+          cidr_ip: "0.0.0.0/0"
+          rule_desc: "for updates and downloads"
+      rules_egress:
+        - proto: "tcp"
+          from_port: 80
+          to_port: 80
+          cidr_ip: "0.0.0.0/0"
+          rule_desc: "allow updates and downloads"
+        - proto: "tcp"
+          from_port: 443
+          to_port: 443
+          cidr_ip: "0.0.0.0/0"
+          rule_desc: "allow updates and downloads"
+        - proto: "tcp"
+          from_port: 1024
+          to_port: 65535
+          cidr_ip: "0.0.0.0/0"
+          rule_desc: "allow replies"
+      state: "present"
+    register: ec2_sec_group
+
+  - name: template compose.yml for dev and staging
+    vars:
+      sub_domain: "web-enrichment.{{ account }}.local"
+    template:
+      src: "./templates/compose.yml.j2"
+      dest: "./docker/compose.yml"
+      force: yes
+    when: account == "dev" or
+          account == "staging"
+
+  - name: template compose.yml for live
+    vars:
+      sub_domain: "web-enrichment.{{ account }}.local"
+    template:
+      src: "./templates/compose.yml.j2"
+      dest: "./docker/compose.yml"
+      force: yes
+    when: account == "live"
+
+  - name: template compose.traefik.yml
+    vars:
+      local_domain: "web-enrichment.{{ account }}.local"
+    template:
+      src: "./templates/compose.traefik.yml.j2"
+      dest: "./docker/compose.traefik.yml"
+      force: yes
+
+  - name: template userdata
+    vars:
+      s3_deployment_bucket: "{{ s3_deployment_bucket }}"
+      s3_deployment_root: "{{ s3_deployment_root }}"
+    template:
+      src: "./templates/userdata.sh.j2"
+      dest: "./userdata.sh"
+      force: yes
+
+  - name: provisioning instance
+    amazon.aws.ec2_instance:
+      key_name: "{{ key_name }}"
+      image_id: "{{ latest_ami.image_id }}"
+      instance_role: "ansible-ami-web-enrichment-role"
+      instance_type: "{{ instance_type }}"
+      metadata_options:
+        http_tokens: "required"
+      name : "web-enrichment-primer"
+      network:
+        assign_public_ip: yes
+        delete_on_termination: yes
+        subnet_id: "{{ subnet_id }}"
+      region: "{{ region }}"
+      security_groups: ["{{ ec2_sec_group.group_id }}"]
+      state: "running"
+      termination_protection: no
+      user_data: "{{ lookup('file', './userdata.sh') }}"
+      wait: true
+      volumes:
+        - device_name: "/dev/xvda"
+          ebs:
+            delete_on_termination: true
+            encrypted: true
+            volume_size: "{{ volume_size }}"
+      vpc_subnet_id: "{{ subnet_id }}"
+      tags:
+        Name: "web-enrichment-primer"
+        Environment: "{{ account }}"
+        Service: "Web"
+        Owner: "Digital Services"
+        CreatedBy: "ansible"
+        CostCentre: 53
+        Terraform: false
+    register: ec2
+
+  - name: get instance ip address
+    set_fact:
+      instance_private_ip: "{{ ec2.instances[0].private_ip_address }}"
+      instance_public_ip: "{{ ec2.instances[0].public_ip_address }}"
+      instance_id: "{{ ec2.instances[0].instance_id }}"
+
+  - ansible.builtin.debug:
+      msg:
+        - "====================================================================="
+        - "instance started up"
+        - "instance private ip: {{ instance_private_ip }}"
+        - "instance id: {{ instance_id }}"
+        - "instance public ip {{ instance_public_ip }}"
+        - "====================================================================="
+
+  - name: register new ec2 as host
+    add_host:
+      hostname: "{{ instance_public_ip }}"
+      groups: ec2hosts
+      ansible_user: ec2-user
+      remote_user: ec2-user
+      gather_facts: no
+
+  - name: wait for SSH service to bind on new instance
+    wait_for:
+      host: "{{ instance_public_ip }}"
+      port: 22
+      delay: 90
+      timeout: 600
+      state: started
+    tags: [ami]
+
+- name: switch to ec2hosts - checking if setup has finished
+  hosts: ec2hosts
+  gather_facts: false
+  tasks:
+  - ansible.builtin.debug:
+      msg:
+        - "====================================================================="
+        - "checking status of new instance before ami can be build"
+        - "20 second interval with max duration of 5 minutes"
+        - "====================================================================="
+
+  - name: check if ec2 instance is ready
+    ansible.builtin.stat:
+      path: "/var/finish-init.txt"
+    remote_user: ec2-user
+    register: init_finished
+    until: "init_finished.stat.exists"
+    retries: 15
+    delay: 20
+
+  - name: copy docker files to remote
+    ansible.builtin.copy:
+      src: ./docker/
+      dest: /var/docker/
+      force: yes
+    become: true
+
+  - name: copy scripts to remote
+    ansible.builtin.copy:
+      src: ./files/
+      dest: /usr/local/bin/
+      force: yes
+      mode: 0755
+    become: true
+
+  - name: set mode for scripts
+    ansible.builtin.file:
+      path: '/usr/local/bin/{{ item.file_name }}'
+      mode: '0755'
+    loop:
+      - { file_name: startup.sh }
+      - { file_name: traefik-up.sh }
+      - { file_name: traefik-down.sh }
+      - { file_name: traefik-deploy.sh }
+      - { file_name: website-blue-green-deploy.sh }
+
+- name: switch to localhost
+  hosts: localhost
+  gather_facts: true
+
+  tasks:
+  - name: create AMI
+    amazon.aws.ec2_ami:
+      instance_id: "{{ instance_id }}"
+      name: "web-enrichment-primer-{{ ansible_date_time.date }} {{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}-{{ ansible_date_time.second }}"
+      description: "Web enrichment Instance - ready for deployment"
+      region: "{{ region }}"
+      state: "present"
+      wait: yes
+      tags:
+        Name: "web-enrichment-primer-{{ ansible_date_time.date }} {{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}-{{ ansible_date_time.second }}"
+        Service: "Web"
+        Owner: "Digital Services"
+        CreatedBy: "ansible"
+        CostCentre: 53
+        Terraform: false
+
+  - name: terminate instance
+    amazon.aws.ec2_instance:
+      instance_ids: "{{ instance_id }}"
+      region: "{{ region }}"
+      state: "absent"
+
+  - name: remove security group
+    amazon.aws.ec2_security_group:
+      name: "ansible-ami-web-enrichment-sg"
+      state: "absent"
+
+  - name: remove IAM role
+    community.aws.iam_role:
+      name: "ansible-ami-web-enrichment-role"
+      region: "{{ region }}"
+      delete_instance_profile: yes
+      state: "absent"
+
+  - name: remove deployment policy
+    community.aws.iam_managed_policy:
+      policy_name: "ansible-ami-web-enrichment-s3-policy"
+      state: "absent"
+...
