@@ -1,5 +1,6 @@
 ---
-name: Build Enrichment AMI
+name: Build Request Service Record AMI
+
 on:
   workflow_call:
     inputs:
@@ -45,13 +46,13 @@ jobs:
 
     steps:
       - name: checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: "${{ inputs.branch }}"
 
       - name: Configure AWS Credentials
         id: creds
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5.1.0
         with:
           aws-region: "${{ inputs.region }}"
           role-to-assume: "${{ inputs.base_role }}"
@@ -81,7 +82,7 @@ jobs:
           aws_region: ${{ inputs.region }}
 
       - name: install python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.13'
           cache: 'pip'
@@ -95,7 +96,7 @@ jobs:
           SUBNET_ID: ${{ steps.subnet.outputs.subnet_id }}
         run: |
           cur_dir=$(pwd)
-          cd $cur_dir/.github/ansible-playbooks/enrichment
+          cd $cur_dir/.github/ansible-playbooks/request-service-record-application
           export AWS_ACCESS_KEY_ID=${{ steps.creds.outputs.aws-access-key-id }}
           export AWS_SECRET_ACCESS_KEY=${{ steps.creds.outputs.aws-secret-access-key }}
           export AWS_SESSION_TOKEN=${{ steps.creds.outputs.aws-session-token }}
@@ -111,5 +112,5 @@ jobs:
           s3_deployment_bucket='${{ inputs.s3_deployment_bucket }}' \
           s3_deployment_root='${{ inputs.s3_deployment_root }}'" \
           --private-key $cur_dir/${{ inputs.key_name }} \
-          web-enrichment-playbook.yml
+          playbook.yml
 ...
