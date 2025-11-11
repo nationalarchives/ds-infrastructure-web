@@ -156,7 +156,8 @@ terraform plan \
 -var-file="vars/live/search.auto.tfvars" \
 -var-file="vars/live/wagtaildocs.auto.tfvars" \
 -var-file="vars/live/cognito.auto.tfvars" \
--var-file="vars/live/ses.auto.tfvars"
+-var-file="vars/live/ses.auto.tfvars" \
+-var-file="vars/live/request-service-record.auto.tfvars"
 ```
 
 **_4. Apply Configuration_**
