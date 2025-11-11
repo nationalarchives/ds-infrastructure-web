@@ -19,18 +19,18 @@ variable "catalogue_folder_s3_key" {}
 module "catalogue" {
     source = "./catalogue"
 
-    environment = var.environment
     ami_id = data.aws_ami.catalogue_ami.id
 
-    route53_zone = data.aws_ssm_parameter.zone_id.value
+    lb_listener_arn = module.load-balancer.lb_listener_arn
+    x_target_header = "catalogue"
+    host_header = "catalogue.${var.environment}.local"
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
     private_subnet_b_id = data.aws_ssm_parameter.private_subnet_2b_id.value
 
     catalogue_sg_id = module.sgs.catalogue_sg_id
-    catalogue_lb_id = module.sgs.catalogue_lb
-    
+
     efs_dns_name = module.media_efs.media_efs_dns_name
 
     catalogue_efs_mount_dir = var.catalogue_efs_mount_dir
@@ -45,12 +45,8 @@ module "catalogue" {
     key_name = "catalogue-${var.environment}-eu-west-2"
     root_block_device_size = "100"
 
-   
+
     instance_cidr = [
-        data.aws_ssm_parameter.private_subnet_2a_cidr.value,
-        data.aws_ssm_parameter.private_subnet_2b_cidr.value,
-    ]
-    lb_cidr = [
         data.aws_ssm_parameter.private_subnet_2a_cidr.value,
         data.aws_ssm_parameter.private_subnet_2b_cidr.value,
     ]

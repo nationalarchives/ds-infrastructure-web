@@ -1,13 +1,11 @@
-variable "environment" {}
-variable "route53_zone" {}
+variable "lb_listener_arn" {}
+variable "x_target_header" {}
+variable "host_header" {}
 
 variable "vpc_id" {}
 variable "private_subnet_a_id" {}
 variable "private_subnet_b_id" {}
 
-variable "lb_cidr" {}
-
-variable "instance_cidr" {}
 variable "ami_id" {}
 variable "instance_type" {}
 variable "key_name" {}
@@ -30,7 +28,6 @@ variable "folder_s3_key" {}
 variable "asg_tags" {}
 variable "tags" {}
 variable "wagtail_sg_id" {}
-variable "wagtail_lb_id" {}
 
 variable "wagtail_efs_mount_dir" {}
 variable "efs_dns_name" {}

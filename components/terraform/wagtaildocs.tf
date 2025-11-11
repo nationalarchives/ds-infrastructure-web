@@ -19,18 +19,18 @@ variable "wagtaildocs_folder_s3_key" {}
 module "wagtaildocs" {
     source = "./wagtaildocs"
 
-    environment = var.environment
     ami_id = data.aws_ami.wagtaildocs_ami.id
 
-    route53_zone = data.aws_ssm_parameter.zone_id.value
+    lb_listener_arn = module.load-balancer.lb_listener_arn
+    x_target_header = "wagtaildocs"
+    host_header = "wagtaildocs.${var.environment}.local"
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
     private_subnet_b_id = data.aws_ssm_parameter.private_subnet_2b_id.value
 
     wagtaildocs_sg_id = module.sgs.wagtaildocs_sg_id
-    wagtaildocs_lb_id = module.sgs.wagtaildocs_lb
-    
+
     efs_dns_name = module.media_efs.media_efs_dns_name
 
     wagtaildocs_efs_mount_dir = var.wagtaildocs_efs_mount_dir
@@ -45,18 +45,11 @@ module "wagtaildocs" {
     key_name = "wagtaildocs-${var.environment}-eu-west-2"
     root_block_device_size = "100"
 
-   
+
     instance_cidr = [
         data.aws_ssm_parameter.private_subnet_2a_cidr.value,
         data.aws_ssm_parameter.private_subnet_2b_cidr.value,
     ]
-    lb_cidr = [
-        data.aws_ssm_parameter.private_subnet_2a_cidr.value,
-        data.aws_ssm_parameter.private_subnet_2b_cidr.value,
-    ]
-
-    
-
 
     auto_switch_off = var.wagtaildocs_auto_switch_off
     auto_switch_on = var.wagtaildocs_auto_switch_on

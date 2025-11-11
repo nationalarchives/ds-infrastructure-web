@@ -1,5 +1,5 @@
-request_service_record_deploy = 1
-request_service_record_deployment_s3_bucket = "ds-dev-deployment-source"
+request_service_record_deploy = 0
+request_service_record_deployment_s3_bucket = "ds-staging-deployment-source"
 request_service_record_folder_s3_key = "web/frontend"
 
 request_service_record_instance_type = "t3a.medium"

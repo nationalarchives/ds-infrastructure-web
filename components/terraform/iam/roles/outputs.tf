@@ -4,7 +4,18 @@ output "frontend_profile_name" {
 output "frontend_profile_arn" {
     value = aws_iam_instance_profile.frontend_profile.arn
 }
-
+#output "request_service_record_role_arn" {
+#    value = aws_iam_role.request_service_record_role.arn
+#}
+#output "request_service_record_role_name" {
+#    value = aws_iam_role.request_service_record_role.name
+#}
+#output "request_service_record_profile_name" {
+#    value = aws_iam_instance_profile.request_service_record_profile.name
+#}
+#output "request_service_record_profile_arn" {
+#    value = aws_iam_instance_profile.request_service_record_profile.arn
+#}
 
 output "media_efs_backup_arn" {
     value = aws_iam_role.media_efs_backup.arn

@@ -19,18 +19,18 @@ variable "wagtail_folder_s3_key" {}
 module "wagtail" {
     source = "./wagtail"
 
-    environment = var.environment
     ami_id = data.aws_ami.wagtail_ami.id
 
-    route53_zone = data.aws_ssm_parameter.zone_id.value
+    lb_listener_arn = module.load-balancer.lb_listener_arn
+    x_target_header = "wagtail"
+    host_header = "wagtail.${var.environment}.local"
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
     private_subnet_b_id = data.aws_ssm_parameter.private_subnet_2b_id.value
 
     wagtail_sg_id = module.sgs.wagtail_sg_id
-    wagtail_lb_id = module.sgs.wagtail_lb
-    
+
     efs_dns_name = module.media_efs.media_efs_dns_name
 
     wagtail_efs_mount_dir = var.wagtail_efs_mount_dir
@@ -44,19 +44,6 @@ module "wagtail" {
     instance_type = var.wagtail_instance_type
     key_name = "wagtail-${var.environment}-eu-west-2"
     root_block_device_size = "100"
-
-   
-    instance_cidr = [
-        data.aws_ssm_parameter.private_subnet_2a_cidr.value,
-        data.aws_ssm_parameter.private_subnet_2b_cidr.value,
-    ]
-    lb_cidr = [
-        data.aws_ssm_parameter.private_subnet_2a_cidr.value,
-        data.aws_ssm_parameter.private_subnet_2b_cidr.value,
-    ]
-
-    
-
 
     auto_switch_off = var.wagtail_auto_switch_off
     auto_switch_on = var.wagtail_auto_switch_on

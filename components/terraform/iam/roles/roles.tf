@@ -1,9 +1,3 @@
-# Data resource for org-session-manager-logs policy
-data "aws_caller_identity" "current" {}
-data "aws_iam_policy" "org_session_manager_logs" {
- arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
-}
-
 ## Roles
 
 # Frontend Role
@@ -114,7 +108,7 @@ resource "aws_iam_role_policy_attachment" "frontend_policy_attachment_3" {
 
 resource "aws_iam_role_policy_attachment" "frontend_policy_attachment_4" {
   role       = aws_iam_role.frontend_role.name
-  policy_arn = data.aws_iam_policy.org_session_manager_logs.arn
+  policy_arn = var.org_level_logging_arn
 }
 
 resource "aws_iam_role_policy_attachment" "frontend_policy_attachment_5" {
@@ -153,7 +147,7 @@ resource "aws_iam_role_policy_attachment" "catalogue_policy_attachment_3" {
 
 resource "aws_iam_role_policy_attachment" "catalogue_policy_attachment_4" {
   role       = aws_iam_role.catalogue_role.name
-  policy_arn = data.aws_iam_policy.org_session_manager_logs.arn
+  policy_arn = var.org_level_logging_arn
 }
 
 resource "aws_iam_role_policy_attachment" "catalogue_policy_attachment_5" {
@@ -180,7 +174,7 @@ resource "aws_iam_role_policy_attachment" "search_policy_attachment_3" {
 
 resource "aws_iam_role_policy_attachment" "search_policy_attachment_4" {
   role       = aws_iam_role.search_role.name
-  policy_arn = data.aws_iam_policy.org_session_manager_logs.arn
+  policy_arn = var.org_level_logging_arn
 }
 
 resource "aws_iam_role_policy_attachment" "search_policy_attachment_5" {
@@ -206,7 +200,7 @@ resource "aws_iam_role_policy_attachment" "wagtail_policy_attachment_3" {
 
 resource "aws_iam_role_policy_attachment" "wagtail_policy_attachment_4" {
   role       = aws_iam_role.wagtail_role.name
-  policy_arn = data.aws_iam_policy.org_session_manager_logs.arn
+  policy_arn = var.org_level_logging_arn
 }
 
 resource "aws_iam_role_policy_attachment" "wagtail_policy_attachment_5" {
@@ -232,7 +226,7 @@ resource "aws_iam_role_policy_attachment" "wagtaildocs_policy_attachment_3" {
 
 resource "aws_iam_role_policy_attachment" "wagtaildocs_policy_attachment_4" {
   role       = aws_iam_role.wagtaildocs_role.name
-  policy_arn = data.aws_iam_policy.org_session_manager_logs.arn
+  policy_arn = var.org_level_logging_arn
 }
 
 resource "aws_iam_role_policy_attachment" "wagtaildocs_policy_attachment_5" {
@@ -244,5 +238,35 @@ resource "aws_iam_role_policy_attachment" "wagtaildocs_policy_attachment_6" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
 }
 
-
-
+# Request Service Record Role - MoD FoI
+#
+#resource "aws_iam_role" "request_service_record_role" {
+#    name = "request-service-record-role"
+#    assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
+#}
+#resource "aws_iam_instance_profile" "request_service_record_profile" {
+#    name = "request-service-record-profile"
+#    path = "/"
+#    role = aws_iam_role.request_service_record_role.name
+#}
+## Attach Policies to Request Service Record Role
+#resource "aws_iam_role_policy_attachment" "rsr_policy_attachment_1" {
+#    role       = aws_iam_role.request_service_record_role.name
+#    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+#}
+#resource "aws_iam_role_policy_attachment" "rsr_policy_attachment_2" {
+#    role       = aws_iam_role.request_service_record_role.name
+#    policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+#}
+#resource "aws_iam_role_policy_attachment" "rsr_policy_attachment_3" {
+#    role       = aws_iam_role.request_service_record_role.name
+#    policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+#}
+#resource "aws_iam_role_policy_attachment" "rsr_policy_attachment_4" {
+#    role       = aws_iam_role.request_service_record_role.name
+#    policy_arn = var.org_level_logging_arn
+#}
+#resource "aws_iam_role_policy_attachment" "rsr_policy_attachment_5" {
+#    role       = aws_iam_role.request_service_record_role.name
+#    policy_arn = var.deployment_s3_policy
+#}

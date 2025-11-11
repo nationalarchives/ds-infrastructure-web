@@ -10,61 +10,25 @@ output "lambda_web_deployment_id" {
     value = aws_security_group.lambda_web_deployment.id
 }
 
-output "wagtail_sg_id" {
-    value = aws_security_group.wagtail.id
-}
 
-output "wagtail_lb_id" {
-    value = aws_security_group.wagtail_lb.id
-}
-
-output "wagtail_lb" {
-    value = aws_security_group.wagtail_lb.id
-}
-
-output "enrichment_lb_id" {
-   value = aws_security_group.enrichment_lb.id
+output "catalogue_sg_id" {
+    value = aws_security_group.catalogue.id
 }
 output "enrichment_sg_id" {
-   value = aws_security_group.enrichment.id
-}
-
-output "redis_lb_id" {
-    value = aws_security_group.redis_lb.id
+    value = aws_security_group.enrichment.id
 }
 output "redis_sg_id" {
    value = aws_security_group.redis.id
 }
-output "catalogue_sg_id" {
-    value = aws_security_group.catalogue.id
+output "request_service_record_sg_id" {
+    value = aws_security_group.request_service_record.id
 }
-
-output "catalogue_lb_id" {
-    value = aws_security_group.catalogue_lb.id
-}
-
-output "catalogue_lb" {
-    value = aws_security_group.catalogue_lb.id
-}
-
 output "search_sg_id" {
     value = aws_security_group.search.id
 }
-
-output "search_lb_id" {
-    value = aws_security_group.search_lb.id
-}
-output "search_lb" {
-    value = aws_security_group.search_lb.id
+output "wagtail_sg_id" {
+    value = aws_security_group.wagtail.id
 }
 output "wagtaildocs_sg_id" {
     value = aws_security_group.wagtaildocs.id
-}
-
-output "wagtaildocs_lb_id" {
-    value = aws_security_group.wagtaildocs_lb.id
-}
-
-output "wagtaildocs_lb" {
-    value = aws_security_group.wagtaildocs_lb.id
 }

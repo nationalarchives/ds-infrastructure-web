@@ -5,7 +5,7 @@ resource "aws_route53_record" "web-frontend" {
     ttl     = 15
 
     records = [
-         module.frontend.lb_internal_dns_name
+         module.load-balancer.load_balancer_dns_name
     ]
 }
 
@@ -16,7 +16,7 @@ resource "aws_route53_record" "web-enrichment" {
     ttl     = 15
 
     records = [
-        module.enrichment.lb_internal_dns_name
+        module.load-balancer.load_balancer_dns_name
     ]
 }
 
@@ -27,7 +27,7 @@ resource "aws_route53_record" "wagtail" {
     ttl     = 15
 
     records = [
-        module.wagtail.lb_internal_dns_name
+        module.load-balancer.load_balancer_dns_name
     ]
 }
 
@@ -38,7 +38,7 @@ resource "aws_route53_record" "catalogue" {
     ttl     = 15
 
     records = [
-        module.catalogue.lb_internal_dns_name
+        module.load-balancer.load_balancer_dns_name
     ]
 }
 
@@ -49,7 +49,7 @@ resource "aws_route53_record" "search" {
     ttl     = 15
 
     records = [
-        module.search.lb_internal_dns_name
+        module.load-balancer.load_balancer_dns_name
     ]
 }
 
@@ -60,7 +60,7 @@ resource "aws_route53_record" "wagtaildocs" {
     ttl     = 15
 
     records = [
-        module.wagtaildocs.lb_internal_dns_name
+        module.load-balancer.load_balancer_dns_name
     ]
 }
 

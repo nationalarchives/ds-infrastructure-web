@@ -1,11 +1,11 @@
-variable "environment" {}
-variable "route53_zone" {}
+variable "lb_listener_arn" {}
+variable "x_target_header" {}
+variable "host_header" {}
+variable "lb_security_group_id" {}
 
 variable "vpc_id" {}
 variable "private_subnet_a_id" {}
 variable "private_subnet_b_id" {}
-
-variable "lb_cidr" {}
 
 variable "instance_cidr" {}
 variable "ami_id" {}

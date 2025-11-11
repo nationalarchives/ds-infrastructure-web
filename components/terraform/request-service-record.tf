@@ -1,5 +1,4 @@
 variable "request_service_record_instance_type" {}
-variable "request_service_record_key_name" {}
 variable "request_service_record_root_block_device_size" {}
 
 variable "request_service_record_asg_max_size" {}
@@ -14,15 +13,26 @@ variable "request_service_record_deployment_group" {}
 variable "request_service_record_patch_group" {}
 variable "request_service_record_deployment_s3_bucket" {}
 variable "request_service_record_folder_s3_key" {}
+variable "request_service_record_deploy"{}
 
 
-module "mod-foi-frontend" {
-    source = "request-service-record"
+module "request-service-record" {
+    count = var.request_service_record_deploy
+    source = "./request-service-record"
 
-    environment = var.environment
+    account_id = data.aws_caller_identity.current.account_id
     ami_id = data.aws_ami.request_service_record_ami.id
 
-    route53_zone = data.aws_ssm_parameter.zone_id.value
+    lb_listener_arn = module.load-balancer.lb_listener_arn
+    x_target_header = "request-service-record"
+    host_header = "request-service-record.${var.environment}.local"
+
+    lb_name = module.load-balancer.load_balancer_dns_name
+    route53_zone = var.route53_zone
+    c_name = "web-rsr.${var.environment}.local"
+
+    request_service_record_sg_id = module.sgs.request_service_record_sg_id
+    org_level_logging_arn = data.aws_iam_policy.org_session_manager_logs.arn
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
@@ -35,18 +45,8 @@ module "mod-foi-frontend" {
     asg_health_check_type = var.request_service_record_asg_health_check_type
 
     instance_type = var.request_service_record_instance_type
-    key_name = "request-service-record-${var.environment}-eu-west-2"
+    key_name = "web-frontend-${var.environment}-eu-west-2"
     root_block_device_size = "100"
-
-    instance_cidr = [
-        data.aws_ssm_parameter.private_subnet_2a_cidr.value,
-        data.aws_ssm_parameter.private_subnet_2b_cidr.value,
-    ]
-    lb_cidr = [
-        data.aws_ssm_parameter.private_subnet_2a_cidr.value,
-        data.aws_ssm_parameter.private_subnet_2b_cidr.value,
-    ]
-
 
     auto_switch_off = var.request_service_record_auto_switch_off
     auto_switch_on = var.request_service_record_auto_switch_on

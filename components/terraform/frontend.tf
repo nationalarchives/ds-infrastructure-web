@@ -1,6 +1,4 @@
 variable "frontend_instance_type" {}
-variable "frontend_key_name" {}
-variable "frontend_root_block_device_size" {}
 
 variable "frontend_asg_max_size" {}
 variable "frontend_asg_min_size" {}
@@ -14,15 +12,18 @@ variable "frontend_deployment_group" {}
 variable "frontend_patch_group" {}
 variable "frontend_deployment_s3_bucket" {}
 variable "frontend_folder_s3_key" {}
-
+variable frontend_root_block_device_size {}
 
 module "frontend" {
     source = "./frontend"
 
-    environment = var.environment
     ami_id = data.aws_ami.frontend_ami.id
 
-    route53_zone = data.aws_ssm_parameter.zone_id.value
+    lb_listener_arn = module.load-balancer.lb_listener_arn
+    x_target_header = "web-frontend"
+    host_header = "web-frontend.${var.environment}.local"
+
+    lb_security_group_id = module.load-balancer.lb_security_group_id
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
@@ -36,17 +37,12 @@ module "frontend" {
 
     instance_type = var.frontend_instance_type
     key_name = "web-frontend-${var.environment}-eu-west-2"
-    root_block_device_size = "100"
+    root_block_device_size = var.frontend_root_block_device_size
 
     instance_cidr = [
         data.aws_ssm_parameter.private_subnet_2a_cidr.value,
         data.aws_ssm_parameter.private_subnet_2b_cidr.value,
     ]
-    lb_cidr = [
-        data.aws_ssm_parameter.private_subnet_2a_cidr.value,
-        data.aws_ssm_parameter.private_subnet_2b_cidr.value,
-    ]
-    
 
     auto_switch_off = var.frontend_auto_switch_off
     auto_switch_on = var.frontend_auto_switch_on

@@ -1,32 +1,32 @@
 locals {
     asg_catalogue_tags = concat(var.asg_tags, [
         {
-            key                 = "Name"
-            value               = "catalogue"
+            key   = "Name"
+            value = "catalogue"
         },
         {
-            key                 = "AutoSwitchOff"
-            value               = var.auto_switch_off
+            key   = "AutoSwitchOff"
+            value = var.auto_switch_off
         },
         {
-            key                 = "AutoSwitchOn"
-            value               = var.auto_switch_on
+            key   = "AutoSwitchOn"
+            value = var.auto_switch_on
         },
         {
-            key                 = "Patch-Group"
-            value               = var.patch_group
+            key   = "Patch-Group"
+            value = var.patch_group
         },
         {
-            key                 = "Deployment-Group"
-            value               = var.deployment_group
+            key   = "Deployment-Group"
+            value = var.deployment_group
         },
         {
-            key                 = "DeploymentGroup"
-            value               = var.deployment_group
+            key   = "DeploymentGroup"
+            value = var.deployment_group
         },
         {
-            key                 = "PatchGroup"
-            value               = var.patch_group
+            key   = "PatchGroup"
+            value = var.patch_group
         },
     ])
 }

@@ -21,13 +21,13 @@ data "aws_ami" "frontend_ami" {
     ]
 }
 
-data "aws_ami" "mod_foi_frontend_ami" {
+data "aws_ami" "request_service_record_ami" {
     most_recent = true
 
     filter {
         name   = "name"
         values = [
-            "mod-foi-frontend-primer*"
+            "request-service-record-primer*"
         ]
     }
 
