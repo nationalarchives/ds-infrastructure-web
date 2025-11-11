@@ -1,0 +1,24 @@
+services:
+  traefik:
+    container_name: traefik
+    image: traefik-image
+    command:
+      #- "--log.level=DEBUG"
+      #- "--api.insecure=true"
+      - "--providers.docker=true"
+    labels:
+       - "traefik.http.routers.dashbord.rule=Host(`{{local_domain}}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+       - "traefik.http.routers.api.service=api@internal"
+    networks:
+      - webgateway
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/var/docker/traefik.yml:/traefik.yml"
+    restart: "no"
+
+networks:
+  webgateway:
+    driver: "bridge"
