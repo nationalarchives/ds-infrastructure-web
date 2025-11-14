@@ -1,0 +1,21 @@
+{
+  "ALLOW_INSECURE": "true",
+  "ALLOWED_HOSTS": "*",
+  "CSRF_TRUSTED_ORIGINS": "https://wagtail.nationalarchives.gov.uk",
+  "DATABASE_HOST": "postgres-main-prime.live.local",
+  "DATABASE_NAME": "etna",
+  "DATABASE_USER": "etna_app_user",
+  "DJANGO_SETTINGS_MODULE": "config.settings.production",
+  "ENVIRONMENT_NAME": "production",
+  "FRONTEND_CACHE_AWS_DISTRIBUTION_ID": "E354PZC9VJL7AP",
+  "REDIS_URL": "redis://platform-redis.live.local:6379",
+  "ROSETTA_API_URL": "https://rosetta-prod.k-int.com/rosetta/data",
+  "RUNTIME": "production",
+  "SENTRY_DSN": "https://9c02a36480da4bcb809476d2d729d8a0@o1230303.ingest.us.sentry.io/6377027",
+  "USE_X_FORWARDED_HOST": "true",
+  "WAGTAILADMIN_BASE_URL": "https://wagtail.nationalarchives.gov.uk",
+  "WAGTAILAPI_BASE_URL": "http://wagtail.live.local",
+  "WAGTAILAPI_IMAGES_BASE_URL": "https://www.nationalarchives.gov.uk",
+  "WAGTAILAPI_MEDIA_BASE_URL": "https://www.nationalarchives.gov.uk",
+  "WAGTAIL_HEADLESS_PREVIEW_URL": "https://www.nationalarchives.gov.uk/preview/"
+}
