@@ -56,21 +56,16 @@ jobs:
 
             echo "Syncing $SERVICE from $FILE to $PARAM_PATH..."
 
-            # Get existing JSON from SSM (if exists)
             EXISTING_JSON=$(aws ssm get-parameter --name "$PARAM_PATH" --query "Parameter.Value" --output text 2>/dev/null || echo "{}")
-
-            # Read JSON from repo
+            
             NEW_JSON=$(cat "$FILE")
-
-            # Merge: replace everything from NEW_JSON (full sync)
-            # Convert JSON to one-liner to store in SSM
-            MERGED_JSON=$(echo "$NEW_JSON" | jq -c '.')
-
-            # Update parameter in SSM (overwrite)
+            
+            FORMATTED_JSON=$(echo "$NEW_JSON" | jq '.')
+            
             aws ssm put-parameter \
               --name "$PARAM_PATH" \
               --type "String" \
-              --value "$MERGED_JSON" \
+              --value "$FORMATTED_JSON" \
               --overwrite
 
             echo "$SERVICE synced successfully!"
