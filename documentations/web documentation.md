@@ -113,7 +113,8 @@ terraform plan \
   -var-file="vars/dev/redis.auto.tfvars" \
   -var-file="vars/dev/catalogue.auto.tfvars" \
   -var-file="vars/dev/search.auto.tfvars" \
-  -var-file="vars/dev/wagtaildocs.auto.tfvars"
+  -var-file="vars/dev/wagtaildocs.auto.tfvars" \
+  -var-file="vars/dev/request-service-record.auto.tfvars"
 ```
 
 **_Staging plan_**

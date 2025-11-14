@@ -6,7 +6,7 @@ resource "aws_lb_target_group" "catalogue" {
 
     health_check {
         interval            = 30
-        path                = "/healthcheck/"
+        path                = "/healthcheck/live/"
         port                = "traffic-port"
         timeout             = 5
         healthy_threshold   = 2
