@@ -6,7 +6,6 @@
   "DJANGO_SETTINGS_MODULE": "config.settings.develop",
   "ENVIRONMENT_NAME": "develop",
   "FORCE_HTTPS": "true",
-  "FRONTEND_CACHE_AWS_DISTRIBUTION_ID": "EQID5ZK8XT4SW",
   "RUNTIME": "production",
   "ROSETTA_API_URL": "https://rosetta-dev.k-int.com/rosetta/data",
   "SENTRY_DSN": "https://9c02a36480da4bcb809476d2d729d8a0@o1230303.ingest.us.sentry.io/6377027",
