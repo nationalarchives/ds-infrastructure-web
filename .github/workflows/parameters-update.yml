@@ -10,6 +10,10 @@ on:
           - staging
           - live
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   sync-parameters:
     runs-on: ubuntu-latest
@@ -35,6 +39,8 @@ jobs:
           aws-region: eu-west-2
           role-to-assume: ${{ steps.set-role.outputs.role }}
           role-session-name: GitHubActionsSession
+          audience: sts.amazonaws.com
+          output-env-credentials: true
 
       - name: Sync parameters
         run: |
