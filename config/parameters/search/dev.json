@@ -1,0 +1,16 @@
+{
+  "ALLOW_INSECURE": "true",
+  "CONFIG": "config.Develop",
+  "COOKIE_DOMAIN": ".nationalarchives.gov.uk",
+  "CSP_FONT_SRC": "'self',fonts.gstatic.com,use.typekit.net",
+  "CSP_STYLE_SRC": "'self',fonts.googleapis.com,p.typekit.net,use.typekit.net",
+  "DB_HOST": "postgres-main-prime.dev.local",
+  "DB_NAME": "search",
+  "DB_USERNAME": "search_app_user",
+  "ENVIRONMENT_NAME": "develop",
+  "FORCE_HTTPS": "False",
+  "GA4_ID": "GTM-KX8ZWVZG",
+  "RUNTIME": "production",
+  "SENTRY_DSN": "https://a58136a7220c4a7775d1c10a9a09fbd9@o1230303.ingest.us.sentry.io/4508698817658880",
+  "SITEMAPS": "https://www.nationalarchives.gov.uk/sitemap.xml,https://design-system.nationalarchives.gov.uk/sitemap.xml"
+}

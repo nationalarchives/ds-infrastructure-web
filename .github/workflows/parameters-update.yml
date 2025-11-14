@@ -1,0 +1,71 @@
+name: Sync JSON Parameters
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        options:
+          - dev
+          - staging
+          - live
+
+jobs:
+  sync-parameters:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set AWS Role
+        id: set-role
+        run: |
+          if [ "${{ github.event.inputs.environment }}" = "dev" ]; then
+            echo "role=arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event.inputs.environment }}" = "staging" ]; then
+            echo "role=arn:aws:iam::337670467269:role/GitHubActionRole" >> $GITHUB_OUTPUT
+          else
+            echo "role=arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-west-2
+          role-to-assume: ${{ steps.set-role.outputs.role }}
+          role-session-name: GitHubActionsSession
+
+      - name: Sync parameters
+        run: |
+          SERVICES=("frontend" "wagtail" "wagtaildocs" "search" "catalogue" "enrichment")
+          for SERVICE in "${SERVICES[@]}"; do
+            FILE="config/parameters/$SERVICE/${{ github.event.inputs.environment }}.json"
+            PARAM_PATH="/application/web/$SERVICE"
+
+            if [ ! -f "$FILE" ]; then
+              echo "File $FILE does not exist. Skipping $SERVICE."
+              continue
+            fi
+
+            echo "Syncing $SERVICE from $FILE to $PARAM_PATH..."
+
+            # Get existing JSON from SSM (if exists)
+            EXISTING_JSON=$(aws ssm get-parameter --name "$PARAM_PATH" --query "Parameter.Value" --output text 2>/dev/null || echo "{}")
+
+            # Read JSON from repo
+            NEW_JSON=$(cat "$FILE")
+
+            # Merge: replace everything from NEW_JSON (full sync)
+            # Convert JSON to one-liner to store in SSM
+            MERGED_JSON=$(echo "$NEW_JSON" | jq -c '.')
+
+            # Update parameter in SSM (overwrite)
+            aws ssm put-parameter \
+              --name "$PARAM_PATH" \
+              --type "String" \
+              --value "$MERGED_JSON" \
+              --overwrite
+
+            echo "$SERVICE synced successfully!"
+          done

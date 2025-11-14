@@ -1,0 +1,20 @@
+{
+  "ALLOW_INSECURE": "true",
+  "ALLOWED_HOSTS": "*",
+  "COOKIE_DOMAIN": ".nationalarchives.gov.uk",
+  "CSP_FONT_SRC": "'self',https://fonts.gstatic.com,https://use.typekit.net",
+  "CSP_IMG_SRC": "'self',https://staging-www.nationalarchives.gov.uk,https://www.googletagmanager.com",
+  "CSP_SCRIPT_SRC": "'self',https://www.googletagmanager.com/gtm.js",
+  "CSP_STYLE_SRC": "'self',https://fonts.googleapis.com,https://p.typekit.net,https://use.typekit.net",
+  "DCS_PREFIXES": "LEV",
+  "DELIVERY_OPTIONS_API_URL": "http://ds-api.staging.local/delivery-options-api/api/DeliveryOptions",
+  "DJANGO_SETTINGS_MODULE": "config.settings.staging",
+  "ENVIRONMENT_NAME": "staging",
+  "GA4_ID": "GTM-KX8ZWVZG",
+  "ONSITE_IP_ADDRESSES": "10.136.0.0/19,167.98.93.94/32,10.120.0.0/13,10.112.0.0/13",
+  "ROSETTA_API_URL": "https://rosetta-staging.k-int.com/rosetta/data",
+  "RUNTIME": "production",
+  "SENTRY_DSN": "https://3e24f4f474026e113e6dcdeccf2abded@o1230303.ingest.us.sentry.io/4507458864087040",
+  "STAFFIN_IP_ADDRESSES": "172.31.8.0/22,10.96.0.0/13,10.104.0.0/13,10.95.48.0/24,172.31.0.0/21,10.252.16.0/21,10.252.21.0/24,10.114.1.0/24",
+  "WAGTAIL_API_URL": "http://wagtail.staging.local/api/v2"
+}

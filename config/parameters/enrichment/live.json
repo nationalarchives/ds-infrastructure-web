@@ -1,0 +1,9 @@
+{
+  "ALLOW_INSECURE": "true",
+  "CONFIG": "config.Production",
+  "COOKIE_DOMAIN": ".nationalarchives.gov.uk",
+  "ENVIRONMENT": "production",
+  "ENVIRONMENT_NAME": "production",
+  "FORCE_HTTPS": "false",
+  "SENTRY_DSN": "https://b468f9d9642b5e84c40007ac377c3b1f@o1230303.ingest.us.sentry.io/4509044214071296"
+}
