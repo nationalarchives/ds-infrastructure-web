@@ -6,7 +6,6 @@
   "CSP_STYLE_SRC": "'self',fonts.googleapis.com,p.typekit.net,use.typekit.net",
   "DB_HOST": "postgres-main-prime.dev.local",
   "DB_NAME": "search",
-  "DB_USERNAME": "search_app_user",
   "ENVIRONMENT_NAME": "develop",
   "FORCE_HTTPS": "False",
   "GA4_ID": "GTM-KX8ZWVZG",

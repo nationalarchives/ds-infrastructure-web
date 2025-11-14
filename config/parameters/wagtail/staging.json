@@ -4,7 +4,6 @@
   "CSRF_TRUSTED_ORIGINS": "https://staging-wagtail.nationalarchives.gov.uk",
   "DATABASE_HOST": "postgres-main-prime.staging.local",
   "DATABASE_NAME": "etna",
-  "DATABASE_USER": "etna_app_user",
   "DJANGO_SETTINGS_MODULE": "config.settings.staging",
   "ENVIRONMENT_NAME": "staging",
   "FORCE_HTTPS": "true",

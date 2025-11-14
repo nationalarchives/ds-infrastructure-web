@@ -4,7 +4,6 @@
   "CSRF_TRUSTED_ORIGINS": "https://wagtail.nationalarchives.gov.uk",
   "DATABASE_HOST": "postgres-main-prime.live.local",
   "DATABASE_NAME": "etna",
-  "DATABASE_USER": "etna_app_user",
   "DJANGO_SETTINGS_MODULE": "config.settings.production",
   "ENVIRONMENT_NAME": "production",
   "FRONTEND_CACHE_AWS_DISTRIBUTION_ID": "E354PZC9VJL7AP",
