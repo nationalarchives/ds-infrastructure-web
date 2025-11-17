@@ -207,7 +207,6 @@
       - { file_name: traefik-up.sh }
       - { file_name: traefik-down.sh }
       - { file_name: traefik-deploy.sh }
-      - { file_name: website-blue-green-deploy.sh }
 
 - name: switch to localhost
   hosts: localhost
