@@ -44,7 +44,7 @@ jobs:
 
       - name: Sync parameters
         run: |
-          SERVICES=("frontend" "wagtail" "wagtaildocs" "search" "catalogue" "enrichment")
+          SERVICES=("frontend" "wagtail" "wagtaildocs" "search" "catalogue" "enrichment" "requestservicerecord")
           for SERVICE in "${SERVICES[@]}"; do
             FILE="config/parameters/$SERVICE/${{ github.event.inputs.environment }}.json"
             PARAM_PATH="/application/web/$SERVICE"
