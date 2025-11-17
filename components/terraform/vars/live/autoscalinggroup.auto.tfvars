@@ -20,9 +20,9 @@ enrichment_asg_health_check_type         = "EC2"
 wagtail_patch_group      = "wagtail-patchgroup"
 wagtail_deployment_group = "wagtail-deploygroup"
 
-wagtail_asg_max_size                  = 4
-wagtail_asg_min_size                  = 2
-wagtail_asg_desired_capacity          = 2
+wagtail_asg_max_size                  = 6
+wagtail_asg_min_size                  = 3
+wagtail_asg_desired_capacity          = 3
 wagtail_asg_health_check_grace_period = 150
 wagtail_asg_health_check_type         = "EC2"
 
@@ -38,9 +38,9 @@ redis_asg_health_check_type         = "EC2"
 catalogue_patch_group      = "catalogue-patchgroup"
 catalogue_deployment_group = "catalogue-deploygroup"
 
-catalogue_asg_max_size                  = 2
-catalogue_asg_min_size                  = 1
-catalogue_asg_desired_capacity          = 1
+catalogue_asg_max_size                  = 4
+catalogue_asg_min_size                  = 2
+catalogue_asg_desired_capacity          = 2
 catalogue_asg_health_check_grace_period = 150
 catalogue_asg_health_check_type         = "EC2"
 
