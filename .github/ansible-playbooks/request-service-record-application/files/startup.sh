@@ -15,7 +15,7 @@ if [ -z ${REQUESTSERVICERECORD_APP_IMAGE+x} ]; then export REQUESTSERVICERECORD_
 # Install dependencies
 sudo dnf -y update && sudo dnf install -y aws-cli jq
 
-OUTPUT_FILE="/var/docker/enrichment.env"
+OUTPUT_FILE="/var/docker/requestservicerecord.env"
 sudo touch "$OUTPUT_FILE"
 sudo chmod 777 "$OUTPUT_FILE"
 > "$OUTPUT_FILE"
