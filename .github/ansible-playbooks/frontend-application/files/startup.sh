@@ -57,10 +57,10 @@ for full_name in $PARAM_NAMES; do
             --query "Parameter.Value" \
             --output text)
         
-        ENRICHMENT_APP_IMAGE=$(echo "$docker_json" | jq -r '.["enrichment-application"]')
+        FRONTEND_APP_IMAGE=$(echo "$docker_json" | jq -r '.["frontend-application"]')
         TRAEFIK_IMAGE=$(echo "$docker_json" | jq -r '.["traefik"]')
 
-        printf 'DOCKER_IMAGE_ENRICHMENT_APPLICATION="%s"\n' "$ENRICHMENT_APP_IMAGE" >> "$OUTPUT_FILE"
+        printf 'DOCKER_IMAGE_FRONTEND_APPLICATION="%s"\n' "$FRONTEND_APP_IMAGE" >> "$OUTPUT_FILE"
         printf 'DOCKER_IMAGE_TRAEFIK="%s"\n' "$TRAEFIK_IMAGE" >> "$OUTPUT_FILE"
         continue
     fi
