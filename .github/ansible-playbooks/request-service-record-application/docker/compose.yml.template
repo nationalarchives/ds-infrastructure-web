@@ -1,7 +1,7 @@
 services:
   blue-web: &requestservicerecord
     container_name: blue-web
-    env_file: /var/docker/frontend.env
+    env_file: /var/docker/requestservicerecord.env
     image: "ghcr.io/nationalarchives/ds-request-service-record:25.10.17.255"
     labels:
       - "traefik.enable=true"
