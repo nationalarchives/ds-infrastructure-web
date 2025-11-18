@@ -7,7 +7,6 @@
   "DJANGO_SETTINGS_MODULE": "config.settings.staging",
   "ENVIRONMENT_NAME": "staging",
   "FORCE_HTTPS": "true",
-  "FRONTEND_CACHE_AWS_DISTRIBUTION_ID": "E61JP9G72M1W9",
   "REDIS_URL": "redis://platform-redis.staging.local:6379",
   "ROSETTA_API_URL": "https://rosetta-prod.k-int.com/rosetta/data",
   "RUNTIME": "production",
