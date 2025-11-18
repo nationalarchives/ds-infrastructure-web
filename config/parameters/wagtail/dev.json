@@ -1,11 +1,13 @@
 {
   "ALLOW_INSECURE": "true",
   "ALLOWED_HOSTS": "*",
+  "CSRF_TRUSTED_ORIGINS": "https://dev-wagtail.nationalarchives.gov.uk",
   "DATABASE_HOST": "postgres-main-prime.dev.local",
   "DATABASE_NAME": "etna",
   "DJANGO_SETTINGS_MODULE": "config.settings.develop",
   "ENVIRONMENT_NAME": "develop",
   "FORCE_HTTPS": "true",
+  "REDIS_URL": "redis://platform-redis.dev.local:6379",
   "RUNTIME": "production",
   "ROSETTA_API_URL": "https://rosetta-dev.k-int.com/rosetta/data",
   "SENTRY_DSN": "https://9c02a36480da4bcb809476d2d729d8a0@o1230303.ingest.us.sentry.io/6377027",

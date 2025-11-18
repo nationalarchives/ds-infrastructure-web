@@ -39,8 +39,8 @@ catalogue_patch_group      = "catalogue-patchgroup"
 catalogue_deployment_group = "catalogue-deploygroup"
 
 catalogue_asg_max_size                  = 4
-catalogue_asg_min_size                  = 2
-catalogue_asg_desired_capacity          = 2
+catalogue_asg_min_size                  = 3
+catalogue_asg_desired_capacity          = 3
 catalogue_asg_health_check_grace_period = 150
 catalogue_asg_health_check_type         = "EC2"
 
