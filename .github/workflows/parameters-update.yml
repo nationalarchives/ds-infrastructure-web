@@ -46,7 +46,6 @@ jobs:
         run: |
           SERVICES=("frontend" "wagtail" "wagtaildocs" "search" "catalogue" "enrichment" "requestservicerecord")
 
-          # Map services to instance names
           declare -A SERVICE_INSTANCES=(
             ["frontend"]="web-frontend"
             ["wagtail"]="wagtail"
@@ -78,17 +77,27 @@ jobs:
               --overwrite
 
             echo "$SERVICE synced successfully!"
-            
+
             INSTANCE_NAME=${SERVICE_INSTANCES[$SERVICE]}
             if [ -z "$INSTANCE_NAME" ]; then
               echo "No instance found for $SERVICE. Skipping startup."
               continue
             fi
 
-            echo "Restarting the container for $INSTANCE_NAME..."
+            INSTANCE_ID=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=$INSTANCE_NAME" "Name=instance-state-name,Values=running" \
+              --query "Reservations[0].Instances[0].InstanceId" \
+              --output text)
+
+            if [ -z "$INSTANCE_ID" ] || [ "$INSTANCE_ID" == "None" ]; then
+              echo "No running instance found for $INSTANCE_NAME. Skipping startup."
+              continue
+            fi
+
+            echo "Restarting the container for $INSTANCE_NAME ($INSTANCE_ID)..."
 
             COMMAND_ID=$(aws ssm send-command \
-              --targets "Key=tag:Name,Values=$INSTANCE_NAME" \
+              --targets "Key=InstanceIds,Values=$INSTANCE_ID" \
               --document-name "AWS-RunShellScript" \
               --comment "Run startup.sh" \
               --parameters 'commands=["bash /usr/local/bin/startup.sh"]' \
@@ -107,7 +116,7 @@ jobs:
 
             OUTPUT=$(aws ssm get-command-invocation \
               --command-id "$COMMAND_ID" \
-              --instance-id "$INSTANCE_NAME" \
+              --instance-id "$INSTANCE_ID" \
               --query "StandardOutputContent" \
               --output text)
 
