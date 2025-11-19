@@ -80,53 +80,53 @@ jobs:
 
             INSTANCE_NAME=${SERVICE_INSTANCES[$SERVICE]}
             if [ -z "$INSTANCE_NAME" ]; then
-              echo "No instance found for $SERVICE. Skipping startup."
+              echo "No instance mapping found for $SERVICE. Skipping startup."
               continue
             fi
 
-            INSTANCE_ID=$(aws ec2 describe-instances \
+            INSTANCE_IDS=$(aws ec2 describe-instances \
               --filters "Name=tag:Name,Values=$INSTANCE_NAME" "Name=instance-state-name,Values=running" \
-              --query "Reservations[0].Instances[0].InstanceId" \
+              --query "Reservations[].Instances[].InstanceId" \
               --output text)
 
-            if [ -z "$INSTANCE_ID" ] || [ "$INSTANCE_ID" == "None" ]; then
-              echo "No running instance found for $INSTANCE_NAME. Skipping startup."
+            if [ -z "$INSTANCE_IDS" ]; then
+              echo "No running instances found for $INSTANCE_NAME. Skipping startup."
               continue
             fi
 
-            echo "Restarting the container for $INSTANCE_NAME ($INSTANCE_ID)..."
+            for INSTANCE_ID in $INSTANCE_IDS; do
+              echo "Restarting the container for $INSTANCE_NAME ($INSTANCE_ID)..."
 
-            COMMAND_ID=$(aws ssm send-command \
-              --targets "Key=InstanceIds,Values=$INSTANCE_ID" \
-              --document-name "AWS-RunShellScript" \
-              --comment "Run startup.sh" \
-              --parameters 'commands=["bash /usr/local/bin/startup.sh"]' \
-              --query "Command.CommandId" \
-              --output text)
-
-            STATUS="Pending"
-            while [[ "$STATUS" != "Success" ]]; do
-              sleep 10
-              STATUS=$(aws ssm list-command-invocations \
-                --command-id "$COMMAND_ID" \
-                --details \
-                --query "CommandInvocations[0].Status" \
+              COMMAND_ID=$(aws ssm send-command \
+                --targets "Key=InstanceIds,Values=$INSTANCE_ID" \
+                --document-name "AWS-RunShellScript" \
+                --comment "Run startup.sh" \
+                --parameters 'commands=["bash /usr/local/bin/startup.sh"]' \
+                --query "Command.CommandId" \
                 --output text)
+
+              STATUS="Pending"
+              while [[ "$STATUS" != "Success" ]]; do
+                sleep 10
+                STATUS=$(aws ssm list-command-invocations \
+                  --command-id "$COMMAND_ID" \
+                  --details \
+                  --query "CommandInvocations[0].Status" \
+                  --output text)
+              done
+
+              OUTPUT=$(aws ssm get-command-invocation \
+                --command-id "$COMMAND_ID" \
+                --instance-id "$INSTANCE_ID" \
+                --query "StandardOutputContent" \
+                --output text)
+
+              if echo "$OUTPUT" | grep -q "Startup completed successfully"; then
+                echo "Startup completed successfully for $INSTANCE_NAME ($INSTANCE_ID)"
+                echo "Container restarted for $INSTANCE_NAME ($INSTANCE_ID)"
+              else
+                echo "Startup failed for $INSTANCE_NAME ($INSTANCE_ID)"
+              fi
             done
-
-            OUTPUT=$(aws ssm get-command-invocation \
-              --command-id "$COMMAND_ID" \
-              --instance-id "$INSTANCE_ID" \
-              --query "StandardOutputContent" \
-              --output text)
-
-            echo "$OUTPUT"
-
-            if [[ "$OUTPUT" == *"Startup completed successfully"* ]]; then
-              echo "Startup completed successfully for $INSTANCE_NAME"
-              echo "Container restarted for $INSTANCE_NAME"
-            else
-              echo "Startup failed for $INSTANCE_NAME"
-            fi
 
           done
