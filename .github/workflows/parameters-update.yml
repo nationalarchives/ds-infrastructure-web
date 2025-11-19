@@ -42,9 +42,21 @@ jobs:
           audience: sts.amazonaws.com
           output-env-credentials: true
 
-      - name: Sync parameters
+      - name: Sync parameters and restart services
         run: |
           SERVICES=("frontend" "wagtail" "wagtaildocs" "search" "catalogue" "enrichment" "requestservicerecord")
+
+          # Map services to instance names
+          declare -A SERVICE_INSTANCES=(
+            ["frontend"]="web-frontend"
+            ["wagtail"]="wagtail"
+            ["wagtaildocs"]="wagtaildocs"
+            ["search"]="search"
+            ["catalogue"]="catalogue"
+            ["enrichment"]="web-enrichment"
+            ["requestservicerecord"]="request-service-record"
+          )
+
           for SERVICE in "${SERVICES[@]}"; do
             FILE="config/parameters/$SERVICE/${{ github.event.inputs.environment }}.json"
             PARAM_PATH="/application/web/$SERVICE"
@@ -56,10 +68,7 @@ jobs:
 
             echo "Syncing $SERVICE from $FILE to $PARAM_PATH..."
 
-            EXISTING_JSON=$(aws ssm get-parameter --name "$PARAM_PATH" --query "Parameter.Value" --output text 2>/dev/null || echo "{}")
-            
             NEW_JSON=$(cat "$FILE")
-            
             FORMATTED_JSON=$(echo "$NEW_JSON" | jq '.')
             
             aws ssm put-parameter \
@@ -69,4 +78,47 @@ jobs:
               --overwrite
 
             echo "$SERVICE synced successfully!"
+
+            # Run startup.sh via Session Manager
+            INSTANCE_NAME=${SERVICE_INSTANCES[$SERVICE]}
+            if [ -z "$INSTANCE_NAME" ]; then
+              echo "No instance found for $SERVICE. Skipping startup."
+              continue
+            fi
+
+            echo "Starting $INSTANCE_NAME via Session Manager..."
+
+            COMMAND_ID=$(aws ssm send-command \
+              --targets "Key=Name,Values=$INSTANCE_NAME" \
+              --document-name "AWS-RunShellScript" \
+              --comment "Run startup.sh" \
+              --parameters 'commands=["bash /usr/local/bin/startup.sh"]' \
+              --query "Command.CommandId" \
+              --output text)
+
+            STATUS="Pending"
+            while [[ "$STATUS" != "Success" ]]; do
+              sleep 10
+              STATUS=$(aws ssm list-command-invocations \
+                --command-id "$COMMAND_ID" \
+                --details \
+                --query "CommandInvocations[0].Status" \
+                --output text)
+            done
+
+            OUTPUT=$(aws ssm get-command-invocation \
+              --command-id "$COMMAND_ID" \
+              --instance-id "$INSTANCE_NAME" \
+              --query "StandardOutputContent" \
+              --output text)
+
+            echo "$OUTPUT"
+
+            if [[ "$OUTPUT" == *"Startup completed successfully"* ]]; then
+              echo "Startup completed successfully for $INSTANCE_NAME"
+              echo "Container restarted for $INSTANCE_NAME"
+            else
+              echo "Startup failed for $INSTANCE_NAME"
+            fi
+
           done
