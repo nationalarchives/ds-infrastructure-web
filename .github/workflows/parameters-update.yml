@@ -78,18 +78,17 @@ jobs:
               --overwrite
 
             echo "$SERVICE synced successfully!"
-
-            # Run startup.sh via Session Manager
+            
             INSTANCE_NAME=${SERVICE_INSTANCES[$SERVICE]}
             if [ -z "$INSTANCE_NAME" ]; then
               echo "No instance found for $SERVICE. Skipping startup."
               continue
             fi
 
-            echo "Starting $INSTANCE_NAME via Session Manager..."
+            echo "Restarting the container for $INSTANCE_NAME..."
 
             COMMAND_ID=$(aws ssm send-command \
-              --targets "Key=Name,Values=$INSTANCE_NAME" \
+              --targets "Key=tag:Name,Values=$INSTANCE_NAME" \
               --document-name "AWS-RunShellScript" \
               --comment "Run startup.sh" \
               --parameters 'commands=["bash /usr/local/bin/startup.sh"]' \
