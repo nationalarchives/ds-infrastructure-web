@@ -42,7 +42,7 @@
         },
         "forms": {
             "image": "ghcr.io/nationalarchives/ds-forms",
-            "version": "25.10.23.50",
+            "version": "25.11.24.51",
             "repo": "https://github.com/nationalarchives/ds-forms"
         }
     }
