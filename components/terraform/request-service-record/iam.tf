@@ -38,5 +38,5 @@ resource "aws_iam_policy" "ec2_access" {
 resource "aws_iam_policy" "ses_access" {
     name        = "request-service-record-ses-access-policy"
     description = "ses access for request-service-record"
-    policy      = data.aws_iam_policy_document.ses_access
+    policy      = data.aws_iam_policy_document.ses_access.json
 }
