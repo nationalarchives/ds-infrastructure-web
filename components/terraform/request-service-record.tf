@@ -56,7 +56,7 @@ module "request-service-record" {
     deployment_s3_bucket = var.request_service_record_deployment_s3_bucket
     folder_s3_key = var.request_service_record_folder_s3_key
 
-    ses_nationalarchives_gov_uk_domain_arn = data.aws_ssm_parameter.ses_nationalarchives_gov_uk_domain_arn
+    ses_nationalarchives_gov_uk_domain_arn = data.aws_ssm_parameter.ses_nationalarchives_gov_uk_domain_arn.value
 
     asg_tags = local.asg_default_tags
     tags = local.tags
