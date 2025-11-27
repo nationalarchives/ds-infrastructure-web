@@ -95,3 +95,7 @@ data "aws_secretsmanager_secret_version" "web_custom_header" {
 data "aws_ssm_parameter" "wagtail_efs_media_dns_name" {
     name = "/infrastructure/wagtail-efs/media-dns-name"
 }
+
+data "aws_ssm_parameter" "ses_nationalarchives_gov_uk_domain_arn" {
+    name = "/infrastructure/ses/nationalarchives_gov_uk/domain-identifier-arn"
+}

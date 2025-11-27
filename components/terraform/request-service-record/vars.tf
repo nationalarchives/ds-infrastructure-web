@@ -38,5 +38,7 @@ variable "folder_s3_key" {}
 variable "asg_tags" {}
 variable "tags" {}
 
+variable "ses_nationalarchives_gov_uk_domain_arn" {}
+
 variable "request_service_record_sg_id" {}
 variable "org_level_logging_arn" {}
