@@ -21,3 +21,15 @@ data "aws_iam_policy_document" "ec2_access" {
         ]
     }
 }
+
+data "aws_iam_policy_document" "ses_access" {
+    statement {
+        sid = "ses_sendemail"
+        actions = [
+            "ses:SendEmail",
+        ]
+        resources = [
+            var.ses_nationalarchives_gov_uk_domain_arn
+        ]
+    }
+}
