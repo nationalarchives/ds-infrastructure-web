@@ -24,7 +24,7 @@ read -p "Enter environment name: " ENVIRONMENT
 # Variables
 ################################################################################
 TERRAFORM_DIRECTORY="components/terraform"
-VARIABLES_DIRECTORY="$TERRAFORM_DIRECTORY/var/$ENVIRONMENT"
+VARIABLES_DIRECTORY="$TERRAFORM_DIRECTORY/vars/$ENVIRONMENT"
 
 ################################################################################
 # Directory Check
