@@ -99,3 +99,7 @@ data "aws_ssm_parameter" "wagtail_efs_media_dns_name" {
 data "aws_ssm_parameter" "ses_nationalarchives_gov_uk_domain_arn" {
     name = "/infrastructure/ses/nationalarchives_gov_uk/domain-identifier-arn"
 }
+
+data "aws_ssm_parameter" "foi1939_register_write_policy_arn" {
+    name = "/infrastructure/s3/policies/write/foi1939_register_arn"
+}

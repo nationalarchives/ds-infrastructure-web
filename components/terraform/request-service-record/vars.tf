@@ -34,6 +34,7 @@ variable "asg_health_check_type" {}
 
 variable "deployment_s3_bucket" {}
 variable "folder_s3_key" {}
+variable "foi1939_register_write_policy_arn" {}
 
 variable "asg_tags" {}
 variable "tags" {}

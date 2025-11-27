@@ -32,6 +32,10 @@ resource "aws_iam_role_policy_attachment" "rsr_policy_attachment_6" {
     role       = aws_iam_role.request_service_record_role.name
     policy_arn = aws_iam_policy.ses_access.arn
 }
+resource "aws_iam_role_policy_attachment" "rsr_policy_attachment_6" {
+    role       = aws_iam_role.request_service_record_role.name
+    policy_arn = var.foi1939_register_write_policy_arn
+}
 
 resource "aws_iam_policy" "ec2_access" {
     name        = "request-service-record-ec2-access-policy"
