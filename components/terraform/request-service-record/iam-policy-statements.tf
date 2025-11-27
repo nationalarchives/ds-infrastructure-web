@@ -24,7 +24,7 @@ data "aws_iam_policy_document" "ec2_access" {
 
 data "aws_iam_policy_document" "ses_access" {
     statement {
-        sid = "ses_sendemail"
+        sid = "sesSendEmail"
         actions = [
             "ses:SendEmail",
         ]
