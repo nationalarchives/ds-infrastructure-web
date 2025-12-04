@@ -1,7 +1,7 @@
 {
   "ALLOW_INSECURE": "true",
   "ALLOWED_HOSTS": "*",
-  "CSRF_TRUSTED_ORIGINS": "https://dev-wagtail.nationalarchives.gov.uk",
+  "CSRF_TRUSTED_ORIGINS": "https://dev-www.nationalarchives.gov.uk,https://dev-wagtail.nationalarchives.gov.uk",
   "DATABASE_HOST": "postgres-main-prime.dev.local",
   "DATABASE_NAME": "etna",
   "DJANGO_SETTINGS_MODULE": "config.settings.develop",
