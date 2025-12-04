@@ -34,9 +34,12 @@ variable "asg_health_check_type" {}
 
 variable "deployment_s3_bucket" {}
 variable "folder_s3_key" {}
+variable "foi1939_register_write_policy_arn" {}
 
 variable "asg_tags" {}
 variable "tags" {}
+
+variable "ses_nationalarchives_gov_uk_domain_arn" {}
 
 variable "request_service_record_sg_id" {}
 variable "org_level_logging_arn" {}
