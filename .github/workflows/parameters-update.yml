@@ -1,4 +1,4 @@
-name: Sync JSON Parameters
+name: Update environment variables
 
 on:
   workflow_dispatch:
