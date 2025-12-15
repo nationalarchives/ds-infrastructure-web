@@ -1,11 +1,16 @@
 frontend_patch_group      = "frontend-patchgroup"
 frontend_deployment_group = "frontend-deploygroup"
 
+enable_autoscaling = false
 frontend_asg_max_size                  = 2
 frontend_asg_min_size                  = 1
 frontend_asg_desired_capacity          = 1
 frontend_asg_health_check_grace_period = 150
 frontend_asg_health_check_type         = "EC2"
+frontend_autoscaling_policy_name_prefix = ""  
+frontend_default_cooldown               = 0   
+frontend_scale_in_threshold             = 0  
+frontend_scale_out_threshold            = 0  
 
 
 wagtail_patch_group      = "wagtail-patchgroup"
