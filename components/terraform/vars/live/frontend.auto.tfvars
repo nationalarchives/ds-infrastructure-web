@@ -1,8 +1,6 @@
 frontend_deployment_s3_bucket = "ds-live-deployment-source"
 frontend_folder_s3_key = "web/frontend"
 
-
-
 frontend_efs_mount_dir = "/media"
 frontend_instance_type = "t3a.large"
 

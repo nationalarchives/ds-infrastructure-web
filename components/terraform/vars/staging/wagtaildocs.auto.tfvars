@@ -1,8 +1,6 @@
 wagtaildocs_deployment_s3_bucket = "ds-staging-deployment-source"
 wagtaildocs_folder_s3_key = "web/wagtaildocs"
 
-
-
 wagtaildocs_efs_mount_dir = "/media"
 wagtaildocs_key_name      = "wagtaildocs-staging-eu-west-2"
 wagtaildocs_instance_type = "t3a.small"

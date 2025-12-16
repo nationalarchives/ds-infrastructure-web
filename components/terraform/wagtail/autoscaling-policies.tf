@@ -1,5 +1,3 @@
-variable "wagtail_autoscaling_policy_name_prefix" {}
-
 # Scale In Policy
 resource "aws_autoscaling_policy" "scale_in" {
   count                  = var.enable_autoscaling ? 1 : 0
