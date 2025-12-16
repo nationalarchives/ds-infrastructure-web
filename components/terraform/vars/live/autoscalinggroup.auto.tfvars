@@ -30,6 +30,10 @@ wagtail_asg_min_size                  = 3
 wagtail_asg_desired_capacity          = 3
 wagtail_asg_health_check_grace_period = 150
 wagtail_asg_health_check_type         = "EC2"
+wagtail_autoscaling_policy_name_prefix = "wagtail"
+wagtail_default_cooldown               = 300
+wagtail_scale_in_threshold             = 20
+wagtail_scale_out_threshold            = 80
 
 redis_patch_group      = "redis-patchgroup"
 redis_deployment_group = "redis-deploygroup"

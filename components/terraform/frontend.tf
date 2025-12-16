@@ -36,14 +36,12 @@ module "frontend" {
     enable_autoscaling = var.environment == "live" ? true : false
     autoscaling_policy_name_prefix = var.environment == "live" ? "web-frontend" : ""
 
-    #enable_autoscaling = var.environment == "live" ? true : false
     frontend_autoscaling_policy_name_prefix = var.environment == "live" ? "web-frontend" : ""
     asg_max_size = var.frontend_asg_max_size
     asg_min_size = var.frontend_asg_min_size
     asg_desired_capacity = var.frontend_asg_desired_capacity
     asg_health_check_grace_period = var.frontend_asg_health_check_grace_period
     asg_health_check_type = var.frontend_asg_health_check_type
-    #autoscaling_policy_name_prefix = var.frontend_autoscaling_policy_name_prefix
     default_cooldown = var.frontend_default_cooldown
     scale_in_threshold = var.frontend_scale_in_threshold
     scale_out_threshold = var.frontend_scale_out_threshold
