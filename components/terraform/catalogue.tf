@@ -8,6 +8,10 @@ variable "catalogue_asg_min_size" {}
 variable "catalogue_asg_desired_capacity" {}
 variable "catalogue_asg_health_check_grace_period" {}
 variable "catalogue_asg_health_check_type" {}
+variable "catalogue_autoscaling_policy_name_prefix" {}
+variable "catalogue_default_cooldown" {}
+variable "catalogue_scale_in_threshold" {}
+variable "catalogue_scale_out_threshold" {}
 
 variable "catalogue_auto_switch_off" {}
 variable "catalogue_auto_switch_on" {}
@@ -35,11 +39,17 @@ module "catalogue" {
 
     catalogue_efs_mount_dir = var.catalogue_efs_mount_dir
 
+    enable_autoscaling = var.environment == "live" ? true : false
+    autoscaling_policy_name_prefix = var.environment == "live" ? "catalogue" : ""
+    catalogue_autoscaling_policy_name_prefix = var.environment == "live" ? "catalogue" : ""
     asg_max_size = var.catalogue_asg_max_size
     asg_min_size = var.catalogue_asg_min_size
     asg_desired_capacity = var.catalogue_asg_desired_capacity
     asg_health_check_grace_period = var.catalogue_asg_health_check_grace_period
     asg_health_check_type = var.catalogue_asg_health_check_type
+    default_cooldown = var.catalogue_default_cooldown
+    scale_in_threshold = var.catalogue_scale_in_threshold
+    scale_out_threshold = var.catalogue_scale_out_threshold
 
     instance_type = var.catalogue_instance_type
     key_name = "catalogue-${var.environment}-eu-west-2"

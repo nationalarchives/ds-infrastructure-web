@@ -1,8 +1,8 @@
 # Scale In Policy
 resource "aws_autoscaling_policy" "scale_in" {
   count                  = var.enable_autoscaling ? 1 : 0
-  name                   = "${var.frontend_autoscaling_policy_name_prefix}-scale-in"
-  autoscaling_group_name = aws_autoscaling_group.web_frontend.name
+  name                   = "${var.catalogue_autoscaling_policy_name_prefix}-scale-in"
+  autoscaling_group_name = aws_autoscaling_group.catalogue.name
   adjustment_type        = "ChangeInCapacity"
   scaling_adjustment     = -1
   cooldown               = var.default_cooldown
@@ -11,9 +11,9 @@ resource "aws_autoscaling_policy" "scale_in" {
 # CloudWatch Alarm for Scale In
 resource "aws_cloudwatch_metric_alarm" "scale_in" {
   count                  = var.enable_autoscaling ? 1 : 0
-  alarm_description      = "Scaling in - CPU utilisation < ${var.scale_in_threshold}% - ${var.frontend_autoscaling_policy_name_prefix} ASG"
+  alarm_description      = "Scaling in - CPU utilisation < ${var.scale_in_threshold}% - ${var.catalogue_autoscaling_policy_name_prefix} ASG"
   alarm_actions          = [aws_autoscaling_policy.scale_in[0].arn]
-  alarm_name             = "${var.frontend_autoscaling_policy_name_prefix}-scale-in"
+  alarm_name             = "${var.catalogue_autoscaling_policy_name_prefix}-scale-in"
   comparison_operator    = "LessThanThreshold"
   insufficient_data_actions = []
   threshold              = var.scale_in_threshold
@@ -31,7 +31,7 @@ resource "aws_cloudwatch_metric_alarm" "scale_in" {
     return_data = false
     metric {
       dimensions = {
-        AutoScalingGroupName = aws_autoscaling_group.web_frontend.name
+        AutoScalingGroupName = aws_autoscaling_group.catalogue.name
       }
       metric_name = "CPUUtilization"
       namespace   = "AWS/EC2"
@@ -45,7 +45,7 @@ resource "aws_cloudwatch_metric_alarm" "scale_in" {
     return_data = false
     metric {
       dimensions = {
-        AutoScalingGroupName = aws_autoscaling_group.web_frontend.name
+        AutoScalingGroupName = aws_autoscaling_group.catalogue.name
       }
       metric_name = "GroupMinSize"
       namespace   = "AWS/AutoScaling"
@@ -59,7 +59,7 @@ resource "aws_cloudwatch_metric_alarm" "scale_in" {
     return_data = false
     metric {
       dimensions = {
-        AutoScalingGroupName = aws_autoscaling_group.web_frontend.name
+        AutoScalingGroupName = aws_autoscaling_group.catalogue.name
       }
       metric_name = "GroupInServiceInstances"
       namespace   = "AWS/AutoScaling"
@@ -72,8 +72,8 @@ resource "aws_cloudwatch_metric_alarm" "scale_in" {
 # Scale Out Policy
 resource "aws_autoscaling_policy" "scale_out" {
   count                  = var.enable_autoscaling ? 1 : 0
-  name                   = "${var.frontend_autoscaling_policy_name_prefix}-scale-out"
-  autoscaling_group_name = aws_autoscaling_group.web_frontend.name
+  name                   = "${var.catalogue_autoscaling_policy_name_prefix}-scale-out"
+  autoscaling_group_name = aws_autoscaling_group.catalogue.name
   adjustment_type        = "ChangeInCapacity"
   scaling_adjustment     = 1
   cooldown               = var.default_cooldown
@@ -82,9 +82,9 @@ resource "aws_autoscaling_policy" "scale_out" {
 # CloudWatch Alarm for Scale Out
 resource "aws_cloudwatch_metric_alarm" "scale_out" {
   count                  = var.enable_autoscaling ? 1 : 0
-  alarm_description      = "Scaling out - CPU utilisation >= ${var.scale_out_threshold}% - ${var.frontend_autoscaling_policy_name_prefix} ASG"
+  alarm_description      = "Scaling out - CPU utilisation >= ${var.scale_out_threshold}% - ${var.catalogue_autoscaling_policy_name_prefix} ASG"
   alarm_actions          = [aws_autoscaling_policy.scale_out[0].arn]
-  alarm_name             = "${var.frontend_autoscaling_policy_name_prefix}-scale-out"
+  alarm_name             = "${var.catalogue_autoscaling_policy_name_prefix}-scale-out"
   comparison_operator    = "GreaterThanOrEqualToThreshold"
   insufficient_data_actions = []
   namespace              = "AWS/EC2"
@@ -96,6 +96,6 @@ resource "aws_cloudwatch_metric_alarm" "scale_out" {
   unit                   = "Percent"
 
   dimensions = {
-    AutoScalingGroupName = aws_autoscaling_group.web_frontend.name
+    AutoScalingGroupName = aws_autoscaling_group.catalogue.name
   }
 }

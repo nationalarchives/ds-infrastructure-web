@@ -1,8 +1,6 @@
 enrichment_deployment_s3_bucket = "ds-staging-deployment-source"
 enrichment_folder_s3_key = "web/enrichment"
 
-
-
 enrichment_efs_mount_dir = "/media"
 enrichment_key_name      = "web-enrichment-staging-eu-west-2"
 enrichment_instance_type = "t3a.medium"

@@ -24,6 +24,7 @@ variable "asg_desired_capacity" {}
 variable "asg_health_check_grace_period" {}
 variable "asg_health_check_type" {}
 variable "autoscaling_policy_name_prefix" {}
+variable "frontend_autoscaling_policy_name_prefix" {}
 variable "default_cooldown" {}
 variable "scale_in_threshold" {}
 variable "scale_out_threshold" {}
