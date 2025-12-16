@@ -1,4 +1,4 @@
-request_service_record_deploy = 0
+#request_service_record_deploy = 0
 request_service_record_deployment_s3_bucket = "ds-live-deployment-source"
 request_service_record_folder_s3_key = "web/frontend"
 
