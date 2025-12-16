@@ -8,6 +8,11 @@ variable "wagtail_asg_min_size" {}
 variable "wagtail_asg_desired_capacity" {}
 variable "wagtail_asg_health_check_grace_period" {}
 variable "wagtail_asg_health_check_type" {}
+variable "wagtail_autoscaling_policy_name_prefix" {}
+variable "wagtail_default_cooldown" {}
+variable "wagtail_scale_in_threshold" {}
+variable "wagtail_scale_out_threshold" {}
+#variable "enable_autoscaling" {}
 
 variable "wagtail_auto_switch_off" {}
 variable "wagtail_auto_switch_on" {}
@@ -29,17 +34,24 @@ module "wagtail" {
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
     private_subnet_b_id = data.aws_ssm_parameter.private_subnet_2b_id.value
 
-    wagtail_sg_id = module.sgs.wagtail_sg_id
-
-    efs_dns_name = module.media_efs.media_efs_dns_name
-
-    wagtail_efs_mount_dir = var.wagtail_efs_mount_dir
-
+    enable_autoscaling = var.environment == "live" ? true : false
+    autoscaling_policy_name_prefix = var.environment == "live" ? "wagtail" : ""
+    wagtail_autoscaling_policy_name_prefix = var.environment == "live" ? "wagtail" : ""
     asg_max_size = var.wagtail_asg_max_size
     asg_min_size = var.wagtail_asg_min_size
     asg_desired_capacity = var.wagtail_asg_desired_capacity
     asg_health_check_grace_period = var.wagtail_asg_health_check_grace_period
     asg_health_check_type = var.wagtail_asg_health_check_type
+    default_cooldown = var.wagtail_default_cooldown
+    scale_in_threshold = var.wagtail_scale_in_threshold
+    scale_out_threshold = var.wagtail_scale_out_threshold
+
+
+    wagtail_sg_id = module.sgs.wagtail_sg_id
+
+    efs_dns_name = module.media_efs.media_efs_dns_name
+
+    wagtail_efs_mount_dir = var.wagtail_efs_mount_dir    
 
     instance_type = var.wagtail_instance_type
     key_name = "wagtail-${var.environment}-eu-west-2"
