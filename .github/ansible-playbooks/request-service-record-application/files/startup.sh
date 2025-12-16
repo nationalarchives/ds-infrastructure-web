@@ -61,7 +61,7 @@ for full_name in $PARAM_NAMES; do
         REQUESTSERVICERECORD_APP_IMAGE=$(echo "$docker_json" | jq -r '.["requestservicerecord-application"]')
         TRAEFIK_IMAGE=$(echo "$docker_json" | jq -r '.["traefik"]')
 
-        printf 'DOCKER_IMAGE_ENRICHMENT_APPLICATION="%s"\n' "$ENRICHMENT_APP_IMAGE" >> "$OUTPUT_FILE"
+        printf 'DOCKER_IMAGE_REQUESTSERVICERECORD_APPLICATION="%s"\n' "$REQUESTSERVICERECORD_APP_IMAGE" >> "$OUTPUT_FILE"
         printf 'DOCKER_IMAGE_TRAEFIK="%s"\n' "$TRAEFIK_IMAGE" >> "$OUTPUT_FILE"
         continue
     fi
