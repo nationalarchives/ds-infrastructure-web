@@ -1,3 +1,7 @@
 {
-    "ALLOW_INSECURE": "true"
+    "ALLOW_INSECURE": "true",
+    "CACHE_REDIS_URL": "redis://platform-redis.staging.local:6379",
+    "CACHE_TYPE": "RedisCache",
+    "FORCE_HTTPS": "false",
+    "DATABASE_HOST": "postgres-main-prime.staging.local"
 }
