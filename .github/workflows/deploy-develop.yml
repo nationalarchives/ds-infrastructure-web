@@ -30,6 +30,7 @@ jobs:
           - catalogue
           - search
           - wagtaildocs
+          - requestservicerecord
           
     timeout-minutes: 15
     steps:
