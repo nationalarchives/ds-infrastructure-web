@@ -11,5 +11,5 @@
   "GA4_ID": "GTM-KX8ZWVZG",
   "RUNTIME": "production",
   "SENTRY_DSN": "https://a58136a7220c4a7775d1c10a9a09fbd9@o1230303.ingest.us.sentry.io/4508698817658880",
-  "SITEMAPS": "https://www.nationalarchives.gov.uk/sitemap.xml,https://design-system.nationalarchives.gov.uk/sitemap.xml"
+  "SITEMAPS": "https://www.nationalarchives.gov.uk/sitemap.xml,https://design-system.nationalarchives.gov.uk/sitemap.xml,https://dev-www.nationalarchives.gov.uk/request-a-military-service-record/sitemap.xml"
 }
