@@ -93,7 +93,7 @@
 
   - name: template compose.yml for dev and staging
     vars:
-      sub_domain: "catalogue.{{ account }}.local"
+      sub_domain: "web-catalogue.{{ account }}.local"
     template:
       src: "./templates/compose.yml.j2"
       dest: "./docker/compose.yml"
@@ -103,7 +103,7 @@
 
   - name: template compose.yml for live
     vars:
-      sub_domain: "catalogue.{{ account }}.local"
+      sub_domain: "web-catalogue.{{ account }}.local"
     template:
       src: "./templates/compose.yml.j2"
       dest: "./docker/compose.yml"
@@ -112,7 +112,7 @@
 
   - name: template compose.traefik.yml
     vars:
-      local_domain: "catalogue.{{ account }}.local"
+      local_domain: "web-catalogue.{{ account }}.local"
     template:
       src: "./templates/compose.traefik.yml.j2"
       dest: "./docker/compose.traefik.yml"
