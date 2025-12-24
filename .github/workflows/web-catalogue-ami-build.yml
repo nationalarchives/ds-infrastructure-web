@@ -1,5 +1,5 @@
 ---
-name: Build Catalogue AMI
+name: Build Web Catalogue AMI
 
 on:
   workflow_call:
@@ -113,4 +113,4 @@ jobs:
           s3_deployment_bucket='${{ inputs.s3_deployment_bucket }}' \
           s3_deployment_root='${{ inputs.s3_deployment_root }}'" \
           --private-key $cur_dir/${{ inputs.key_name }} \
-          catalogue-playbook.yml
+          web-catalogue-playbook.yml
