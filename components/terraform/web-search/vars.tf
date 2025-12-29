@@ -30,8 +30,6 @@ variable "tags" {}
 
 variable "efs_dns_name" {}
 
-variable "search_sg_id" {}
+variable "web_search_sg_id" {}
 
-variable "search_efs_mount_dir" {}
-
-
+variable "web_search_efs_mount_dir" {}

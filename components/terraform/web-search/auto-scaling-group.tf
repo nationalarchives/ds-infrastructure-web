@@ -1,8 +1,8 @@
 locals {
-    asg_search_tags = concat(var.asg_tags, [
+    asg_web_search_tags = concat(var.asg_tags, [
         {
             key                 = "Name"
-            value               = "search"
+            value               = "web-search"
         },
         {
             key                 = "AutoSwitchOff"
@@ -31,11 +31,11 @@ locals {
     ])
 }
 
-resource "aws_autoscaling_group" "search" {
-    name = "search"
+resource "aws_autoscaling_group" "web_search" {
+    name = "web-search"
     launch_template {
-        id      = aws_launch_template.search.id
-        version = aws_launch_template.search.latest_version
+        id      = aws_launch_template.web_search.id
+        version = aws_launch_template.web_search.latest_version
     }
 
     vpc_zone_identifier = [
@@ -68,7 +68,7 @@ resource "aws_autoscaling_group" "search" {
     }
 
     dynamic "tag" {
-        for_each = local.asg_search_tags
+        for_each = local.asg_web_search_tags
         content {
             key                 = tag.value["key"]
             value               = tag.value["value"]
@@ -77,23 +77,23 @@ resource "aws_autoscaling_group" "search" {
     }
 }
 
-resource "aws_autoscaling_attachment" "search" {
-    autoscaling_group_name = aws_autoscaling_group.search.id
-    lb_target_group_arn    = aws_lb_target_group.search.arn
+resource "aws_autoscaling_attachment" "web_search" {
+    autoscaling_group_name = aws_autoscaling_group.web_search.id
+    lb_target_group_arn    = aws_lb_target_group.web_search.arn
 }
 
-resource "aws_autoscaling_policy" "search_up_policy" {
-    name                   = "search-up-policy"
+resource "aws_autoscaling_policy" "web_search_up_policy" {
+    name                   = "web-search-up-policy"
     scaling_adjustment     = 1
     adjustment_type        = "ChangeInCapacity"
     cooldown               = 300
-    autoscaling_group_name = aws_autoscaling_group.search.name
+    autoscaling_group_name = aws_autoscaling_group.web_search.name
 }
 
-resource "aws_autoscaling_policy" "search_down_policy" {
-    name                   = "search-down-policy"
+resource "aws_autoscaling_policy" "web_search_down_policy" {
+    name                   = "web-search-down-policy"
     scaling_adjustment     = -1
     adjustment_type        = "ChangeInCapacity"
     cooldown               = 300
-    autoscaling_group_name = aws_autoscaling_group.search.name
+    autoscaling_group_name = aws_autoscaling_group.web_search.name
 }

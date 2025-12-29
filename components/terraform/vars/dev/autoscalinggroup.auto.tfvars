@@ -62,14 +62,14 @@ web_catalogue_scale_in_threshold             = 0
 web_catalogue_scale_out_threshold            = 0
 
 # Search
-search_patch_group      = "search-patchgroup"
-search_deployment_group = "search-deploygroup"
+web_search_patch_group      = "web-search-patchgroup"
+web_search_deployment_group = "web-search-deploygroup"
 
-search_asg_max_size                  = 2
-search_asg_min_size                  = 1
-search_asg_desired_capacity          = 1
-search_asg_health_check_grace_period = 150
-search_asg_health_check_type         = "EC2"
+web_search_asg_max_size                  = 2
+web_search_asg_min_size                  = 1
+web_search_asg_desired_capacity          = 1
+web_search_asg_health_check_grace_period = 150
+web_search_asg_health_check_type         = "EC2"
 
 # Wagtail Docs
 web_wagtaildocs_patch_group      = "web-wagtaildocs-patchgroup"

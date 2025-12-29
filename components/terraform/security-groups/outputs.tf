@@ -23,8 +23,8 @@ output "redis_sg_id" {
 output "request_service_record_sg_id" {
     value = aws_security_group.request_service_record.id
 }
-output "search_sg_id" {
-    value = aws_security_group.search.id
+output "web_search_sg_id" {
+    value = aws_security_group.web_search.id
 }
 output "web_wagtail_sg_id" {
     value = aws_security_group.web_wagtail.id

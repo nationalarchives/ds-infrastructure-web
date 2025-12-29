@@ -137,13 +137,13 @@ data "aws_ami" "web_catalogue_ami" {
 }
 
 
-data "aws_ami" "search_ami" {
+data "aws_ami" "web_search_ami" {
     most_recent = true
 
     filter {
         name   = "name"
         values = [
-            "search-primer*"
+            "web-search-primer*"
         ]
     }
 

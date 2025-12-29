@@ -1,11 +1,11 @@
 # -----------------------------------------------------------------------------
 # Launch Template
 # -----------------------------------------------------------------------------
-resource "aws_launch_template" "search" {
-    name = "search"
+resource "aws_launch_template" "web_search" {
+    name = "web-search"
 
     iam_instance_profile {
-        arn = aws_iam_instance_profile.search_profile.arn
+        arn = aws_iam_instance_profile.web_search_profile.arn
     }
 
     image_id               = var.ami_id
@@ -14,12 +14,12 @@ resource "aws_launch_template" "search" {
     update_default_version = true
 
     vpc_security_group_ids = [
-        var.search_sg_id
+        var.web_search_sg_id
     ]
 
     user_data = base64encode(templatefile("${path.module}/scripts/userdata.sh", {
         mount_target         = var.efs_dns_name,
-        search_efs_mount_dir            = var.search_efs_mount_dir,
+        web_search_efs_mount_dir            = var.web_search_efs_mount_dir,
         deployment_s3_bucket = var.deployment_s3_bucket,
         nginx_folder_s3_key  = var.folder_s3_key
     }))

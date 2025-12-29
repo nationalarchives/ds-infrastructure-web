@@ -9,3 +9,4 @@ variable "media_efs_backup_delete_after" {}
 variable "media_efs_backup_kms_key_arn" {}
 
 variable "tags" {}
+variable "web_wagtail_sg_id" {}

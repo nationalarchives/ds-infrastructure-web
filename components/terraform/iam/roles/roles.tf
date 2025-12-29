@@ -20,8 +20,8 @@ resource "aws_iam_role" "web_catalogue_role" {
 }
 
 # Search Role
-resource "aws_iam_role" "search_role" {
-  name               = "search-assume-role"
+resource "aws_iam_role" "web_search_role" {
+  name               = "web-search-assume-role"
   assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
@@ -176,35 +176,35 @@ resource "aws_iam_role_policy_attachment" "web_catalogue_policy_attachment_7" {
   role       = aws_iam_role.web_catalogue_role.name
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
-
-# Attach Policies to Search Role
-resource "aws_iam_role_policy_attachment" "search_policy_attachment_1" {
-  role       = aws_iam_role.search_role.name
+  
+# Attach Policies to Web Search Role
+resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_1" {
+  role       = aws_iam_role.web_search_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
-resource "aws_iam_role_policy_attachment" "search_policy_attachment_2" {
-  role       = aws_iam_role.search_role.name
+resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_2" {
+  role       = aws_iam_role.web_search_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
-resource "aws_iam_role_policy_attachment" "search_policy_attachment_3" {
-  role       = aws_iam_role.search_role.name
+resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_3" {
+  role       = aws_iam_role.web_search_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-resource "aws_iam_role_policy_attachment" "search_policy_attachment_4" {
-  role       = aws_iam_role.search_role.name
+resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_4" {
+  role       = aws_iam_role.web_search_role.name
   policy_arn = var.org_level_logging_arn
 }
 
-resource "aws_iam_role_policy_attachment" "search_policy_attachment_5" {
-  role       = aws_iam_role.search_role.name
+resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_5" {
+  role       = aws_iam_role.web_search_role.name
   policy_arn = var.deployment_s3_policy
 }
 
-resource "aws_iam_role_policy_attachment" "search_policy_attachment_6" {
-  role       = aws_iam_role.search_role.name
+resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_6" {
+  role       = aws_iam_role.web_search_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
 }
 

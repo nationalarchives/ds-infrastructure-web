@@ -5,6 +5,3 @@ output "media_efs_dns_name" {
 output "media_efs_sg_id" {
     value = aws_security_group.media_efs.id
 }
-
-
-

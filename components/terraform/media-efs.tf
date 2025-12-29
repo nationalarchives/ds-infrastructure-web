@@ -20,6 +20,7 @@ module "media_efs" {
     media_efs_backup_cold_storage_after = var.media_efs_backup_cold_storage_after
     media_efs_backup_delete_after       = var.media_efs_backup_delete_after
     media_efs_backup_kms_key_arn        = var.media_efs_backup_kms_key_arn
+    web_wagtail_sg_id = module.sgs.web_wagtail_sg_id
 
     tags = local.tags
 }

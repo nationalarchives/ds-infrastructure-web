@@ -42,9 +42,9 @@ resource "aws_route53_record" "web-catalogue" {
     ]
 }
 
-resource "aws_route53_record" "search" {
+resource "aws_route53_record" "web_search" {
     zone_id = var.route53_zone
-    name    = "search.${var.environment}.local"
+    name    = "web-search.${var.environment}.local"
     type    = "CNAME"
     ttl     = 15
 
