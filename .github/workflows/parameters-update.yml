@@ -48,10 +48,10 @@ jobs:
 
           declare -A SERVICE_INSTANCES=(
             ["frontend"]="web-frontend"
-            ["wagtail"]="wagtail"
-            ["wagtaildocs"]="wagtaildocs"
+            ["wagtail"]="web-wagtail"
+            ["wagtaildocs"]="web-wagtaildocs"
             ["search"]="search"
-            ["catalogue"]="catalogue"
+            ["catalogue"]="web-catalogue"
             ["enrichment"]="web-enrichment"
             ["requestservicerecord"]="request-service-record"
           )
