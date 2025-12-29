@@ -7,7 +7,7 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network='traefik_webgateway'"
       - "traefik.http.routers.web.entrypoints=web"
-      - "traefik.http.routers.web.rule=Host(`request-service-record.dev.local`) || PathPrefix(`/`)"
+      - "traefik.http.routers.web.rule=Host(`web-rsr.dev.local`) || PathPrefix(`/`)"
       - "traefik.http.middlewares.test-retry.retry.attempts=5"
       - "traefik.http.middlewares.test-retry.retry.initialinterval=200ms"
       - "traefik.http.services.web.loadbalancer.healthCheck.path=/healthcheck/live/"

@@ -1,6 +1,6 @@
-# Request Service Record playbook
+# Web Request Service Record playbook
 ---
-- name: create request service record AMI
+- name: create Web Request Service Record AMI
   hosts: localhost
   gather_facts: false
 
@@ -13,7 +13,7 @@
   - name: switch role credentials
     community.aws.sts_assume_role:
       role_arn: "{{ role_arn }}"
-      role_session_name: "s-devops-request-service-record"
+      role_session_name: "s-devops-web-request-service-record"
     register: assumed_role
 
   - name: get linux 2023 AMI
@@ -38,14 +38,14 @@
 
   - name: create deployment policy
     community.aws.iam_managed_policy:
-      policy_name: "ansible-ami-request-service-record-s3-policy"
+      policy_name: "ansible-ami-web-request-service-record-s3-policy"
       policy: "{{ lookup('file', './instance-role-policy.json') }}"
       state: "present"
     register: s3_policy
 
-  - name: create base request-service-record IAM role
+  - name: create base web-request-service-record IAM role
     community.aws.iam_role:
-      name: "ansible-ami-request-service-record-role"
+      name: "ansible-ami-web-request-service-record-role"
       region: "{{ region }}"
       assume_role_policy_document: "{{ lookup('file', './ec2-role-policy.json') }}"
       managed_policies: ["{{ s3_policy.policy.arn }}", "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM", "arn:aws:iam::aws:policy/SecretsManagerReadWrite"]
@@ -57,7 +57,7 @@
 
   - name: create security group - allowing updates and downloads
     amazon.aws.ec2_security_group:
-      name: "ansible-ami-request-service-record-sg"
+      name: "ansible-ami-web-request-service-record-sg"
       description: "security group allowing updates and downloads"
       region: "{{ region }}"
       vpc_id: "{{ vpc_id }}"
@@ -93,7 +93,7 @@
 
   - name: template compose.yml for dev and staging
     vars:
-      sub_domain: "request-service-record.{{ account }}.local"
+      sub_domain: "web-rsr.{{ account }}.local"
     template:
       src: "./templates/compose.yml.j2"
       dest: "./docker/compose.yml"
@@ -103,7 +103,7 @@
 
   - name: template compose.yml for live
     vars:
-      sub_domain: "request-service-record.{{ account }}.local"
+      sub_domain: "web-rsr.{{ account }}.local"
     template:
       src: "./templates/compose.yml.j2"
       dest: "./docker/compose.yml"
@@ -112,7 +112,7 @@
 
   - name: template compose.traefik.yml
     vars:
-      local_domain: "request-service-record.{{ account }}.local"
+      local_domain: "web-rsr.{{ account }}.local"
     template:
       src: "./templates/compose.traefik.yml.j2"
       dest: "./docker/compose.traefik.yml"
@@ -131,11 +131,11 @@
     amazon.aws.ec2_instance:
       key_name: "{{ key_name }}"
       image_id: "{{ latest_ami.image_id }}"#
-      instance_role: "ansible-ami-request-service-record-role"
+      instance_role: "ansible-ami-web-request-service-record-role"
       instance_type: "{{ instance_type }}"
       metadata_options:
         http_tokens: "required"
-      name : "request-service-record-primer"
+      name : "web-request-service-record-primer"
       network:
         assign_public_ip: yes
         delete_on_termination: yes
@@ -154,9 +154,9 @@
             volume_size: "{{ volume_size }}"
       vpc_subnet_id: "{{ subnet_id }}"
       tags:
-        Name: "request-service-record-primer"
+        Name: "web-request-service-record-primer"
         Environment: "{{ account }}"
-        Service: "request service record"
+        Service: "web request service record"
         Owner: "Digital Services"
         CreatedBy: "ansible"
         CostCentre: 53
@@ -249,14 +249,14 @@
   - name: create AMI
     amazon.aws.ec2_ami:
       instance_id: "{{ instance_id }}"
-      name: "request-service-record-primer-{{ ansible_date_time.date }} {{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}-{{ ansible_date_time.second }}"
-      description: "Request Service Record Instance - ready for deployment"
+      name: "web-request-service-record-primer-{{ ansible_date_time.date }} {{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}-{{ ansible_date_time.second }}"
+      description: "Web Request Service Record Instance - ready for deployment"
       region: "{{ region }}"
       state: "present"
       wait: yes
       tags:
-        Name: "request-service-record-primer-{{ ansible_date_time.date }} {{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}-{{ ansible_date_time.second }}"
-        Service: "Request Service Record"
+        Name: "web-request-service-record-primer-{{ ansible_date_time.date }} {{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}-{{ ansible_date_time.second }}"
+        Service: "Web Request Service Record"
         Owner: "Digital Services"
         CreatedBy: "ansible"
         CostCentre: 53
@@ -270,18 +270,18 @@
 
   - name: remove security group
     amazon.aws.ec2_security_group:
-      name: "ansible-ami-request-service-record-sg"
+      name: "ansible-ami-web-request-service-record-sg"
       state: "absent"
 
   - name: remove IAM role
     community.aws.iam_role:
-      name: "ansible-ami-request-service-record-role"
+      name: "ansible-ami-web-request-service-record-role"
       region: "{{ region }}"
       delete_instance_profile: yes
       state: "absent"
 
   - name: remove deployment policy
     community.aws.iam_managed_policy:
-      policy_name: "ansible-ami-request-service-record-s3-policy"
+      policy_name: "ansible-ami-web-request-service-record-s3-policy"
       state: "absent"
 ...

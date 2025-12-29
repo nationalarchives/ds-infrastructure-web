@@ -1,5 +1,5 @@
 ---
-name: Build Request Service Record AMI
+name: Build Web Request Service Record AMI
 
 on:
   workflow_call:
@@ -112,5 +112,5 @@ jobs:
           s3_deployment_bucket='${{ inputs.s3_deployment_bucket }}' \
           s3_deployment_root='${{ inputs.s3_deployment_root }}'" \
           --private-key $cur_dir/${{ inputs.key_name }} \
-          playbook.yml
+          web-request-service-record-playbook.yml
 ...
