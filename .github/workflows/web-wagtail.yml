@@ -1,5 +1,5 @@
 ---
-name: WebWagtail AMI
+name: Web Wagtail AMI
 run-name: Web Wagtail AMI web-wagtail-primer-(date-time) to ${{ inputs.account }} by @${{ github.actor }}
 
 permissions:
