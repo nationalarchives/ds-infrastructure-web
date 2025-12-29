@@ -14,18 +14,18 @@ web_frontend_scale_in_threshold             = 0
 web_frontend_scale_out_threshold            = 0   
 
 # Wagtail
-wagtail_patch_group      = "wagtail-patchgroup"
-wagtail_deployment_group = "wagtail-deploygroup"
+web_wagtail_patch_group      = "web-wagtail-patchgroup"
+web_wagtail_deployment_group = "web-wagtail-deploygroup"
 
-wagtail_asg_max_size                  = 2
-wagtail_asg_min_size                  = 1
-wagtail_asg_desired_capacity          = 1
-wagtail_asg_health_check_grace_period = 150
-wagtail_asg_health_check_type         = "EC2"
-wagtail_autoscaling_policy_name_prefix = ""  
-wagtail_default_cooldown               = 0   
-wagtail_scale_in_threshold             = 0  
-wagtail_scale_out_threshold            = 0   
+web_wagtail_asg_max_size                  = 2
+web_wagtail_asg_min_size                  = 1
+web_wagtail_asg_desired_capacity          = 1
+web_wagtail_asg_health_check_grace_period = 150
+web_wagtail_asg_health_check_type         = "EC2"
+web_wagtail_autoscaling_policy_name_prefix = ""  
+web_wagtail_default_cooldown               = 0   
+web_wagtail_scale_in_threshold             = 0  
+web_wagtail_scale_out_threshold            = 0   
 
 # Web Enrichment
 web_enrichment_patch_group      = "web-enrichment-patchgroup"

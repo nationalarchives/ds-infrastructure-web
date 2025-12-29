@@ -16,5 +16,5 @@
   "ROSETTA_API_URL": "https://rosetta-dev.k-int.com/rosetta/data",
   "RUNTIME": "production",
   "SENTRY_DSN": "https://3e24f4f474026e113e6dcdeccf2abded@o1230303.ingest.us.sentry.io/4507458864087040",
-  "WAGTAIL_API_URL": "http://wagtail.dev.local/api/v2"
+  "WAGTAIL_API_URL": "http://web-wagtail.dev.local/api/v2"
 }

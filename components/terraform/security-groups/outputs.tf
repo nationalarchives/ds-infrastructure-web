@@ -26,8 +26,8 @@ output "request_service_record_sg_id" {
 output "search_sg_id" {
     value = aws_security_group.search.id
 }
-output "wagtail_sg_id" {
-    value = aws_security_group.wagtail.id
+output "web_wagtail_sg_id" {
+    value = aws_security_group.web_wagtail.id
 }
 output "web_wagtaildocs_sg_id" {
     value = aws_security_group.web_wagtaildocs.id

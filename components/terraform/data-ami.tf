@@ -44,7 +44,7 @@ data "aws_ami" "request_service_record_ami" {
     ]
 }
 
-data "aws_ami" "webwagtail_ami" {
+data "aws_ami" "web_wagtail_ami" {
     most_recent = true
 
     filter {

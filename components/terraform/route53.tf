@@ -20,9 +20,9 @@ resource "aws_route53_record" "web-enrichment" {
     ]
 }
 
-resource "aws_route53_record" "wagtail" {
+resource "aws_route53_record" "web_wagtail" {
     zone_id = var.route53_zone
-    name    = "wagtail.${var.environment}.local"
+    name    = "web-wagtail.${var.environment}.local"
     type    = "CNAME"
     ttl     = 15
 
@@ -53,7 +53,7 @@ resource "aws_route53_record" "search" {
     ]
 }
 
-resource "aws_route53_record" "webwagtaildocs" {
+resource "aws_route53_record" "web_wagtaildocs" {
     zone_id = var.route53_zone
     name    = "web-wagtaildocs.${var.environment}.local"
     type    = "CNAME"
