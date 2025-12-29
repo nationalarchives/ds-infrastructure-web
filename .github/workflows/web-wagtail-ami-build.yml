@@ -1,5 +1,5 @@
 ---
-name: Build Wagtail AMI
+name: Build Web Wagtail AMI
 on:
   workflow_call:
     inputs:
@@ -110,5 +110,5 @@ jobs:
           s3_deployment_bucket='${{ inputs.s3_deployment_bucket }}' \
           s3_deployment_root='${{ inputs.s3_deployment_root }}'" \
           --private-key $cur_dir/${{ inputs.key_name }} \
-          wagtail-playbook.yml
+          web-wagtail-playbook.yml
 ...
