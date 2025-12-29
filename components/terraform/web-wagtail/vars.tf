@@ -21,7 +21,7 @@ variable "asg_min_size" {}
 variable "asg_desired_capacity" {}
 variable "asg_health_check_grace_period" {}
 variable "asg_health_check_type" {}
-variable "wagtail_autoscaling_policy_name_prefix" {}
+variable "web_wagtail_autoscaling_policy_name_prefix" {}
 variable "autoscaling_policy_name_prefix" {}
 variable "default_cooldown" {}
 variable "scale_in_threshold" {}
@@ -33,8 +33,8 @@ variable "folder_s3_key" {}
 
 variable "asg_tags" {}
 variable "tags" {}
-variable "wagtail_sg_id" {}
+variable "web_wagtail_sg_id" {}
 
-variable "wagtail_efs_mount_dir" {}
+variable "web_wagtail_efs_mount_dir" {}
 variable "efs_dns_name" {}
 

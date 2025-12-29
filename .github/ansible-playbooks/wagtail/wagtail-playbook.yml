@@ -1,6 +1,6 @@
 # Wagtail playbook
 ---
-- name: create Wagtail AMI
+- name: create Web Wagtail AMI
   hosts: localhost
   gather_facts: false
 
@@ -13,7 +13,7 @@
   - name: switch role credentials
     community.aws.sts_assume_role:
       role_arn: "{{ role_arn }}"
-      role_session_name: "s-devops-wagtail"
+      role_session_name: "s-devops-web-wagtail"
     register: assumed_role
 
   - name: get linux 2023 AMI
@@ -38,14 +38,14 @@
 
   - name: create deployment policy
     community.aws.iam_managed_policy:
-      policy_name: "ansible-ami-wagtail-s3-policy"
+      policy_name: "ansible-ami-web-wagtail-s3-policy"
       policy: "{{ lookup('file', './instance-role-policy.json') }}"
       state: "present"
     register: s3_policy
 
-  - name: create base wagtail IAM role
+  - name: create base web wagtail IAM role
     community.aws.iam_role:
-      name: "ansible-ami-wagtail-role"
+      name: "ansible-ami-web-wagtail-role"
       region: "{{ region }}"
       assume_role_policy_document: "{{ lookup('file', './ec2-role-policy.json') }}"
       managed_policies: ["{{ s3_policy.policy.arn }}", "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM", "arn:aws:iam::aws:policy/SecretsManagerReadWrite"]
@@ -57,7 +57,7 @@
 
   - name: create security group - allowing updates and downloads
     amazon.aws.ec2_security_group:
-      name: "ansible-ami-wagtail-sg"
+      name: "ansible-ami-web-wagtail-sg"
       description: "security group allowing updates and downloads"
       region: "{{ region }}"
       vpc_id: "{{ vpc_id }}"
@@ -93,7 +93,7 @@
 
   - name: template compose.yml for dev and staging
     vars:
-      sub_domain: "wagtail.{{ account }}.local"
+      sub_domain: "web-wagtail.{{ account }}.local"
     template:
       src: "./templates/compose.yml.j2"
       dest: "./docker/compose.yml"
@@ -103,7 +103,7 @@
 
   - name: template compose.yml for live
     vars:
-      sub_domain: "wagtail.{{ account }}.local"
+      sub_domain: "web-wagtail.{{ account }}.local"
     template:
       src: "./templates/compose.yml.j2"
       dest: "./docker/compose.yml"
@@ -112,7 +112,7 @@
 
   - name: template compose.traefik.yml
     vars:
-      local_domain: "wagtail.{{ account }}.local"
+      local_domain: "web-wagtail.{{ account }}.local"
     template:
       src: "./templates/compose.traefik.yml.j2"
       dest: "./docker/compose.traefik.yml"
@@ -131,11 +131,11 @@
     amazon.aws.ec2_instance:
       key_name: "{{ key_name }}"
       image_id: "{{ latest_ami.image_id }}"
-      instance_role: "ansible-ami-wagtail-role"
+      instance_role: "ansible-ami-web-wagtail-role"
       instance_type: "{{ instance_type }}"
       metadata_options:
         http_tokens: "required"
-      name : "wagtail-primer"
+      name : "web-wagtail-primer"
       network:
         assign_public_ip: yes
         delete_on_termination: yes
@@ -154,7 +154,7 @@
             volume_size: "{{ volume_size }}"
       vpc_subnet_id: "{{ subnet_id }}"
       tags:
-        Name: "wagtail-primer"
+        Name: "web-wagtail-primer"
         Environment: "{{ account }}"
         Service: "Web"
         Owner: "Digital Services"
@@ -249,13 +249,13 @@
   - name: create AMI
     amazon.aws.ec2_ami:
       instance_id: "{{ instance_id }}"
-      name: "wagtail-primer-{{ ansible_date_time.date }} {{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}-{{ ansible_date_time.second }}"
-      description: "Wagtail Instance - ready for deployment"
+      name: "web-wagtail-primer-{{ ansible_date_time.date }} {{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}-{{ ansible_date_time.second }}"
+      description: "Web Wagtail Instance - ready for deployment"
       region: "{{ region }}"
       state: "present"
       wait: yes
       tags:
-        Name: "wagtail-primer-{{ ansible_date_time.date }} {{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}-{{ ansible_date_time.second }}"
+        Name: "web-wagtail-primer-{{ ansible_date_time.date }} {{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}-{{ ansible_date_time.second }}"
         Service: "Web"
         Owner: "Digital Services"
         CreatedBy: "ansible"
@@ -270,18 +270,18 @@
 
   - name: remove security group
     amazon.aws.ec2_security_group:
-      name: "ansible-ami-wagtail-sg"
+      name: "ansible-ami-web-wagtail-sg"
       state: "absent"
 
   - name: remove IAM role
     community.aws.iam_role:
-      name: "ansible-ami-wagtail-role"
+      name: "ansible-ami-web-wagtail-role"
       region: "{{ region }}"
       delete_instance_profile: yes
       state: "absent"
 
   - name: remove deployment policy
     community.aws.iam_managed_policy:
-      policy_name: "ansible-ami-wagtail-s3-policy"
+      policy_name: "ansible-ami-web-wagtail-s3-policy"
       state: "absent"
 ...

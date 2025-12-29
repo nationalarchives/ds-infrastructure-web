@@ -44,13 +44,13 @@ data "aws_ami" "request_service_record_ami" {
     ]
 }
 
-data "aws_ami" "wagtail_ami" {
+data "aws_ami" "webwagtail_ami" {
     most_recent = true
 
     filter {
         name   = "name"
         values = [
-            "wagtail-primer*"
+            "web-wagtail-primer*"
         ]
     }
 

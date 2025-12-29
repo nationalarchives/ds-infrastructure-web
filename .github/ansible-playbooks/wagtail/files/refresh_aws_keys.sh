@@ -7,7 +7,7 @@ TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" \
   -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
 
 # IAM role name
-ROLE_NAME="wagtail-assume-role"
+ROLE_NAME="web-wagtail-assume-role"
 
 CREDS=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" \
   http://169.254.169.254/latest/meta-data/iam/security-credentials/$ROLE_NAME)

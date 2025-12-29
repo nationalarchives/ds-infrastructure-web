@@ -20,7 +20,7 @@ variable "web_catalogue_patch_group" {}
 variable "web_catalogue_deployment_s3_bucket" {}
 variable "web_catalogue_folder_s3_key" {}
 
-module "web-catalogue" {
+module "web_catalogue" {
     source = "./web-catalogue"
 
     ami_id = data.aws_ami.web_catalogue_ami.id

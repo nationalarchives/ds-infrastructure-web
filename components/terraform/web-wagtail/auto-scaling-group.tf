@@ -1,8 +1,8 @@
 locals {
-    asg_wagtail_tags = concat(var.asg_tags, [
+    asg_web_wagtail_tags = concat(var.asg_tags, [
         {
             key                 = "Name"
-            value               = "wagtail"
+            value               = "web-wagtail"
         },
         {
             key                 = "AutoSwitchOff"
@@ -31,11 +31,11 @@ locals {
     ])
 }
 
-resource "aws_autoscaling_group" "wagtail" {
-    name = "wagtail"
+resource "aws_autoscaling_group" "web_wagtail" {
+    name = "web-wagtail"
     launch_template {
-        id      = aws_launch_template.wagtail.id
-        version = aws_launch_template.wagtail.latest_version
+        id      = aws_launch_template.web_wagtail.id
+        version = aws_launch_template.web_wagtail.latest_version
     }
 
     vpc_zone_identifier = [
@@ -68,7 +68,7 @@ resource "aws_autoscaling_group" "wagtail" {
     }
 
     dynamic "tag" {
-        for_each = local.asg_wagtail_tags
+        for_each = local.asg_web_wagtail_tags
         content {
             key                 = tag.value["key"]
             value               = tag.value["value"]
@@ -77,23 +77,23 @@ resource "aws_autoscaling_group" "wagtail" {
     }
 }
 
-resource "aws_autoscaling_attachment" "wagtail" {
-    autoscaling_group_name = aws_autoscaling_group.wagtail.id
-    lb_target_group_arn    = aws_lb_target_group.wagtail.arn
+resource "aws_autoscaling_attachment" "web_wagtail" {
+    autoscaling_group_name = aws_autoscaling_group.web_wagtail.id
+    lb_target_group_arn    = aws_lb_target_group.web_wagtail.arn
 }
 
-resource "aws_autoscaling_policy" "wagtail_up_policy" {
-    name                   = "wagtail-up-policy"
+resource "aws_autoscaling_policy" "web_wagtail_up_policy" {
+    name                   = "web-wagtail-up-policy"
     scaling_adjustment     = 1
     adjustment_type        = "ChangeInCapacity"
     cooldown               = 300
-    autoscaling_group_name = aws_autoscaling_group.wagtail.name
+    autoscaling_group_name = aws_autoscaling_group.web_wagtail.name
 }
 
-resource "aws_autoscaling_policy" "wagtail_down_policy" {
-    name                   = "wagtail-down-policy"
+resource "aws_autoscaling_policy" "web_wagtail_down_policy" {
+    name                   = "web-wagtail-down-policy"
     scaling_adjustment     = -1
     adjustment_type        = "ChangeInCapacity"
     cooldown               = 300
-    autoscaling_group_name = aws_autoscaling_group.wagtail.name
+    autoscaling_group_name = aws_autoscaling_group.web_wagtail.name
 }

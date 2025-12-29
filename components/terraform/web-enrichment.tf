@@ -15,7 +15,7 @@ variable "web_enrichment_patch_group" {}
 variable "web_enrichment_deployment_s3_bucket" {}
 variable "web_enrichment_folder_s3_key" {}
 
-module "web-enrichment" {
+module "web_enrichment" {
     source = "./web-enrichment"
 
     ami_id = data.aws_ami.web_enrichment_ami.id

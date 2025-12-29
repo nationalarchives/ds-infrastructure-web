@@ -8,8 +8,8 @@ resource "aws_iam_role" "web_frontend_role" {
 }
 
 # wagtail Role
-resource "aws_iam_role" "wagtail_role" {
-  name               = "wagtail-assume-role"
+resource "aws_iam_role" "web_wagtail_role" {
+  name               = "web-wagtail-assume-role"
   assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
@@ -208,34 +208,34 @@ resource "aws_iam_role_policy_attachment" "search_policy_attachment_6" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
 }
 
-# Attach Policies to Wagtail Role
-resource "aws_iam_role_policy_attachment" "wagtail_policy_attachment_1" {
-  role       = aws_iam_role.wagtail_role.name
+# Attach Policies to Web Wagtail Role
+resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_1" {
+  role       = aws_iam_role.web_wagtail_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
-resource "aws_iam_role_policy_attachment" "wagtail_policy_attachment_2" {
-  role       = aws_iam_role.wagtail_role.name
+resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_2" {
+  role       = aws_iam_role.web_wagtail_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
-resource "aws_iam_role_policy_attachment" "wagtail_policy_attachment_3" {
-  role       = aws_iam_role.wagtail_role.name
+resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_3" {
+  role       = aws_iam_role.web_wagtail_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-resource "aws_iam_role_policy_attachment" "wagtail_policy_attachment_4" {
-  role       = aws_iam_role.wagtail_role.name
+resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_4" {
+  role       = aws_iam_role.web_wagtail_role.name
   policy_arn = var.org_level_logging_arn
 }
 
-resource "aws_iam_role_policy_attachment" "wagtail_policy_attachment_5" {
-  role       = aws_iam_role.wagtail_role.name
+resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_5" {
+  role       = aws_iam_role.web_wagtail_role.name
   policy_arn = var.deployment_s3_policy
 }
 
-resource "aws_iam_role_policy_attachment" "wagtail_policy_attachment_6" {
-  role       = aws_iam_role.wagtail_role.name
+resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_6" {
+  role       = aws_iam_role.web_wagtail_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
 }
 

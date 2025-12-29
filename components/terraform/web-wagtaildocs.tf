@@ -15,7 +15,7 @@ variable "web_wagtaildocs_patch_group" {}
 variable "web_wagtaildocs_deployment_s3_bucket" {}
 variable "web_wagtaildocs_folder_s3_key" {}
 
-module "web-wagtaildocs" {
+module "web_wagtaildocs" {
     source = "./web-wagtaildocs"
 
     ami_id = data.aws_ami.web_wagtaildocs_ami.id
