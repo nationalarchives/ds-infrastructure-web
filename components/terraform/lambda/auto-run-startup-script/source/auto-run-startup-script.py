@@ -119,9 +119,9 @@ def lambda_handler(event, context):
         "frontend": "web-frontend",
         "enrichment": "web-enrichment",
         "wagtail": "wagtail",
-        "catalogue": "catalogue",
+        "catalogue": "web-catalogue",
         "search":"search",
-        "wagtaildocs":"wagtaildocs",
+        "wagtaildocs":"web-wagtaildocs",
         "requestservicerecord":"request-service-record"
     }
 

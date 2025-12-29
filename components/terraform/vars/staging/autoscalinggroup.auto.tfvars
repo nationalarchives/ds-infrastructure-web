@@ -28,14 +28,14 @@ wagtail_scale_in_threshold             = 0
 wagtail_scale_out_threshold            = 0
 
 # Enrichment
-enrichment_patch_group      = "enrichment-patchgroup"
-enrichment_deployment_group = "enrichment-deploygroup"
+web_enrichment_patch_group      = "web-enrichment-patchgroup"
+web_enrichment_deployment_group = "web-enrichment-deploygroup"
 
-enrichment_asg_max_size                  = 2
-enrichment_asg_min_size                  = 1
-enrichment_asg_desired_capacity          = 1
-enrichment_asg_health_check_grace_period = 150
-enrichment_asg_health_check_type         = "EC2"
+web_enrichment_asg_max_size                  = 2
+web_enrichment_asg_min_size                  = 1
+web_enrichment_asg_desired_capacity          = 1
+web_enrichment_asg_health_check_grace_period = 150
+web_enrichment_asg_health_check_type         = "EC2"
 
 # Redis
 redis_patch_group      = "redis-patchgroup"

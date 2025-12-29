@@ -11,11 +11,11 @@ output "lambda_web_deployment_id" {
 }
 
 
-output "catalogue_sg_id" {
-    value = aws_security_group.catalogue.id
+output "web_catalogue_sg_id" {
+    value = aws_security_group.web_catalogue.id
 }
-output "enrichment_sg_id" {
-    value = aws_security_group.enrichment.id
+output "web_enrichment_sg_id" {
+    value = aws_security_group.web_enrichment.id
 }
 output "redis_sg_id" {
    value = aws_security_group.redis.id
@@ -29,6 +29,6 @@ output "search_sg_id" {
 output "wagtail_sg_id" {
     value = aws_security_group.wagtail.id
 }
-output "wagtaildocs_sg_id" {
-    value = aws_security_group.wagtaildocs.id
+output "web_wagtaildocs_sg_id" {
+    value = aws_security_group.web_wagtaildocs.id
 }

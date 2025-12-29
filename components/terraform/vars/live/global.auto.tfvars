@@ -11,8 +11,8 @@ internal_domain_name = "web-frontend.live.local"
 deployment_s3_bucket  = "ds-live-deployment-source"
 logfile_s3_bucket     = "ds-live-logfiles"
 
-enrichment_deployment_s3_root = "web/enrichment"
-enrichment_logfile_s3_root = "web/enrichment"
+web_enrichment_deployment_s3_root = "web/enrichment"
+web_enrichment_logfile_s3_root = "web/enrichment"
 
 frontend_deployment_s3_root = "web/frontend"
 frontend_logfile_s3_root    = "web/frontend"

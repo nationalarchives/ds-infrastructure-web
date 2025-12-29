@@ -12,8 +12,6 @@ variable "wagtail_autoscaling_policy_name_prefix" {}
 variable "wagtail_default_cooldown" {}
 variable "wagtail_scale_in_threshold" {}
 variable "wagtail_scale_out_threshold" {}
-#variable "enable_autoscaling" {}
-
 variable "wagtail_auto_switch_off" {}
 variable "wagtail_auto_switch_on" {}
 variable "wagtail_deployment_group" {}

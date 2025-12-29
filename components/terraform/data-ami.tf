@@ -1,4 +1,4 @@
-data "aws_ami" "frontend_ami" {
+data "aws_ami" "web_frontend_ami" {
     most_recent = true
 
     filter {
@@ -67,7 +67,7 @@ data "aws_ami" "wagtail_ami" {
     ]
 }
 
-data "aws_ami" "enrichment_ami" {
+data "aws_ami" "web_enrichment_ami" {
     most_recent = true
 
     filter {
@@ -113,13 +113,13 @@ data "aws_ami" "redis_ami" {
     ]
 }
 
-data "aws_ami" "catalogue_ami" {
+data "aws_ami" "web_catalogue_ami" {
     most_recent = true
 
     filter {
         name   = "name"
         values = [
-            "catalogue-primer*"
+            "web-catalogue-primer*"
         ]
     }
 
@@ -160,13 +160,13 @@ data "aws_ami" "search_ami" {
     ]
 }
 
-data "aws_ami" "wagtaildocs_ami" {
+data "aws_ami" "web_wagtaildocs_ami" {
     most_recent = true
 
     filter {
         name   = "name"
         values = [
-            "wagtaildocs-primer*"
+            "web-wagtaildocs-primer*"
         ]
     }
 

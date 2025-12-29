@@ -21,7 +21,7 @@ resource "aws_security_group" "upload_efs" {
     })
 }
 
-resource "aws_security_group_rule" "frontend_efs_ingress" {
+resource "aws_security_group_rule" "web_frontend_efs_ingress" {
     description              = "EFS mount target"
     from_port                = 2049
     protocol                 = "tcp"

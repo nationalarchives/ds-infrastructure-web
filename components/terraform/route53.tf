@@ -31,9 +31,9 @@ resource "aws_route53_record" "wagtail" {
     ]
 }
 
-resource "aws_route53_record" "catalogue" {
+resource "aws_route53_record" "web-catalogue" {
     zone_id = var.route53_zone
-    name    = "catalogue.${var.environment}.local"
+    name    = "web-catalogue.${var.environment}.local"
     type    = "CNAME"
     ttl     = 15
 
@@ -53,9 +53,9 @@ resource "aws_route53_record" "search" {
     ]
 }
 
-resource "aws_route53_record" "wagtaildocs" {
+resource "aws_route53_record" "webwagtaildocs" {
     zone_id = var.route53_zone
-    name    = "wagtaildocs.${var.environment}.local"
+    name    = "web-wagtaildocs.${var.environment}.local"
     type    = "CNAME"
     ttl     = 15
 
