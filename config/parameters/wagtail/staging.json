@@ -13,7 +13,7 @@
   "SENTRY_DSN": "https://9c02a36480da4bcb809476d2d729d8a0@o1230303.ingest.us.sentry.io/6377027",
   "USE_X_FORWARDED_HOST": "true",
   "WAGTAILADMIN_BASE_URL": "https://staging-wagtail.nationalarchives.gov.uk",
-  "WAGTAILAPI_BASE_URL": "http://wagtail.staging.local",
+  "WAGTAILAPI_BASE_URL": "http://web-wagtail.staging.local",
   "WAGTAILAPI_IMAGES_BASE_URL": "https://staging-www.nationalarchives.gov.uk",
   "WAGTAILAPI_MEDIA_BASE_URL": "https://staging-www.nationalarchives.gov.uk",
   "WAGTAIL_HEADLESS_PREVIEW_URL": "https://staging-www.nationalarchives.gov.uk/preview/"

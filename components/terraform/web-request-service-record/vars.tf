@@ -1,5 +1,5 @@
 locals {
-    service_name = "request-service-record"
+    service_name = "web-request-service-record"
 }
 
 variable "account_id" {}
@@ -41,5 +41,5 @@ variable "tags" {}
 
 variable "ses_nationalarchives_gov_uk_domain_arn" {}
 
-variable "request_service_record_sg_id" {}
+variable "web_request_service_record_sg_id" {}
 variable "org_level_logging_arn" {}

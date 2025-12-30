@@ -118,11 +118,11 @@ def lambda_handler(event, context):
     services = {
         "frontend": "web-frontend",
         "enrichment": "web-enrichment",
-        "wagtail": "wagtail",
+        "wagtail": "web-wagtail",
         "catalogue": "web-catalogue",
-        "search":"search",
+        "search":"web-search",
         "wagtaildocs":"web-wagtaildocs",
-        "requestservicerecord":"request-service-record"
+        "requestservicerecord":"web-request-service-record"
     }
 
     if 'service' in event:

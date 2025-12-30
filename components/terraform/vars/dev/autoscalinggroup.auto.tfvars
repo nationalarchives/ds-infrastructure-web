@@ -81,12 +81,12 @@ web_wagtaildocs_asg_desired_capacity          = 1
 web_wagtaildocs_asg_health_check_grace_period = 150
 web_wagtaildocs_asg_health_check_type         = "EC2"
 
-# Request Service Record
-request_service_record_patch_group      = "request-service-record-patchgroup"
-request_service_record_deployment_group = "request-service-record-deploygroup"
+# Web Request Service Record
+web_request_service_record_patch_group      = "web-request-service-record-patchgroup"
+web_request_service_record_deployment_group = "web-request-service-record-deploygroup"
 
-request_service_record_asg_max_size                  = 2
-request_service_record_asg_min_size                  = 1
-request_service_record_asg_desired_capacity          = 1
-request_service_record_asg_health_check_grace_period = 150
-request_service_record_asg_health_check_type         = "EC2"
+web_request_service_record_asg_max_size                  = 2
+web_request_service_record_asg_min_size                  = 1
+web_request_service_record_asg_desired_capacity          = 1
+web_request_service_record_asg_health_check_grace_period = 150
+web_request_service_record_asg_health_check_type         = "EC2"

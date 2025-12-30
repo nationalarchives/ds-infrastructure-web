@@ -1,8 +1,8 @@
 locals {
-    asg_request_service_record_tags = concat(var.asg_tags, [
+    asg_web_request_service_record_tags = concat(var.asg_tags, [
         {
             key                 = "Name"
-            value               = "request-service-record"
+            value               = "web-request-service-record"
         },
         {
             key                 = "AutoSwitchOff"
@@ -31,11 +31,11 @@ locals {
     ])
 }
 
-resource "aws_autoscaling_group" "request_service_record" {
-    name = "request-service-record"
+resource "aws_autoscaling_group" "web_request_service_record" {
+    name = "web-request-service-record"
     launch_template {
-        id      = aws_launch_template.request_service_record.id
-        version = aws_launch_template.request_service_record.latest_version
+        id      = aws_launch_template.web_request_service_record.id
+        version = aws_launch_template.web_request_service_record.latest_version
     }
 
     vpc_zone_identifier = [
@@ -68,7 +68,7 @@ resource "aws_autoscaling_group" "request_service_record" {
     }
 
     dynamic "tag" {
-        for_each = local.asg_request_service_record_tags
+        for_each = local.asg_web_request_service_record_tags
         content {
             key                 = tag.value["key"]
             value               = tag.value["value"]
@@ -77,23 +77,23 @@ resource "aws_autoscaling_group" "request_service_record" {
     }
 }
 
-resource "aws_autoscaling_attachment" "request_service_record" {
-    autoscaling_group_name = aws_autoscaling_group.request_service_record.id
-    lb_target_group_arn    = aws_lb_target_group.request_service_record.arn
+resource "aws_autoscaling_attachment" "web_request_service_record" {
+    autoscaling_group_name = aws_autoscaling_group.web_request_service_record.id
+    lb_target_group_arn    = aws_lb_target_group.web_request_service_record.arn
 }
 
-resource "aws_autoscaling_policy" "request_service_record_up_policy" {
-    name                   = "request-service-record-up-policy"
+resource "aws_autoscaling_policy" "web_request_service_record_up_policy" {
+    name                   = "web-request-service-record-up-policy"
     scaling_adjustment     = 1
     adjustment_type        = "ChangeInCapacity"
     cooldown               = 300
-    autoscaling_group_name = aws_autoscaling_group.request_service_record.name
+    autoscaling_group_name = aws_autoscaling_group.web_request_service_record.name
 }
 
-resource "aws_autoscaling_policy" "request_service_record_down_policy" {
-    name                   = "request-service-record-down-policy"
+resource "aws_autoscaling_policy" "web_request_service_record_down_policy" {
+    name                   = "web-request-service-record-down-policy"
     scaling_adjustment     = -1
     adjustment_type        = "ChangeInCapacity"
     cooldown               = 300
-    autoscaling_group_name = aws_autoscaling_group.request_service_record.name
+    autoscaling_group_name = aws_autoscaling_group.web_request_service_record.name
 }

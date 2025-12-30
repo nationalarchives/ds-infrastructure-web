@@ -21,13 +21,13 @@ data "aws_ami" "web_frontend_ami" {
     ]
 }
 
-data "aws_ami" "request_service_record_ami" {
+data "aws_ami" "web_request_service_record_ami" {
     most_recent = true
 
     filter {
         name   = "name"
         values = [
-            "request-service-record-primer*"
+            "web-request-service-record-primer*"
         ]
     }
 

@@ -1,11 +1,11 @@
 # -----------------------------------------------------------------------------
 # Launch Template
 # -----------------------------------------------------------------------------
-resource "aws_launch_template" "request_service_record" {
-    name = "request-service-record"
+resource "aws_launch_template" "web_request_service_record" {
+    name = "web-request-service-record"
 
     iam_instance_profile {
-        name = aws_iam_instance_profile.request_service_record_profile.name
+        name = aws_iam_instance_profile.web_request_service_record_profile.name
     }
 
     image_id               = var.ami_id
@@ -14,7 +14,7 @@ resource "aws_launch_template" "request_service_record" {
     update_default_version = true
 
     vpc_security_group_ids = [
-        var.request_service_record_sg_id,
+        var.web_request_service_record_sg_id,
     ]
 
     user_data = base64encode(templatefile("${path.module}/scripts/userdata.sh", {

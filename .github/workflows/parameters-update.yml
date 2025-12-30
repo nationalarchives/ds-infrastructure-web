@@ -50,10 +50,10 @@ jobs:
             ["frontend"]="web-frontend"
             ["wagtail"]="web-wagtail"
             ["wagtaildocs"]="web-wagtaildocs"
-            ["search"]="search"
+            ["search"]="web-search"
             ["catalogue"]="web-catalogue"
             ["enrichment"]="web-enrichment"
-            ["requestservicerecord"]="request-service-record"
+            ["requestservicerecord"]="web-request-service-record"
           )
 
           for SERVICE in "${SERVICES[@]}"; do

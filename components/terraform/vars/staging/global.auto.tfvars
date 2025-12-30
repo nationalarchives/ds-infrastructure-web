@@ -12,8 +12,8 @@ deployment_s3_bucket  = "ds-staging-deployment-source"
 logfile_s3_bucket     = "ds-staging-logfiles"
 
 
-frontend_deployment_s3_root = "web/frontend"
-frontend_logfile_s3_root    = "web/frontend"
+web_frontend_deployment_s3_root = "web/frontend"
+web_frontend_logfile_s3_root    = "web/frontend"
 
 web_enrichment_deployment_s3_root = "web/enrichment"
 web_enrichment_logfile_s3_root = "web/enrichment"

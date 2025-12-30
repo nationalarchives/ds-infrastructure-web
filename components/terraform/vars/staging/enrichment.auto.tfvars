@@ -9,4 +9,3 @@ web_enrichment_auto_switch_on   = true
 web_enrichment_auto_switch_off  = true
 
 web_enrichment_root_block_device_size = "100"
-web_enrichment_root_block_device_type = "gp3"

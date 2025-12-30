@@ -63,4 +63,3 @@ resource "aws_route53_record" "web_wagtaildocs" {
         module.load-balancer.load_balancer_dns_name
     ]
 }
-
