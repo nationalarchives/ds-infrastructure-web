@@ -37,7 +37,7 @@
         },
         "requestservicerecord": {
             "image": "ghcr.io/nationalarchives/ds-request-service-record",
-            "version": "25.12.29.463",
+            "version": "25.12.30.464",
             "repo": "https://github.com/nationalarchives/ds-request-service-record"
         },
         "forms": {
