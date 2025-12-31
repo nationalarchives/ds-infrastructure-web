@@ -17,6 +17,8 @@ web_enrichment_logfile_s3_root = "web/enrichment"
 web_frontend_deployment_s3_root = "web/frontend"
 web_frontend_logfile_s3_root    = "web/frontend"
 
+enable_monitoring                 = true
+
 
 on_prem_cidrs = [
     "172.31.2.0/24",

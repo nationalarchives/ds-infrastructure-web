@@ -18,6 +18,7 @@ variable "web_frontend_patch_group" {}
 variable "web_frontend_deployment_s3_bucket" {}
 variable "web_frontend_folder_s3_key" {}
 variable "web_frontend_root_block_device_size" {}
+variable "enable_monitoring" {}
 
 module "web_frontend" {
     source = "./web-frontend"
@@ -60,6 +61,7 @@ module "web_frontend" {
     auto_switch_on = var.web_frontend_auto_switch_on
     deployment_group = var.web_frontend_deployment_group
     patch_group = var.web_frontend_patch_group
+    enable_monitoring = var.enable_monitoring
 
     deployment_s3_bucket = var.web_frontend_deployment_s3_bucket
     folder_s3_key = var.web_frontend_folder_s3_key

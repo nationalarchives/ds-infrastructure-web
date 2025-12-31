@@ -38,6 +38,7 @@ module "web_catalogue" {
     efs_dns_name = module.media_efs.media_efs_dns_name
 
     web_catalogue_efs_mount_dir = var.web_catalogue_efs_mount_dir
+    enable_monitoring = var.enable_monitoring
 
     enable_autoscaling = var.environment == "live" ? true : false
     autoscaling_policy_name_prefix = var.environment == "live" ? "web-catalogue" : ""

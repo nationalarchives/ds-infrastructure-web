@@ -29,6 +29,7 @@ module "web_enrichment" {
     private_subnet_b_id = data.aws_ssm_parameter.private_subnet_2b_id.value
 
     web_enrichment_sg_id = module.sgs.web_enrichment_sg_id
+    enable_monitoring = var.enable_monitoring
 
     asg_max_size = var.web_enrichment_asg_max_size
     asg_min_size = var.web_enrichment_asg_min_size

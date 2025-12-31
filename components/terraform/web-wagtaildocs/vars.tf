@@ -11,6 +11,7 @@ variable "ami_id" {}
 variable "instance_type" {}
 variable "key_name" {}
 variable "root_block_device_size" {}
+variable "enable_monitoring" {}
 
 variable "patch_group" {}
 variable "deployment_group" {}

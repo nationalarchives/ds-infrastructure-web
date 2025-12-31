@@ -31,6 +31,7 @@ module "web_wagtaildocs" {
     web_wagtaildocs_sg_id = module.sgs.web_wagtaildocs_sg_id
 
     efs_dns_name = module.media_efs.media_efs_dns_name
+    enable_monitoring = var.enable_monitoring
 
     web_wagtaildocs_efs_mount_dir = var.web_wagtaildocs_efs_mount_dir
     asg_max_size = var.web_wagtaildocs_asg_max_size

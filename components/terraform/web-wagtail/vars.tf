@@ -15,6 +15,7 @@ variable "patch_group" {}
 variable "deployment_group" {}
 variable "auto_switch_on" {}
 variable "auto_switch_off" {}
+variable "enable_monitoring" {}
 
 variable "asg_max_size" {}
 variable "asg_min_size" {}

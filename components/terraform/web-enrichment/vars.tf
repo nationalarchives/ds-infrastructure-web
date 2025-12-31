@@ -29,3 +29,4 @@ variable "asg_tags" {}
 variable "tags" {}
 
 variable "web_enrichment_sg_id" {}
+variable "enable_monitoring" {}

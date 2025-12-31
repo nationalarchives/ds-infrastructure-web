@@ -43,6 +43,7 @@ module "web_wagtail" {
     default_cooldown = var.web_wagtail_default_cooldown
     scale_in_threshold = var.web_wagtail_scale_in_threshold
     scale_out_threshold = var.web_wagtail_scale_out_threshold
+    enable_monitoring = var.enable_monitoring
 
 
     web_wagtail_sg_id = module.sgs.web_wagtail_sg_id

@@ -5,16 +5,16 @@ output "web_frontend_profile_arn" {
     value = aws_iam_instance_profile.web_frontend_profile.arn
 }
 output "web_request_service_record_role_arn" {
-   value = aws_iam_role.request_service_record_role.arn
+   value = aws_iam_role.web_request_service_record_role.arn
 }
 output "web_request_service_record_role_name" {
-   value = aws_iam_role.request_service_record_role.name
+   value = aws_iam_role.web_request_service_record_role.name
 }
 output "web_request_service_record_profile_name" {
-   value = aws_iam_instance_profile.request_service_record_profile.name
+   value = aws_iam_instance_profile.web_request_service_record_profile.name
 }
 output "web_request_service_record_profile_arn" {
-   value = aws_iam_instance_profile.request_service_record_profile.arn
+   value = aws_iam_instance_profile.web_request_service_record_profile.arn
 }
 
 output "media_efs_backup_arn" {

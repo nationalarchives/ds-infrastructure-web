@@ -31,5 +31,5 @@ variable "tags" {}
 variable "efs_dns_name" {}
 
 variable "web_search_sg_id" {}
-
+variable "enable_monitoring" {}
 variable "web_search_efs_mount_dir" {}

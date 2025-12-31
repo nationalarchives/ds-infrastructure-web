@@ -37,4 +37,8 @@ resource "aws_launch_template" "web_frontend" {
         http_put_response_hop_limit = 1
         instance_metadata_tags      = "enabled"
     }
+    
+    monitoring {
+        enabled = var.enable_monitoring
+    }
 }

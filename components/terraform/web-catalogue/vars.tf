@@ -28,6 +28,7 @@ variable "default_cooldown" {}
 variable "scale_in_threshold" {}
 variable "scale_out_threshold" {}
 variable "enable_autoscaling" {}
+variable "enable_monitoring" {}
 
 variable "deployment_s3_bucket" {}
 variable "folder_s3_key" {}

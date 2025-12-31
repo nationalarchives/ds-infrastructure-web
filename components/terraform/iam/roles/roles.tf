@@ -295,7 +295,9 @@ resource "aws_iam_role_policy_attachment" "web_wagtaildocs_policy_attachment_7" 
     path = "/"
     role = aws_iam_role.web_request_service_record_role.name
   }
-  # Attach Policies to Request Service Record Role
+
+# Attach Policies to Request Service Record Role
+
   resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_1" {
     role       = aws_iam_role.web_request_service_record_role.name
     policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
