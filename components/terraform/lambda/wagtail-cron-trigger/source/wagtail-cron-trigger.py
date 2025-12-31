@@ -5,7 +5,7 @@ def wagtail_cron_trigger(event, context):
     ec2_client = boto3.client('ec2')
     ssm_client = boto3.client('ssm')
     
-    instance_name = 'wagtail'
+    instance_name = 'web-wagtail'
     
     response = ec2_client.describe_instances(
         Filters=[{

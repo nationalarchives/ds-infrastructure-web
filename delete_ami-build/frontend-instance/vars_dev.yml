@@ -1,8 +1,0 @@
----
-key_name: "web-frontend-dev-eu-west-2"
-region: "eu-west-2"
-env: "dev"
-service: "web"
-volume_size: 20
-s3_deployment_bucket: "ds-dev-deployment-source"
-s3_deployment_root: "web"

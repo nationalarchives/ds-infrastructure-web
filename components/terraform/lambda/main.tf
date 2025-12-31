@@ -134,5 +134,3 @@ resource "aws_cloudwatch_log_group" "wagtail_cron_trigger" {
   name              = "/aws/lambda/WagtailCronTrigger"
   retention_in_days = 7
 }
-
-
