@@ -22,7 +22,7 @@
         },
         "enrichment": {
             "image": "ghcr.io/nationalarchives/ds-frontend-enrichment",
-            "version": "25.12.08.59",
+            "version": "26.01.02.60",
             "repo": "https://github.com/nationalarchives/ds-frontend-enrichment"
         },
         "search": {
