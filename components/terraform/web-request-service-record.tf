@@ -25,7 +25,7 @@ module "web-request-service-record" {
 
     lb_listener_arn = module.load-balancer.lb_listener_arn
     x_target_header = "web-request-service-record"
-    host_header = "web-request-service-record.${var.environment}.local"
+    host_header = "web-rsr.${var.environment}.local"
     lb_name = module.load-balancer.load_balancer_dns_name
     route53_zone = var.route53_zone
     c_name = "web-rsr.${var.environment}.local"
