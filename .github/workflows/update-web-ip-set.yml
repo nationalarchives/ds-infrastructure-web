@@ -1,4 +1,5 @@
 name: Update Web IP Set
+
 on:
   workflow_dispatch:
     inputs:
@@ -14,7 +15,7 @@ permissions:
   contents: read
 
 jobs:
-  update-web-ip-set:
+  update-web-ip-sets:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,74 +30,86 @@ jobs:
       - name: Install boto3
         run: pip install boto3
 
-      - name: Update WAF IP Sets for Dev and Staging
+      - name: Update WAF IP Set for Dev
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
+          role-session-name: GitHubActions-Dev
+          audience: sts.amazonaws.com
+          output-env-credentials: true
+
+      - name: Update WAF IP Set for Dev Environment
         run: |
           python3 - <<EOF
           import boto3
 
           new_ip = '${{ github.event.inputs.new_ip }}'.strip()
           old_ip = '${{ github.event.inputs.old_ip }}'.strip()
+          ip_set_id = '058768bc-eb34-41ba-82e8-3a2e0768184b'
 
-          if not new_ip:
-              print("New IP/CIDR is mandatory!")
-              exit(1)
+          waf = boto3.client('wafv2', region_name='us-east-1')
 
-          envs = {
-              'dev': {
-                  'ip_set_id': '058768bc-eb34-41ba-82e8-3a2e0768184b',
-                  'role_arn': 'arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL'
-              },
-              'staging': {
-                  'ip_set_id': 'eb3183da-cb52-4788-8d0d-00bed2675808',
-                  'role_arn': 'arn:aws:iam::337670467269:role/GitHubActionRole'
-              }
-          }
+          resp = waf.get_ip_set(Name='wp-website-access', Scope='CLOUDFRONT', Id=ip_set_id)
+          lock_token = resp['LockToken']
+          addresses = resp['IPSet']['Addresses']
 
-          for env, data in envs.items():
-              print(f"\nProcessing environment: {env}")
-              sts = boto3.client('sts')
-              creds = sts.assume_role(
-                  RoleArn=data['role_arn'],
-                  RoleSessionName=f'GitHubActions-{env}'
-              )['Credentials']
+          if new_ip not in addresses:
+              addresses.append(new_ip)
+              print(f"[Dev] Added new IP: {new_ip}")
+          else:
+              print(f"[Dev] IP {new_ip} already exists")
 
-              session = boto3.session.Session(
-                  aws_access_key_id=creds['AccessKeyId'],
-                  aws_secret_access_key=creds['SecretAccessKey'],
-                  aws_session_token=creds['SessionToken'],
-                  region_name='us-east-1'
-              )
-
-              waf = session.client('wafv2')
-
-              resp = waf.get_ip_set(
-                  Name='wp-website-access',
-                  Scope='CLOUDFRONT',
-                  Id=data['ip_set_id']
-              )
-              lock_token = resp['LockToken']
-              addresses = resp['IPSet']['Addresses']
-
-              if new_ip in addresses:
-                  print(f"[{env}] IP/CIDR {new_ip} already exists.")
+          if old_ip:
+              if old_ip in addresses:
+                  addresses.remove(old_ip)
+                  print(f"[Dev] Removed old IP: {old_ip}")
               else:
-                  addresses.append(new_ip)
-                  print(f"[{env}] IP/CIDR {new_ip} added.")
+                  print(f"[Dev] Old IP {old_ip} not found")
 
-              if old_ip:
-                  if old_ip in addresses:
-                      addresses.remove(old_ip)
-                      print(f"[{env}] Old IP/CIDR {old_ip} removed.")
-                  else:
-                      print(f"[{env}] Old IP/CIDR {old_ip} not found.")
-   
-              waf.update_ip_set(
-                  Name='wp-website-access',
-                  Scope='CLOUDFRONT',
-                  Id=data['ip_set_id'],
-                  Addresses=addresses,
-                  LockToken=lock_token
-              )
+          waf.update_ip_set(Name='wp-website-access', Scope='CLOUDFRONT', Id=ip_set_id,
+                            Addresses=addresses, LockToken=lock_token)
+          print("[Dev] WAF IP set update completed")
+          EOF
 
-              print(f"[{env}] IP set update completed.")
+      - name: Update WAF IP Set for Staging
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::337670467269:role/GitHubActionRole
+          role-session-name: GitHubActions-Staging
+          audience: sts.amazonaws.com
+          output-env-credentials: true
+
+      - name: Update WAF IP Set for Staging Environment
+        run: |
+          python3 - <<EOF
+          import boto3
+
+          new_ip = '${{ github.event.inputs.new_ip }}'.strip()
+          old_ip = '${{ github.event.inputs.old_ip }}'.strip()
+          ip_set_id = 'eb3183da-cb52-4788-8d0d-00bed2675808'
+
+          waf = boto3.client('wafv2', region_name='us-east-1')
+
+          resp = waf.get_ip_set(Name='wp-website-access', Scope='CLOUDFRONT', Id=ip_set_id)
+          lock_token = resp['LockToken']
+          addresses = resp['IPSet']['Addresses']
+
+          if new_ip not in addresses:
+              addresses.append(new_ip)
+              print(f"[Staging] Added new IP: {new_ip}")
+          else:
+              print(f"[Staging] IP {new_ip} already exists")
+
+          if old_ip:
+              if old_ip in addresses:
+                  addresses.remove(old_ip)
+                  print(f"[Staging] Removed old IP: {old_ip}")
+              else:
+                  print(f"[Staging] Old IP {old_ip} not found")
+
+          waf.update_ip_set(Name='wp-website-access', Scope='CLOUDFRONT', Id=ip_set_id,
+                            Addresses=addresses, LockToken=lock_token)
+          print("[Staging] WAF IP set update completed")
           EOF
