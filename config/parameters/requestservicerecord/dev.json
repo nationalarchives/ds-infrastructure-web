@@ -29,5 +29,6 @@
     "DYNAMICS_INBOX": "james.biggs@nationalarchives.gov.uk",
     "EMAIL_FROM": "D365Test42@nationalarchives.gov.uk",
     "GOV_UK_PAY_API_URL": "https://publicapi.payments.service.gov.uk/v1/payments",
-    "PROOF_OF_DEATH_BUCKET_NAME": "ds-dev-foi1939-register"
+    "PROOF_OF_DEATH_BUCKET_NAME": "ds-dev-foi1939-register",
+    "RECORD_COPYING_SERVICE_API_URL": "http://test-services.nationalarchives.web.local/MOD.recordcopyingserviceapi/"
 }
