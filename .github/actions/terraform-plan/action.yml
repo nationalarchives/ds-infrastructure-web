@@ -1,0 +1,33 @@
+name: run terraform
+inputs:
+  account:
+    description: "The account to run the terraform plan for"
+    required: true
+
+outputs:
+  run_status:
+    description: "The status of the terraform plan command"
+    value: ${{ steps.tf_plan.outputs.tf_status }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: copy variables
+      run: |
+        cp ./components/terraform/vars/${{ inputs.account }}/* ./${{ env.working_dir }}/
+      shell: bash
+
+    - name: run terraform
+      id: tf_plan
+      run: |
+        cd ${{ env.working_dir }}
+        terraform init -upgrade
+        set +e
+        terraform plan -detailed-exitcode -input=false
+        tf_error_code=$?
+        echo "tf_status=$tf_error_code" >> $GITHUB_OUTPUT
+        [ $tf_error_code -eq 0 ] && echo "No changes required"
+        [ $tf_error_code -eq 1 ] && echo "Error in code detected"
+        [ $tf_error_code -eq 2 ] && echo "Changes required"
+      shell: bash
+      continue-on-error: true

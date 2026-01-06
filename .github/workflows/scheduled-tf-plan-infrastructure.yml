@@ -1,0 +1,178 @@
+name: TF scheduled plan infrastructure
+
+on:
+  schedule:
+    - cron: '45 5 * * *' # Every day at 05:45 UTC
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  plan-dev:
+    runs-on: ubuntu-latest
+    env:
+      working_dir: components/terraform
+      account: dev
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: get AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-west-2
+          role-to-assume: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
+          role-session-name: MySessionName
+
+      - name: setup runner
+        uses: ./.github/actions/setup-runtime
+
+      - name: Terraform plan
+        id: tf_run
+        with:
+          account: "dev"
+        uses: ./.github/actions/terraform-plan
+
+      - name: get slack credentials
+        uses: aws-actions/aws-secretsmanager-get-secrets@v2
+        with:
+          secret-ids: |
+            ,infrastructure/ds-infrastructure-notifications/slack
+          parse-json-secrets: true
+
+      - name: Slack notification
+        if: ${{ steps.tf_run.outputs.run_status == '1' }}
+        uses: slackapi/slack-github-action@v2.1.0
+        env:
+          tf_run_status: ${{ steps.tf_run.outputs.run_status }}
+        with:
+          method: chat.postMessage
+          token: ${{ env.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ env.SLACK_CHANNEL_ID }}
+            text: "*`${{ github.event.repository.name }}`*\n\n :x: Terraform plan encountered an Error\nAccount: `${{ env.account }}`\nRun ID: `${{ github.run_id }}`\nRun URL: `${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`\n\n*Please check the run logs for more details.*"
+
+      - name: Slack notification
+        if: ${{ steps.tf_run.outputs.run_status == '2' }}
+        uses: slackapi/slack-github-action@v2.1.0
+        env:
+          tf_run_status: ${{ steps.tf_run.outputs.run_status }}
+        with:
+          method: chat.postMessage
+          token: ${{ env.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ env.SLACK_CHANNEL_ID }}
+            text: "*`${{ github.event.repository.name }}`*\n\n :git-requested-changes: Terraform indicates changes to the infrastructure or service\nAccount: `${{ env.account }}`\nRun ID: `${{ github.run_id }}`\nRun URL: `${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`\n\n*Please check the run logs for more details.*"
+
+  plan-staging:
+    runs-on: ubuntu-latest
+    env:
+      working_dir: components/terraform
+      account: staging
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: get AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-west-2
+          role-to-assume: arn:aws:iam::337670467269:role/GitHubActionRole
+          role-session-name: MySessionName
+
+      - name: setup runner
+        uses: ./.github/actions/setup-runtime
+
+      - name: Terraform plan
+        id: tf_run
+        with:
+          account: "staging"
+        uses: ./.github/actions/terraform-plan
+
+      - name: get slack credentials
+        uses: aws-actions/aws-secretsmanager-get-secrets@v2
+        with:
+          secret-ids: |
+            ,infrastructure/ds-infrastructure-notifications/slack
+          parse-json-secrets: true
+
+      - name: Slack notification
+        if: ${{ steps.tf_run.outputs.run_status == '1' }}
+        uses: slackapi/slack-github-action@v2.1.0
+        env:
+          tf_run_status: ${{ steps.tf_run.outputs.run_status }}
+        with:
+          method: chat.postMessage
+          token: ${{ env.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ env.SLACK_CHANNEL_ID }}
+            text: "*`${{ github.event.repository.name }}`*\n\n :x: Terraform plan encountered an Error\nAccount: `${{ env.account }}`\nRun ID: `${{ github.run_id }}`\nRun URL: `${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`\n\n*Please check the run logs for more details.*"
+
+      - name: Slack notification
+        if: ${{ steps.tf_run.outputs.run_status == '2' }}
+        uses: slackapi/slack-github-action@v2.1.0
+        env:
+          tf_run_status: ${{ steps.tf_run.outputs.run_status }}
+        with:
+          method: chat.postMessage
+          token: ${{ env.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ env.SLACK_CHANNEL_ID }}
+            text: "*`${{ github.event.repository.name }}`*\n\n :git-requested-changes: Terraform indicates changes to the infrastructure or service\nAccount: `${{ env.account }}`\nRun ID: `${{ github.run_id }}`\nRun URL: `${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`\n\n*Please check the run logs for more details.*"
+
+  plan-live:
+    runs-on: ubuntu-latest
+    env:
+      working_dir: components/terraform
+      account: live
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: get AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-west-2
+          role-to-assume: arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0
+          role-session-name: MySessionName
+
+      - name: setup runner
+        uses: ./.github/actions/setup-runtime
+
+      - name: Terraform plan
+        id: tf_run
+        with:
+          account: "live"
+        uses: ./.github/actions/terraform-plan
+
+      - name: get slack credentials
+        uses: aws-actions/aws-secretsmanager-get-secrets@v2
+        with:
+          secret-ids: |
+            ,infrastructure/ds-infrastructure-notifications/slack
+          parse-json-secrets: true
+
+      - name: Slack notification
+        if: ${{ steps.tf_run.outputs.run_status == '1' }}
+        uses: slackapi/slack-github-action@v2.1.0
+        env:
+          tf_run_status: ${{ steps.tf_run.outputs.run_status }}
+        with:
+          method: chat.postMessage
+          token: ${{ env.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ env.SLACK_CHANNEL_ID }}
+            text: "*`${{ github.event.repository.name }}`*\n\n :x: Terraform plan encountered an Error\nAccount: `${{ env.account }}`\nRun ID: `${{ github.run_id }}`\nRun URL: `${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`\n\n*Please check the run logs for more details.*"
+
+      - name: Slack notification
+        if: ${{ steps.tf_run.outputs.run_status == '2' }}
+        uses: slackapi/slack-github-action@v2.1.0
+        env:
+          tf_run_status: ${{ steps.tf_run.outputs.run_status }}
+        with:
+          method: chat.postMessage
+          token: ${{ env.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ env.SLACK_CHANNEL_ID }}
+            text: "*`${{ github.event.repository.name }}`*\n\n :git-requested-changes: Terraform indicates changes to the infrastructure or service\nAccount: `${{ env.account }}`\nRun ID: `${{ github.run_id }}`\nRun URL: `${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`\n\n*Please check the run logs for more details.*"
