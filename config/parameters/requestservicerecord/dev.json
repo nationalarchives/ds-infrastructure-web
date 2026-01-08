@@ -26,7 +26,7 @@
     "SENTRY_JS": "https://js.sentry-cdn.com/f736865f0e1fb140b8192082e1bfb5ad.min.js",
     "waf-ip_set": "46.231.163.128/32,",
     "DATABASE_HOST": "postgres-main-prime.dev.local",
-    "DYNAMICS_INBOX": "james.biggs@nationalarchives.gov.uk",
+    "DYNAMICS_INBOX": "FOID365@nationalarchives.gov.uk",
     "EMAIL_FROM": "MODFOIApplication@nationalarchives.gov.uk",
     "GOV_UK_PAY_API_URL": "https://publicapi.payments.service.gov.uk/v1/payments",
     "PROOF_OF_DEATH_BUCKET_NAME": "ds-dev-foi1939-register",
