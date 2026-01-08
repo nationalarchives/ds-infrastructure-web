@@ -18,6 +18,8 @@ web_frontend_deployment_s3_root = "web/frontend"
 web_frontend_logfile_s3_root    = "web/frontend"
 
 enable_monitoring                 = true
+slack_workspace_id = "T09LRLGHY"
+slack_channel_id   = "C0A7BDN600K"
 
 
 on_prem_cidrs = [

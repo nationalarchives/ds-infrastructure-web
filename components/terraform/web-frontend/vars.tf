@@ -30,6 +30,7 @@ variable "scale_in_threshold" {}
 variable "scale_out_threshold" {}
 variable "enable_autoscaling" {}
 variable "enable_monitoring" {}
+variable "asg_notifications_sns_arn" {}
 
 
 variable "deployment_s3_bucket" {}

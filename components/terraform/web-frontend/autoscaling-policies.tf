@@ -12,7 +12,12 @@ resource "aws_autoscaling_policy" "scale_in" {
 resource "aws_cloudwatch_metric_alarm" "scale_in" {
   count                  = var.enable_autoscaling ? 1 : 0
   alarm_description      = "Scaling in - CPU utilisation < ${var.scale_in_threshold}% - ${var.web_frontend_autoscaling_policy_name_prefix} ASG"
-  alarm_actions          = [aws_autoscaling_policy.scale_in[0].arn]
+
+  alarm_actions = compact([
+    aws_autoscaling_policy.scale_in[0].arn,
+    var.asg_notifications_sns_arn != "" ? var.asg_notifications_sns_arn : null
+  ])
+
   alarm_name             = "${var.web_frontend_autoscaling_policy_name_prefix}-scale-in"
   comparison_operator    = "LessThanThreshold"
   insufficient_data_actions = []
@@ -83,7 +88,12 @@ resource "aws_autoscaling_policy" "scale_out" {
 resource "aws_cloudwatch_metric_alarm" "scale_out" {
   count                  = var.enable_autoscaling ? 1 : 0
   alarm_description      = "Scaling out - CPU utilisation >= ${var.scale_out_threshold}% - ${var.web_frontend_autoscaling_policy_name_prefix} ASG"
-  alarm_actions          = [aws_autoscaling_policy.scale_out[0].arn]
+
+  alarm_actions = compact([
+    aws_autoscaling_policy.scale_out[0].arn,
+    var.asg_notifications_sns_arn != "" ? var.asg_notifications_sns_arn : null
+  ])
+  
   alarm_name             = "${var.web_frontend_autoscaling_policy_name_prefix}-scale-out"
   comparison_operator    = "GreaterThanOrEqualToThreshold"
   insufficient_data_actions = []

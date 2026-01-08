@@ -19,6 +19,14 @@ variable "web_wagtail_patch_group" {}
 variable "web_wagtail_deployment_s3_bucket" {}
 variable "web_wagtail_folder_s3_key" {}
 
+# module "notifications" {
+#   source = "./chatbot/web-sns-notifications"
+
+#   environment        = var.environment
+#   slack_workspace_id = var.slack_workspace_id
+#   slack_channel_id   = var.slack_channel_id
+# }
+
 module "web_wagtail" {
     source = "./web-wagtail"
 
@@ -65,4 +73,5 @@ module "web_wagtail" {
 
     asg_tags = local.asg_default_tags
     tags = local.tags
+    asg_notifications_sns_arn = module.notifications.sns_topic_arn
 }

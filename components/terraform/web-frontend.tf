@@ -20,6 +20,14 @@ variable "web_frontend_folder_s3_key" {}
 variable "web_frontend_root_block_device_size" {}
 variable "enable_monitoring" {}
 
+# module "notifications" {
+#   source = "./chatbot/web-sns-notifications"
+
+#   environment        = var.environment
+#   slack_workspace_id = var.slack_workspace_id
+#   slack_channel_id   = var.slack_channel_id
+# }
+
 module "web_frontend" {
     source = "./web-frontend"
 
@@ -68,4 +76,5 @@ module "web_frontend" {
 
     asg_tags = local.asg_default_tags
     tags = local.tags
+    asg_notifications_sns_arn = module.notifications.sns_topic_arn
 }
