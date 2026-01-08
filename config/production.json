@@ -2,32 +2,32 @@
     "services": {
         "frontend": {
             "image": "ghcr.io/nationalarchives/ds-frontend",
-            "version": "26.01.06.1538",
+            "version": "26.01.07.1539",
             "repo": "https://github.com/nationalarchives/ds-frontend"
         },
         "wagtail": {
             "image": "ghcr.io/nationalarchives/ds-wagtail",
-            "version": "26.01.05.1061",
+            "version": "26.01.08.1081",
             "repo": "https://github.com/nationalarchives/ds-wagtail"
         },
         "wagtaildocs": {
             "image": "ghcr.io/nationalarchives/ds-frontend",
-            "version": "26.01.06.1538",
+            "version": "26.01.07.1539",
             "repo": "https://github.com/nationalarchives/ds-frontend"
         },
         "catalogue": {
             "image": "ghcr.io/nationalarchives/ds-catalogue",
-            "version": "26.01.07.1737",
+            "version": "26.01.08.1750",
             "repo": "https://github.com/nationalarchives/ds-catalogue"
         },
         "enrichment": {
             "image": "ghcr.io/nationalarchives/ds-frontend-enrichment",
-            "version": "26.01.06.63",
+            "version": "26.01.07.64",
             "repo": "https://github.com/nationalarchives/ds-frontend-enrichment"
         },
         "search": {
             "image": "ghcr.io/nationalarchives/ds-sitemap-search",
-            "version": "26.01.06.122",
+            "version": "26.01.07.123",
             "repo": "https://github.com/nationalarchives/ds-sitemap-search"
         },
         "feedback": {
@@ -37,12 +37,12 @@
         },
         "requestservicerecord": {
             "image": "ghcr.io/nationalarchives/ds-request-service-record",
-            "version": "26.01.07.511",
+            "version": "26.01.07.512",
             "repo": "https://github.com/nationalarchives/ds-request-service-record"
         },
         "forms": {
             "image": "ghcr.io/nationalarchives/ds-forms",
-            "version": "26.01.06.64",
+            "version": "26.01.07.65",
             "repo": "https://github.com/nationalarchives/ds-forms"
         }
     }
