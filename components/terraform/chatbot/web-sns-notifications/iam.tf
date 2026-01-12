@@ -16,7 +16,6 @@ resource "aws_iam_role" "chatbot_role" {
   })
 }
 
-# Optional: Attach SNS read-only policy
 resource "aws_iam_role_policy_attachment" "chatbot_sns_access" {
   count      = var.environment == "live" ? 1 : 0
   role       = aws_iam_role.chatbot_role[0].name

@@ -20,14 +20,6 @@ variable "web_frontend_folder_s3_key" {}
 variable "web_frontend_root_block_device_size" {}
 variable "enable_monitoring" {}
 
-# module "notifications" {
-#   source = "./chatbot/web-sns-notifications"
-
-#   environment        = var.environment
-#   slack_workspace_id = var.slack_workspace_id
-#   slack_channel_id   = var.slack_channel_id
-# }
-
 module "web_frontend" {
     source = "./web-frontend"
 

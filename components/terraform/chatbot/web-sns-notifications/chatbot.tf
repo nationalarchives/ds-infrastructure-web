@@ -1,10 +1,8 @@
-# SNS Topic for ASG notifications (live environment only)
 resource "aws_sns_topic" "web_asg_notifications" {
   count = var.environment == "live" ? 1 : 0
   name  = "web-asg-notifications-${var.environment}"
 }
 
-# Chatbot Slack configuration
 resource "aws_chatbot_slack_channel_configuration" "web_asg_notifications" {
   count = var.environment == "live" ? 1 : 0
 

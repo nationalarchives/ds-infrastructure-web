@@ -5,7 +5,7 @@ on:
     inputs:
       new_ip:
         description: 'Enter your new IP/CIDR (mandatory, e.g., 203.0.113.5/32 or 10.0.0.0/24)'
-        required: true
+        required: false
       old_ip:
         description: 'Enter old IP/CIDR to delete (optional)'
         required: false
