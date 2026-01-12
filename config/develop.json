@@ -2,7 +2,7 @@
     "services": {
         "frontend": {
             "image": "ghcr.io/nationalarchives/ds-frontend",
-            "version": "26.01.12.1544",
+            "version": "feature-self-signed-ssl",
             "repo": "https://github.com/nationalarchives/ds-frontend"
         },
         "wagtail": {
