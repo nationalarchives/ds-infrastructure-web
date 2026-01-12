@@ -1,4 +1,5 @@
 {
+  "ALLOW_INSECURE": "true",
   "SSL_DOMAIN": "web-frontend.dev.local",
   "CACHE_HEADER_DURATION": "31536000",
   "CACHE_REDIS_URL": "redis://platform-redis.dev.local:6379",
