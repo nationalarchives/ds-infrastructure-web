@@ -15,7 +15,7 @@ permissions:
   contents: read
 
 jobs:
-  update-web-ip-sets:
+  update-beta-ip-sets:
     runs-on: ubuntu-latest
 
     steps:
