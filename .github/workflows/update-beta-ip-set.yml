@@ -1,0 +1,115 @@
+name: Update Beta IP Set
+
+on:
+  workflow_dispatch:
+    inputs:
+      new_ip:
+        description: 'Enter your new IP/CIDR (e.g., 203.0.113.5/32 or 10.0.0.0/24)'
+        required: true
+      old_ip:
+        description: 'Enter old IP/CIDR to delete (optional)'
+        required: false
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  update-web-ip-sets:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install boto3
+        run: pip install boto3
+
+      - name: Update WAF IP Set for Dev
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
+          role-session-name: GitHubActions-Dev
+          audience: sts.amazonaws.com
+          output-env-credentials: true
+
+      - name: Update WAF IP Set for Dev Environment
+        run: |
+          python3 - <<EOF
+          import boto3
+
+          new_ip = '${{ github.event.inputs.new_ip }}'.strip()
+          old_ip = '${{ github.event.inputs.old_ip }}'.strip()
+          ip_set_id = '8c36e883-8d54-452f-84d1-676523699d30'
+
+          waf = boto3.client('wafv2', region_name='us-east-1')
+
+          resp = waf.get_ip_set(Name='beta-access', Scope='CLOUDFRONT', Id=ip_set_id)
+          lock_token = resp['LockToken']
+          addresses = resp['IPSet']['Addresses']
+
+          if new_ip not in addresses:
+              addresses.append(new_ip)
+              print(f"[Dev] Added new IP: {new_ip}")
+          else:
+              print(f"[Dev] IP {new_ip} already exists")
+
+          if old_ip:
+              if old_ip in addresses:
+                  addresses.remove(old_ip)
+                  print(f"[Dev] Removed old IP: {old_ip}")
+              else:
+                  print(f"[Dev] Old IP {old_ip} not found")
+
+          waf.update_ip_set(Name='beta-access', Scope='CLOUDFRONT', Id=ip_set_id,
+                            Addresses=addresses, LockToken=lock_token)
+          print("[Dev] WAF IP set update completed")
+          EOF
+
+      - name: Update WAF IP Set for Staging
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::337670467269:role/GitHubActionRole
+          role-session-name: GitHubActions-Staging
+          audience: sts.amazonaws.com
+          output-env-credentials: true
+
+      - name: Update WAF IP Set for Staging Environment
+        run: |
+          python3 - <<EOF
+          import boto3
+
+          new_ip = '${{ github.event.inputs.new_ip }}'.strip()
+          old_ip = '${{ github.event.inputs.old_ip }}'.strip()
+          ip_set_id = 'bd2a5ce8-8090-42f0-9843-e0c89448cd3e'
+
+          waf = boto3.client('wafv2', region_name='us-east-1')
+
+          resp = waf.get_ip_set(Name='beta-access', Scope='CLOUDFRONT', Id=ip_set_id)
+          lock_token = resp['LockToken']
+          addresses = resp['IPSet']['Addresses']
+
+          if new_ip not in addresses:
+              addresses.append(new_ip)
+              print(f"[Staging] Added new IP: {new_ip}")
+          else:
+              print(f"[Staging] IP {new_ip} already exists")
+
+          if old_ip:
+              if old_ip in addresses:
+                  addresses.remove(old_ip)
+                  print(f"[Staging] Removed old IP: {old_ip}")
+              else:
+                  print(f"[Staging] Old IP {old_ip} not found")
+
+          waf.update_ip_set(Name='beta-access', Scope='CLOUDFRONT', Id=ip_set_id,
+                            Addresses=addresses, LockToken=lock_token)
+          print("[Staging] WAF IP set update completed")
+          EOF
