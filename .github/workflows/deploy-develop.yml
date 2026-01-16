@@ -36,34 +36,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Update SSM parameters
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: eu-west-2
-          role-to-assume: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
-          role-session-name: GitHubActionsSession
-          
-      - name: Update SSM parameters
-        run: |
-          FILE="config/parameters/${{ matrix.service }}/develop.json"
-          PARAM_PATH="/application/web/${{ matrix.service }}"
-
-          if [ ! -f "$FILE" ]; then
-            echo "File $FILE does not exist. Skipping parameter update for ${{ matrix.service }}."
-          else
-            echo "Updating parameters for ${{ matrix.service }}..."
-
-            NEW_JSON=$(cat "$FILE")
-            FORMATTED_JSON=$(echo "$NEW_JSON" | jq '.')
-
-            aws ssm put-parameter \
-              --name "$PARAM_PATH" \
-              --type "String" \
-              --value "$FORMATTED_JSON" \
-              --overwrite
-            echo "Parameters updated for ${{ matrix.service }}!"
-          fi
-
       - name: Deploy service
         uses: ./.github/actions/deploy
         with:
