@@ -1,7 +1,8 @@
 {
-    "ALLOW_INSECURE": "true",
-    "CACHE_REDIS_URL": "redis://platform-redis.live.local:6379",
-    "CACHE_TYPE": "RedisCache",
-    "FORCE_HTTPS": "false",
-    "DATABASE_HOST": "postgres-main-prime.live.local"
+  "ALLOW_INSECURE": "true",
+  "APPLICATION_PROTOCOL": "http",
+  "CACHE_REDIS_URL": "redis://platform-redis.live.local:6379",
+  "CACHE_TYPE": "RedisCache",
+  "FORCE_HTTPS": "false",
+  "DATABASE_HOST": "postgres-main-prime.live.local"
 }

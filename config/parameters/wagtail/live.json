@@ -1,5 +1,6 @@
 {
   "ALLOW_INSECURE": "true",
+  "APPLICATION_PROTOCOL": "http",
   "ALLOWED_HOSTS": "*",
   "CSRF_TRUSTED_ORIGINS": "https://wagtail.nationalarchives.gov.uk",
   "DATABASE_HOST": "postgres-main-prime.live.local",

@@ -1,5 +1,6 @@
 {
   "ALLOW_INSECURE": "true",
+  "APPLICATION_PROTOCOL": "http",
   "CONFIG": "config.Production",
   "COOKIE_DOMAIN": ".nationalarchives.gov.uk",
   "CSP_FONT_SRC": "'self',fonts.gstatic.com,use.typekit.net",

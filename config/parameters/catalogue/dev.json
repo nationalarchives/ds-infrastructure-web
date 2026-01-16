@@ -1,5 +1,6 @@
 {
   "ALLOW_INSECURE": "true",
+  "APPLICATION_PROTOCOL": "http",
   "ALLOWED_HOSTS": "*",
   "COOKIE_DOMAIN": ".nationalarchives.gov.uk",
   "CSP_CONNECT_SRC": "'self',https://*.google-analytics.com,https://www.googletagmanager.com",

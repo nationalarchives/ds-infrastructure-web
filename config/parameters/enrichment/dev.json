@@ -1,5 +1,6 @@
 {
   "ALLOW_INSECURE": "true",
+  "APPLICATION_PROTOCOL": "http",
   "CONFIG": "config.Develop",
   "COOKIE_DOMAIN": ".nationalarchives.gov.uk",
   "ENVIRONMENT_NAME": "production",
