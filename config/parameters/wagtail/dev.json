@@ -9,6 +9,7 @@
   "FORCE_HTTPS": "true",
   "REDIS_URL": "redis://platform-redis.dev.local:6379",
   "RUNTIME": "production",
+  "LOG_LEVEL": "debug",
   "ROSETTA_API_URL": "https://rosetta-dev.k-int.com/rosetta/data",
   "SENTRY_DSN": "https://9c02a36480da4bcb809476d2d729d8a0@o1230303.ingest.us.sentry.io/6377027",
   "USE_X_FORWARDED_HOST": "true",
