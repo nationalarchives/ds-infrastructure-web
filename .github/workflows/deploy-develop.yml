@@ -35,23 +35,6 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy service
-        uses: ./.github/actions/deploy
-        with:
-          config-file: develop.json
-          service-name: ${{ matrix.service }}
-          aws-role: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
-          parameter-path: /application/web/${{ matrix.service }}/docker_images
-          deployed-parameter-path: /application/web/${{ matrix.service }}/deployed_version
-
-  tests:
-    runs-on: ubuntu-latest
-    needs:
-      - deploy
-    env:
-      GH_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN_TEST_RUNNER }}
-    steps:
-      - uses: actions/checkout@v4
 
       - name: Update SSM parameters
         run: |
@@ -73,6 +56,24 @@ jobs:
               --overwrite
             echo "Parameters updated for ${{ matrix.service }}!"
           fi
+          
+      - name: Deploy service
+        uses: ./.github/actions/deploy
+        with:
+          config-file: develop.json
+          service-name: ${{ matrix.service }}
+          aws-role: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
+          parameter-path: /application/web/${{ matrix.service }}/docker_images
+          deployed-parameter-path: /application/web/${{ matrix.service }}/deployed_version
+
+  tests:
+    runs-on: ubuntu-latest
+    needs:
+      - deploy
+    env:
+      GH_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN_TEST_RUNNER }}
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Run tests
         run: |
