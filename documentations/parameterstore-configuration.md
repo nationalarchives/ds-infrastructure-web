@@ -24,13 +24,37 @@ The web enrichment related environment variables are stored under the path:
 /application/web/enrichment
 ```
 
-### 1.3 Wagtail Parameters
+### 1.3 Web Wagtail Parameters
 
 The wagtail related environment variables are stored under the path:
 
 ```bash
 /application/web/wagtail
 ```
+### 1.4 Web Search Parameters
+The web search related environment variables are stored under the path:
+
+```bash 
+/application/web/search
+```
+### 1.5 Web Catalogue Parameters
+The web catalogue related environment variables are stored under the path:
+
+```bash
+/application/web/catalogue
+```
+### 1.6 Web Wagtaildocs Parameters
+The wagtaildocs related environment variables are stored under the path:
+
+```bash
+/application/web/wagtaildocs
+```
+### 1.7 Web Request Service Record Parameters
+The web request service record related environment variables are stored under the path:
+
+```bash
+/application/web/requestservicerecord
+``` 
 
 ## 2. Updating Parameters in AWS Parameter Store
 

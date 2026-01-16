@@ -2,12 +2,12 @@
 | Instance Name           | Purpose                                      | Notes                                                                                        |
 | ----------------------- | -------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | `web-frontend`          | Frontend application                         | Runs container for frontend. Uses **website-reverse-proxy** as its reverse proxy. |
-| `wagtail`               | Wagtail CMS                                  | Mounted **EFS** at `/media`. Handles content management.                                     |
-| `catalogue`             | Catalogue service                            | Handles catalogue API. Reverse proxied via **beta-rp** instance.                             |
-| `search`                | Search service                               | Handles search functionality. Reverse proxied via **beta-rp** instance. (Later changes to website-reverse-proxy)                     |
+| `web-wagtail`               | Wagtail CMS                                  | Mounted **EFS** at `/media`. Handles content management.                                     |
+| `web-catalogue`             | Catalogue service                            | Handles catalogue API. Reverse proxied via **beta-rp** instance.                             |
+| `web-search`                | Search service                               | Handles search functionality. Reverse proxied via **beta-rp** instance. (Later changes to website-reverse-proxy)                     |
 | `website-reverse-proxy` | Reverse proxy for `web-frontend` & `wagtail` | Nginx manages routing to frontend and Wagtail containers.                                  |
 | `beta-rp`               | Reverse proxy for `search` & `catalogue`     | Nginx manages routing for these services.                                         |
-| `wagtaildocs`               | Wagtail Documentation                                  |For content designers to document how to use Wagtail.                                    |
+| `web-wagtaildocs`               | Wagtail Documentation                                  |For content designers to document how to use Wagtail.                                    |
 
 # 2. Deployment Strategy – Blue-Green Deployment
 ### Applications Using Blue-Green Deployment:
@@ -21,6 +21,8 @@
 * catalogue
 
 * wagtaildocs
+
+* request-service-record
 
 ### What is Blue-Green Deployment?
 
@@ -65,6 +67,7 @@ All critical deployment scripts are located in:
    * Catalogue parameters path -> /application/web/catalogue.
    * Search parameters path -> /application/web/search.
    * wagtaildocs parameters path -> /application/web/wagtaildocs.
+   * requestservicerecord parameters path -> /application/web/requestservicerecord
 
 * Installs dependencies (aws-cli, jq).
 
@@ -133,6 +136,10 @@ All applications are deployed and managed via GitHub Actions workflows in the ds
    * catalogue
 
    * search
+
+   * wagtaildocs
+
+   * request-service-record
 
 * Fetches Docker images from Parameter Store (/application/web/<service>/docker_images)
 

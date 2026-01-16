@@ -243,14 +243,11 @@ terraform apply \
 - media-efs.tf: Configures EFS and backups.
 - iam.tf: Defines IAm roles and policies.
 - provider.tf: Configures terraform providers (AWS and klayers).
-- nginx-conf.tf: Configures nginx runtime configurations.
-- reverse-proxy.tf: Configures the reverse proxy service.
-- rp-nginx.tf: Configures nginx for the reverse proxy.
 - security-groups.tf: Defines security groups for network access.
 - wagtail.tf: Configures the wagtail CMS service.
 - global-variables.tf: Defines global variables and tags used across all Terraform modules.
 - waf.tf: Configures AWS WAF (Web Application Firewall) to protect web services from common exploits (SQL injection, XSS, DDoS).
-- reverse-proxy.tf: Configures the NGINX reverse proxy service that routes and filters traffic between CloudFront and backend services (frontend, Wagtail, enrichment).
+- reverse-proxy.tf: Configures the NGINX reverse proxy service that routes and filters traffic between CloudFront and backend services.
 
 **_Best Practices_**
 

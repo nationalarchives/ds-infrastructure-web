@@ -46,7 +46,7 @@ sudo /usr/local/bin/refresh_aws_keys.sh
 (
     sudo crontab -l 2>/dev/null | grep -v '/usr/local/bin/refresh_aws_keys.sh' | grep -v '/usr/local/bin/upload-media-to-s3.sh'
     echo "*/30 * * * * /usr/local/bin/refresh_aws_keys.sh >> /var/log/refresh_aws_keys.log 2>&1"
-    echo "0 15 * * 1 /usr/local/bin/upload-media-to-s3.sh >> /var/log/media_backup.log 2>&1"
+    echo "0 15 * * 2 /usr/local/bin/upload-media-to-s3.sh >> /var/log/media_backup.log 2>&1"
 ) | sudo crontab -
 
 sudo dnf -y update
