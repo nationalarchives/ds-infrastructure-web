@@ -52,6 +52,28 @@ jobs:
       GH_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN_TEST_RUNNER }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Update SSM parameters
+        run: |
+          FILE="config/parameters/${{ matrix.service }}/develop.json"
+          PARAM_PATH="/application/web/${{ matrix.service }}"
+
+          if [ ! -f "$FILE" ]; then
+            echo "File $FILE does not exist. Skipping parameter update for ${{ matrix.service }}."
+          else
+            echo "Updating parameters for ${{ matrix.service }}..."
+
+            NEW_JSON=$(cat "$FILE")
+            FORMATTED_JSON=$(echo "$NEW_JSON" | jq '.')
+
+            aws ssm put-parameter \
+              --name "$PARAM_PATH" \
+              --type "String" \
+              --value "$FORMATTED_JSON" \
+              --overwrite
+            echo "Parameters updated for ${{ matrix.service }}!"
+          fi
+
       - name: Run tests
         run: |
           HOUR=$(date +"%H")
