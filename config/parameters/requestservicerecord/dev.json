@@ -22,6 +22,7 @@
   "GA4_ID": "GTM-KX8ZWVZG",
   "LOG_LEVEL": "debug",
   "SENTRY_DSN": "https://97e0a467ebc6db7db1ed047a36b1d0ec@o1230303.ingest.us.sentry.io/4510186965762048",
+  "SENTRY_SAMPLE_RATE": "1",
   "waf-ip_set": "46.231.163.128/32,",
   "DATABASE_HOST": "postgres-main-prime.dev.local",
   "DYNAMICS_INBOX": "FOID365@nationalarchives.gov.uk",
