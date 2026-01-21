@@ -47,7 +47,7 @@ jobs:
 
       - name: Update SSM parameters for ${{ matrix.service }}
         run: |
-          FILE="config/parameters/${{ matrix.service }}/dev.json"
+          FILE="config/parameters/${{ matrix.service }}/develop.json"
           PARAM_PATH="/application/web/${{ matrix.service }}"
 
           if [ ! -f "$FILE" ]; then

@@ -119,8 +119,40 @@ jobs:
           - catalogue
           - search
           - wagtaildocs
+          - requestservicerecord
     timeout-minutes: 15
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-west-2
+          role-to-assume: arn:aws:iam::337670467269:role/GithubActionRole
+          role-session-name: GitHubActionsSession
+
+      - name: Update SSM parameters for ${{ matrix.service }}
+        run: |
+          FILE="config/parameters/${{ matrix.service }}/staging.json"
+          PARAM_PATH="/application/web/${{ matrix.service }}"
+
+          if [ ! -f "$FILE" ]; then
+            echo "❌ $FILE not found, skipping ${{ matrix.service }}"
+            exit 0
+          fi
+
+          echo "🔄 Updating $PARAM_PATH from $FILE"
+          FORMATTED_JSON=$(jq '.' "$FILE")
+
+          aws ssm put-parameter \
+            --name "$PARAM_PATH" \
+            --type String \
+            --value "$FORMATTED_JSON" \
+            --overwrite
+
+          echo "✅ ${{ matrix.service }} parameters updated"
+
       - uses: actions/checkout@v4
         with:
           ref: v${{ needs.create-release.outputs.version }}
