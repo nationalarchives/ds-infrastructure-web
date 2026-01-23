@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - config/parameters/**
+      - config/parameters/**/develop.json
       - config/develop.json
   workflow_dispatch:
 
