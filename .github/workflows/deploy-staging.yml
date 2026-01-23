@@ -28,7 +28,7 @@ jobs:
     outputs:
       version-summary: ${{ steps.build-comparison.outputs.VERSION_SUMMARY }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Compare to production
         id: build-comparison
         run: |
@@ -64,7 +64,7 @@ jobs:
     outputs:
       version: ${{ steps.version-tag.outputs.VERSION }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - id: version-tag
         name: Create release version
         run: |
@@ -123,7 +123,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -153,7 +153,7 @@ jobs:
 
           echo "✅ ${{ matrix.service }} parameters updated"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: v${{ needs.create-release.outputs.version }}
       - name: Deploy service
@@ -204,7 +204,7 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN_TEST_RUNNER }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Run tests
         run: |
           gh workflow run run.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://staging-www.nationalarchives.gov.uk --raw-field exclude-tests=@wip --raw-field notify-slack-on-pass=${{ inputs.notify-slack }} --raw-field notify-slack-on-fail=${{ inputs.notify-slack }} --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"

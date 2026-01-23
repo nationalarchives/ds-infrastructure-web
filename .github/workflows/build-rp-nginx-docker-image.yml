@@ -24,7 +24,7 @@ jobs:
           prep_image_id=$(echo "ghcr.io/${{ github.repository_owner }}/web-rp-nginx" | tr '[A-Z]' '[a-z]')
           echo "image_id=$prep_image_id" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: log in to registry
         run: echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io --username ${{ github.actor }} --password-stdin

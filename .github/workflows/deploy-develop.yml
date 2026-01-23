@@ -36,7 +36,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -67,7 +67,7 @@ jobs:
           echo "✅ ${{ matrix.service }} parameters updated"
 
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Deploy service
         uses: ./.github/actions/deploy
@@ -85,7 +85,7 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN_TEST_RUNNER }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Run tests
         run: |

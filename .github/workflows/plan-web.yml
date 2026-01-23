@@ -48,7 +48,7 @@ jobs:
               architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
 
           - name: Checkout
-            uses: actions/checkout@v4
+            uses: actions/checkout@v6
             with:
               ref: ${{ env.branch }}
 

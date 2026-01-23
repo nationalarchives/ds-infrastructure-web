@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref_name != 'main'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Get environment name
         id: get-environment
         run: echo "ENVIRONMENT=$(echo "${{ github.ref_name }}" | sed -e 's,/,-,g')" >> "$GITHUB_OUTPUT"
@@ -39,7 +39,7 @@ jobs:
     needs:
       - env-name
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Read the config file
         run: cat "config/${{ inputs.config }}"

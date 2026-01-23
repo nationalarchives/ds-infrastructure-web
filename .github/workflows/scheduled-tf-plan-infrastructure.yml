@@ -16,7 +16,7 @@ jobs:
       account: dev
     timeout-minutes: 3
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: get AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -72,7 +72,7 @@ jobs:
       account: staging
     timeout-minutes: 3
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: get AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -128,7 +128,7 @@ jobs:
       account: live
     timeout-minutes: 3
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: get AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
