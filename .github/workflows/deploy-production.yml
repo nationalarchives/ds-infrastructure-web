@@ -165,6 +165,6 @@ jobs:
           ref: ${{ needs.prepare.outputs.commit-sha }}
       - name: Run tests
         run: |
-          gh workflow run run.yml --repo nationalarchives/ds-tna-website-tests --raw-field domain=https://www.nationalarchives.gov.uk --raw-field exclude-tests=@wip --raw-field notify-slack-on-pass=true --raw-field notify-slack-on-fail=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
+          gh workflow run run.yml --repo nationalarchives/ds-tna-website-tests --field site=all --field environment=production --raw-field exclude-tests=@wip --field notify-slack-on-pass=true --field notify-slack-on-fail=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
           sleep 5
           gh run watch --exit-status --repo nationalarchives/ds-tna-website-tests $(gh run list --repo nationalarchives/ds-tna-website-tests --workflow run.yml -L1 --json databaseId --jq .[0].databaseId)
