@@ -207,6 +207,6 @@ jobs:
       - uses: actions/checkout@v6
       - name: Run tests
         run: |
-          gh workflow run run.yml --repo nationalarchives/ds-tna-website-tests --field site=all --field environment=staging --raw-field exclude-tests=@wip --field notify-slack-on-pass=${{ inputs.notify-slack }} --field notify-slack-on-fail=${{ inputs.notify-slack }} --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
+          gh workflow run run.yml --repo nationalarchives/ds-tna-website-tests --ref beta-site-tests --field site=all --field environment=staging --raw-field exclude-tests=@wip --field notify-slack-on-pass=${{ inputs.notify-slack }} --field notify-slack-on-fail=${{ inputs.notify-slack }} --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
           sleep 5
           gh run watch --exit-status --repo nationalarchives/ds-tna-website-tests $(gh run list --repo nationalarchives/ds-tna-website-tests --workflow run.yml -L1 --json databaseId --jq .[0].databaseId)
