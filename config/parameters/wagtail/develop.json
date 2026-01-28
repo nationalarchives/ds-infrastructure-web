@@ -7,9 +7,7 @@
   "DATABASE_NAME": "etna",
   "DJANGO_SETTINGS_MODULE": "config.settings.develop",
   "ENVIRONMENT_NAME": "develop",
-  "FORCE_HTTPS": "true",
   "REDIS_URL": "redis://platform-redis.dev.local:6379",
-  "RUNTIME": "production",
   "LOG_LEVEL": "debug",
   "ROSETTA_API_URL": "https://rosetta-dev.k-int.com/rosetta/data",
   "SENTRY_DSN": "https://9c02a36480da4bcb809476d2d729d8a0@o1230303.ingest.us.sentry.io/6377027",
@@ -17,5 +15,6 @@
   "WAGTAILADMIN_BASE_URL": "https://dev-wagtail.nationalarchives.gov.uk",
   "WAGTAILAPI_BASE_URL": "http://web-wagtail.dev.local",
   "WAGTAILAPI_IMAGES_BASE_URL": "https://dev-www.nationalarchives.gov.uk",
-  "WAGTAILAPI_MEDIA_BASE_URL": "https://dev-www.nationalarchives.gov.uk"
+  "WAGTAILAPI_MEDIA_BASE_URL": "https://dev-www.nationalarchives.gov.uk",
+  "WAGTAIL_2FA_REQUIRED": "false"
 }

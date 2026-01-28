@@ -7,14 +7,13 @@
   "DATABASE_NAME": "etna",
   "DJANGO_SETTINGS_MODULE": "config.settings.staging",
   "ENVIRONMENT_NAME": "staging",
-  "FORCE_HTTPS": "true",
   "REDIS_URL": "redis://platform-redis.staging.local:6379",
   "ROSETTA_API_URL": "https://rosetta-prod.k-int.com/rosetta/data",
-  "RUNTIME": "production",
   "SENTRY_DSN": "https://9c02a36480da4bcb809476d2d729d8a0@o1230303.ingest.us.sentry.io/6377027",
   "USE_X_FORWARDED_HOST": "true",
   "WAGTAILADMIN_BASE_URL": "https://staging-wagtail.nationalarchives.gov.uk",
   "WAGTAILAPI_BASE_URL": "http://web-wagtail.staging.local",
   "WAGTAILAPI_IMAGES_BASE_URL": "https://staging-www.nationalarchives.gov.uk",
-  "WAGTAILAPI_MEDIA_BASE_URL": "https://staging-www.nationalarchives.gov.uk"
+  "WAGTAILAPI_MEDIA_BASE_URL": "https://staging-www.nationalarchives.gov.uk",
+  "WAGTAIL_2FA_REQUIRED": "false"
 }
