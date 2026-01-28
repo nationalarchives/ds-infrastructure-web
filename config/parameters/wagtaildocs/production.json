@@ -19,7 +19,6 @@
   "FORCE_HTTPS": "false",
   "GA4_ID": "GTM-T8DSWV",
   "LOG_LEVEL": "debug",
-  "RUNTIME": "production",
   "SENTRY_DSN": "https://cd29dbbbe0df9acf5c001eb0da230525@o1230303.ingest.us.sentry.io/4507423798853632",
   "SENTRY_JS": "https://js.sentry-cdn.com/f736865f0e1fb140b8192082e1bfb5ad.min.js",
   "WAGTAIL_API_URL": "http://web-wagtail.live.local/api/v2",

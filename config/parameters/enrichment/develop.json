@@ -4,6 +4,5 @@
   "CONFIG": "config.Develop",
   "COOKIE_DOMAIN": ".nationalarchives.gov.uk",
   "ENVIRONMENT_NAME": "production",
-  "RUNTIME": "production",
   "SENTRY_DSN": "https://b468f9d9642b5e84c40007ac377c3b1f@o1230303.ingest.us.sentry.io/4509044214071296"
 }
