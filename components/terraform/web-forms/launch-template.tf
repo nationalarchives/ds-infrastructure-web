@@ -1,11 +1,11 @@
 # -----------------------------------------------------------------------------
 # Launch Template
 # -----------------------------------------------------------------------------
-resource "aws_launch_template" "web_wagtail" {
-    name = "web-wagtail"
+resource "aws_launch_template" "web_forms" {
+    name = "web-forms"
 
     iam_instance_profile {
-        arn = aws_iam_instance_profile.web_wagtail_profile.arn
+        arn = aws_iam_instance_profile.web_forms_profile.arn
     }
 
     image_id               = var.ami_id
@@ -14,12 +14,12 @@ resource "aws_launch_template" "web_wagtail" {
     update_default_version = true
 
     vpc_security_group_ids = [
-        var.web_wagtail_sg_id
+        var.web_forms_sg_id
     ]
 
     user_data = base64encode(templatefile("${path.module}/scripts/userdata.sh", {
         mount_target         = var.efs_dns_name,
-        web_wagtail_efs_mount_dir            = var.web_wagtail_efs_mount_dir,
+        web_forms_efs_mount_dir            = var.web_forms_efs_mount_dir,
         deployment_s3_bucket = var.deployment_s3_bucket,
         nginx_folder_s3_key  = var.folder_s3_key
     }))
@@ -36,7 +36,7 @@ resource "aws_launch_template" "web_wagtail" {
     metadata_options {
         http_endpoint               = "enabled"
         http_tokens                 = "required"
-        http_put_response_hop_limit = 2
+        http_put_response_hop_limit = 1
         instance_metadata_tags      = "enabled"
     }
     monitoring {

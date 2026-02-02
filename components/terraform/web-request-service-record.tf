@@ -6,6 +6,9 @@ variable "web_request_service_record_asg_min_size" {}
 variable "web_request_service_record_asg_desired_capacity" {}
 variable "web_request_service_record_asg_health_check_grace_period" {}
 variable "web_request_service_record_asg_health_check_type" {}
+variable "web_request_service_record_default_cooldown" {}
+variable "web_request_service_record_scale_in_threshold" {}
+variable "web_request_service_record_scale_out_threshold" {}
 
 variable "web_request_service_record_auto_switch_off" {}
 variable "web_request_service_record_auto_switch_on" {}
@@ -14,7 +17,6 @@ variable "web_request_service_record_patch_group" {}
 variable "web_request_service_record_deployment_s3_bucket" {}
 variable "web_request_service_record_folder_s3_key" {}
 variable "web_request_service_record_deploy"{}
-
 
 module "web-request-service-record" {
     count = var.web_request_service_record_deploy
@@ -37,6 +39,14 @@ module "web-request-service-record" {
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
     private_subnet_b_id = data.aws_ssm_parameter.private_subnet_2b_id.value
     enable_monitoring = var.enable_monitoring
+
+    enable_autoscaling = var.environment == "live" ? true : false
+    autoscaling_policy_name_prefix = var.environment == "live" ? "web-request-service-record" : ""
+    web_request_service_record_autoscaling_policy_name_prefix = var.environment == "live" ? "web-request-service-record" : ""
+    default_cooldown = var.web_request_service_record_default_cooldown
+    scale_in_threshold = var.web_request_service_record_scale_in_threshold
+    scale_out_threshold = var.web_request_service_record_scale_out_threshold
+    
 
     asg_max_size = var.web_request_service_record_asg_max_size
     asg_min_size = var.web_request_service_record_asg_min_size
@@ -61,4 +71,5 @@ module "web-request-service-record" {
 
     asg_tags = local.asg_default_tags
     tags = local.tags
+    asg_notifications_sns_arn = module.notifications.sns_topic_arn
 }
