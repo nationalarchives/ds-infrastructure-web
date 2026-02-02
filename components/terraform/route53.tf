@@ -63,3 +63,14 @@ resource "aws_route53_record" "web_wagtaildocs" {
         module.load-balancer.load_balancer_dns_name
     ]
 }
+
+# resource "aws_route53_record" "web_forms" {
+#     zone_id = var.route53_zone
+#     name    = "web-forms.${var.environment}.local"
+#     type    = "CNAME"
+#     ttl     = 15
+
+#     records = [
+#         module.load-balancer.load_balancer_dns_name
+#     ]
+# }

@@ -1,17 +1,6 @@
-locals {
-    service_name = "web-request-service-record"
-}
-
-variable "account_id" {}
-
 variable "lb_listener_arn" {}
 variable "x_target_header" {}
 variable "host_header" {}
-
-variable "lb_name" {}
-variable "route53_zone" {}
-variable "c_name" {}
-variable "enable_monitoring" {}
 
 variable "vpc_id" {}
 variable "private_subnet_a_id" {}
@@ -26,27 +15,24 @@ variable "patch_group" {}
 variable "deployment_group" {}
 variable "auto_switch_on" {}
 variable "auto_switch_off" {}
-variable "default_cooldown" {}
-variable "web_request_service_record_autoscaling_policy_name_prefix" {}
-variable "autoscaling_policy_name_prefix" {}
+
 variable "asg_max_size" {}
 variable "asg_min_size" {}
 variable "asg_desired_capacity" {}
 variable "asg_health_check_grace_period" {}
 variable "asg_health_check_type" {}
-variable "scale_in_threshold" {}
-variable "scale_out_threshold" {}
-variable "enable_autoscaling" {}
-variable "asg_notifications_sns_arn" {}
 
 variable "deployment_s3_bucket" {}
 variable "folder_s3_key" {}
-variable "foi1939_register_write_policy_arn" {}
 
 variable "asg_tags" {}
 variable "tags" {}
 
-variable "ses_nationalarchives_gov_uk_domain_arn" {}
+variable "efs_dns_name" {}
 
-variable "web_request_service_record_sg_id" {}
-variable "org_level_logging_arn" {}
+variable "web_search_sg_id" {}
+variable "enable_monitoring" {}
+variable "web_search_efs_mount_dir" {}
+
+variable "web_forms_sg_id" {}
+variable "web_forms_efs_mount_dir" {}

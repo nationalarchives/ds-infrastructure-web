@@ -90,3 +90,7 @@ web_request_service_record_asg_min_size                  = 1
 web_request_service_record_asg_desired_capacity          = 1
 web_request_service_record_asg_health_check_grace_period = 150
 web_request_service_record_asg_health_check_type         = "EC2"
+web_request_service_record_autoscaling_policy_name_prefix = "web-request-service-record"
+web_request_service_record_default_cooldown               = 300
+web_request_service_record_scale_in_threshold             = 20
+web_request_service_record_scale_out_threshold            = 80
