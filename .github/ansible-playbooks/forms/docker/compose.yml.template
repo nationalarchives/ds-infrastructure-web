@@ -1,0 +1,26 @@
+services:
+  blue-web: &forms
+    container_name: blue-web
+    env_file: /var/docker/forms.env
+    image: "ghcr.io/nationalarchives/ds-forms:26.01.23.73"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network='traefik_webgateway'"
+      - "traefik.http.routers.web.entrypoints=web"
+      - "traefik.http.routers.web.rule=Host(`web-forms.dev.local`) || PathPrefix(`/`)"
+      - "traefik.http.middlewares.test-retry.retry.attempts=5"
+      - "traefik.http.middlewares.test-retry.retry.initialinterval=200ms"
+      - "traefik.http.services.web.loadbalancer.healthCheck.path=/healthcheck/live/"
+      - "traefik.http.services.web.loadbalancer.healthCheck.interval=10s"
+      - "traefik.http.services.web.loadbalancer.healthCheck.timeout=1s"
+    restart: "always"
+    networks:
+      - traefik
+  green-web:
+    !!merge <<: *forms
+    container_name: green-web
+networks:
+  traefik:
+    name: traefik_webgateway
+    external: true
+    
