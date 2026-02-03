@@ -18,5 +18,8 @@
   "SENTRY_DSN": "https://3e24f4f474026e113e6dcdeccf2abded@o1230303.ingest.us.sentry.io/4507458864087040",
   "WAGTAIL_API_URL": "http://web-wagtail.dev.local/api/v2",
   "ENABLE_PARALLEL_API_CALLS": "true",
-  "ENRICHMENT_TIMING_ENABLED": "true"
+  "ENRICHMENT_TIMING_ENABLED": "true",
+  "ROSETTA_ENRICHMENT_API_TIMEOUT": 5,
+  "WAGTAIL_API_TIMEOUT": 5,
+  "DELIVERY_OPTIONS_API_TIMEOUT": 5
 }
