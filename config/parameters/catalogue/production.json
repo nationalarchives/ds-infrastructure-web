@@ -8,7 +8,7 @@
   "CSP_IMG_SRC": "'self',https://www.nationalarchives.gov.uk,https://www.googletagmanager.com",
   "CSP_SCRIPT_SRC": "'self' https://www.googletagmanager.com",
   "CSP_STYLE_SRC": "'self',https://fonts.googleapis.com,https://p.typekit.net,https://use.typekit.net",
-  "DCS_PREFIXES": "LEV",
+  "DCS_PREFIXES": "HO 616,AB 41,J 14,HO 397,ILB 2,LEV 1,GTI 2,GTI 102,ICSA 1,ICSA 2,ICSA 3,ICSA 4,ICSA 5,ICSA 6,ICSA 7,ES 38",
   "DELIVERY_OPTIONS_API_URL": "http://ds-api.live.local/delivery-options-api/api/DeliveryOptions",
   "DJANGO_SETTINGS_MODULE": "config.settings.production",
   "ENVIRONMENT_NAME": "production",
