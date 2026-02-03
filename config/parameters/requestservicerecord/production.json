@@ -17,6 +17,7 @@
   "CSP_SCRIPT_SRC": "'self',https://www.googletagmanager.com,https://*.sentry-cdn.com,https://www.youtube.com",
   "CSP_STYLE_SRC": "'self',https://fonts.googleapis.com,https://p.typekit.net,https://use.typekit.net",
   "CSP_WORKER_SRC": "'self',blob:,www.nationalarchives.gov.uk",
+  "CSP_REPORT_URL": "https://o1230303.ingest.us.sentry.io/api/4510186965762048/security/?sentry_key=97e0a467ebc6db7db1ed047a36b1d0ec",
   "ENVIRONMENT_NAME": "production",
   "FORCE_HTTPS": "false",
   "GA4_ID": "GTM-T8DSWV",
