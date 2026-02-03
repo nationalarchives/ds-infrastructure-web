@@ -41,10 +41,10 @@ resource "aws_iam_role" "web_wagtaildocs_role" {
 }
 
 # Forms Role
-# resource "aws_iam_role" "web_forms_role" {
-#   name               = "web-forms-assume-role"
-#   assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
-# }
+resource "aws_iam_role" "web_forms_role" {
+  name               = "web-forms-assume-role"
+  assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
+}
 
 # Request Service Record Role - MoD FoI
 resource "aws_iam_role" "web_request_service_record_role" {
@@ -111,11 +111,11 @@ resource "aws_iam_instance_profile" "web_wagtail_profile" {
 }
 
 ## Instance Profile for Forms Role
-# resource "aws_iam_instance_profile" "web_forms_profile" {
-#   name = "web-forms-profile"
-#   path = "/"
-#   role = aws_iam_role.web_forms_role.name
-# }
+resource "aws_iam_instance_profile" "web_forms_profile" {
+  name = "web-forms-profile"
+  path = "/"
+  role = aws_iam_role.web_forms_role.name
+}
 
 ## Instance Profile for RSR Role
 resource "aws_iam_instance_profile" "web_request_service_record_profile" {
@@ -354,31 +354,31 @@ resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_6" {
 
 ####### Attach Policies to Forms Role
 
-# resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_1" {
-#   role       = aws_iam_role.web_forms_role.name
-#   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
-# }
-# resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_2" {
-#   role       = aws_iam_role.web_forms_role.name
-#   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
-# }
-# resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_3" {
-#   role       = aws_iam_role.web_forms_role.name
-#   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-# }
-# resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_4" {
-#   role       = aws_iam_role.web_forms_role.name
-#   policy_arn = var.org_level_logging_arn
-# }
-# resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_5" {
-#   role       = aws_iam_role.web_forms_role.name
-#   policy_arn = var.deployment_s3_policy
-# }
-# resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_6" {
-#   role       = aws_iam_role.web_forms_role.name
-#   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
-# }
-# resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_7" {
-#   role       = aws_iam_role.web_forms_role.name
-#   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
-# }
+resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_1" {
+  role       = aws_iam_role.web_forms_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+}
+resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_2" {
+  role       = aws_iam_role.web_forms_role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
+resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_3" {
+  role       = aws_iam_role.web_forms_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_4" {
+  role       = aws_iam_role.web_forms_role.name
+  policy_arn = var.org_level_logging_arn
+}
+resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_5" {
+  role       = aws_iam_role.web_forms_role.name
+  policy_arn = var.deployment_s3_policy
+}
+resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_6" {
+  role       = aws_iam_role.web_forms_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
+}
+resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_7" {
+  role       = aws_iam_role.web_forms_role.name
+  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
+}

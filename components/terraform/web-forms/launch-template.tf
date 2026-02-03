@@ -19,7 +19,6 @@ resource "aws_launch_template" "web_forms" {
 
     user_data = base64encode(templatefile("${path.module}/scripts/userdata.sh", {
         mount_target         = var.efs_dns_name,
-        web_forms_efs_mount_dir            = var.web_forms_efs_mount_dir,
         deployment_s3_bucket = var.deployment_s3_bucket,
         nginx_folder_s3_key  = var.folder_s3_key
     }))
