@@ -13,5 +13,6 @@
   "FORCE_HTTPS": "False",
   "GA4_ID": "GTM-T8DSWV",
   "SENTRY_DSN": "https://a58136a7220c4a7775d1c10a9a09fbd9@o1230303.ingest.us.sentry.io/4508698817658880",
+  "CSP_REPORT_URL": "https://o1230303.ingest.us.sentry.io/api/4508698817658880/security/?sentry_key=a58136a7220c4a7775d1c10a9a09fbd9",
   "SITEMAPS": "https://www.nationalarchives.gov.uk/sitemap.xml,https://www.nationalarchives.gov.uk/sitemap_index.xml,https://design-system.nationalarchives.gov.uk/sitemap.xml,https://www.nationalarchives.gov.uk/request-a-military-service-record/sitemap.xml"
 }
