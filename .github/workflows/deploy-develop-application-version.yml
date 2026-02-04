@@ -20,9 +20,6 @@ on:
         description: Docker image tag to deploy
         required: true
 
-permissions:
-  id-token: write
-
 concurrency:
   group: deploy-develop
   cancel-in-progress: false
@@ -33,8 +30,9 @@ jobs:
     environment:
       name: develop
       url: https://dev-www.nationalarchives.gov.uk/
-    
     timeout-minutes: 15
+    permissions:
+      id-token: write
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
@@ -51,7 +49,6 @@ jobs:
         with:
           service-name: ${{ matrix.service }}
           environment: develop
-          # aws-role: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
           parameter-path: /application/web/${{ matrix.service }}
 
 

@@ -14,10 +14,6 @@ on:
         required: true
         default: true
 
-permissions:
-  id-token: write
-  contents: write
-
 concurrency:
   group: deploy-staging
   cancel-in-progress: false
@@ -63,6 +59,8 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     outputs:
       version: ${{ steps.version-tag.outputs.VERSION }}
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v6
       - id: version-tag
@@ -121,6 +119,8 @@ jobs:
           - wagtaildocs
           - requestservicerecord
     timeout-minutes: 15
+    permissions:
+      id-token: write
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
@@ -137,7 +137,6 @@ jobs:
         with:
           service-name: ${{ matrix.service }}
           environment: staging
-          # aws-role: arn:aws:iam::337670467269:role/GitHubActionRole
           parameter-path: /application/web/${{ matrix.service }}
 
       - name: Deploy service
@@ -145,7 +144,6 @@ jobs:
         with:
           config-file: staging.json
           service-name: ${{ matrix.service }}
-          # aws-role: arn:aws:iam::337670467269:role/GitHubActionRole
           parameter-path: /application/web/${{ matrix.service }}/docker_images
           deployed-parameter-path: /application/web/${{ matrix.service }}/deployed_version
 

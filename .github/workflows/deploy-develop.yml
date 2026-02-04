@@ -9,9 +9,6 @@ on:
       - config/develop.json
   workflow_dispatch:
 
-permissions:
-  id-token: write
-
 concurrency:
   group: deploy-develop
   cancel-in-progress: false
@@ -32,7 +29,8 @@ jobs:
           - search
           - wagtaildocs
           - requestservicerecord
-          
+    permissions:
+      id-token: write
     timeout-minutes: 15
     steps:
       - name: Checkout repo
@@ -50,7 +48,6 @@ jobs:
         with:
           service-name: ${{ matrix.service }}
           environment: develop
-          # aws-role: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
           parameter-path: /application/web/${{ matrix.service }}
 
       - name: Deploy service
@@ -58,7 +55,6 @@ jobs:
         with:
           config-file: develop.json
           service-name: ${{ matrix.service }}
-          # aws-role: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
           parameter-path: /application/web/${{ matrix.service }}/docker_images
           deployed-parameter-path: /application/web/${{ matrix.service }}/deployed_version
 

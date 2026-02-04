@@ -5,10 +5,6 @@ on:
     types:
       - published
 
-permissions:
-  id-token: write
-  contents: write
-
 concurrency:
   group: deploy-production
   cancel-in-progress: false
@@ -24,6 +20,8 @@ jobs:
     outputs:
       commit-sha: ${{ steps.copy-config.outputs.COMMIT_SHA }}
       version: ${{ steps.copy-config.outputs.VERSION }}
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v6
         with:
@@ -78,6 +76,8 @@ jobs:
           - wagtaildocs
           - requestservicerecord
     timeout-minutes: 15
+    permissions:
+      id-token: write
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
@@ -94,7 +94,6 @@ jobs:
         with:
           service-name: ${{ matrix.service }}
           environment: production
-          # aws-role: arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0
           parameter-path: /application/web/${{ matrix.service }}
 
       - uses: actions/checkout@v6
@@ -106,7 +105,6 @@ jobs:
         with:
           config-file: production.json
           service-name: ${{ matrix.service }}
-          # aws-role: arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0
           parameter-path: /application/web/${{ matrix.service }}/docker_images
           deployed-parameter-path: /application/web/${{ matrix.service }}/deployed_version
 
