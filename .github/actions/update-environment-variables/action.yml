@@ -1,0 +1,52 @@
+name: Update service environment variables
+description: Update AWS SSM Parameter Store parameters for a given service and environment
+
+inputs:
+  service-name:
+    required: true
+    type: string
+  environment:
+    required: true
+    type: string
+  # aws-region:
+  #   required: true
+  #   type: string
+  #   default: eu-west-2
+  # aws-role:
+  #   required: true
+  #   type: string
+  parameter-path:
+    required: true
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    # - name: Configure AWS credentials
+    #   uses: aws-actions/configure-aws-credentials@v5
+    #   with:
+    #     aws-region: ${{ inputs.aws-region }}
+    #     role-to-assume: ${{ inputs.aws-role }}
+    #     role-session-name: GitHubActionsSession
+
+    - name: Update SSM parameters
+      run: |
+        FILE="config/parameters/${{ inputs.service-name }}/${{ inputs.environment }}.json"
+        PARAM_PATH="/application/web/${{ inputs.service-name }}"
+
+        if [ ! -f "$FILE" ]; then
+          echo "❌ $FILE not found, skipping ${{ inputs.service-name }}"
+          exit 0
+        fi
+
+        echo "🔄 Updating $PARAM_PATH from $FILE"
+        FORMATTED_JSON=$(jq '.' "$FILE")
+
+        aws ssm put-parameter \
+          --name "${{ inputs.parameter-path }}" \
+          --type String \
+          --value "$FORMATTED_JSON" \
+          --overwrite
+
+        echo "✅ ${{ inputs.service-name }} parameters updated"
+      shell: bash
