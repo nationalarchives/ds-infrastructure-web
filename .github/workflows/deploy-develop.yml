@@ -9,6 +9,8 @@ on:
       - config/develop.json
   workflow_dispatch:
 
+permissions: {}
+
 concurrency:
   group: deploy-develop
   cancel-in-progress: false

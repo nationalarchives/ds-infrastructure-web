@@ -20,6 +20,8 @@ on:
         description: Docker image tag to deploy
         required: true
 
+permissions: {}
+
 concurrency:
   group: deploy-develop
   cancel-in-progress: false

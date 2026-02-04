@@ -5,6 +5,8 @@ on:
     types:
       - published
 
+permissions: {}
+
 concurrency:
   group: deploy-production
   cancel-in-progress: false
