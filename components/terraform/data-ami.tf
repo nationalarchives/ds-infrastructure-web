@@ -182,3 +182,26 @@ data "aws_ami" "web_wagtaildocs_ami" {
         "amazon"
     ]
 }
+
+data "aws_ami" "web_forms_ami" {
+    most_recent = true
+
+    filter {
+        name   = "name"
+        values = [
+            "web-forms-primer*"
+        ]
+    }
+
+    filter {
+        name   = "virtualization-type"
+        values = [
+            "hvm"
+        ]
+    }
+
+    owners = [
+        data.aws_caller_identity.current.account_id,
+        "amazon"
+    ]
+}

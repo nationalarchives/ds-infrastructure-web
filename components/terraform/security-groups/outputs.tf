@@ -32,3 +32,6 @@ output "web_wagtail_sg_id" {
 output "web_wagtaildocs_sg_id" {
     value = aws_security_group.web_wagtaildocs.id
 }
+output "web_forms_sg_id" {
+    value = aws_security_group.web_forms.id
+}
