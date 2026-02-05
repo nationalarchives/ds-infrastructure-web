@@ -46,12 +46,12 @@ jobs:
           role-to-assume: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
           role-session-name: GitHubActionsSession
 
-      - name: Update SSM parameters
-        uses: ./.github/actions/update-environment-variables
-        with:
-          service-name: ${{ inputs.application }}
-          environment: develop
-          parameter-path: /application/web/${{ inputs.application }}
+      # - name: Update SSM parameters
+      #   uses: ./.github/actions/update-environment-variables
+      #   with:
+      #     service-name: ${{ inputs.application }}
+      #     environment: develop
+      #     parameter-path: /application/web/${{ inputs.application }}
 
       - name: Deploy service
         uses: ./.github/actions/deploy
