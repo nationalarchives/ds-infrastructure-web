@@ -1,0 +1,57 @@
+name: Deploy single application to develop
+description: Deploy a specific version of an application to the develop environment without updating the config
+
+on:
+  workflow_dispatch:
+    inputs:
+      application:
+        description: Which application to deploy
+        type: choice
+        options:
+          - frontend
+          - enrichment
+          - wagtail
+          - catalogue
+          - search
+          - wagtaildocs
+          - requestservicerecord
+        required: true
+      image_tag:
+        description: Docker image tag to deploy (e.g. 26.02.05.1234)
+        required: true
+
+permissions: {}
+
+concurrency:
+  group: deploy-develop
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: develop
+      url: https://dev-www.nationalarchives.gov.uk/
+    timeout-minutes: 15
+    permissions:
+      id-token: write
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@8df5847569e6427dd6c4fb1cf565c83acfa8afa7
+        with:
+          aws-region: eu-west-2
+          role-to-assume: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
+          role-session-name: GitHubActionsSession
+
+      - name: Update SSM parameters
+        uses: ./.github/actions/update-environment-variables
+        with:
+          service-name: ${{ matrix.service }}
+          environment: develop
+          parameter-path: /application/web/${{ matrix.service }}
+
+
+

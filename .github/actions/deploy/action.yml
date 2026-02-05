@@ -1,4 +1,5 @@
 name: Deploy service
+description: Deploy a service to an environment by updating the AWS Parameter Store and triggering a deployment Lambda function
 
 inputs:
   config-file:
@@ -7,8 +8,8 @@ inputs:
   service-name:
     required: true
     type: string
-  aws-role:
-    required: true
+  version:
+    required: false
     type: string
   parameter-path:
     required: true
@@ -20,12 +21,17 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-region: eu-west-2
-        role-to-assume: ${{ inputs.aws-role }}
-        role-session-name: GitHubActionsSession
+    - name: Get version from config
+      if: ${{ inputs.version == '' }}
+      shell: bash
+      run: |
+        NEW_VERSION=$(jq -r '.services."'${{ inputs.service-name }}'".version' config/${{ inputs.config-file }})
+        echo "NEW_VERSION=$NEW_VERSION" >> "$GITHUB_ENV"
+
+    - name: Set version from input
+      if: ${{ inputs.version != '' }}
+      shell: bash
+      run: echo "NEW_VERSION=${{ inputs.version }}" >> "$GITHUB_ENV"
 
     - name: Update AWS Parameter Store
       shell: bash
@@ -33,7 +39,6 @@ runs:
       run: |
         echo "Fetching version from config/${{ inputs.config-file }}..."
 
-        NEW_VERSION=$(jq -r '.services."'${{ inputs.service-name }}'".version' config/${{ inputs.config-file }})
         NEW_IMAGE=$(jq -r '.services."'${{ inputs.service-name }}'".image' config/${{ inputs.config-file }})
 
         echo "Extracted NEW_IMAGE=$NEW_IMAGE"
