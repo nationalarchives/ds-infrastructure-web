@@ -17,7 +17,7 @@ on:
           - requestservicerecord
         required: true
       image_tag:
-        description: Docker image tag to deploy
+        description: Docker image tag to deploy (e.g. 26.02.05.1234)
         required: true
 
 permissions: {}
