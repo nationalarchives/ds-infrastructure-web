@@ -17,7 +17,7 @@ on:
           - requestservicerecord
         required: true
       image_tag:
-        description: Docker image tag to deploy (e.g. 26.02.05.1234)
+        description: Docker image tag to deploy (e.g. `26.02.05.1234`)
         required: true
 
 permissions: {}
@@ -49,9 +49,9 @@ jobs:
       - name: Update SSM parameters
         uses: ./.github/actions/update-environment-variables
         with:
-          service-name: ${{ matrix.service }}
+          service-name: ${{ inputs.application }}
           environment: develop
-          parameter-path: /application/web/${{ matrix.service }}
+          parameter-path: /application/web/${{ inputs.application }}
 
 
 
