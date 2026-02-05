@@ -14,6 +14,6 @@
   "ENVIRONMENT_NAME": "production",
   "GA4_ID": "GTM-T8DSWV",
   "ROSETTA_API_URL": "https://rosetta-prod.k-int.com/rosetta/data",
-  "SENTRY_DSN": "https://3e24f4f474026e113e6dcdeccf2abded@o1230303.ingest.us.sentry.io/4507458864087040",
+  "_SENTRY_DSN": "https://3e24f4f474026e113e6dcdeccf2abded@o1230303.ingest.us.sentry.io/4507458864087040",
   "WAGTAIL_API_URL": "http://web-wagtail.live.local/api/v2"
 }

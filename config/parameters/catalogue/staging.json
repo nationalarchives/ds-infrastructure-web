@@ -13,6 +13,6 @@
   "ENVIRONMENT_NAME": "staging",
   "GA4_ID": "GTM-KX8ZWVZG",
   "ROSETTA_API_URL": "https://rosetta-staging.k-int.com/rosetta/data",
-  "SENTRY_DSN": "https://3e24f4f474026e113e6dcdeccf2abded@o1230303.ingest.us.sentry.io/4507458864087040",
+  "_SENTRY_DSN": "https://3e24f4f474026e113e6dcdeccf2abded@o1230303.ingest.us.sentry.io/4507458864087040",
   "WAGTAIL_API_URL": "http://web-wagtail.staging.local/api/v2"
 }
