@@ -53,5 +53,11 @@ jobs:
           environment: develop
           parameter-path: /application/web/${{ inputs.application }}
 
-
-
+      - name: Deploy service
+        uses: ./.github/actions/deploy
+        with:
+          config-file: develop.json
+          version: ${{ inputs.image_tag }}
+          service-name: ${{ inputs.application }}
+          parameter-path: /application/web/${{ inputs.application }}/docker_images
+          deployed-parameter-path: /application/web/${{ inputs.application }}/deployed_version
