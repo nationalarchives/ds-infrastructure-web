@@ -1,0 +1,12 @@
+{
+  "APPLICATION_PROTOCOL" : "http",
+  "ENVIRONMENT_NAME": "staging",  
+  "CONFIG": "config.Staging",
+  "COOKIE_DOMAIN": ".nationalarchives.gov.uk",
+  "CSP_STYLE_SRC": "'self',fonts.googleapis.com,p.typekit.net,use.typekit.net",
+  "CSP_FONT_SRC": "'self',fonts.gstatic.com,use.typekit.net",
+  "CACHE_TYPE": "RedisCache",
+  "CACHE_REDIS_URL": "redis://platform-redis.staging.local:6379/0",
+  "SESSION_REDIS_URL": "redis://platform-redis.staging.local:6379/1",
+  "RATELIMIT_REDIS_URL": "redis://platform-redis.staging.local:6379/2"
+}

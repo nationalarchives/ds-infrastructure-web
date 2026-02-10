@@ -100,7 +100,7 @@ All critical deployment scripts are located in:
 
 ### Timeout & Retry:
 
-* Timeout: 120 seconds
+* Timeout: 60 seconds
 
 * Health check interval: 5 seconds
 
