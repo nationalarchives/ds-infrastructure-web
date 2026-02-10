@@ -16,5 +16,6 @@
   "WAGTAILAPI_BASE_URL": "http://web-wagtail.live.local",
   "WAGTAILAPI_IMAGES_BASE_URL": "https://www.nationalarchives.gov.uk",
   "WAGTAILAPI_MEDIA_BASE_URL": "https://www.nationalarchives.gov.uk",
-  "WAGTAIL_2FA_REQUIRED": "false"
+  "WAGTAIL_2FA_REQUIRED": "false",
+  "WAGTAILAPI_AUTHENTICATION": "false"
 }
