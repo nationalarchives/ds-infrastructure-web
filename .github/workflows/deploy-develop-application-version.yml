@@ -15,6 +15,7 @@ on:
           - search
           - wagtaildocs
           - requestservicerecord
+          - forms
         required: true
       image_tag:
         description: Docker image tag to deploy (e.g. 26.02.05.1234)
