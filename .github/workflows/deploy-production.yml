@@ -115,10 +115,10 @@ jobs:
     needs:
       - prepare
       - deploy
-    if: always()
+    if: ${{ !cancelled() }}
     steps:
       - uses: rtCamp/action-slack-notify@v2
-        if: success()
+        if: ${{ success() }}
         env:
           SLACK_TITLE: Website deployment
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
@@ -130,7 +130,7 @@ jobs:
           SLACKIFY_MARKDOWN: true
           SLACK_MESSAGE: "🎉 Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** deployed to production: [www.nationalarchives.gov.uk](http://www.nationalarchives.gov.uk/)"
       - uses: rtCamp/action-slack-notify@v2
-        if: failure()
+        if: ${{ failure() }}
         env:
           SLACK_TITLE: Website deployment
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
