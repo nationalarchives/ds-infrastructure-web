@@ -43,8 +43,8 @@ jobs:
           COMMIT_SHA=$(git log --format="%H" -n 1)
           echo "COMMIT_SHA=$COMMIT_SHA" >> "$GITHUB_OUTPUT"
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
-          SUBMITTED_BY=${{ github.actor }}
-          APPROVED_BY=$(gh api "/repos/${{ github.repository_owner }}/${{ github.repository_id }}/deployments?environment=production&sha=$COMMIT_SHA" --jq '.[].creator.login')
+          # SUBMITTED_BY=${{ github.actor }}
+          # APPROVED_BY=$(gh api "/repos/${{ github.repository_owner }}/${{ github.repository_id }}/deployments?environment=production&sha=$COMMIT_SHA" --jq '.[].creator.login')
 
   notify-start:
     runs-on: ubuntu-latest
