@@ -24,7 +24,7 @@ blue_ps=$(sudo docker ps --all --format "{{.Names}}" | grep "$BLUE_SERVICE")
 green_ps=$(sudo docker ps --all --format "{{.Names}}" | grep "$GREEN_SERVICE")
 
 if [ ! -z "$blue_ps" ] && [ ! -z "$blue_up" ]; then
-  echo "$BLUE_SERVICE -> $BLUE_SERVICE"
+  echo "$BLUE_SERVICE -> $GREEN_SERVICE"
   ACTIVE_SERVICE=$BLUE_SERVICE
   INACTIVE_SERVICE=$GREEN_SERVICE
 else
@@ -53,7 +53,7 @@ for ((i=1; i<=$MAX_RETRIES; i++)); do
     continue
   fi
 
-  HEALTH_CHECK_URL="http://$CONTAINER_IP:$SERVICE_PORT/"
+  HEALTH_CHECK_URL="http://$CONTAINER_IP:$SERVICE_PORT/healthcheck/live/"
   # N.B.: We use docker to execute curl because on macOS we are unable to directly access the docker-managed Traefik network.
   if sudo docker run --net $TRAEFIK_NETWORK --rm curlimages/curl:8.00.1 --fail --silent "$HEALTH_CHECK_URL" >/dev/null; then
     echo "$INACTIVE_SERVICE is healthy using IP $CONTAINER_IP"
