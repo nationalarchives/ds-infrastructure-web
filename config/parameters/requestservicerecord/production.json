@@ -24,5 +24,5 @@
   "GOV_UK_PAY_API_URL": "https://publicapi.payments.service.gov.uk/v1/payments",
   "PROOF_OF_DEATH_BUCKET_NAME": "ds-live-foi1939-register",
   "RECORD_COPYING_SERVICE_API_URL": "http://discovery-services.live.local/recordcopyingserviceapi/",
-  "MOD_COPYING_API_URL": "http://test-services.nationalarchives.web.local/MOD.recordcopyingserviceapi/PaymentConfirmation/Update"
+  "MOD_COPYING_API_URL": "http://services.nationalarchives.web.local/MOD.recordcopyingserviceapi/PaymentConfirmation/Update"
 }
