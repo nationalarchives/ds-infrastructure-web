@@ -7,7 +7,7 @@
         },
         "wagtail": {
             "image": "ghcr.io/nationalarchives/ds-wagtail",
-            "version": "26.02.11.1239",
+            "version": "26.02.16.1240",
             "repo": "https://github.com/nationalarchives/ds-wagtail"
         },
         "wagtaildocs": {
@@ -22,7 +22,7 @@
         },
         "enrichment": {
             "image": "ghcr.io/nationalarchives/ds-frontend-enrichment",
-            "version": "26.02.13.91",
+            "version": "26.02.16.93",
             "repo": "https://github.com/nationalarchives/ds-frontend-enrichment"
         },
         "search": {
