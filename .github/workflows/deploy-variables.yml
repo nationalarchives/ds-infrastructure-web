@@ -40,6 +40,9 @@ jobs:
           - wagtaildocs
           - requestservicerecord
           - forms
+    permissions:
+      id-token: write
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
 
