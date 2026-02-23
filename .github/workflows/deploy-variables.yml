@@ -1,4 +1,4 @@
-name: Update SSM variables
+name: Update environment variables
 
 on:
   workflow_dispatch:
