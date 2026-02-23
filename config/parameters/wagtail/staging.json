@@ -16,5 +16,5 @@
   "WAGTAILAPI_IMAGES_BASE_URL": "https://staging-www.nationalarchives.gov.uk",
   "WAGTAILAPI_MEDIA_BASE_URL": "https://staging-www.nationalarchives.gov.uk",
   "WAGTAIL_2FA_REQUIRED": "false",
-  "WAGTAILAPI_AUTHENTICATION": "false"
+  "WAGTAILAPI_AUTHENTICATION": "true"
 }
