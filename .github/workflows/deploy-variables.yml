@@ -47,10 +47,27 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Configure AWS credentials
+        if: ${{ github.event.inputs.environment == 'develop' }}
+        uses: aws-actions/configure-aws-credentials@8df5847569e6427dd6c4fb1cf565c83acfa8afa7
+        with:
+          aws-region: eu-west-2
+          role-to-assume: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
+          role-session-name: GitHubActionsSession
+
+      - name: Configure AWS credentials
+        if: ${{ github.event.inputs.environment == 'staging' }}
         uses: aws-actions/configure-aws-credentials@8df5847569e6427dd6c4fb1cf565c83acfa8afa7
         with:
           aws-region: eu-west-2
           role-to-assume: arn:aws:iam::337670467269:role/GitHubActionRole
+          role-session-name: GitHubActionsSession
+
+      - name: Configure AWS credentials
+        if: ${{ github.event.inputs.environment == 'production' }}
+        uses: aws-actions/configure-aws-credentials@8df5847569e6427dd6c4fb1cf565c83acfa8afa7
+        with:
+          aws-region: eu-west-2
+          role-to-assume: arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0
           role-session-name: GitHubActionsSession
 
       - name: Update SSM parameters
