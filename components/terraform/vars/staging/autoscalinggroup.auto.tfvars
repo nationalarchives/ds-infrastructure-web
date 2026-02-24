@@ -94,3 +94,13 @@ web_request_service_record_autoscaling_policy_name_prefix = ""
 web_request_service_record_default_cooldown               = 0   
 web_request_service_record_scale_in_threshold             = 0  
 web_request_service_record_scale_out_threshold            = 0
+
+# Web Forms
+web_forms_patch_group      = "web-forms-patchgroup"
+web_forms_deployment_group = "web-forms-deploygroup"
+
+web_forms_asg_max_size                  = 2
+web_forms_asg_min_size                  = 1
+web_forms_asg_desired_capacity          = 1
+web_forms_asg_health_check_grace_period = 150
+web_forms_asg_health_check_type         = "EC2"

@@ -137,7 +137,8 @@ terraform plan \
   -var-file="vars/staging/wagtaildocs.auto.tfvars" \
   -var-file="vars/staging/cognito.auto.tfvars" \
   -var-file="vars/staging/ses.auto.tfvars" \
-  -var-file="vars/staging/request-service-record.auto.tfvars"
+  -var-file="vars/staging/request-service-record.auto.tfvars" \
+  -var-file="vars/staging/forms.auto.tfvars"
 ```
 
 **_Live plan_**
@@ -159,7 +160,8 @@ terraform plan \
 -var-file="vars/live/wagtaildocs.auto.tfvars" \
 -var-file="vars/live/cognito.auto.tfvars" \
 -var-file="vars/live/ses.auto.tfvars" \
--var-file="vars/live/request-service-record.auto.tfvars"
+-var-file="vars/live/request-service-record.auto.tfvars" \
+-var-file="vars/live/forms.auto.tfvars"
 ```
 
 **_4. Apply Configuration_**
