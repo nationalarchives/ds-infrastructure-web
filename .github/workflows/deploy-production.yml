@@ -55,7 +55,8 @@ jobs:
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
           SUBMITTED_BY=${{ github.actor }}
           echo "SUBMITTED_BY=$SUBMITTED_BY"
-          APPROVED_BY=$(gh api "repos/${{ github.repository_owner }}/${{ github.repository_id }}/deployments?environment=production&sha=$WORKFLOW_COMMIT_SHA" --jq '.[].creator.login')
+          APPROVED_BY=$(gh api "repos/${{ github.repository }}/deployments?environment=production&sha=$WORKFLOW_COMMIT_SHA" --jq '.[].creator.login')
+
           echo "APPROVED_BY=$APPROVED_BY"
           echo "SUBMITTED_BY=$SUBMITTED_BY" >> "$GITHUB_OUTPUT"
           echo "APPROVED_BY=$APPROVED_BY" >> "$GITHUB_OUTPUT"

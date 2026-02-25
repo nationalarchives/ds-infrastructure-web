@@ -17,19 +17,3 @@ jobs:
           echo "| Service | New ($SOURCE) | Current ($TARGET) | Changes |" >> $GITHUB_STEP_SUMMARY
           echo "| --- | --- | --- | --- |" >> $GITHUB_STEP_SUMMARY
           jq --raw-output '.services | keys[]' "config/$SOURCE.json" | while read -r SERVICE_NAME; do SERVICE_REPO=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].repo' "config/$SOURCE.json") && SERVICE_SOURCE=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/$SOURCE.json") && SERVICE_TARGET=$(jq --raw-output --arg service "$SERVICE_NAME" '.services[$service].version' "config/$TARGET.json") && [ "$SERVICE_SOURCE" != "$SERVICE_TARGET" ] && echo "| $SERVICE_NAME | \`$SERVICE_SOURCE\` | \`$SERVICE_TARGET\` | [Compare]($SERVICE_REPO/compare/v$SERVICE_TARGET...v$SERVICE_SOURCE) |" >> $GITHUB_STEP_SUMMARY || echo "| $SERVICE_NAME | \`$SERVICE_SOURCE\` | \`$SERVICE_TARGET\` | [No changes] |" >> $GITHUB_STEP_SUMMARY; done
-  
-  debug:
-    runs-on: ubuntu-latest
-    env:
-      GH_TOKEN: ${{ github.token }}
-    steps:
-      - uses: actions/checkout@v6
-      - name: Debug
-        run: |
-          echo ${{ github.repository }}
-
-          APPROVED_BY=$(curl --request GET --url "https://api.github.com/repos/${{ github.repository }}/deployments?environment=production&sha=950f5d43215d757f7d17fa0813a68283437a3583" --header "Authorization: Bearer ${{ github.token }}" --header "X-GitHub-Api-Version: 2022-11-28" | jq '.[].creator.login')
-          echo $APPROVED_BY
-          
-          APPROVED_BY=$(gh api "repos/${{ github.repository }}/deployments?environment=production&sha=950f5d43215d757f7d17fa0813a68283437a3583" --jq '.[].creator.login')
-          echo $APPROVED_BY
