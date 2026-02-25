@@ -54,11 +54,11 @@ jobs:
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
           SUBMITTED_BY=${{ github.actor }}
           echo "SUBMITTED_BY=$SUBMITTED_BY"
-          APPROVED_BY=$(gh api "repos/${{ github.repository }}/deployments?environment=production&sha=$WORKFLOW_COMMIT_SHA" --jq '.[].creator.login')
+          # APPROVED_BY=$(gh api "repos/${{ github.repository }}/deployments?environment=production&sha=$WORKFLOW_COMMIT_SHA" --jq '.[].creator.login')
 
-          echo "APPROVED_BY=$APPROVED_BY"
+          # echo "APPROVED_BY=$APPROVED_BY"
           echo "SUBMITTED_BY=$SUBMITTED_BY" >> "$GITHUB_OUTPUT"
-          echo "APPROVED_BY=$APPROVED_BY" >> "$GITHUB_OUTPUT"
+          # echo "APPROVED_BY=$APPROVED_BY" >> "$GITHUB_OUTPUT"
 
   notify-start:
     runs-on: ubuntu-latest
@@ -75,7 +75,7 @@ jobs:
           MSG_MINIMAL: true
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
-          SLACK_MESSAGE: "🚀 Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** deploying to production... (approved by ${{ needs.prepare.outputs.approved-by }})"
+          SLACK_MESSAGE: "🚀 Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** deploying to production..."
 
   deploy:
     runs-on: ubuntu-latest
@@ -140,7 +140,7 @@ jobs:
           MSG_MINIMAL: true
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
-          SLACK_MESSAGE: "🎉 Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** deployed to production: [www.nationalarchives.gov.uk](http://www.nationalarchives.gov.uk/) (approved by ${{ needs.prepare.outputs.approved-by }})"
+          SLACK_MESSAGE: "🎉 Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** deployed to production: [www.nationalarchives.gov.uk](http://www.nationalarchives.gov.uk/)"
       - uses: rtCamp/action-slack-notify@v2
         if: ${{ failure() }}
         env:
