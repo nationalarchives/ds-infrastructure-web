@@ -29,6 +29,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: main
       - name: Copy config from staging to production
         id: copy-config
         run: |
