@@ -5,6 +5,7 @@
   "CSRF_TRUSTED_ORIGINS": "https://dev-www.nationalarchives.gov.uk,https://dev-wagtail.nationalarchives.gov.uk",
   "DATABASE_HOST": "postgres-main-prime.dev.local",
   "DATABASE_NAME": "etna",
+  "DEFAULT_FROM_EMAIL": "wagtail@nationalarchives.gov.uk",
   "DJANGO_SETTINGS_MODULE": "config.settings.develop",
   "ENVIRONMENT_NAME": "develop",
   "REDIS_URL": "redis://platform-redis.dev.local:6379",
