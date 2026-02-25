@@ -20,13 +20,15 @@ jobs:
   
   debug:
     runs-on: ubuntu-latest
-    env:
-      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v6
       - name: Debug
         run: |
-          APPROVED_BY=$(gh api "repos/${{ github.repository_owner }}/${{ github.repository_id }}/deployments?environment=production&sha=950f5d43215d757f7d17fa0813a68283437a3583" --jq '.[].creator.login')
+          echo ${{ github.repository_id }}
+          echo ${{ github.repository }}
+
+          APPROVED_BY=$(curl --request GET --url "https://api.github.com/repos/nationalarchives/ds-infrastructure-web/deployments?environment=production&sha=950f5d43215d757f7d17fa0813a68283437a3583" --header "Authorization: Bearer ${{ github.token }}" --header "X-GitHub-Api-Version: 2022-11-28" | jq '.[].creator.login')
           echo $APPROVED_BY
-          APPROVED_BY=$(gh api "repos/${{ github.repository_owner }}/${{ github.repository }}/deployments?environment=production&sha=950f5d43215d757f7d17fa0813a68283437a3583" --jq '.[].creator.login')
+          
+          APPROVED_BY=$(gh api "repos/${{ github.repository_owner }}/${{ github.repository_id }}/deployments?environment=production&sha=950f5d43215d757f7d17fa0813a68283437a3583" --jq '.[].creator.login')
           echo $APPROVED_BY
