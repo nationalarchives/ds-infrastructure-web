@@ -4,6 +4,7 @@ on:
   release:
     types:
       - published
+      - edited  # TODO: Remove after testing
 
 permissions: {}
 
@@ -22,6 +23,8 @@ jobs:
     outputs:
       commit-sha: ${{ steps.copy-config.outputs.COMMIT_SHA }}
       version: ${{ steps.copy-config.outputs.VERSION }}
+      submitted-by: ${{ steps.copy-config.outputs.SUBMITTED_BY }}
+      approved-by: ${{ steps.copy-config.outputs.APPROVED_BY }}
     permissions:
       contents: write
     steps:
@@ -29,9 +32,14 @@ jobs:
       - name: Copy config from staging to production
         id: copy-config
         run: |
+          WORKFLOW_COMMIT_SHA=$(git log --format="%H" -n 1)
+          echo "WORKFLOW_COMMIT_SHA=$WORKFLOW_COMMIT_SHA"
+          
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
           # Strip "v" prefix from tag name
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          echo "VERSION=$VERSION"
+
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "<>"
           cp config/staging.json config/production.json
@@ -39,10 +47,16 @@ jobs:
           git commit -m "Release v$VERSION to production" || true
           git push
           COMMIT_SHA=$(git log --format="%H" -n 1)
+          echo "COMMIT_SHA=$COMMIT_SHA"
+
           echo "COMMIT_SHA=$COMMIT_SHA" >> "$GITHUB_OUTPUT"
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
-          # SUBMITTED_BY=${{ github.actor }}
-          # APPROVED_BY=$(gh api "/repos/${{ github.repository_owner }}/${{ github.repository_id }}/deployments?environment=production&sha=$COMMIT_SHA" --jq '.[].creator.login')
+          SUBMITTED_BY=${{ github.actor }}
+          echo "SUBMITTED_BY=$SUBMITTED_BY"
+          APPROVED_BY=$(gh api "/repos/${{ github.repository_owner }}/${{ github.repository_id }}/deployments?environment=production&sha=$WORKFLOW_COMMIT_SHA" --jq '.[].creator.login')
+          echo "APPROVED_BY=$APPROVED_BY"
+          echo "SUBMITTED_BY=$SUBMITTED_BY" >> "$GITHUB_OUTPUT"
+          echo "APPROVED_BY=$APPROVED_BY" >> "$GITHUB_OUTPUT"
 
   notify-start:
     runs-on: ubuntu-latest
