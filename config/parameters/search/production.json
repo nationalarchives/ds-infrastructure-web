@@ -3,6 +3,7 @@
   "APPLICATION_PROTOCOL": "http",
   "CONFIG": "config.Production",
   "COOKIE_DOMAIN": ".nationalarchives.gov.uk",
+  "CSP_CONNECT_SRC": "'self',https://*.google-analytics.com,https://www.googletagmanager.com",
   "CSP_FONT_SRC": "'self',fonts.gstatic.com,use.typekit.net",
   "CSP_SCRIPT_SRC": "'self',https://www.googletagmanager.com",
   "CSP_IMG_SRC": "'self',https://*.nationalarchives.gov.uk,https://www.googletagmanager.com",
