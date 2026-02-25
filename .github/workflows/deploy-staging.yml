@@ -27,8 +27,6 @@ jobs:
       version-summary: ${{ steps.build-comparison.outputs.VERSION_SUMMARY }}
     steps:
       - uses: actions/checkout@v6
-        with:
-          ref: main
       - name: Compare to production
         id: build-comparison
         run: |
@@ -68,8 +66,6 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v6
-        with:
-          ref: main
       - id: version-tag
         name: Create release version
         run: |
