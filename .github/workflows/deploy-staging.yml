@@ -60,8 +60,8 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     outputs:
-      commit-sha: ${{ steps.version-tag.outputs.COMMIT_SHA }}
       version: ${{ steps.version-tag.outputs.VERSION }}
+      commit-sha: ${{ steps.create-release.outputs.COMMIT_SHA }}
     permissions:
       contents: write
     steps:
@@ -69,8 +69,6 @@ jobs:
       - id: version-tag
         name: Create release version
         run: |
-          COMMIT_SHA=$(git log --format="%H" -n 1)
-          echo "COMMIT_SHA=$COMMIT_SHA" >> "$GITHUB_OUTPUT"
           VERSION=$(date +%y.%m.%d).${{ github.run_number }}
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
       - name: Set up git
@@ -85,11 +83,14 @@ jobs:
           git commit -m "Release v${{ steps.version-tag.outputs.VERSION }} to staging" || true
           git push
       - name: Create tag and release
+        id: create-release
         run: |
           git tag "v${{ steps.version-tag.outputs.VERSION }}" -m "Release ${{ steps.version-tag.outputs.VERSION }}"
           git push origin --tags
           echo "${{ needs.compare.outputs.version-summary }}" > release-notes.md
           gh release create "v${{ steps.version-tag.outputs.VERSION }}" --title "v${{ steps.version-tag.outputs.VERSION }}" --draft --notes-file release-notes.md --latest
+          COMMIT_SHA=$(git log --format="%H" -n 1)
+          echo "COMMIT_SHA=$COMMIT_SHA" >> "$GITHUB_OUTPUT"
 
   notify-start:
     runs-on: ubuntu-latest
