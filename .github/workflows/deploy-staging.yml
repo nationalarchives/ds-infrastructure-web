@@ -27,6 +27,8 @@ jobs:
       version-summary: ${{ steps.build-comparison.outputs.VERSION_SUMMARY }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: main
       - name: Compare to production
         id: build-comparison
         run: |
@@ -60,14 +62,19 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     outputs:
+      commit-sha: ${{ steps.version-tag.outputs.COMMIT_SHA }}
       version: ${{ steps.version-tag.outputs.VERSION }}
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: main
       - id: version-tag
         name: Create release version
         run: |
+          COMMIT_SHA=$(git log --format="%H" -n 1)
+          echo "COMMIT_SHA=$COMMIT_SHA" >> "$GITHUB_OUTPUT"
           VERSION=$(date +%y.%m.%d).${{ github.run_number }}
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
       - name: Set up git
@@ -126,6 +133,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.create-release.outputs.commit-sha }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@8df5847569e6427dd6c4fb1cf565c83acfa8afa7
@@ -189,6 +198,8 @@ jobs:
       GH_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN_TEST_RUNNER }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.create-release.outputs.commit-sha }}
       - name: Run tests
         run: |
           gh workflow run run.yml --repo nationalarchives/ds-tna-website-tests --field site=all --field environment=staging --raw-field exclude-tests=@wip --field notify-slack-on-pass=${{ inputs.notify-slack }} --field notify-slack-on-fail=${{ inputs.notify-slack }} --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
