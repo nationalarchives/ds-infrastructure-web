@@ -20,6 +20,8 @@ jobs:
   
   debug:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v6
       - name: Debug
