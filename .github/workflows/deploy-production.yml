@@ -76,7 +76,7 @@ jobs:
           MSG_MINIMAL: true
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
-          SLACK_MESSAGE: "🚀 Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** deploying to production... (approved by ${{ needs.prepare.outputs.approved_by }})"
+          SLACK_MESSAGE: "🚀 Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** deploying to production... (approved by ${{ needs.prepare.outputs.approved-by }})"
 
   deploy:
     runs-on: ubuntu-latest
@@ -141,7 +141,7 @@ jobs:
           MSG_MINIMAL: true
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
-          SLACK_MESSAGE: "🎉 Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** deployed to production: [www.nationalarchives.gov.uk](http://www.nationalarchives.gov.uk/) (approved by ${{ needs.prepare.outputs.approved_by }})"
+          SLACK_MESSAGE: "🎉 Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** deployed to production: [www.nationalarchives.gov.uk](http://www.nationalarchives.gov.uk/) (approved by ${{ needs.prepare.outputs.approved-by }})"
       - uses: rtCamp/action-slack-notify@v2
         if: ${{ failure() }}
         env:
