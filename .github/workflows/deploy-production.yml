@@ -83,6 +83,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.prepare.outputs.commit-sha }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@8df5847569e6427dd6c4fb1cf565c83acfa8afa7
@@ -97,10 +99,6 @@ jobs:
           service-name: ${{ matrix.service }}
           environment: production
           parameter-path: /application/web/${{ matrix.service }}
-
-      - uses: actions/checkout@v6
-        with:
-          ref: ${{ needs.prepare.outputs.commit-sha }}
       
       - name: Deploy service
         uses: ./.github/actions/deploy
