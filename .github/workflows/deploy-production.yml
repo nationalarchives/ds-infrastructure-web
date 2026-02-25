@@ -4,7 +4,7 @@ on:
   release:
     types:
       - published
-      - edited  # TODO: Remove after testing
+  workflow_dispatch:
 
 permissions: {}
 
