@@ -35,7 +35,7 @@ resource "aws_iam_role_policy_attachment" "rsr_policy_attachment_6" {
 
 resource "aws_iam_role_policy" "web_rsr_inline_policy" {
     role       = aws_iam_role.web_request_service_record_role.name
-    policy = data.aws_iam_policy_document.s3_access
+    policy = data.aws_iam_policy_document.s3_access.json
 }
 
 resource "aws_iam_policy" "ec2_access" {
