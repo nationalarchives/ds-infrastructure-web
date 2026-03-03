@@ -32,11 +32,11 @@ resource "aws_iam_role_policy_attachment" "rsr_policy_attachment_6" {
     role       = aws_iam_role.web_request_service_record_role.name
     policy_arn = aws_iam_policy.ses_access.arn
 }
-# The following block is commented out because James says the S3 PutObject requests were working without it
-# resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_7" {
-#     role       = aws_iam_role.web_request_service_record_role.name
-#     policy_arn = var.foi1939_register_write_policy_arn
-# }
+
+resource "aws_iam_role_policy" "web_rsr_inline_policy" {
+    role       = aws_iam_role.web_request_service_record_role.name
+    policy_arn = data.aws_iam_policy_document.s3_access
+}
 
 resource "aws_iam_policy" "ec2_access" {
     name        = "web-request-service-record-ec2-access-policy"
