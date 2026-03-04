@@ -3,6 +3,7 @@ locals {
 }
 
 variable "account_id" {}
+variable "environment" {}
 
 variable "lb_listener_arn" {}
 variable "x_target_header" {}

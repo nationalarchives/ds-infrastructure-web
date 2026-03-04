@@ -22,6 +22,7 @@ module "web-request-service-record" {
     count = var.web_request_service_record_deploy
     source = "./web-request-service-record"
 
+    environment = var.environment
     account_id = data.aws_caller_identity.current.account_id
     ami_id = data.aws_ami.web_request_service_record_ami.id
 
