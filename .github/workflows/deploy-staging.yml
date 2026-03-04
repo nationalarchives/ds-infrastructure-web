@@ -120,7 +120,7 @@ jobs:
           MSG_MINIMAL: true
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
-          SLACK_MESSAGE: "🧑‍💻 Release **v${{ needs.create-release.outputs.version }}** created and deploying to staging... (submitted by ${{ needs.create-release.outputs.submitted-by }}, approved by ${{ needs.create-release.outputs.approved-by }})"
+          SLACK_MESSAGE: "🧑‍💻 Release **v${{ needs.create-release.outputs.version }}** created and deploying to staging... *(approved by ${{ needs.create-release.outputs.approved-by }})*"
 
   deploy:
     runs-on: ubuntu-latest

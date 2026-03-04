@@ -75,7 +75,7 @@ jobs:
           MSG_MINIMAL: true
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
-          SLACK_MESSAGE: "🚀 Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** deploying to production... (submitted by ${{ needs.prepare.outputs.submitted-by }}, approved by ${{ needs.prepare.outputs.approved-by }})"
+          SLACK_MESSAGE: "🚀 Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** deploying to production... *(approved by ${{ needs.prepare.outputs.approved-by }})*"
 
   deploy:
     runs-on: ubuntu-latest
