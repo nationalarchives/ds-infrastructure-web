@@ -62,6 +62,8 @@ jobs:
     outputs:
       version: ${{ steps.version-tag.outputs.VERSION }}
       commit-sha: ${{ steps.create-release.outputs.COMMIT_SHA }}
+      submitted-by: ${{ steps.get-contributors.outputs.SUBMITTED_BY }}
+      approved-by: ${{ steps.get-contributors.outputs.APPROVED_BY }}
     permissions:
       contents: write
     steps:
@@ -91,6 +93,16 @@ jobs:
           gh release create "v${{ steps.version-tag.outputs.VERSION }}" --title "v${{ steps.version-tag.outputs.VERSION }}" --draft --notes-file release-notes.md --latest
           COMMIT_SHA=$(git log --format="%H" -n 1)
           echo "COMMIT_SHA=$COMMIT_SHA" >> "$GITHUB_OUTPUT"
+      - name: Get contributors
+        id: get-contributors
+        run: |
+          SUBMITTED_BY=${{ github.actor }}
+          echo "SUBMITTED_BY=$SUBMITTED_BY"
+          echo "SUBMITTED_BY=$SUBMITTED_BY" >> "$GITHUB_OUTPUT"
+
+          APPROVED_BY=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/approvals" --jq '.|map(select(.user.type=="User"))|map(.user.login)|join(", ")') || APPROVED_BY=unknown
+          echo "APPROVED_BY=$APPROVED_BY"
+          echo "APPROVED_BY=$APPROVED_BY" >> "$GITHUB_OUTPUT"
 
   notify-start:
     runs-on: ubuntu-latest
@@ -108,7 +120,7 @@ jobs:
           MSG_MINIMAL: true
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
-          SLACK_MESSAGE: "🧑‍💻 Release **v${{ needs.create-release.outputs.version }}** created and deploying to staging..."
+          SLACK_MESSAGE: "🧑‍💻 Release **v${{ needs.create-release.outputs.version }}** created and deploying to staging... (submitted by ${{ needs.create-release.outputs.submitted-by }}, approved by ${{ needs.create-release.outputs.approved-by }})"
 
   deploy:
     runs-on: ubuntu-latest
