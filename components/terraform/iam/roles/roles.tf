@@ -350,7 +350,10 @@ resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_6" {
   role       = aws_iam_role.web_request_service_record_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
 }
-
+resource "aws_iam_role_policy_attachment" "attach_web_request_s3_copy" {
+  role       = aws_iam_role.web_request_service_record_role.name
+  policy_arn = var.web_request_s3_copy_policy_arn
+}
 
 ####### Attach Policies to Forms Role
 

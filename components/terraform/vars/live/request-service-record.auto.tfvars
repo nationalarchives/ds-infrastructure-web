@@ -7,3 +7,5 @@ web_request_service_record_auto_switch_on   = true
 web_request_service_record_auto_switch_off  = true
 
 web_request_service_record_root_block_device_size = "100"
+
+foi_s3_bucket = "ds-live-foi1939-register"

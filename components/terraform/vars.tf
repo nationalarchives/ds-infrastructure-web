@@ -16,3 +16,4 @@ variable "web_enrichment_efs_mount_dir" {}
 variable "web_frontend_efs_mount_dir" {}
 variable "on_prem_cidrs" {}
 variable "redis_efs_mount_dir" {}
+variable "foi_s3_bucket" {}

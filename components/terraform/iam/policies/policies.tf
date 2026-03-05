@@ -28,3 +28,12 @@ resource "aws_iam_policy" "web_ssm" {
        account_id = var.account_id
    })
 }
+
+resource "aws_iam_policy" "web_request_s3_copy_policy" {
+  name        = "web-request-s3-copy-policy"
+  description = "Policy to copy objects from holding to submitted"
+
+  policy = templatefile("${path.module}/templates/foi-s3-copy-policy.json", {
+    foi_s3_bucket = var.foi_s3_bucket
+  })
+}
