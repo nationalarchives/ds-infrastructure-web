@@ -2,6 +2,7 @@
   "APPLICATION_PROTOCOL": "http",
   "CACHE_HEADER_DURATION": "86400",
   "CACHE_REDIS_URL": "redis://platform-redis.staging.local:6379",
+  "SESSION_REDIS_URL": "redis://platform-redis.staging.local:6379",
   "CACHE_TYPE": "RedisCache",
   "CONFIG": "config.Staging",
   "COOKIE_DOMAIN": ".nationalarchives.gov.uk",
