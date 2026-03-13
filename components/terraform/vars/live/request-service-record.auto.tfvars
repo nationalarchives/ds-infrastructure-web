@@ -9,3 +9,7 @@ web_request_service_record_auto_switch_off  = true
 web_request_service_record_root_block_device_size = "100"
 
 foi_s3_bucket = "ds-live-foi1939-register"
+lambda_web_request_sqs_queue_arn = "arn:aws:sqs:eu-west-2:968803923593:process-submitted-files-queue"
+foi_s3_bucket_arn = "arn:aws:s3:::ds-live-foi1939-register"
+process_submitted_files_queue_arn = "arn:aws:sqs:eu-west-2:968803923593:process-submitted-files-queue"
+process_submitted_files_queue_url = "https://sqs.eu-west-2.amazonaws.com/968803923593/process-submitted-files-queue"

@@ -8,13 +8,26 @@
     },
     {
       "Effect": "Allow",
-      "Action": ["s3:GetObject", "s3:DeleteObject"],
-      "Resource": "arn:aws:s3:::${foi_s3_bucket}/holding/*"
+      "Action": [
+        "s3:GetObject",
+        "s3:DeleteObject",
+        "s3:CopyObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::${foi_s3_bucket}/submitted/*",
+        "arn:aws:s3:::${foi_s3_bucket}/holding/*"
+      ]
     },
     {
       "Effect": "Allow",
-      "Action": ["s3:PutObject", "s3:PutObjectAcl"],
-      "Resource": "arn:aws:s3:::${foi_s3_bucket}/submitted/*"
+      "Action": [
+        "s3:PutObject",
+        "s3:PutObjectAcl"
+      ],
+      "Resource": [
+        "arn:aws:s3:::${foi_s3_bucket}/submitted/*",
+        "arn:aws:s3:::${foi_s3_bucket}/*"
+      ]
     }
   ]
 }

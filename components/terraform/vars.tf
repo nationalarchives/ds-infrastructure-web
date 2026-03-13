@@ -17,3 +17,8 @@ variable "web_frontend_efs_mount_dir" {}
 variable "on_prem_cidrs" {}
 variable "redis_efs_mount_dir" {}
 variable "foi_s3_bucket" {}
+variable "lambda_web_request_sqs_queue_arn" {}
+variable "foi_s3_bucket_arn" {}
+variable "process_submitted_files_queue_arn" {}
+
+variable "process_submitted_files_queue_url" {}

@@ -134,3 +134,59 @@ resource "aws_cloudwatch_log_group" "wagtail_cron_trigger" {
   name              = "/aws/lambda/WagtailCronTrigger"
   retention_in_days = 7
 }
+
+
+resource "aws_sqs_queue" "process_submitted_files_queue" {
+  count = var.environment == "live" ? 1 : 0
+  name = "process-submitted-files-queue"
+  visibility_timeout_seconds = 360
+  message_retention_seconds  = 1209600
+}
+
+resource "aws_s3_bucket_notification" "submitted_folder_event" {
+  count = var.environment == "live" ? 1 : 0
+  bucket = var.foi_s3_bucket
+  eventbridge = true
+
+  queue {
+    queue_arn     = aws_sqs_queue.process_submitted_files_queue[0].arn
+    events        = ["s3:ObjectCreated:*"]
+    filter_prefix = "submitted/"
+  }
+
+  depends_on = [aws_sqs_queue.process_submitted_files_queue]
+}
+
+resource "aws_lambda_function" "process_submitted_files" {
+  count = var.environment == "live" ? 1 : 0
+
+  function_name = "process-submitted-files"
+  role          = var.web_request_service_record_role_arn
+  handler       = "process-submitted-files.lambda_handler"
+  runtime       = "python3.12"
+  timeout       = 300
+
+
+  filename = "${path.module}/process-submitted-files/process-submitted-files.zip"
+
+  environment {
+    variables = {
+      BUCKET_NAME      = var.foi_s3_bucket
+      PLACEHOLDER_IMAGE = "${path.module}/source/placeholder.jpg"
+    }
+  }
+
+  depends_on = [aws_sqs_queue.process_submitted_files_queue]
+}
+resource "aws_lambda_event_source_mapping" "process_submitted_files_sqs" {
+  count = var.environment == "live" ? 1 : 0
+  event_source_arn = aws_sqs_queue.process_submitted_files_queue[0].arn
+  function_name    = aws_lambda_function.process_submitted_files[0].arn
+  batch_size       = 1
+  enabled          = true
+
+  depends_on = [
+    aws_lambda_function.process_submitted_files,
+    aws_sqs_queue.process_submitted_files_queue
+  ]
+}

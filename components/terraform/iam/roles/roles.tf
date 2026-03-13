@@ -51,6 +51,12 @@ resource "aws_iam_role" "web_request_service_record_role" {
   name = "web-request-service-record-role"
   assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
+resource "aws_iam_role" "lambda_web_request_service_record_role" {
+  name               = "lambda-web-request-service-record-role"
+  assume_role_policy = file("${path.root}/shared-templates/assume-role-lambda-policy.json")
+  description        = "Allow Lambda to process S3 and SQS events"
+  tags               = var.tags
+}
 
 # Lambda Web Docker Deployment Role
 resource "aws_iam_role" "lambda_web_docker_deployment_role" {
@@ -354,7 +360,11 @@ resource "aws_iam_role_policy_attachment" "attach_web_request_s3_copy" {
   role       = aws_iam_role.web_request_service_record_role.name
   policy_arn = var.web_request_s3_copy_policy_arn
 }
-
+resource "aws_iam_role_policy_attachment" "attach_lambda_rsr_sqs" {
+  count = var.environment == "live" ? 1 : 0
+  role       = aws_iam_role.lambda_web_request_service_record_role.name
+  policy_arn = var.lambda_web_request_rsr_sqs_arn
+}
 ####### Attach Policies to Forms Role
 
 resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_1" {

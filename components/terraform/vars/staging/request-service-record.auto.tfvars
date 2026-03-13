@@ -9,3 +9,7 @@ web_request_service_record_auto_switch_off  = true
 web_request_service_record_root_block_device_size = "100"
 
 foi_s3_bucket = "ds-staging-foi1939-register"
+foi_s3_bucket_arn = ""
+lambda_web_request_sqs_queue_arn = ""
+process_submitted_files_queue_arn = ""
+process_submitted_files_queue_url = ""

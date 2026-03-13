@@ -25,7 +25,7 @@ module "web_docker_deployment" {
     web_docker_deployment_role_arn = module.roles.lambda_web_docker_deployment_role_arn
     auto_run_startup_script_role_arn = module.roles.lambda_auto_run_startup_script_role_arn
     wagtail_cron_trigger_role_arn = module.roles.lambda_wagtail_cron_trigger_role_arn
-    
+    web_request_service_record_role_arn = module.roles.lambda_web_request_service_record_role_arn
     
     subnet_ids = [
         data.aws_ssm_parameter.private_subnet_2a_id.value,
@@ -40,9 +40,8 @@ module "web_docker_deployment" {
     security_group_ids = [
         module.sgs.lambda_web_deployment_id,
     ]
-
+    foi_s3_bucket_arn = var.foi_s3_bucket_arn
     environment = var.environment
-
+    foi_s3_bucket = var.foi_s3_bucket
     tags = local.tags
 }
-
