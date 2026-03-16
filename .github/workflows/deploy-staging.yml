@@ -101,6 +101,7 @@ jobs:
           echo "SUBMITTED_BY=$SUBMITTED_BY" >> "$GITHUB_OUTPUT"
 
           APPROVED_BY=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/approvals" --jq '.|map(select(.user.type=="User"))|map(.user.login)|join(", ")') || APPROVED_BY=unknown
+          [[ -z $APPROVED_BY ]] && APPROVED_BY="self-approved"
           echo "APPROVED_BY=$APPROVED_BY"
           echo "APPROVED_BY=$APPROVED_BY" >> "$GITHUB_OUTPUT"
 
