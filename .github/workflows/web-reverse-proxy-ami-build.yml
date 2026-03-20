@@ -34,12 +34,6 @@ on:
       s3_deployment_root:
         type: string
         required: true
-      s3_logfile_bucket:
-        type: string
-        required: true
-      s3_logfile_root:
-        type: string
-        required: true
 
 permissions:
   id-token: write
