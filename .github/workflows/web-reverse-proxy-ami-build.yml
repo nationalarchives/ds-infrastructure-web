@@ -1,5 +1,6 @@
 ---
-name: Build Frontend AMI
+name: Build Web Reverse Proxy AMI
+
 on:
   workflow_call:
     inputs:
@@ -33,6 +34,12 @@ on:
       s3_deployment_root:
         type: string
         required: true
+      s3_logfile_bucket:
+        type: string
+        required: true
+      s3_logfile_root:
+        type: string
+        required: true
 
 permissions:
   id-token: write
@@ -47,6 +54,7 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v6
         with:
+          path: main
           ref: "${{ inputs.branch }}"
 
       - name: Configure AWS Credentials
@@ -56,6 +64,7 @@ jobs:
           aws-region: "${{ inputs.region }}"
           role-to-assume: "${{ inputs.base_role }}"
           output-credentials: true
+
       - name: Get VPC ID from SSM
         id: vpc
         run: |
@@ -86,7 +95,7 @@ jobs:
           cache: 'pip'
           cache-dependency-path: '**/base-python-req.txt'
       - run: |
-          pip install -r ${{ github.workspace }}/.github/workflows/base-python-req.txt
+          pip install -r ${{ github.workspace }}/actions/.github/workflows/base-python-req.txt
 
       - name: run ansible playbook
         env:
@@ -94,7 +103,7 @@ jobs:
           SUBNET_ID: ${{ steps.subnet.outputs.subnet_id }}
         run: |
           cur_dir=$(pwd)
-          cd $cur_dir/.github/ansible-playbooks/frontend-application
+          cd $cur_dir/actions/ansible-playbooks/reverse-proxy
           export AWS_ACCESS_KEY_ID=${{ steps.creds.outputs.aws-access-key-id }}
           export AWS_SECRET_ACCESS_KEY=${{ steps.creds.outputs.aws-secret-access-key }}
           export AWS_SESSION_TOKEN=${{ steps.creds.outputs.aws-session-token }}
@@ -108,7 +117,9 @@ jobs:
           instance_type='${{ inputs.instance_type }}' \
           volume_size='${{ inputs.volume_size }}' \
           s3_deployment_bucket='${{ inputs.s3_deployment_bucket }}' \
-          s3_deployment_root='${{ inputs.s3_deployment_root }}'" \
+          s3_deployment_root='${{ inputs.s3_deployment_root }}' \
+          s3_logfile_bucket='${{ inputs.s3_logfile_bucket }}' \
+          s3_logfile_root='${{ inputs.s3_logfile_root }}'" \
           --private-key $cur_dir/${{ inputs.key_name }} \
-          web-frontend-playbook.yml
+          web-reverse-proxy-playbook.yml
 ...

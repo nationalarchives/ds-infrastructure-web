@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  blue-nginx: &nginx
+    container_name: blue-nginx     
+    image: "nginx:latest"                
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_webgateway"
+      - "traefik.http.routers.web.entrypoints=web"
+      - "traefik.http.routers.web.rule=Host(`web-reverse-proxy.dev.local`) || PathPrefix(`/`)"
+      - "traefik.http.services.web.loadbalancer.healthCheck.path=/healthcheck/live/"
+      - "traefik.http.services.web.loadbalancer.healthCheck.interval=10s"
+      - "traefik.http.services.web.loadbalancer.healthCheck.timeout=1s"
+    restart: always
+    networks:
+      - traefik
+  green-nginx:
+    <<: *nginx
+    container_name: green-nginx
+
+networks:
+  traefik:
+    name: traefik_webgateway
+    external: true
