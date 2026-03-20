@@ -48,7 +48,6 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v6
         with:
-          path: main
           ref: "${{ inputs.branch }}"
 
       - name: Configure AWS Credentials
