@@ -110,7 +110,7 @@ jobs:
           instance_type='${{ inputs.instance_type }}' \
           volume_size='${{ inputs.volume_size }}' \
           s3_deployment_bucket='${{ inputs.s3_deployment_bucket }}' \
-          s3_deployment_root='${{ inputs.s3_deployment_root }}' \
+          s3_deployment_root='${{ inputs.s3_deployment_root }}'" \
           --private-key $cur_dir/${{ inputs.key_name }} \
           web-reverse-proxy-playbook.yml
 ...
