@@ -2,17 +2,17 @@
     "services": {
         "frontend": {
             "image": "ghcr.io/nationalarchives/ds-frontend",
-            "version": "26.03.19.1601",
+            "version": "26.03.19.1603",
             "repo": "https://github.com/nationalarchives/ds-frontend"
         },
         "wagtail": {
             "image": "ghcr.io/nationalarchives/ds-wagtail",
-            "version": "26.03.19.1321",
+            "version": "26.03.20.1326",
             "repo": "https://github.com/nationalarchives/ds-wagtail"
         },
         "wagtaildocs": {
             "image": "ghcr.io/nationalarchives/ds-frontend",
-            "version": "26.03.19.1601",
+            "version": "26.03.19.1603",
             "repo": "https://github.com/nationalarchives/ds-frontend"
         },
         "catalogue": {
