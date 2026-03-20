@@ -1,10 +1,15 @@
-# Web Reverse Proxy playbook
+# Web  playbook
 ---
 - name: create web reverse proxy AMI
   hosts: localhost
   gather_facts: false
 
   tasks:
+  - name: set vpc and subnet id
+    set_fact:
+      vpc_id: "{{ lookup( 'env', 'VPC_ID') }}"
+      subnet_id: "{{ lookup( 'env', 'SUBNET_ID') }}"
+
   - name: switch role credentials
     community.aws.sts_assume_role:
       role_arn: "{{ role_arn }}"
@@ -43,7 +48,7 @@
       name: "ansible-ami-web-reverse-proxy-role"
       region: "{{ region }}"
       assume_role_policy_document: "{{ lookup('file', './ec2-role-policy.json') }}"
-      managed_policies: ["{{ s3_policy.policy.arn }}", "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/SecretsManagerReadWrite"]
+      managed_policies: ["{{ s3_policy.policy.arn }}", "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM", "arn:aws:iam::aws:policy/SecretsManagerReadWrite"]
       create_instance_profile: yes
       delete_instance_profile: yes
       purge_policies: yes
@@ -55,7 +60,7 @@
       name: "ansible-ami-web-reverse-proxy-sg"
       description: "security group allowing updates and downloads"
       region: "{{ region }}"
-      vpc_id: "{{ lookup( 'env', 'VPC_ID') }}"
+      vpc_id: "{{ vpc_id }}"
       rules:
         - proto: "tcp"
           from_port: 22
@@ -85,13 +90,37 @@
           rule_desc: "allow replies"
       state: "present"
     register: ec2_sec_group
+  - name: template compose.yml for dev and staging
+    vars:
+      sub_domain: "web-reverse-proxy.{{ account }}.local"
+    template:
+      src: "./templates/compose.yml.j2"
+      dest: "./docker/compose.yml"
+      force: yes
+    when: account == "dev" or
+          account == "staging"
+
+  - name: template compose.yml for live
+    vars:
+      sub_domain: "web-reverse-proxy.{{ account }}.local"
+    template:
+      src: "./templates/compose.yml.j2"
+      dest: "./docker/compose.yml"
+      force: yes
+    when: account == "live"  
+
+  - name: template compose.traefik.yml
+    vars:
+      local_domain: "web-reverse-proxy.{{ account }}.local"
+    template:
+      src: "./templates/compose.traefik.yml.j2"
+      dest: "./docker/compose.traefik.yml"
+      force: yes
 
   - name: template userdata
     vars:
       s3_deployment_bucket: "{{ s3_deployment_bucket }}"
       s3_deployment_root: "{{ s3_deployment_root }}"
-      s3_logfile_bucket: "{{ s3_logfile_bucket }}"
-      s3_logfile_root: "{{ s3_logfile_root }}"
     template:
       src: "./templates/userdata.sh.j2"
       dest: "./userdata.sh"
@@ -109,7 +138,7 @@
       network:
         assign_public_ip: yes
         delete_on_termination: yes
-        subnet_id: "{{ lookup('env', 'SUBNET_ID') }}"
+        subnet_id: "{{ subnet_id }}"
       region: "{{ region }}"
       security_groups: ["{{ ec2_sec_group.group_id }}"]
       state: "running"
@@ -122,7 +151,7 @@
             delete_on_termination: true
             encrypted: true
             volume_size: "{{ volume_size }}"
-      vpc_subnet_id: "{{ lookup('env', 'SUBNET_ID') }}"
+      vpc_subnet_id: "{{ subnet_id }}"
       tags:
         Name: "web-reverse-proxy-primer"
         Environment: "{{ account }}"
@@ -184,6 +213,32 @@
     until: "init_finished.stat.exists"
     retries: 15
     delay: 20
+
+  - name: copy docker files to remote
+    ansible.builtin.copy:
+      src: ./docker/
+      dest: /var/docker/
+      force: yes
+    become: true
+
+  - name: copy scripts to remote
+    ansible.builtin.copy:
+      src: ./files/
+      dest: /usr/local/bin/
+      force: yes
+      mode: 0755
+    become: true
+
+  - name: set mode for scripts
+    ansible.builtin.file:
+      path: '/usr/local/bin/{{ item.file_name }}'
+      mode: '0755'
+    loop:
+      - { file_name: startup.sh }
+      - { file_name: traefik-up.sh }
+      - { file_name: traefik-down.sh }
+      - { file_name: traefik-deploy.sh }
+      - { file_name: website-blue-green-deploy.sh }
 
 - name: switch to localhost
   hosts: localhost
