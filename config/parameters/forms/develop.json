@@ -8,5 +8,6 @@
   "CACHE_TYPE": "RedisCache",
   "CACHE_REDIS_URL": "redis://platform-redis.dev.local:6379/0",
   "SESSION_REDIS_URL": "redis://platform-redis.dev.local:6379/1",
-  "RATELIMIT_REDIS_URL": "redis://platform-redis.dev.local:6379/2"
+  "RATELIMIT_REDIS_URL": "redis://platform-redis.dev.local:6379/2",
+  "LOG_LEVEL": "debug"
 }
