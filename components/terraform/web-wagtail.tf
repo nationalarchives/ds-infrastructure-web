@@ -19,14 +19,6 @@ variable "web_wagtail_patch_group" {}
 variable "web_wagtail_deployment_s3_bucket" {}
 variable "web_wagtail_folder_s3_key" {}
 
-# module "notifications" {
-#   source = "./chatbot/web-sns-notifications"
-
-#   environment        = var.environment
-#   slack_workspace_id = var.slack_workspace_id
-#   slack_channel_id   = var.slack_channel_id
-# }
-
 module "web_wagtail" {
     source = "./web-wagtail"
 
@@ -43,6 +35,7 @@ module "web_wagtail" {
     enable_autoscaling = var.environment == "live" ? true : false
     autoscaling_policy_name_prefix = var.environment == "live" ? "web-wagtail" : ""
     web_wagtail_autoscaling_policy_name_prefix = var.environment == "live" ? "web-wagtail" : ""
+    
     asg_max_size = var.web_wagtail_asg_max_size
     asg_min_size = var.web_wagtail_asg_min_size
     asg_desired_capacity = var.web_wagtail_asg_desired_capacity

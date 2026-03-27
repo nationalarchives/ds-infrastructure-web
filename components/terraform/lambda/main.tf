@@ -46,7 +46,7 @@ resource "aws_cloudwatch_log_group" "web_docker_deployment" {
     retention_in_days = 7
 }
 
-
+## AutoRunStartupScript
 data "archive_file" "auto_run_startup_script" {
   type        = "zip"
   source_dir  = "${path.root}/lambda/auto-run-startup-script/source"
@@ -91,6 +91,7 @@ resource "aws_cloudwatch_log_group" "auto_run_startup_script" {
   retention_in_days = 7
 }
 
+# WagtailCronTrigger
 data "archive_file" "wagtail_cron_trigger" {
   type        = "zip"
   source_dir  = "${path.root}/lambda/wagtail-cron-trigger/source"
@@ -135,6 +136,12 @@ resource "aws_cloudwatch_log_group" "wagtail_cron_trigger" {
   retention_in_days = 7
 }
 
+# ProcessSubmittedFiles
+data "archive_file" "process_submitted_files" {
+  type        = "zip"
+  source_dir  = "${path.root}/lambda/process-submitted-files/source"
+  output_path = "${path.root}/lambda/process-submitted-files/process-submitted-files.zip"
+}
 
 resource "aws_sqs_queue" "process_submitted_files_queue" {
   count = var.environment == "live" ? 1 : 0

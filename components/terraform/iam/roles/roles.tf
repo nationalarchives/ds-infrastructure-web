@@ -51,6 +51,8 @@ resource "aws_iam_role" "web_request_service_record_role" {
   name = "web-request-service-record-role"
   assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
+
+# Lambda Web Request Service Record Role - MoD FoI
 resource "aws_iam_role" "lambda_web_request_service_record_role" {
   name               = "lambda-web-request-service-record-role"
   assume_role_policy = file("${path.root}/shared-templates/assume-role-lambda-policy.json")
@@ -81,7 +83,6 @@ resource "aws_iam_role" "lambda_wagtail_cron_trigger_role" {
   description        = "Allows Lambda functions to call AWS services on your behalf"
   tags               = var.tags
 }
-
 
 # --------------------------------------------------------------
 ############# Instance profiles###############
@@ -129,7 +130,6 @@ resource "aws_iam_instance_profile" "web_request_service_record_profile" {
   path = "/"
   role = aws_iam_role.web_request_service_record_role.name
 }
-
 
 #---------------------------------------------------------------------------
 ################### Policies ##########################################

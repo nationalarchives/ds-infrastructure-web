@@ -4,7 +4,7 @@
 account = "dev"
 environment = "dev"
 region      = "eu-west-2"
-service     = "web-frontend"
+service     = "web"
 
 internal_domain_name = "web-frontend.dev.local"
 

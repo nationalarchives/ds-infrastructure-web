@@ -10,7 +10,6 @@ output "lambda_web_deployment_id" {
     value = aws_security_group.lambda_web_deployment.id
 }
 
-
 output "web_catalogue_sg_id" {
     value = aws_security_group.web_catalogue.id
 }
@@ -34,4 +33,7 @@ output "web_wagtaildocs_sg_id" {
 }
 output "web_forms_sg_id" {
     value = aws_security_group.web_forms.id
+}
+output "web_reverse_proxy_sg_id" {
+    value = aws_security_group.web_reverse_proxy.id
 }

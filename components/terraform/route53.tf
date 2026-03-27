@@ -74,3 +74,14 @@ resource "aws_route53_record" "web_forms" {
         module.load-balancer.load_balancer_dns_name
     ]
 }
+
+resource "aws_route53_record" "web_reverse_proxy" {
+    zone_id = var.route53_zone
+    name    = "web-reverse-proxy.${var.environment}.local"
+    type    = "CNAME"
+    ttl     = 15
+
+    records = [
+        module.load-balancer.load_balancer_dns_name
+    ]
+}

@@ -1,0 +1,48 @@
+# -----------------------------------------------------------------------------
+# Launch Template
+# -----------------------------------------------------------------------------
+resource "aws_launch_template" "web_reverse_proxy" {
+    name = "web-reverse-proxy"
+
+    iam_instance_profile {
+        arn = aws_iam_instance_profile.web_reverse_proxy_profile.arn
+    }
+
+    image_id               = var.ami_id
+    instance_type          = var.instance_type
+    key_name               = var.key_name
+    update_default_version = true
+
+    vpc_security_group_ids = [
+        var.web_reverse_proxy_sg_id
+    ]
+
+    user_data = base64encode(templatefile("${path.module}/scripts/userdata.sh", {
+        mount_target         = var.efs_dns_name,
+        deployment_s3_bucket = var.deployment_s3_bucket,
+        nginx_folder_s3_key  = var.folder_s3_key,
+        mount_wagtail_dir     = var.mount_wagtail_dir,
+        mount_wagtail_media   = var.mount_wagtail_media,
+        service               = var.service
+    }))
+
+    block_device_mappings {
+        device_name = "/dev/xvda"
+
+        ebs {
+            volume_size = var.root_block_device_size
+            encrypted   = true
+        }
+    }
+
+    metadata_options {
+        http_endpoint               = "enabled"
+        http_tokens                 = "required"
+        http_put_response_hop_limit = 2
+        instance_metadata_tags      = "enabled"
+    }
+    monitoring {
+        enabled = var.enable_monitoring
+    }
+}
+
