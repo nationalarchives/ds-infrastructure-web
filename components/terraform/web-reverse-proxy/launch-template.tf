@@ -23,6 +23,8 @@ resource "aws_launch_template" "web_reverse_proxy" {
         nginx_folder_s3_key  = var.folder_s3_key,
         mount_wagtail_dir     = var.mount_wagtail_dir,
         mount_wagtail_media   = var.mount_wagtail_media,
+        mount_nginx_dir      = var.mount_nginx_dir,
+        mount_nginx_efs      = var.mount_nginx_efs,
         service               = var.service
     }))
 

@@ -2,6 +2,7 @@ variable "web_reverse_proxy_instance_type" {}
 variable "web_reverse_proxy_key_name" {}
 variable "web_reverse_proxy_root_block_device_size" {}
 variable "web_reverse_proxy_efs_mount_dir" {}
+variable "web_reverse_proxy_nginx_mount_dir" {}
 
 variable "web_reverse_proxy_asg_max_size" {}
 variable "web_reverse_proxy_asg_min_size" {}
@@ -20,20 +21,9 @@ variable "web_reverse_proxy_patch_group" {}
 variable "web_reverse_proxy_deployment_s3_bucket" {}
 variable "web_reverse_proxy_folder_s3_key" {}
 
+
 variable "vpc_cidr" {}
 variable "resolver" {}
-# variable "ups_appslb" {}
-# variable "ups_legacy_apps" {}
-# variable "ups_pronom" {}
-# variable "ups_ecommerce_be" {}
-# variable "ups_services" {}
-# variable "ups_win2016apps" {}
-# variable "ups_win2016apps_host" {}
-# variable "ups_win2016web" {}
-# variable "ups_win2016web_host" {}
-#variable "streamline_access_list" {}
-#variable "admin_list" {}
-#variable "site_access_list" {}
 
 module "web_reverse_proxy" {
     source = "./web-reverse-proxy"
@@ -42,6 +32,8 @@ module "web_reverse_proxy" {
     mount_wagtail_dir   = var.web_reverse_proxy_efs_mount_dir
     mount_wagtail_media = module.media_efs.media_efs_dns_name
     service = var.service
+    mount_nginx_dir = var.web_reverse_proxy_nginx_mount_dir
+    mount_nginx_efs = module.nginx_efs.nginx_efs_dns_name
 
 
     lb_listener_arn = module.load-balancer.lb_listener_arn
@@ -93,17 +85,17 @@ module "nginx_conf" {
     environment            = var.environment
     resolver               = var.resolver
     set_real_ip_from       = var.vpc_cidr
-    # ups_appslb             = var.ups_appslb
-    # ups_legacy_apps        = var.ups_legacy_apps
-    # ups_pronom             = var.ups_pronom
-    # ups_ecommerce_be       = var.ups_ecommerce_be
-    # ups_services           = var.ups_services
-    # ups_win2016apps        = var.ups_win2016apps
-    # ups_win2016apps_host   = var.ups_win2016apps_host
-    # ups_win2016web         = var.ups_win2016web
-    # ups_win2016web_host    = var.ups_win2016web_host
-    #streamline_access_list = var.streamline_access_list
 
-    #admin_list       = concat([var.vpc_cidr], var.admin_list)
-    #site_access_list = concat([var.vpc_cidr], var.site_access_list)
+}
+
+module "nginx_efs" {
+    source = "./nginx-efs"
+
+    vpc_id = data.aws_ssm_parameter.vpc_id.value
+    private_subs = [
+        data.aws_ssm_parameter.private_subnet_2a_id.value,
+        data.aws_ssm_parameter.private_subnet_2b_id.value,
+    ]
+    tags = local.tags   
+    web_reverse_proxy_sg_id = module.sgs.web_reverse_proxy_sg_id
 }

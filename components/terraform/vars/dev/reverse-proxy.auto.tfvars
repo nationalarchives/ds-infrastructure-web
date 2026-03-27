@@ -11,3 +11,4 @@ web_reverse_proxy_auto_switch_off  = true
 resolver    = "10.128.208.2"
 vpc_cidr    = "10.128.208.0/21"
 
+web_reverse_proxy_nginx_mount_dir = "/etc/nginx"
