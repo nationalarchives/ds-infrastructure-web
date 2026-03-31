@@ -2,8 +2,7 @@ name: TF scheduled plan infrastructure
 
 on:
   schedule:
-    - cron: '45 5 * * *' # Every day at 05:45 UTC
-
+    - cron: '45 5 * * 1-5' # At 05:45 on every working day (Monday to Friday)
 permissions:
   id-token: write
   contents: write
