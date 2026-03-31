@@ -4,17 +4,14 @@
 sudo yum update -y
 
 # Mount EFS (Wagtail Media)
-sudo mkdir -p ${mount_wagtail_dir}
-sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 ${mount_wagtail_media}:/ ${mount_wagtail_dir}
-sudo chmod 777 ${mount_wagtail_dir}
-sudo echo "${mount_wagtail_media}:/ ${mount_wagtail_dir} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,fsc,_netdev 0 0" >> /etc/fstab
+sudo mkdir -p ${web_wagtail_efs_mount_dir}
+sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 ${mount_target}:/ ${web_wagtail_efs_mount_dir}
+sudo chmod 777 ${web_wagtail_efs_mount_dir}
+sudo echo "${mount_target}:/ ${web_wagtail_efs_mount_dir} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,fsc,_netdev 0 0" >> /etc/fstab
 
-
-# Mount EFS for Nginx Configs
-sudo mkdir -p ${mount_nginx_dir}
-sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 ${mount_nginx_efs}:/ ${mount_nginx_dir}
-sudo chmod 777 ${mount_nginx_dir}
-sudo echo "${mount_nginx_efs}:/ ${mount_nginx_dir} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,fsc,_netdev 0 0" >> /etc/fstab
+# Copy configuration files and scripts
+sudo aws s3 cp s3://${deployment_s3_bucket}/${service}/${nginx_folder_s3_key}/ /etc/nginx/ --recursive --exclude "*" --include "*.conf" --include "mime.types"
+sudo aws s3 cp s3://${deployment_s3_bucket}/${service}/${nginx_folder_s3_key}/update_nginx_confs.sh ~/update_nginx_confs.sh
 
 # Install Docker
 echo "Installing Docker..."

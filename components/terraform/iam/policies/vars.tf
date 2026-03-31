@@ -8,3 +8,4 @@ variable "process_submitted_files_queue_arn" {}
 variable "process_submitted_files_queue_url" {}
 variable "lambda_web_request_sqs_queue_arn" {}
 variable "environment" {}
+variable "lambda_role_name" {}

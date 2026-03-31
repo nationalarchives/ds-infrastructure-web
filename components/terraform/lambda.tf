@@ -26,6 +26,7 @@ module "web_docker_deployment" {
     auto_run_startup_script_role_arn = module.roles.lambda_auto_run_startup_script_role_arn
     wagtail_cron_trigger_role_arn = module.roles.lambda_wagtail_cron_trigger_role_arn
     web_request_service_record_role_arn = module.roles.lambda_web_request_service_record_role_arn
+    web_rsr_cron_role_arn = module.roles.lambda_web_rsr_cron_role_arn
     
     subnet_ids = [
         data.aws_ssm_parameter.private_subnet_2a_id.value,

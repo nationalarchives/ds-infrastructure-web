@@ -84,6 +84,17 @@ resource "aws_iam_role" "lambda_wagtail_cron_trigger_role" {
   tags               = var.tags
 }
 
+# Web RSR Role - MoD FoI
+resource "aws_iam_role" "lambda_web_rsr_cron_role" {
+  name               = "WebrsrCronRole"
+  assume_role_policy = file("${path.root}/shared-templates/assume-role-lambda-policy.json")
+  description        = "Allows Lambda functions to call AWS services on your behalf"
+  tags               = var.tags
+}
+resource "aws_iam_role_policy_attachment" "lambda_vpc_access" {
+  role       = aws_iam_role.lambda_web_rsr_cron_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+}
 # --------------------------------------------------------------
 ############# Instance profiles###############
 # --------------------------------------------------------------

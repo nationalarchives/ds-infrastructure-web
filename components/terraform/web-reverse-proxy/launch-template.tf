@@ -21,10 +21,7 @@ resource "aws_launch_template" "web_reverse_proxy" {
         mount_target         = var.efs_dns_name,
         deployment_s3_bucket = var.deployment_s3_bucket,
         nginx_folder_s3_key  = var.folder_s3_key,
-        mount_wagtail_dir     = var.mount_wagtail_dir,
-        mount_wagtail_media   = var.mount_wagtail_media,
-        mount_nginx_dir      = var.mount_nginx_dir,
-        mount_nginx_efs      = var.mount_nginx_efs,
+        web_wagtail_efs_mount_dir = var.web_wagtail_efs_mount_dir,
         service               = var.service
     }))
 

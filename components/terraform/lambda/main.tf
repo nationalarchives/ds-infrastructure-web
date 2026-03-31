@@ -197,3 +197,44 @@ resource "aws_lambda_event_source_mapping" "process_submitted_files_sqs" {
     aws_sqs_queue.process_submitted_files_queue
   ]
 }
+
+data "archive_file" "web_rsr_cron" {
+  type        = "zip"
+  source_dir  = "${path.root}/lambda/web-rsr-cron/source"
+  output_path = "${path.root}/lambda/web-rsr-cron/web-rsr-cron.zip"
+}
+
+resource "aws_lambda_function" "web_rsr_cron" {
+  filename         = data.archive_file.web_rsr_cron.output_path
+  source_code_hash = data.archive_file.web_rsr_cron.output_base64sha256
+
+  function_name = "WebrsrCron"
+  role          = var.web_rsr_cron_role_arn
+
+  handler = "web-rsr-cron.web_rsr_cron"  
+  runtime = "python3.12"
+
+  memory_size = 128
+  timeout     = 900
+
+  ephemeral_storage {
+    size = 512
+  }
+
+  vpc_config {
+    subnet_ids         = var.subnet_ids
+    security_group_ids = var.security_group_ids
+  }
+
+  tags = merge(var.tags, {
+    Role            = "serverless"
+    ApplicationType = "python"
+    CreatedBy       = "devops@nationalarchives.gov.uk"
+    Service         = "Web"
+    Name            = "web_rsr_cron"
+  })
+}
+resource "aws_cloudwatch_log_group" "web_rsr_cron" {
+  name              = "/aws/lambda/WebrsrCron"
+  retention_in_days = 7
+}

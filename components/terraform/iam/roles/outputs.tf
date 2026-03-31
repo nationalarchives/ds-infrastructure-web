@@ -36,4 +36,9 @@ output "lambda_wagtail_cron_trigger_role_arn"{
 output "lambda_web_request_service_record_role_arn"{
     value = aws_iam_role.lambda_web_request_service_record_role.arn
 }
-
+output "lambda_web_rsr_cron_role_arn"{
+    value = aws_iam_role.lambda_web_rsr_cron_role.arn
+}
+output "lambda_web_rsr_role_name" {
+  value = aws_iam_role.lambda_web_rsr_cron_role.name
+}

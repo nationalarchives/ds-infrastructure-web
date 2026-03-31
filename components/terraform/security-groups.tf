@@ -11,8 +11,6 @@ module "sgs" {
         data.aws_ssm_parameter.private_db_subnet_2b_cidr.value,
         data.aws_ssm_parameter.client_vpn_cidr.value,
     ]
-
     redis_sg_id = module.sgs.redis_sg_id
-
     tags = local.tags
 }

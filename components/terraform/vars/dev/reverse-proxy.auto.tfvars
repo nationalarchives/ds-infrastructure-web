@@ -1,4 +1,3 @@
-web_reverse_proxy_efs_mount_dir = "/media"
 web_reverse_proxy_folder_s3_key = "nginx"
 web_reverse_proxy_deployment_s3_bucket = "ds-dev-deployment-source"
 web_reverse_proxy_instance_type = "t3a.small"
@@ -11,4 +10,4 @@ web_reverse_proxy_auto_switch_off  = true
 resolver    = "10.128.208.2"
 vpc_cidr    = "10.128.208.0/21"
 
-web_reverse_proxy_nginx_mount_dir = "/etc/nginx"
+nginx_folder_s3_key = "nginx"

@@ -1,22 +1,12 @@
-# resource "aws_s3_object" "nginx_conf" {
-#     bucket = var.deployment_s3_bucket
-#     key    = "${var.service}/${var.nginx_folder_s3_key}/nginx.conf"
-#     content = templatefile("${path.module}/scripts/nginx.conf", {
-#         environment            = var.environment,
-#         set_real_ip_from       = var.set_real_ip_from,
-#         resolver               = var.resolver,
-#         # ups_appslb             = var.ups_appslb,
-#         # ups_legacy_apps        = var.ups_legacy_apps,
-#         # ups_pronom             = var.ups_pronom,
-#         # ups_ecommerce_be       = var.ups_ecommerce_be,
-#         # ups_services           = var.ups_services,
-#         # ups_win2016apps        = var.ups_win2016apps,
-#         # ups_win2016apps_host   = var.ups_win2016apps_host,
-#         # ups_win2016web         = var.ups_win2016web,
-#         # ups_win2016web_host    = var.ups_win2016web_host,
-#         # streamline_access_list = var.streamline_access_list,
-#     })
-# }
+resource "aws_s3_object" "nginx_conf" {
+    bucket = var.deployment_s3_bucket
+    key    = "${var.service}/${var.nginx_folder_s3_key}/nginx.conf"
+    content = templatefile("${path.module}/scripts/nginx.conf", {
+        environment            = var.environment,
+        set_real_ip_from       = var.set_real_ip_from,
+        resolver               = var.resolver,
+    })
+}
 
 # resource "aws_s3_object" "redirects_conf" {
 #     bucket = var.deployment_s3_bucket
@@ -25,33 +15,6 @@
 #     source_hash = filemd5("${path.module}/scripts/redirects.conf")
 # }
 
-# resource "aws_s3_object" "admin_conf" {
-#     bucket = var.deployment_s3_bucket
-#     key    = "${var.service}/${var.nginx_folder_s3_key}/wp_admin.conf"
-#     content = templatefile("${path.module}/scripts/wp_admin.conf", {
-#         environment      = var.environment,
-#         set_real_ip_from = var.set_real_ip_from,
-#         resolver         = var.resolver
-#     })
-# }
-
-# resource "aws_s3_object" "admin_subdomain_conf" {
-#     bucket = var.deployment_s3_bucket
-#     key    = "${var.service}/${var.nginx_folder_s3_key}/wp_admin_subdomain.conf"
-#     content = templatefile("${path.module}/scripts/wp_admin_subdomain.conf", {
-#         environment      = var.environment,
-#         set_real_ip_from = var.set_real_ip_from,
-#         resolver         = var.resolver
-#     })
-# }
-
-# resource "aws_s3_object" "admin_ips_conf" {
-#     bucket = var.deployment_s3_bucket
-#     key    = "${var.service}/${var.nginx_folder_s3_key}/admin_ips.conf"
-#     content = templatefile("${path.module}/scripts/admin_ips.conf", {
-#         admin_list = var.admin_list
-#     })
-# }
 
 resource "aws_s3_object" "cloudfront_ips_conf" {
     bucket = var.deployment_s3_bucket
@@ -83,16 +46,7 @@ resource "aws_s3_object" "variables_conf" {
     content = templatefile("${path.module}/scripts/variables.conf", {
         environment          = var.environment,
         set_real_ip_from     = var.set_real_ip_from,
-        resolver             = var.resolver,
-        # ups_appslb           = var.ups_appslb,
-        # ups_legacy_apps      = var.ups_legacy_apps,
-        # ups_ecommerce_be     = var.ups_ecommerce_be,
-        # ups_services         = var.ups_services,
-        # ups_win2016apps      = var.ups_win2016apps,
-        # ups_win2016apps_host = var.ups_win2016apps_host,
-        # ups_win2016web       = var.ups_win2016web,
-        # ups_win2016web_host  = var.ups_win2016web_host,
-        # ups_pronom           = var.ups_pronom
+        resolver             = var.resolver
     })
 }
 
@@ -116,18 +70,3 @@ resource "aws_s3_object" "whitelist_conf" {
     })
 }
 
-# resource "aws_s3_object" "blog_conf" {
-#     bucket = var.deployment_s3_bucket
-#     key    = "${var.service}/${var.nginx_folder_s3_key}/blog.conf"
-#     content = templatefile("${path.module}/scripts/blog.conf", {
-#         environment = var.environment
-#     })
-# }
-
-# resource "aws_s3_object" "media_conf" {
-#     bucket = var.deployment_s3_bucket
-#     key    = "${var.service}/${var.nginx_folder_s3_key}/media.conf"
-#     content = templatefile("${path.module}/scripts/media.conf", {
-#         environment = var.environment
-#     })
-# }

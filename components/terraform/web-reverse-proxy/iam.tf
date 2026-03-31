@@ -23,7 +23,7 @@ resource "aws_iam_policy" "web_reverse_proxy_deployment_s3" {
     description = "deployment S3 access for web reverse proxy"     
     policy = templatefile("${path.module}/templates/deployment-source-s3-access.json", {
         deployment_s3_bucket = var.deployment_s3_bucket,
-        service              = "web-reverse-proxy"
+        service              = "web"
     })
 }
 resource "aws_iam_role_policy_attachment" "web_reverse_proxy_policy_attachment_7" {

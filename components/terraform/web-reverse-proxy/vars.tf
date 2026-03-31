@@ -38,8 +38,5 @@ variable "tags" {}
 
 variable "efs_dns_name" {}
 variable "web_reverse_proxy_sg_id" {}
-variable "mount_wagtail_dir" {}
-variable "mount_wagtail_media" {}
-variable "mount_nginx_dir" {}
-variable "mount_nginx_efs" {}
+variable "web_wagtail_efs_mount_dir" {}
 variable "service" {}

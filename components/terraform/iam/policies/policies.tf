@@ -99,3 +99,41 @@ resource "aws_s3_bucket_notification" "submitted_folder_event" {
     aws_sqs_queue_policy.process_submitted_files_queue_policy
   ]
 }
+
+resource "aws_iam_policy" "lambda_web_rsr_policy" {
+  name        = "WebrsrCronPolicy"
+  description = "Permissions for Web RSR Lambda to interact with EC2, SSM, and invoke Lambda"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:DescribeInstances"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "ssm:SendCommand",
+          "ssm:GetCommandInvocation"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "lambda:InvokeFunction"
+        ]
+        Resource = "arn:aws:lambda:eu-west-2:${var.account_id}:function:WebrsrCron"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_web_rsr_policy_attach" {
+  role       = var.lambda_role_name
+  policy_arn = aws_iam_policy.lambda_web_rsr_policy.arn
+}

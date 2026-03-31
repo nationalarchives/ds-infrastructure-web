@@ -21,3 +21,13 @@ resource "aws_security_group_rule" "media_mount_efs_ingress" {
   security_group_id        = aws_security_group.media_efs.id
   source_security_group_id = var.web_wagtail_sg_id
 }
+
+resource "aws_security_group_rule" "media_mount_efs_web_reverse_proxy" {
+  description              = "Allow NFS from web-reverse-proxy EC2"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 2049
+  to_port                  = 2049
+  security_group_id        = aws_security_group.media_efs.id
+  source_security_group_id = var.web_reverse_proxy_sg_id
+}

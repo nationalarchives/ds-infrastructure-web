@@ -9,7 +9,7 @@ variable "web_request_service_record_asg_health_check_type" {}
 variable "web_request_service_record_default_cooldown" {}
 variable "web_request_service_record_scale_in_threshold" {}
 variable "web_request_service_record_scale_out_threshold" {}
-
+variable "web_request_service_record_autoscaling_policy_name_prefix" {}
 variable "web_request_service_record_auto_switch_off" {}
 variable "web_request_service_record_auto_switch_on" {}
 variable "web_request_service_record_deployment_group" {}

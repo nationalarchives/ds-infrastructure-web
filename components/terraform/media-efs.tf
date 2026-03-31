@@ -21,6 +21,7 @@ module "media_efs" {
     media_efs_backup_delete_after       = var.media_efs_backup_delete_after
     media_efs_backup_kms_key_arn        = var.media_efs_backup_kms_key_arn
     web_wagtail_sg_id = module.sgs.web_wagtail_sg_id
+    web_reverse_proxy_sg_id = module.sgs.web_reverse_proxy_sg_id
 
     tags = local.tags
 }

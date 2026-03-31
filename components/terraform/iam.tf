@@ -6,11 +6,10 @@ module "policies" {
     foi_s3_bucket_arn    = var.foi_s3_bucket
     service              = var.service
     foi_s3_bucket        = var.foi_s3_bucket
-
+    lambda_role_name = module.roles.lambda_web_rsr_role_name
     lambda_web_request_sqs_queue_arn  = var.lambda_web_request_sqs_queue_arn
     process_submitted_files_queue_arn = var.process_submitted_files_queue_arn
     process_submitted_files_queue_url = var.process_submitted_files_queue_url
-
     account_id = data.aws_caller_identity.current.account_id
 }
 
