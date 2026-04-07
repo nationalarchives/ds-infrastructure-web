@@ -81,6 +81,8 @@ def web_rsr_cron(event, context):
         cron_command = f"sudo docker-compose -f /var/docker/compose.yml exec {active_container} poetry run python expire_old_payments.py"
     elif task == 'retry_paid_requests':
         cron_command = f"sudo docker-compose -f /var/docker/compose.yml exec {active_container} poetry run python retry_paid_requests.py"
+    elif task == 'retry_paid_dynamics_payments':
+        cron_command = f"sudo docker-compose -f /var/docker/compose.yml exec {active_container} poetry run python retry_paid_dynamics_payments.py"
     else:
         return {
             'statusCode': 400,
