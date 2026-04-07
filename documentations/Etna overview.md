@@ -8,6 +8,8 @@
 | `website-reverse-proxy` | Reverse proxy for `web-frontend` & `wagtail` | Nginx manages routing to frontend and Wagtail containers.                                  |
 | `beta-rp`               | Reverse proxy for `search` & `catalogue`     | Nginx manages routing for these services.                                         |
 | `web-wagtaildocs`               | Wagtail Documentation                                  |For content designers to document how to use Wagtail.                                    |
+| `web-request-service-record`     | Military Request Service Record   |Runs container for MOD FOI.
+| `web-forms`  | Forms Service      |  Runs container for forms application
 
 # 2. Deployment Strategy – Blue-Green Deployment
 ### Applications Using Blue-Green Deployment:
@@ -23,6 +25,8 @@
 * wagtaildocs
 
 * request-service-record
+
+* Forms
 
 ### What is Blue-Green Deployment?
 
@@ -62,12 +66,8 @@ All critical deployment scripts are located in:
 ### Responsibilities:
 
 * Sets environment variables from AWS Parameter Store 
-   *  Frontend parameters path -> /application/web/frontend.
-   * Wagtail parameters path -> /application/web/wagtail.
-   * Catalogue parameters path -> /application/web/catalogue.
-   * Search parameters path -> /application/web/search.
-   * wagtaildocs parameters path -> /application/web/wagtaildocs.
-   * requestservicerecord parameters path -> /application/web/requestservicerecord
+   *  Parameters path -> /application/web/servicename.
+   
 
 * Installs dependencies (aws-cli, jq).
 
