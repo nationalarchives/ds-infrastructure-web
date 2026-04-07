@@ -102,7 +102,6 @@ terraform plan \
   -var-file="vars/dev/autoscalinggroup.auto.tfvars" \
   -var-file="vars/dev/frontend.auto.tfvars" \
   -var-file="vars/dev/global.auto.tfvars" \
-  -var-file="vars/dev/waf.auto.tfvars" \
   -var-file="vars/dev/route53.auto.tfvars" \
   -var-file="vars/dev/media-efs.auto.tfvars" \
   -var-file="vars/dev/cloudfront.auto.tfvars" \
@@ -126,7 +125,6 @@ terraform plan \
   -var-file="vars/staging/autoscalinggroup.auto.tfvars" \
   -var-file="vars/staging/frontend.auto.tfvars" \
   -var-file="vars/staging/global.auto.tfvars" \
-  -var-file="vars/staging/waf.auto.tfvars" \
   -var-file="vars/staging/route53.auto.tfvars" \
   -var-file="vars/staging/media-efs.auto.tfvars" \
   -var-file="vars/staging/cloudfront.auto.tfvars" \
@@ -149,7 +147,6 @@ terraform plan \
 -var-file="vars/live/autoscalinggroup.auto.tfvars" \
 -var-file="vars/live/frontend.auto.tfvars" \
 -var-file="vars/live/global.auto.tfvars" \
--var-file="vars/live/waf.auto.tfvars" \
 -var-file="vars/live/route53.auto.tfvars" \
 -var-file="vars/live/media-efs.auto.tfvars" \
 -var-file="vars/live/cloudfront.auto.tfvars" \
@@ -174,7 +171,6 @@ terraform apply \
   -var-file="vars/dev/autoscalinggroup.auto.tfvars" \
   -var-file="vars/dev/frontend.auto.tfvars" \
   -var-file="vars/dev/global.auto.tfvars" \
-  -var-file="vars/dev/waf.auto.tfvars" \
   -var-file="vars/dev/route53.auto.tfvars" \
   -var-file="vars/dev/media-efs.auto.tfvars" \
   -var-file="vars/dev/cloudfront.auto.tfvars" \
@@ -196,7 +192,6 @@ terraform apply \
 -var-file="vars/staging/autoscalinggroup.auto.tfvars" \
 -var-file="vars/staging/frontend.auto.tfvars" \
 -var-file="vars/staging/global.auto.tfvars" \
--var-file="vars/staging/waf.auto.tfvars" \
 -var-file="vars/staging/route53.auto.tfvars" \
 -var-file="vars/staging/media-efs.auto.tfvars" \
 -var-file="vars/staging/cloudfront.auto.tfvars" \
@@ -216,7 +211,6 @@ terraform apply \
 -var-file="vars/live/autoscalinggroup.auto.tfvars" \
 -var-file="vars/live/frontend.auto.tfvars" \
 -var-file="vars/live/global.auto.tfvars" \
--var-file="vars/live/waf.auto.tfvars" \
 -var-file="vars/live/route53.auto.tfvars" \
 -var-file="vars/live/media-efs.auto.tfvars" \
 -var-file="vars/live/cloudfront.auto.tfvars" \
