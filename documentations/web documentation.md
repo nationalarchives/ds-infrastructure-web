@@ -8,22 +8,26 @@ The ds-infrastructure-web repository contains terraform configurations for migra
 
 ## **2. Architecture**
 
-![Architecture diagram](./general-web-infrastructure.png)
+![Architecture diagram](./general-web-infrastructure.draw.io)
 
 ## **3. Components**
 
 **_Frontend_**
 
-- Hosted on EC2 instances in an Auto Scaling Group (ASG).
+- Hosted on EC2 instances (`web-frontend`) in an Auto Scaling Group (ASG).
 - Accessed via an Application Load Balancer.
 - Uses AMI for deployment (web-frontend-primer\*).
 - It serves user facing part of Etna application.
 
 **_Enrichment_**
 
-- Hosted on EC2 instances in an ASG.
+- Hosted on EC2 instances (`web-enrichment`) in an ASG.
 - Uses AMI for deployment (web-enrichment-primer\*).
 - The enrichment service is a backend component that processes and enhances data before it's delivered to users or other services.
+
+**_Wagtail_**
+
+- Wagtail refers to the **CMS(Content Management System)** component likely used to manage and serve content for Etna application.
 
 **_Cognito_**
 
@@ -55,10 +59,6 @@ The ds-infrastructure-web repository contains terraform configurations for migra
 **_Cloud Front_**
 
 - Cloud Front distribution acts as a secure CDN, caching content at edge locations and routing requests through AWS WAF before forwarding them to the reverse proxy ALB, using custom headers for origin authentication.
-
-**_Wagtail_**
-
-- Wagtail refers to the **CMS(Content Management System)** component likely used to manage and serve content for Etna application.
 
 **_Route53_**
 
@@ -240,7 +240,7 @@ terraform apply \
 - frontend.tf: Configures the frontend service.
 - lambda.tf: Manages lambda functions and layers.
 - media-efs.tf: Configures EFS and backups.
-- iam.tf: Defines IAm roles and policies.
+- iam.tf: Defines IAM roles and policies.
 - provider.tf: Configures terraform providers (AWS and klayers).
 - security-groups.tf: Defines security groups for network access.
 - wagtail.tf: Configures the wagtail CMS service.
@@ -294,12 +294,12 @@ terraform apply \
 - Validate AWS permissions.
 - Resources already existing.
 
-  2.**Lambda Function Fails**:
+2. **Lambda Function Fails**:
 
 - Check CloudWatch logs for errors.
 - Validate IAM permissions.
 
-  3.**EFS Backup fails**:
+3. **EFS Backup fails**:
 
 - Verify backup configuration in AWS Backup.
 - Check IAM permissions for AWS Backup.
