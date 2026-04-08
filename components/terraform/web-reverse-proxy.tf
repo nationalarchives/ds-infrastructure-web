@@ -18,6 +18,7 @@ variable "web_reverse_proxy_patch_group" {}
 variable "web_reverse_proxy_deployment_s3_bucket" {}
 variable "web_reverse_proxy_folder_s3_key" {}
 variable "nginx_folder_s3_key" {}
+variable "nginx_version" {}
 variable "vpc_cidr" {}
 variable "resolver" {}
 
@@ -68,15 +69,43 @@ module "web_reverse_proxy" {
    
 }
 
-module "nginx_conf" {
-    source = "./nginx-conf"
+# module "nginx_conf" {
+#     source = "./nginx-conf"
 
-    service              = var.service
-    deployment_s3_bucket = var.deployment_s3_bucket
-    nginx_folder_s3_key  = "nginx"
+#     service              = var.service
+#     deployment_s3_bucket = var.deployment_s3_bucket
+#     nginx_folder_s3_key  = "nginx"
+#     nginx_version    = var.nginx_version
+#     environment            = var.environment
+#     resolver               = var.resolver
+#     set_real_ip_from       = var.vpc_cidr
 
-    environment            = var.environment
-    resolver               = var.resolver
-    set_real_ip_from       = var.vpc_cidr
+# }
 
+module "nginx_conf_v1" {
+  source = "./nginx-conf"
+
+  service              = var.service
+  deployment_s3_bucket = var.deployment_s3_bucket
+  nginx_folder_s3_key  = "nginx"
+
+  nginx_version        = "v1"
+
+  environment    = var.environment
+  resolver       = var.resolver
+  set_real_ip_from = var.vpc_cidr
+}
+
+module "nginx_conf_v2" {
+  source = "./nginx-conf"
+
+  service              = var.service
+  deployment_s3_bucket = var.deployment_s3_bucket
+  nginx_folder_s3_key  = "nginx"
+
+  nginx_version        = "v2"
+
+  environment    = var.environment
+  resolver       = var.resolver
+  set_real_ip_from = var.vpc_cidr
 }

@@ -6,3 +6,4 @@ variable "environment" {}
 variable "set_real_ip_from" {}
 variable "resolver" {}
 
+variable "nginx_version"{}

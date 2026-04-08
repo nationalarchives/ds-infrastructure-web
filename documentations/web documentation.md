@@ -115,7 +115,9 @@ terraform plan \
   -var-file="vars/dev/wagtaildocs.auto.tfvars" \
   -var-file="vars/dev/request-service-record.auto.tfvars" \
   -var-file="vars/dev/forms.auto.tfvars" \
-  -var-file="vars/dev/reverse-proxy.auto.tfvars"
+  -var-file="vars/dev/reverse-proxy.auto.tfvars" \
+  -var-file="vars/dev/nginx-v1.auto.tfvars" \
+  -var-file="vars/dev/nginx-v2.auto.tfvars"
 ```
 
 **_Staging plan_**
