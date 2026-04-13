@@ -9,10 +9,6 @@ sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,ret
 sudo chmod 777 ${web_wagtail_efs_mount_dir}
 sudo echo "${mount_target}:/ ${web_wagtail_efs_mount_dir} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,fsc,_netdev 0 0" >> /etc/fstab
 
-# Copy configuration files and scripts
-sudo aws s3 cp s3://${deployment_s3_bucket}/${service}/${nginx_folder_s3_key}/${nginx_version}/. /etc/nginx/ --recursive --exclude "*" --include "*.conf" --include "mime.types"
-sudo aws s3 cp s3://${deployment_s3_bucket}/${service}/${nginx_folder_s3_key}/update_nginx_confs.sh ~/update_nginx_confs.sh
-
 # Install Docker
 echo "Installing Docker..."
 sudo yum install -y docker
