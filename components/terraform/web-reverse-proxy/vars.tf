@@ -35,7 +35,7 @@ variable "folder_s3_key" {}
 
 variable "asg_tags" {}
 variable "tags" {}
-variable "nginx_version" {}
+
 variable "efs_dns_name" {}
 variable "web_reverse_proxy_sg_id" {}
 variable "web_wagtail_efs_mount_dir" {}
