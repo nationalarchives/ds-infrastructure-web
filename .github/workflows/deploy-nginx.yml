@@ -203,6 +203,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
+          role-to-assume: ${{ inputs.role-to-assume }}
           aws-region: "${{ env.region }}"
 
       - name: Deploy
