@@ -127,7 +127,7 @@ jobs:
           fi
 
           mkdir .payload
-          aws s3 cp s3://$CONFIG_BUCKET/web/nginx/$nginx_version .payload/ --recursive --exclude "*" --include "*.conf" --include "mime.types"
+          aws s3 cp s3://$CONFIG_BUCKET/web/nginx/$nginx_version/ .payload/ --recursive --exclude "*" --include "*.conf" --include "mime.types"
           echo "version: 0.0" > appspec.yml
           echo "os: linux" >> appspec.yml
           echo "files:" >> appspec.yml

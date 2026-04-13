@@ -64,9 +64,7 @@ module "web_reverse_proxy" {
     patch_group = var.web_reverse_proxy_patch_group
     deployment_s3_bucket = var.web_reverse_proxy_deployment_s3_bucket
     folder_s3_key = var.web_reverse_proxy_folder_s3_key
-    tags = local.tags
-    nginx_version = var.nginx_version
-   
+    tags = local.tags   
 }
 
 module "nginx_conf_v1" {
