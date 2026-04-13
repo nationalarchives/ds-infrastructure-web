@@ -15,6 +15,19 @@ sudo yum install -y docker
 sudo systemctl enable docker
 sudo systemctl start docker
 
+echo "Creating /etc/nginx directory..."
+sudo mkdir -p /etc/nginx
+sudo aws s3 cp \
+s3://${deployment_s3_bucket}/${service}/${nginx_folder_s3_key}/v1/ \
+/etc/nginx/ \
+--recursive \
+--exclude "*" \
+--include "*.conf" \
+--include "mime.types"
+
+echo "Listing copied files:"
+ls -l /etc/nginx || true
+
 # Reload Nginx container (zero downtime)
 echo "Waiting for Nginx container to start..."
 max_retries=12
