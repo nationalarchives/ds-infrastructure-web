@@ -65,21 +65,9 @@ module "web_reverse_proxy" {
     deployment_s3_bucket = var.web_reverse_proxy_deployment_s3_bucket
     folder_s3_key = var.web_reverse_proxy_folder_s3_key
     tags = local.tags
+    nginx_version = var.nginx_version
    
 }
-
-# module "nginx_conf" {
-#     source = "./nginx-conf"
-
-#     service              = var.service
-#     deployment_s3_bucket = var.deployment_s3_bucket
-#     nginx_folder_s3_key  = "nginx"
-#     nginx_version    = var.nginx_version
-#     environment            = var.environment
-#     resolver               = var.resolver
-#     set_real_ip_from       = var.vpc_cidr
-
-# }
 
 module "nginx_conf_v1" {
   source = "./nginx-conf"

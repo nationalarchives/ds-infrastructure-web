@@ -18,7 +18,7 @@ sudo systemctl start docker
 echo "Creating /etc/nginx directory..."
 sudo mkdir -p /etc/nginx
 sudo aws s3 cp \
-s3://${deployment_s3_bucket}/${service}/${nginx_folder_s3_key}/v1/ \
+s3://${deployment_s3_bucket}/${service}/${nginx_folder_s3_key}/${nginx_version}/ \
 /etc/nginx/ \
 --recursive \
 --exclude "*" \

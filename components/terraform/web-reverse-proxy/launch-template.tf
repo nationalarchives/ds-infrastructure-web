@@ -22,7 +22,8 @@ resource "aws_launch_template" "web_reverse_proxy" {
         deployment_s3_bucket = var.deployment_s3_bucket,
         nginx_folder_s3_key  = var.folder_s3_key,
         web_wagtail_efs_mount_dir = var.web_wagtail_efs_mount_dir,
-        service               = var.service
+        service               = var.service,
+        nginx_version         = var.nginx_version
     }))
 
     block_device_mappings {
