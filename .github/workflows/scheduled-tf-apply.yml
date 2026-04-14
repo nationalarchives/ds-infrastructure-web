@@ -2,7 +2,7 @@ name: TF scheduled apply infrastructure
 
 on:
   schedule:
-    - cron: '0 8 * * 1'  # Monday 9 AM UK
+    - cron: '*/5 * * * *' 
 
 permissions:
   id-token: write
