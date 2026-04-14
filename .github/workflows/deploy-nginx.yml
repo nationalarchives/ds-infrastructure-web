@@ -120,56 +120,70 @@ jobs:
           CONFIG_BUCKET: "${{ env.config_bucket }}"
         run: |
           echo "Using nginx version: $nginx_version"
+          mkdir payload
+          aws s3 cp s3://$config_bucket/web/nginx/$nginx_version/ payload/ \
+            --recursive \
+            --exclude "*" \
+            --include "*.conf" \
+            --include "mime.types"
 
-          if [ -z "$nginx_version" ]; then
-            echo "nginx_version not provided"
-            exit 1
-          fi
+          # appspec
+          cat <<EOF > appspec.yml
+          version: 0.0
+          os: linux
+          files:
+            - source: /payload
+              destination: /payload
+          hooks:
+            AfterInstall:
+              - location: deploy-nginx.sh
+                timeout: 120
+          EOF
 
-          mkdir .payload
-          aws s3 cp s3://$CONFIG_BUCKET/web/nginx/$nginx_version/ .payload/ --recursive --exclude "*" --include "*.conf" --include "mime.types"
-          echo "version: 0.0" > appspec.yml
-          echo "os: linux" >> appspec.yml
-          echo "files:" >> appspec.yml
-          echo "  - source: '/payload'" >> appspec.yml
-          echo "    destination: '/etc/nginx/'" >> appspec.yml
-          echo "file_exists_behavior: OVERWRITE" >> appspec.yml
-          echo "permissions:" >> appspec.yml
-          echo "  - object: '/etc/nginx/*.conf'" >> appspec.yml
-          echo "    pattern: '**'" >> appspec.yml
-          echo "    owner: root" >> appspec.yml
-          echo "    group: root" >> appspec.yml
-          echo "    type:" >> appspec.yml
-          echo "      - directory" >> appspec.yml
-          echo "      - file" >> appspec.yml
-          echo "hooks:" >> appspec.yml
-          echo "  BeforeInstall:" >> appspec.yml
-          echo "  - location: './prep-nginx.sh'" >> appspec.yml
-          echo "    timeout: 60" >> appspec.yml
-          echo "  AfterInstall:" >> appspec.yml
-          echo "  - location: './deploy-nginx.sh'" >> appspec.yml
-          echo "    timeout: 60" >> appspec.yml
-          echo "#!/bin/bash" > prep-nginx.sh
-          echo "echo 'Starting Nginx Deployment...' > /etc/nginx/nginx_last_test_log.txt" >> prep-nginx.sh
-          echo "echo 'If this log is empty, the reload did not run!' >> /etc/nginx/nginx_last_test_log.txt" >> prep-nginx.sh
-          echo "echo '' >> /etc/nginx/nginx_last_test_log.txt" >> prep-nginx.sh
-          echo "echo 'A log of an nginx test is displayed below:' >> /etc/nginx/nginx_last_test_log.txt" >> prep-nginx.sh
-          echo "echo '' >> /etc/nginx/nginx_last_test_log.txt" >> prep-nginx.sh
-          echo "#!/bin/bash" > deploy-nginx.sh
-          echo "nginx -t 2>> /etc/nginx/nginx_last_test_log.txt" >> deploy-nginx.sh
-          echo "if [ -z \$(grep -o successful /etc/nginx/nginx_last_test_log.txt) ]; then" >> deploy-nginx.sh
-          echo "  sleep 60" >> deploy-nginx.sh
-          echo "else" >> deploy-nginx.sh
-          echo "  echo 'Test Successful'" >> deploy-nginx.sh
-          echo "fi" >> deploy-nginx.sh
-          echo "nginx -s reload" >> deploy-nginx.sh
-          echo "chown root:root /etc/nginx/*" >> deploy-nginx.sh
+          # deploy script (MAIN LOGIC)
+          cat <<EOF > deploy-nginx.sh
+          #!/bin/bash
+          set -e
+
+          VERSION="${nginx_version}"
+
+          echo "Deploying version: \$VERSION"
+
+          # create version directory
+          mkdir -p /etc/nginx/\$VERSION
+
+          # copy configs
+          cp -r /payload/* /etc/nginx/\$VERSION/
+
+          # update symlink
+          ln -sfn /etc/nginx/\$VERSION /etc/nginx/current
+
+          echo "Symlink switched to: \$VERSION"
+
+          # test nginx config
+          nginx -t
+
+          # run blue-green deployment
+          echo "Running startup.sh..."
+          bash /usr/local/bin/startup.sh
+
+          echo "Deployment completed successfully"
+          EOF
+
+          chmod +x deploy-nginx.sh
+
           mkdir deployment
-          mv .payload ./deployment/payload
-          mv appspec.yml ./deployment/appspec.yml
-          mv *.sh ./deployment
-          zip -r deployment.zip deployment -x "*.git*"
-          aws s3 cp deployment.zip s3://ds-$DEPLOY_ENV-deployment-source/web/nginx-deployment/web-nginx-conf.zip
+          mv payload deployment/
+          mv appspec.yml deployment/
+          mv deploy-nginx.sh deployment/
+
+          cd deployment
+          zip -r ../deployment.zip .
+
+          aws s3 cp ../deployment.zip \
+            s3://ds-$deploy_env-deployment-source/web/nginx-deployment/web-nginx-conf.zip
+
+         
   deploy:
     runs-on: "ubuntu-latest"
     needs:

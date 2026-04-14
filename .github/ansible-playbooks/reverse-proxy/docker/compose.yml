@@ -13,6 +13,9 @@ services:
     restart: always
     networks:
       - traefik
+    volumes:
+      - /media:/media
+      - /etc/nginx/current:/etc/nginx:ro
   green-nginx:
     <<: *nginx
     container_name: green-nginx

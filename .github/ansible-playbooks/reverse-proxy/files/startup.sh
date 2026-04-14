@@ -1,64 +1,105 @@
 #!/bin/bash
 
-# set environment variables
-source /etc/environment
+set -e
 
-sudo touch /var/log/server-startup.log
+COMPOSE_FILE="/var/docker/compose.yml"
 
-region="eu-west-2"
+BLUE="blue-web"
+GREEN="green-web"
 
-if [ -z ${TRAEFIK_IMAGE+x} ]; then export TRAEFIK_IMAGE="none"; fi
-if [ -z ${NGINX_APP_IMAGE+x} ]; then export NGINX_APP_IMAGE="none"; fi
+echo "======================================"
+echo "Starting Nginx Blue-Green Deployment"
+echo "======================================"
 
-# get docker image tag from parameter store
-echo "retrieve versions"
-exp_traefik_image=$(aws ssm get-parameter --name /application/nginx/docker-images --query Parameter.Value --region $region --output text | jq -r '.["traefik"]')
-exp_app_image=$(aws ssm get-parameter --name /application/nginx/docker-images --query Parameter.Value --region $region --output text | jq -r '.["nginx-application"]')
+# detect running containers
+BLUE_RUNNING=$(sudo docker ps --filter "name=$BLUE" --format "{{.Names}}")
+GREEN_RUNNING=$(sudo docker ps --filter "name=$GREEN" --format "{{.Names}}")
 
-set_traefik_image=$(yq '.services.traefik.image' /var/docker/compose.traefik.yml)
-set_app_image=$(yq '.services.blue-web.image' /var/docker/compose.yml)
+echo "Blue running: $BLUE_RUNNING"
+echo "Green running: $GREEN_RUNNING"
 
-# update traefik version if needed
-if [ "$TRAEFIK_IMAGE" != "$exp_traefik_image" ] || [ "$set_traefik_image" != "$exp_traefik_image" ]; then
-  sudo yq -i ".services.traefik.image = \"$exp_traefik_image\"" /var/docker/compose.traefik.yml
-  export TRAEFIK_IMAGE="$exp_traefik_image"
-  sudo sed -i "s|export TRAEFIK_IMAGE=.*|export TRAEFIK_IMAGE=\"$exp_traefik_image\"|g" /etc/environment
-fi
+# determine active and new
+if [ -z "$BLUE_RUNNING" ] && [ -z "$GREEN_RUNNING" ]; then
+    echo "No containers running. Starting fresh with blue..."
+    ACTIVE=""
+    NEW="blue"
 
-# check if traefik is running...
-TRAEFIK_ID=$(sudo docker ps --all --filter "name=traefik" --format "{{.ID}}")
-TRAEFIK_UP=$(sudo docker inspect -f '{{.State.Running}}' traefik 2> /dev/null)
+elif [ -n "$BLUE_RUNNING" ]; then
+    ACTIVE="blue"
+    NEW="green"
 
-if [ -z "$TRAEFIK_ID" ]; then
-  # traefik container isn't loaded
-  echo "starting up traefik - $exp_traefik_image"
-  source /usr/local/bin/traefik-deploy.sh --up
-  export TRAEFIK_IMAGE="$exp_traefik_image"
-  echo "traefik image version set to $exp_traefik_image"
-elif [ ! -z "$TRAEFIK_ID" ] && [ "$TRAEFIK_UP" != "true" ]; then
-  # traefik is in a exit state
-  echo "traefik has exited - try to restart"
-  source /usr/local/bin/traefik-deploy.sh --restart
-elif [ "$update_traefik" == "yes" ]; then
-  echo "updating traefik to $exp_traefik_image ..."
-  source /usr/local/bin/traefik-deploy.sh --down
-  source /usr/local/bin/traefik-deploy.sh --up
-  export TRAEFIK_IMAGE="$exp_traefik_image"
-  echo "traefik image version set to $exp_traefik_image"
 else
-  echo "traefik is ok - tag:$exp_traefik_image"
+    ACTIVE="green"
+    NEW="blue"
 fi
 
-# update app version
-if [ "$NGINX_APP_IMAGE" != "$exp_app_image" ] || [ "$set_app_image" != "$exp_app_image" ]; then
-  sudo yq -i ".services.blue-web.image = \"$exp_app_image\"" /var/docker/compose.yml
-  export NGINX_APP_IMAGE="$exp_app_image"
-  sudo sed -i "s|export NGINX_APP_IMAGE=.*|export NGINX_APP_IMAGE=\"$exp_app_image\"|g" /etc/environment
-fi
-
-TRAEFIK_UP=$(sudo docker inspect -f '{{.State.Running}}' traefik 2> /dev/null)
-if [ "$TRAEFIK_UP" = "true" ]; then
-  sudo /usr/local/bin/website-blue-green-deploy.sh
+# set container names
+if [ -n "$ACTIVE" ]; then
+    ACTIVE_CONTAINER="${ACTIVE}-web"
 else
-  echo "can't start app - traefik hasn't started"
+    ACTIVE_CONTAINER=""
 fi
+
+NEW_CONTAINER="${NEW}-web"
+
+echo "======================================"
+echo "Switching from ${ACTIVE:-none} to $NEW"
+echo "======================================"
+
+echo "Active: ${ACTIVE_CONTAINER:-none}"
+echo "Starting: $NEW_CONTAINER"
+
+# detect docker compose command
+if docker-compose version >/dev/null 2>&1; then
+    DC="docker-compose"
+else
+    DC="docker compose"
+fi
+
+echo "Using: $DC"
+
+# start new container
+sudo $DC -f $COMPOSE_FILE up -d $NEW_CONTAINER
+
+echo "Waiting for container..."
+sleep 10
+
+# check container status
+STATUS=$(sudo docker inspect -f '{{.State.Running}}' $NEW_CONTAINER 2>/dev/null || echo "false")
+
+if [ "$STATUS" != "true" ]; then
+    echo "❌ Container failed to start"
+
+    if [ -n "$ACTIVE_CONTAINER" ]; then
+        sudo $DC -f $COMPOSE_FILE up -d $ACTIVE_CONTAINER
+    fi
+
+    exit 1
+fi
+
+# test nginx config
+echo "Testing nginx config..."
+sudo docker exec $NEW_CONTAINER nginx -t
+
+if [ $? -ne 0 ]; then
+    echo "❌ Nginx config failed! Rolling back..."
+
+    if [ -n "$ACTIVE_CONTAINER" ]; then
+        sudo $DC -f $COMPOSE_FILE up -d $ACTIVE_CONTAINER
+    fi
+
+    sudo docker rm -f $NEW_CONTAINER || true
+    exit 1
+fi
+
+# stop old container if exists
+echo "Stopping old container..."
+
+if [ -n "$ACTIVE_CONTAINER" ]; then
+    sudo docker stop $ACTIVE_CONTAINER || true
+    sudo docker rm -f $ACTIVE_CONTAINER || true
+fi
+
+echo "======================================"
+echo "✅ Switched to $NEW"
+echo "======================================"
