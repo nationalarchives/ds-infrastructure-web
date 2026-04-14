@@ -1,0 +1,94 @@
+name: TF scheduled apply infrastructure
+
+on:
+  schedule:
+    - cron: '0 8 * * 1'  # Monday 9 AM UK
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+
+  trigger-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger DEV Apply
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'terraform-apply.yml',
+              ref: 'main',
+              inputs: {
+                deploy-environment: 'dev',
+                branch: 'main'
+              }
+            });
+
+      - name: Notify Slack (DEV)
+        uses: slackapi/slack-github-action@v2.1.0
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ secrets.SLACK_CHANNEL_ID }}
+            text: ":rocket: *DEV Terraform Apply Scheduled*\nStatus: Waiting for approval"
+
+  trigger-staging:
+    runs-on: ubuntu-latest
+    needs: trigger-dev
+    steps:
+      - name: Trigger STAGING Apply
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'terraform-apply.yml',
+              ref: 'main',
+              inputs: {
+                deploy-environment: 'staging',
+                branch: 'main'
+              }
+            });
+
+      - name: Notify Slack (STAGING)
+        uses: slackapi/slack-github-action@v2.1.0
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ secrets.SLACK_CHANNEL_ID }}
+            text: ":rocket: *STAGING Terraform Apply Scheduled*\nStatus: Waiting for approval"
+
+  trigger-live:
+    runs-on: ubuntu-latest
+    needs: trigger-staging
+    steps:
+      - name: Trigger LIVE Apply
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'terraform-apply.yml',
+              ref: 'main',
+              inputs: {
+                deploy-environment: 'live',
+                branch: 'main'
+              }
+            });
+
+      - name: Notify Slack (LIVE)
+        uses: slackapi/slack-github-action@v2.1.0
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ secrets.SLACK_CHANNEL_ID }}
+            text: ":warning: *LIVE Terraform Apply Scheduled*\n⚠ Requires approval before execution"
