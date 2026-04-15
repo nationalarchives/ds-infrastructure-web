@@ -7,7 +7,7 @@
         },
         "wagtail": {
             "image": "ghcr.io/nationalarchives/ds-wagtail",
-            "version": "26.04.02.1449",
+            "version": "26.04.13.1489",
             "repo": "https://github.com/nationalarchives/ds-wagtail"
         },
         "wagtaildocs": {
@@ -27,7 +27,7 @@
         },
         "search": {
             "image": "ghcr.io/nationalarchives/ds-sitemap-search",
-            "version": "26.03.25.145",
+            "version": "26.04.13.146",
             "repo": "https://github.com/nationalarchives/ds-sitemap-search"
         },
         "feedback": {
