@@ -9,7 +9,7 @@
     {
       "Effect": "Allow",
       "Action": ["s3:GetObject", "s3:PutObject", "s3:PutObjectAcl"],
-      "Resource": ["arn:aws:s3:::${deployment_s3_bucket}/${service}/*"]
+      "Resource": ["arn:aws:s3:::${deployment_s3_bucket}/*"]
     }
   ]
 }
