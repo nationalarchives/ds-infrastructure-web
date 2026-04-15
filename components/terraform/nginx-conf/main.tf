@@ -15,6 +15,13 @@ resource "aws_s3_object" "cloudfront_ips_conf" {
   source_hash = filemd5("${path.module}/scripts/${var.nginx_version}/cloudfront_ips.conf")
 }
 
+resource "aws_s3_object" "redirects_conf" {
+  bucket = var.deployment_s3_bucket
+  key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/redirects.conf"
+  source = "${path.module}/scripts/${var.nginx_version}/redirects.conf"
+  source_hash = filemd5("${path.module}/scripts/${var.nginx_version}/redirects.conf")
+}
+
 resource "aws_s3_object" "mime_types" {
   bucket = var.deployment_s3_bucket
   key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/mime.types"
