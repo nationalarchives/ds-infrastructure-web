@@ -5,12 +5,12 @@ filename=
 
 copy_file()
 {
-  sudo aws s3 cp s3://${deployment_s3_bucket}/${service}/${nginx_folder_s3_key}/${nginx_version}/$filename /etc/nginx/$filename
+  sudo aws s3 cp s3://${deployment_s3_bucket}/${service}/${nginx_folder_s3_key}/${nginx_version}/$filename /etc/nginx/${nginx_version}/$filename
 }
 
 copy_all()
 {
-  sudo aws s3 cp s3://${deployment_s3_bucket}/${service}/${nginx_folder_s3_key}/${nginx_version}/ /etc/nginx/ --recursive --exclude "*" --include "*.conf"
+  sudo aws s3 cp s3://${deployment_s3_bucket}/${service}/${nginx_folder_s3_key}/${nginx_version}/ /etc/nginx/${nginx_version}/ --recursive --exclude "*" --include "*.conf"
 }
 
 help()
