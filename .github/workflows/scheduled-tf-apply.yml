@@ -2,7 +2,7 @@ name: TF scheduled apply infrastructure
 
 on:
   schedule:
-    - cron: '45 12 * * 5'
+    - cron: '10 15 * * 5'
   workflow_dispatch:
 
 permissions:
@@ -75,4 +75,3 @@ jobs:
         uses: ./.github/actions/terraform-apply
         with:
           account: ${{ matrix.account }}
-          
