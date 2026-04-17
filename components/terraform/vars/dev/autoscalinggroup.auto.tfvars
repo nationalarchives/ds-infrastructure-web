@@ -108,7 +108,7 @@ web_forms_asg_health_check_type         = "EC2"
 
 # Reverse Proxy
 web_reverse_proxy_patch_group      = "web-reverse-proxy-patchgroup"
-web_reverse_proxy_deployment_group = "web-reverse-proxy-deploygroup"
+web_reverse_proxy_deployment_group = "web-nginx-rp"
 
 web_reverse_proxy_asg_max_size                  = 2
 web_reverse_proxy_asg_min_size                  = 1
