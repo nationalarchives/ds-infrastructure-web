@@ -35,6 +35,7 @@ RUN ./configure \
     --pid-path=/var/run/nginx.pid \
     --lock-path=/var/run/nginx.lock \
     --with-compat \
+    --with-http_sub_module \
     --with-http_ssl_module \
     --with-http_v2_module \
     --with-http_realip_module \

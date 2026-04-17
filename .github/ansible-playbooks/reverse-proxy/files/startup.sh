@@ -8,13 +8,13 @@ GREEN="green-web"
 
 echo "===== BLUE-GREEN DEPLOY START ====="
 
-BLUE_UP=$(sudo docker ps --filter name=$BLUE --format "{{.Names}}")
-GREEN_UP=$(sudo docker ps --filter name=$GREEN --format "{{.Names}}")
+BLUE_UP=$(sudo docker ps -a --filter name=$BLUE --format "{{.Names}}")
+GREEN_UP=$(sudo docker ps -a --filter name=$GREEN --format "{{.Names}}")
 
 if [ -z "$BLUE_UP" ] && [ -z "$GREEN_UP" ]; then
     ACTIVE=""
     NEW="blue"
-elif [ -n "$BLUE_UP" ]; then
+elif sudo docker ps --filter name=$BLUE --format "{{.Names}}" | grep -q blue-web; then
     ACTIVE="blue"
     NEW="green"
 else
@@ -27,18 +27,30 @@ NEW_C="${NEW}-web"
 
 echo "Switching: ${ACTIVE:-none} -> $NEW"
 
-# start new container FIRST
-sudo docker compose -f $COMPOSE_FILE up -d $NEW_C
+# Start container (IMPORTANT: capture failure)
+if ! sudo docker-compose -f $COMPOSE_FILE up -d $NEW_C; then
+    echo "❌ Container failed to start"
+    exit 1
+fi
 
 echo "Waiting for container to stabilize..."
-sleep 10
+sleep 15
 
-echo "Testing health..."
+echo "Checking container status..."
+
+# Check if container is RUNNING
+if ! sudo docker ps --filter name=$NEW_C --format "{{.Names}}" | grep -q $NEW_C; then
+    echo "❌ Container is not running"
+    sudo docker logs $NEW_C || true
+    exit 1
+fi
+
+echo "Running health check..."
 
 HEALTH_OK=0
 
 for i in {1..20}; do
-    if sudo docker exec $NEW_C curl -f http://127.0.0.1/ >/dev/null 2>&1; then
+    if sudo docker exec $NEW_C nginx -t >/dev/null 2>&1; then
         HEALTH_OK=1
         break
     fi
@@ -51,13 +63,14 @@ if [ "$HEALTH_OK" -ne 1 ]; then
     sudo docker rm -f $NEW_C || true
 
     if [ -n "$ACTIVE_C" ]; then
-        sudo docker compose -f $COMPOSE_FILE up -d $ACTIVE_C
+        echo "Rolling back to $ACTIVE"
+        sudo docker-compose -f $COMPOSE_FILE up -d $ACTIVE_C || true
     fi
 
     exit 1
 fi
 
-echo "Switching traffic..."
+echo "✅ New container healthy"
 
 if [ -n "$ACTIVE_C" ]; then
     sudo docker rm -f $ACTIVE_C || true
