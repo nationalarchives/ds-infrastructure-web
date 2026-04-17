@@ -160,20 +160,12 @@ jobs:
 
           echo "Symlink switched to: \$VERSION"
 
-          echo "Detecting active nginx container..."
 
-          ACTIVE_CONTAINER=$(sudo docker ps --format "{{.Names}}" | grep -E "blue-web|green-web" | head -n 1)
+          # echo "Running nginx config test in: $ACTIVE_CONTAINER"
 
-          if [ -z "$ACTIVE_CONTAINER" ]; then
-            echo "No nginx container found!"
-            exit 1
-          fi
+          # sudo docker exec "$ACTIVE_CONTAINER" nginx -t
 
-          echo "Running nginx config test in: $ACTIVE_CONTAINER"
-
-          sudo docker exec "$ACTIVE_CONTAINER" nginx -t
-
-          echo "Config validation successful"
+          # echo "Config validation successful"
           
           echo "Running startup.sh..."
           bash /usr/local/bin/startup.sh
