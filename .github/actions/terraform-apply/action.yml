@@ -7,31 +7,18 @@ inputs:
 
 runs:
   using: "composite"
+
   steps:
     - name: copy variables
       run: |
         cp ./components/terraform/vars/${{ inputs.account }}/* ./${{ env.working_dir }}/
       shell: bash
 
-    - name: Get Slack credentials
-      uses: aws-actions/aws-secretsmanager-get-secrets@v2
-      with:
-        secret-ids: |
-          ,infrastructure/ds-infrastructure-notifications/slack
-        parse-json-secrets: true
-
-    - name: Slack notify BEFORE apply
-      uses: slackapi/slack-github-action@v2.1.0
-      with:
-        method: chat.postMessage
-        token: ${{ env.SLACK_BOT_TOKEN }}
-        payload: |
-          channel: ${{ env.SLACK_CHANNEL_ID }}
-          text: ":rotating_light: Terraform APPLY starting for *${{ inputs.account }}*\n\nEnvironment approval passed in GitHub\nRun: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-
     - name: run terraform apply
       run: |
         cd ${{ env.working_dir }}
         terraform init -upgrade
+
+        echo "Running terraform apply (manual approval handled by GitHub environment)"
         terraform apply -auto-approve
       shell: bash

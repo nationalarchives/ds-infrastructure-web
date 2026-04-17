@@ -2,202 +2,75 @@ name: TF scheduled apply infrastructure
 
 on:
   schedule:
-    - cron: '15 13 * * 3' # Wednesday 1 PM UK (BST)
+    - cron: '45 12 * * 5'
+  workflow_dispatch:
 
 permissions:
   id-token: write
   contents: write
 
-
 jobs:
-  plan-dev:
+  terraform:
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - account: dev
+            role: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
+            environment: dev
+
+          # - account: staging
+          #   role: arn:aws:iam::337670467269:role/GitHubActionRole
+          #   environment: staging
+
+          # - account: live
+          #   role: arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0
+          #   environment: production
+
+    environment: ${{ matrix.environment }}
+
     env:
       working_dir: components/terraform
-      account: dev
-    timeout-minutes: 3
+
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: eu-west-2
-          role-to-assume: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
+          role-to-assume: ${{ matrix.role }}
           role-session-name: MySessionName
 
       - name: Setup runner
         uses: ./.github/actions/setup-runtime
 
+      # ---------------- PLAN ----------------
       - name: Terraform Plan
         uses: ./.github/actions/terraform-plan
         with:
-          account: "dev"
+          account: ${{ matrix.account }}
 
+      # ---------------- SLACK ----------------
       - name: Get Slack credentials
         uses: aws-actions/aws-secretsmanager-get-secrets@v2
         with:
-          secret-ids: |
-            ,infrastructure/ds-infrastructure-notifications/slack
+          secret-ids: infrastructure/ds-infrastructure-notifications/slack
           parse-json-secrets: true
 
-      - name: Slack notify (DEV approval)
+      - name: Slack notify
         uses: slackapi/slack-github-action@v2.1.0
         with:
           method: chat.postMessage
           token: ${{ env.SLACK_BOT_TOKEN }}
           payload: |
             channel: ${{ env.SLACK_CHANNEL_ID }}
-            text: ":warning: *DEV Terraform plan completed*\n\nApproval required before APPLY\nRun: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            text: ":warning: *${{ matrix.account }} Terraform plan completed*\nApproval required before APPLY\nRun: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
-  apply-dev:
-    needs: plan-dev
-    runs-on: ubuntu-latest
-    environment: dev
-    env:
-      account: dev
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: eu-west-2
-          role-to-assume: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
-          role-session-name: MySessionName
-
-      - name: Setup runner
-        uses: ./.github/actions/setup-runtime
-
+      # ---------------- APPLY ----------------
       - name: Terraform Apply
         uses: ./.github/actions/terraform-apply
         with:
-          account: "dev"
-
-  plan-staging:
-    needs: apply-dev
-    runs-on: ubuntu-latest
-    env:
-      working_dir: components/terraform
-      account: staging
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: eu-west-2
-          role-to-assume: arn:aws:iam::337670467269:role/GitHubActionRole
-          role-session-name: MySessionName
-
-      - name: Setup runner
-        uses: ./.github/actions/setup-runtime
-
-      - name: Terraform Plan
-        uses: ./.github/actions/terraform-plan
-        with:
-          account: "staging"
-
-      - name: Get Slack credentials
-        uses: aws-actions/aws-secretsmanager-get-secrets@v2
-        with:
-          secret-ids: |
-            ,infrastructure/ds-infrastructure-notifications/slack
-          parse-json-secrets: true
-
-      - name: Slack notify (STAGING approval)
-        uses: slackapi/slack-github-action@v2.1.0
-        with:
-          method: chat.postMessage
-          token: ${{ env.SLACK_BOT_TOKEN }}
-          payload: |
-            channel: ${{ env.SLACK_CHANNEL_ID }}
-            text: ":warning: *STAGING Terraform plan completed*\n\nApproval required before APPLY\nRun: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-
-  apply-staging:
-    needs: plan-staging
-    runs-on: ubuntu-latest
-    environment: staging
-    env:
-      account: staging
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: eu-west-2
-          role-to-assume: arn:aws:iam::337670467269:role/GitHubActionRole
-          role-session-name: MySessionName
-
-      - name: Setup runner
-        uses: ./.github/actions/setup-runtime
-
-      - name: Terraform Apply
-        uses: ./.github/actions/terraform-apply
-        with:
-          account: "staging"
-
-  plan-live:
-    needs: apply-staging
-    runs-on: ubuntu-latest
-    env:
-      working_dir: components/terraform
-      account: live
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: eu-west-2
-          role-to-assume: arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0
-          role-session-name: MySessionName
-
-      - name: Setup runner
-        uses: ./.github/actions/setup-runtime
-
-      - name: Terraform Plan
-        uses: ./.github/actions/terraform-plan
-        with:
-          account: "live"
-
-      - name: Get Slack credentials
-        uses: aws-actions/aws-secretsmanager-get-secrets@v2
-        with:
-          secret-ids: |
-            ,infrastructure/ds-infrastructure-notifications/slack
-          parse-json-secrets: true
-
-      - name: Slack notify (LIVE approval)
-        uses: slackapi/slack-github-action@v2.1.0
-        with:
-          method: chat.postMessage
-          token: ${{ env.SLACK_BOT_TOKEN }}
-          payload: |
-            channel: ${{ env.SLACK_CHANNEL_ID }}
-            text: ":warning: *LIVE Terraform plan completed*\n\nApproval required before APPLY\nRun: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-
-  apply-live:
-    needs: plan-live
-    runs-on: ubuntu-latest
-    environment: production
-    env:
-      account: live
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: eu-west-2
-          role-to-assume: arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0
-          role-session-name: MySessionName
-
-      - name: Setup runner
-        uses: ./.github/actions/setup-runtime
-
-      - name: Terraform Apply
-        uses: ./.github/actions/terraform-apply
-        with:
-          account: "live"
+          account: ${{ matrix.account }}

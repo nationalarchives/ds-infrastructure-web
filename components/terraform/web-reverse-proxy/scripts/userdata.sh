@@ -17,7 +17,6 @@ sudo systemctl start docker
 
 echo "Creating /etc/nginx directory..."
 sudo mkdir -p /etc/nginx
-sudo mkdir -p /etc/nginx/current
 
 # Nginx config from S3
 sudo aws s3 cp \

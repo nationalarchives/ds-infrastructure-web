@@ -60,7 +60,9 @@ RUN mkdir -p \
     /var/cache/nginx/fastcgi_temp \
     /var/cache/nginx/uwsgi_temp \
     /var/cache/nginx/scgi_temp && \
-    chown -R nginx:nginx /var/log/nginx /var/cache/nginx
+    /var/run \
+    && chmod -R 755 /var/log/nginx /var/cache/nginx /var/run \
+    && chown -R nginx:nginx /var/log/nginx /var/cache/nginx || true
 
 EXPOSE 80
 
