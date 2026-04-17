@@ -27,6 +27,8 @@ s3://${deployment_s3_bucket}/${service}/${nginx_folder_s3_key}/ \
 --include "*.conf" \
 --include "mime.types"
 
+ln -sfn /etc/nginx/v1 /etc/nginx/current
+
 # Build image
 if ! docker image inspect custom-nginx:latest >/dev/null 2>&1; then
   echo "Building nginx image..."
