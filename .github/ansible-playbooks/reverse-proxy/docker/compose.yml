@@ -1,26 +1,18 @@
 services:
-  blue-nginx: &nginx
-    container_name: blue-nginx     
-    image: "nginx:latest"                
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=traefik_webgateway"
-      - "traefik.http.routers.web.entrypoints=web"
-      - "traefik.http.routers.web.rule=Host(`web-reverse-proxy.dev.local`) || PathPrefix(`/`)"
-      - "traefik.http.services.web.loadbalancer.healthCheck.path=/healthcheck/live/"
-      - "traefik.http.services.web.loadbalancer.healthCheck.interval=10s"
-      - "traefik.http.services.web.loadbalancer.healthCheck.timeout=1s"
+  blue-web:
+    container_name: blue-web
+    image: custom-nginx:latest
     restart: always
-    networks:
-      - traefik
     volumes:
       - /media:/media
       - /etc/nginx/current:/etc/nginx:ro
-  green-nginx:
-    <<: *nginx
-    container_name: green-nginx
+      - /var/cache/nginx:/var/cache/nginx
 
-networks:
-  traefik:
-    name: traefik_webgateway
-    external: true
+  green-web:
+    container_name: green-web
+    image: custom-nginx:latest
+    restart: always
+    volumes:
+      - /media:/media
+      - /etc/nginx/current:/etc/nginx:ro
+      - /var/cache/nginx:/var/cache/nginx

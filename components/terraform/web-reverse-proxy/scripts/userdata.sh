@@ -17,6 +17,9 @@ sudo systemctl start docker
 
 echo "Creating /etc/nginx directory..."
 sudo mkdir -p /etc/nginx
+sudo mkdir -p /etc/nginx/current
+
+# Nginx config from S3
 sudo aws s3 cp \
 s3://${deployment_s3_bucket}/${service}/${nginx_folder_s3_key}/ \
 /etc/nginx/ \
@@ -25,29 +28,43 @@ s3://${deployment_s3_bucket}/${service}/${nginx_folder_s3_key}/ \
 --include "*.conf" \
 --include "mime.types"
 
-echo "Listing copied files:"
-ls -l /etc/nginx || true
+# Build image
+if ! docker image inspect custom-nginx:latest >/dev/null 2>&1; then
+  echo "Building nginx image..."
+  cd /var/docker
+  docker build -t custom-nginx:latest .
+else
+  echo "Image already exists, skipping build"
+fi
+
+# startup script
+sudo touch /var/log/start-up.log
+echo "$(date '+%Y-%m-%d %T') - system update" | sudo tee -a /var/log/start-up.log > /dev/null
+echo "$(date '+%Y-%m-%d %T') - call startup script" | sudo tee -a /var/log/start-up.log > /dev/null
+/usr/local/bin/startup.sh
 
 # Reload Nginx container (zero downtime)
 echo "Waiting for Nginx container to start..."
 max_retries=12
 count=0
-until docker ps --format '{{.Names}}' | grep -q "^nginx$"; do
-    count=$((count+1))
-    if [ "$count" -ge "$max_retries" ]; then
-        echo "Nginx container not found after waiting. Skipping reload."
-        break
-    fi
-    echo "Waiting for container... retry $count/$max_retries"
-    sleep 5
+until docker ps --format '{{.Names}}' | grep -E "blue-web|green-web" >/dev/null; do
+  count=$((count+1))
+  if [ "$count" -ge "$max_retries" ]; then
+    echo "Containers not found after waiting. Skipping reload."
+    break
+  fi
+  echo "Waiting... retry $count/$max_retries"
+  sleep 5
 done
 
-if docker ps --format '{{.Names}}' | grep -q "^nginx$"; then
-    echo "Reloading Nginx inside container..."
-    docker exec nginx nginx -s reload
-else
-    echo "Nginx container is not running. Skipping reload."
-fi
+echo "Reloading nginx inside active containers..."
+
+for c in blue-web green-web; do
+  if docker ps --format '{{.Names}}' | grep -q "^$c$"; then
+    echo "Reloading $c"
+    docker exec $c nginx -s reload || true
+  fi
+done
 
 # Install CodeDeploy Agent
 echo "Installing CodeDeploy Agent..."
