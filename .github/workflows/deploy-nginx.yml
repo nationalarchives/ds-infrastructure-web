@@ -159,13 +159,6 @@ jobs:
           ln -sfn /etc/nginx/\$VERSION /etc/nginx/current
 
           echo "Symlink switched to: \$VERSION"
-
-
-          # echo "Running nginx config test in: $ACTIVE_CONTAINER"
-
-          # sudo docker exec "$ACTIVE_CONTAINER" nginx -t
-
-          # echo "Config validation successful"
           
           echo "Running startup.sh..."
           bash /usr/local/bin/startup.sh

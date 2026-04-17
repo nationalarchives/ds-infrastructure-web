@@ -57,7 +57,8 @@ jobs:
       - name: Get Slack credentials
         uses: aws-actions/aws-secretsmanager-get-secrets@v2
         with:
-          secret-ids: infrastructure/ds-infrastructure-notifications/slack
+          secret-ids: |
+            ,infrastructure/ds-infrastructure-notifications/slack
           parse-json-secrets: true
 
       - name: Slack notify
@@ -74,3 +75,4 @@ jobs:
         uses: ./.github/actions/terraform-apply
         with:
           account: ${{ matrix.account }}
+          
