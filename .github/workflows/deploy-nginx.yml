@@ -162,7 +162,7 @@ jobs:
 
           echo "Detecting active nginx container..."
 
-          ACTIVE_CONTAINER=$(docker ps --format "{{.Names}}" | grep -E "blue-web|green-web" | head -n 1)
+          ACTIVE_CONTAINER=$(sudo docker ps --format "{{.Names}}" | grep -E "blue-web|green-web" | head -n 1)
 
           if [ -z "$ACTIVE_CONTAINER" ]; then
             echo "No nginx container found!"
@@ -171,7 +171,7 @@ jobs:
 
           echo "Running nginx config test in: $ACTIVE_CONTAINER"
 
-          docker exec "$ACTIVE_CONTAINER" nginx -t
+          sudo docker exec "$ACTIVE_CONTAINER" nginx -t
 
           echo "Config validation successful"
           
