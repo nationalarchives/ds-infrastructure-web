@@ -13,7 +13,6 @@
   "USE_X_FORWARDED_HOST": "true",
   "WAGTAILADMIN_BASE_URL": "https://staging-wagtail.nationalarchives.gov.uk",
   "WAGTAILAPI_BASE_URL": "http://web-wagtail.staging.local",
-  "WAGTAILAPI_IMAGES_BASE_URL": "https://staging-www.nationalarchives.gov.uk",
   "WAGTAILAPI_MEDIA_BASE_URL": "https://staging-www.nationalarchives.gov.uk",
   "WAGTAIL_2FA_REQUIRED": "false",
   "WAGTAILAPI_AUTHENTICATION": "true"
