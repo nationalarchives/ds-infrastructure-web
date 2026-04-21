@@ -22,10 +22,7 @@ sudo mkdir -p /etc/nginx
 sudo aws s3 cp \
 s3://${deployment_s3_bucket}/${service}/${nginx_folder_s3_key}/ \
 /etc/nginx/ \
---recursive \
---exclude "*" \
---include "*.conf" \
---include "mime.types"
+--recursive 
 
 ln -sfn /etc/nginx/v1 /etc/nginx/current
 
