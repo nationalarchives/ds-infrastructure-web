@@ -25,8 +25,10 @@ resource "aws_s3_object" "redirects_conf" {
 resource "aws_s3_object" "web_forms_conf" {
   bucket = var.deployment_s3_bucket
   key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/web-forms.conf"
-  source = "${path.module}/scripts/${var.nginx_version}/web-forms.conf"
-  source_hash = filemd5("${path.module}/scripts/${var.nginx_version}/web-forms.conf")
+  content = templatefile("${path.module}/scripts/${var.nginx_version}/web-forms.conf", {
+    environment      = var.environment,
+    set_real_ip_from = var.set_real_ip_from
+  })
 }
 
 resource "aws_s3_object" "mime_types" {
