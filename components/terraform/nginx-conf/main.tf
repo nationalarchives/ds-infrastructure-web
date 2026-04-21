@@ -22,6 +22,13 @@ resource "aws_s3_object" "redirects_conf" {
   source_hash = filemd5("${path.module}/scripts/${var.nginx_version}/redirects.conf")
 }
 
+resource "aws_s3_object" "web_forms_conf" {
+  bucket = var.deployment_s3_bucket
+  key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/web-forms.conf"
+  source = "${path.module}/scripts/${var.nginx_version}/web-forms.conf"
+  source_hash = filemd5("${path.module}/scripts/${var.nginx_version}/web-forms.conf")
+}
+
 resource "aws_s3_object" "mime_types" {
   bucket = var.deployment_s3_bucket
   key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/mime.types"
