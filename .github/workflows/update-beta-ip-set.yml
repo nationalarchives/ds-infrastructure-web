@@ -20,10 +20,10 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4.9.1
         with:
           python-version: '3.11'
 
@@ -31,7 +31,7 @@ jobs:
         run: pip install boto3
 
       - name: Update WAF IP Set for Dev
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
         with:
           aws-region: us-east-1
           role-to-assume: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
@@ -73,7 +73,7 @@ jobs:
           EOF
 
       - name: Update WAF IP Set for Staging
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
         with:
           aws-region: us-east-1
           role-to-assume: arn:aws:iam::337670467269:role/GitHubActionRole
