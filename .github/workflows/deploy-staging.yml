@@ -176,7 +176,7 @@ jobs:
     if: ${{ (success() || failure()) && inputs.notify-slack }}
     steps:
       - uses: rtCamp/action-slack-notify@v2
-        if: ${{ success() }}
+        if: ${{ needs.deploy.result == 'success' }}
         env:
           SLACK_TITLE: Website deployment
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
@@ -188,7 +188,7 @@ jobs:
           SLACKIFY_MARKDOWN: true
           SLACK_MESSAGE: "🧪 Release **v${{ needs.create-release.outputs.version }}** deployed to staging: [staging-www.nationalarchives.gov.uk](http://staging-www.nationalarchives.gov.uk/)"
       - uses: rtCamp/action-slack-notify@v2
-        if: ${{ failure() }}
+        if: ${{ needs.deploy.result == 'failure' }}
         env:
           SLACK_TITLE: Website deployment
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
