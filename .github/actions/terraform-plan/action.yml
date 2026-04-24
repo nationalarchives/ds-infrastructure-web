@@ -31,3 +31,4 @@ runs:
         [ $tf_error_code -eq 2 ] && echo "Changes required"
       shell: bash
       continue-on-error: true
+      
