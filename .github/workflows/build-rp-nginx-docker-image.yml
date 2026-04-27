@@ -25,6 +25,8 @@ jobs:
           echo "image_id=$prep_image_id" >> "$GITHUB_OUTPUT"
 
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
       - name: log in to registry
         run: echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io --username ${{ github.actor }} --password-stdin

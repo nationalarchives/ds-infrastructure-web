@@ -55,9 +55,10 @@ jobs:
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
 
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: ${{ env.branch }}
+          persist-credentials: false
 
       - uses: hashicorp/setup-terraform@633666f66e0061ca3b725c73b2ec20cd13a8fdd1 # v2.0.3
 
@@ -191,9 +192,10 @@ jobs:
     environment: "${{ inputs.github-environment }}"
     steps:
       - name: Checkout ds-infrastructure-web
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           repository: nationalarchives/ds-infrastructure-web
+          persist-credentials: false
 
       - name: copy script
         run: |
