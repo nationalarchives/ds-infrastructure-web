@@ -65,7 +65,7 @@ jobs:
     needs:
       - prepare
     steps:
-      - uses: rtCamp/action-slack-notify@ve31e87e03dd19038e411e38ae27cbad084a90661 # v2.3.3
+      - uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661 # v2.3.3
         env:
           SLACK_TITLE: Website deployment
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
@@ -129,7 +129,7 @@ jobs:
       - deploy
     if: ${{ !cancelled() }}
     steps:
-      - uses: rtCamp/action-slack-notify@ve31e87e03dd19038e411e38ae27cbad084a90661 # v2.3.3
+      - uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661 # v2.3.3
         if: ${{ needs.deploy.result == 'success' }}
         env:
           SLACK_TITLE: Website deployment
@@ -141,7 +141,7 @@ jobs:
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
           SLACK_MESSAGE: "🎉 Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** deployed to production: [www.nationalarchives.gov.uk](http://www.nationalarchives.gov.uk/)"
-      - uses: rtCamp/action-slack-notify@ve31e87e03dd19038e411e38ae27cbad084a90661 # v2.3.3
+      - uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661 # v2.3.3
         if: ${{ needs.deploy.result == 'failure' }}
         env:
           SLACK_TITLE: Website deployment
