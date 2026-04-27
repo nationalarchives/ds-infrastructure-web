@@ -1,38 +1,25 @@
-name: TF scheduled apply infrastructure
+name: TF scheduled infrastructure pipeline
 
 on:
   schedule:
-    - cron: '10 15 * * 5'
+    - cron: '05 14 * * 5'
   workflow_dispatch:
 
 permissions:
   id-token: write
-  contents: write
+  contents: read
+
+env:
+  working_dir: components/terraform
 
 jobs:
-  terraform:
+
+# =========================
+# DEV
+# =========================
+  dev:
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - account: dev
-            role: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
-            environment: dev
-
-          # - account: staging
-          #   role: arn:aws:iam::337670467269:role/GitHubActionRole
-          #   environment: staging
-
-          # - account: live
-          #   role: arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0
-          #   environment: production
-
-    environment: ${{ matrix.environment }}
-
-    env:
-      working_dir: components/terraform
+    environment: dev
 
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
@@ -41,17 +28,20 @@ jobs:
         uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
         with:
           aws-region: eu-west-2
-          role-to-assume: ${{ matrix.role }}
-          role-session-name: MySessionName
+          role-to-assume: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
 
-      - name: Setup runner
+      - name: Setup runtime
         uses: ./.github/actions/setup-runtime
 
-      # ---------------- PLAN ----------------
+      - name: Terraform Init
+        run: |
+          cd $working_dir
+          terraform init -input=false
+
       - name: Terraform Plan
-        uses: ./.github/actions/terraform-plan
-        with:
-          account: ${{ matrix.account }}
+        run: |
+          cd $working_dir
+          terraform plan -out=tfplan
 
       # ---------------- SLACK ----------------
       - name: Get Slack credentials
@@ -65,13 +55,106 @@ jobs:
         uses: slackapi/slack-github-action@b0fa283ad8fea605de13dc3f449259339835fc52 # v2.1.0
         with:
           method: chat.postMessage
-          token: ${{ env.SLACK_BOT_TOKEN }}
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
           payload: |
-            channel: ${{ env.SLACK_CHANNEL_ID }}
-            text: ":warning: *${{ matrix.account }} Terraform plan completed*\nApproval required before APPLY\nRun: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            channel: ${{ secrets.SLACK_CHANNEL_ID }}
+            text: |
+              🟢 DEV Terraform plan completed
+              👉 Please approve in GitHub UI
 
-      # ---------------- APPLY ----------------
       - name: Terraform Apply
-        uses: ./.github/actions/terraform-apply
+        run: |
+          cd $working_dir
+          terraform apply -auto-approve tfplan
+
+
+# =========================
+# STAGING
+# =========================
+  staging:
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: AWS STAGING auth
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          account: ${{ matrix.account }}
+          aws-region: eu-west-2
+          role-to-assume: arn:aws:iam::337670467269:role/GitHubActionRole
+
+      - name: Setup runtime
+        uses: ./.github/actions/setup-runtime
+
+      - name: Terraform Init
+        run: |
+          cd $working_dir
+          terraform init -input=false
+
+      - name: Terraform Plan
+        run: |
+          cd $working_dir
+          terraform plan -out=tfplan
+
+      - name: Slack Notify (STAGING)
+        uses: slackapi/slack-github-action@v2.1.0
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ secrets.SLACK_CHANNEL_ID }}
+            text: |
+              ⚠️ STAGING Terraform plan completed
+              👉 Awaiting GitHub approval
+
+      - name: Terraform Apply
+        run: |
+          cd $working_dir
+          terraform apply -auto-approve tfplan
+
+
+# =========================
+# LIVE
+# =========================
+  live:
+    runs-on: ubuntu-latest
+    environment: live
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: AWS LIVE auth
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-west-2
+          role-to-assume: arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0
+
+      - name: Setup runtime
+        uses: ./.github/actions/setup-runtime
+
+      - name: Terraform Init
+        run: |
+          cd $working_dir
+          terraform init -input=false
+
+      - name: Terraform Plan
+        run: |
+          cd $working_dir
+          terraform plan -out=tfplan
+
+      - name: Slack Notify (LIVE)
+        uses: slackapi/slack-github-action@v2.1.0
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ secrets.SLACK_CHANNEL_ID }}
+            text: |
+              🚨 LIVE Terraform plan completed
+              👉 Awaiting GitHub approval
+
+      - name: Terraform Apply
+        run: |
+          cd $working_dir
+          terraform apply -auto-approve tfplan
