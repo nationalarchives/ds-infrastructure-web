@@ -1,4 +1,4 @@
-name: TF scheduled infrastructure pipeline
+name: TF scheduled infrastructure
 
 on:
   schedule:

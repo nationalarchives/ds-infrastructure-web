@@ -117,7 +117,8 @@ terraform plan \
   -var-file="vars/dev/forms.auto.tfvars" \
   -var-file="vars/dev/reverse-proxy.auto.tfvars" \
   -var-file="vars/dev/nginx-v1.auto.tfvars" \
-  -var-file="vars/dev/nginx-v2.auto.tfvars"
+  -var-file="vars/dev/nginx-v2.auto.tfvars" \
+  -var-file="vars/dev/wp-website.auto.tfvars"
 ```
 
 **_Staging plan_**

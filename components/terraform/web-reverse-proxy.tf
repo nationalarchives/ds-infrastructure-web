@@ -21,6 +21,18 @@ variable "nginx_folder_s3_key" {}
 variable "nginx_version" {}
 variable "vpc_cidr" {}
 variable "resolver" {}
+variable "ups_ecommerce_be" {}
+variable "ups_services" {}
+variable "ups_win2016apps" {}
+variable "ups_win2016web" {}
+variable "ups_win2016web_host" {}
+variable "ups_appslb" {}
+variable "ups_legacy_apps" {}
+variable "ups_win2016apps_host" {}
+variable "site_access_list" {}
+variable "admin_list" {}
+variable "ups_pronom" {}
+variable "streamline_access_list" {}
 
 module "web_reverse_proxy" {
     source = "./web-reverse-proxy"
@@ -70,9 +82,21 @@ module "web_reverse_proxy" {
 module "nginx_conf_v1" {
   source = "./nginx-conf"
 
-  service              = var.service
-  deployment_s3_bucket = var.deployment_s3_bucket
-  nginx_folder_s3_key  = "nginx"
+  service               = var.service
+  deployment_s3_bucket  = var.deployment_s3_bucket
+  nginx_folder_s3_key   = "nginx"
+  ups_ecommerce_be      = var.ups_ecommerce_be
+  ups_services          = var.ups_services
+  ups_win2016apps       = var.ups_win2016apps
+  ups_win2016web        = var.ups_win2016web
+  ups_win2016web_host   = var.ups_win2016web_host
+  ups_appslb            = var.ups_appslb
+  ups_legacy_apps       = var.ups_legacy_apps
+  ups_win2016apps_host  = var.ups_win2016apps_host
+  site_access_list      = var.site_access_list
+  admin_list            = var.admin_list
+  ups_pronom            = var.ups_pronom
+  streamline_access_list = var.streamline_access_list
 
   nginx_version        = "v1"
 
@@ -87,6 +111,19 @@ module "nginx_conf_v2" {
   service              = var.service
   deployment_s3_bucket = var.deployment_s3_bucket
   nginx_folder_s3_key  = "nginx"
+
+  ups_ecommerce_be      = var.ups_ecommerce_be
+  ups_services          = var.ups_services
+  ups_win2016apps       = var.ups_win2016apps
+  ups_win2016web        = var.ups_win2016web
+  ups_win2016web_host   = var.ups_win2016web_host
+  ups_appslb            = var.ups_appslb
+  ups_legacy_apps       = var.ups_legacy_apps
+  ups_win2016apps_host  = var.ups_win2016apps_host
+  site_access_list      = var.site_access_list
+  admin_list            = var.admin_list
+  ups_pronom            = var.ups_pronom
+  streamline_access_list = var.streamline_access_list
 
   nginx_version        = "v2"
 
