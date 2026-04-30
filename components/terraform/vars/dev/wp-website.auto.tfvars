@@ -2,16 +2,6 @@ service = "web"
 
 deployment_s3_bucket               = "ds-dev-deployment-source"
 logfile_s3_bucket                  = "ds-dev-logfiles"
-public_domain_name                 = "dev-www.nationalarchives.gov.uk"
-website_instance_type              = "t3a.small"
-reverse_proxy_instance_type        = "t3a.small"
-reverse_proxy_asg_max_size         = 2
-reverse_proxy_asg_min_size         = 1
-reverse_proxy_asg_desired_capacity = 1
-website_auto_switch_on             = "true"
-website_auto_switch_off            = "true"
-reverse_proxy_auto_switch_on       = "true"
-reverse_proxy_auto_switch_off      = "true"
 
 resolver             = "10.128.208.2"
 ups_appslb           = "test-apps.nationalarchives.web.local"
@@ -30,9 +20,6 @@ on_prem_cidrs = [
     "172.31.10.0/24"
 ]
 
-website_asg_max_size         = 2
-website_asg_min_size         = 1
-website_asg_desired_capacity = 1
 
 admin_list = [
     # Pulse VPN clients
@@ -85,10 +72,5 @@ streamline_access_list = [
     "195.35.90.0/23"
     # streamline provided IP range
 ]
-
-wp_secretsmanager_secret_arn = "arn:aws:secretsmanager:eu-west-2:846769538626:secret:dev/WordPress-5IJdVp"
-
-intersite_vpc_and_clientvpn_cidr = "10.128.224.0/21"
-vpc_cidr                         = "10.128.208.0/21"
 
 

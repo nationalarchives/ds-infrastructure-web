@@ -12,6 +12,9 @@ data "aws_ssm_parameter" "wildcard_certificate_arn" {
 data "aws_ssm_parameter" "us_east_1_wildcard_certificate_arn" {
     name = "/infrastructure/certificate-manager/us-east-1-wildcard-certificate-arn"
 }
+data "aws_ssm_parameter" "admin_subdomain_certificate_arn" {
+    name = "/infrastructure/certificate-manager/website-admin-subdomain-certificate-arn"
+}
 
 # networking
 #

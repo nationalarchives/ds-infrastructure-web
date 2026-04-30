@@ -40,3 +40,9 @@ variable "efs_dns_name" {}
 variable "web_reverse_proxy_sg_id" {}
 variable "web_wagtail_efs_mount_dir" {}
 variable "service" {}
+variable "lb_sg_id" {}
+variable "public_subnet_a_id" {}
+
+variable "public_subnet_b_id" {}
+variable "public_ssl_cert_arn" {}
+variable "sub_sub_domain_ssl_cert_arn" {}

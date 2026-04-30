@@ -44,10 +44,15 @@ module "web_reverse_proxy" {
     lb_listener_arn = module.load-balancer.lb_listener_arn
     x_target_header = "web-reverse-proxy"
     host_header = "web-reverse-proxy.${var.environment}.local"
+    lb_sg_id = module.sgs.web_reverse_proxy_sg_id
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
     private_subnet_b_id = data.aws_ssm_parameter.private_subnet_2b_id.value
+    public_subnet_a_id  = data.aws_ssm_parameter.public_subnet_2a_id.value
+    public_subnet_b_id  = data.aws_ssm_parameter.public_subnet_2b_id.value
+    public_ssl_cert_arn = data.aws_ssm_parameter.wildcard_certificate_arn.value
+    sub_sub_domain_ssl_cert_arn   = data.aws_ssm_parameter.admin_subdomain_certificate_arn.value
 
     enable_autoscaling = var.environment == "live" ? true : false
     autoscaling_policy_name_prefix = var.environment == "live" ? "web-reverse-proxy" : ""
@@ -76,7 +81,7 @@ module "web_reverse_proxy" {
     patch_group = var.web_reverse_proxy_patch_group
     deployment_s3_bucket = var.web_reverse_proxy_deployment_s3_bucket
     folder_s3_key = var.web_reverse_proxy_folder_s3_key
-    tags = local.tags   
+    tags = local.tags
 }
 
 module "nginx_conf_v1" {

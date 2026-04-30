@@ -1,6 +1,6 @@
 module "sgs" {
     source = "./security-groups"
-
+    
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     lb_security_group_id = module.load-balancer.lb_security_group_id
 
