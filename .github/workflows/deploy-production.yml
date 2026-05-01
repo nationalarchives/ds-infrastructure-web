@@ -27,7 +27,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: main
       - name: Copy config from staging to production
@@ -96,9 +96,10 @@ jobs:
       id-token: write
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: ${{ needs.prepare.outputs.commit-sha }}
+          persist-credentials: false
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@8df5847569e6427dd6c4fb1cf565c83acfa8afa7
@@ -142,7 +143,7 @@ jobs:
           SLACKIFY_MARKDOWN: true
           SLACK_MESSAGE: "🎉 Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** deployed to production: [www.nationalarchives.gov.uk](http://www.nationalarchives.gov.uk/)"
       - uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661 # v2.3.3
-        if: ${{ needs.deploy.result == 'failure' }}
+        if: ${{ needs.deploy.result != 'success' }}
         env:
           SLACK_TITLE: Website deployment
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
@@ -162,9 +163,10 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN_TEST_RUNNER }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: ${{ needs.prepare.outputs.commit-sha }}
+          persist-credentials: false
       - name: Run tests
         run: |
           gh workflow run run.yml --repo nationalarchives/ds-tna-website-tests --field site=all --field environment=production --raw-field exclude-tests=@wip --field notify-slack-on-pass=true --field notify-slack-on-fail=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
