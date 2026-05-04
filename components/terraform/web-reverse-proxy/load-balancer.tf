@@ -25,7 +25,7 @@ resource "aws_lb_target_group" "web_reverse_proxy" {
 
     health_check {
         interval            = 30
-        path                = "/healthcheck/live/"
+        path                = "/rp-beacon"
         port                = "traffic-port"
         timeout             = 5
         healthy_threshold   = 2
