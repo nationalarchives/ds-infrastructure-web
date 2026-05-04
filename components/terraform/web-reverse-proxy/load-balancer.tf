@@ -7,7 +7,7 @@ resource "aws_lb" "web_reverse_proxy" {
     load_balancer_type = "application"
 
     security_groups = [
-        var.lb_sg_id
+        var.web_reverse_proxy_lb_security_group_id
     ]
 
     subnets = [

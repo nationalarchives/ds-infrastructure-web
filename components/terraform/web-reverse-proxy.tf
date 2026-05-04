@@ -45,6 +45,7 @@ module "web_reverse_proxy" {
     x_target_header = "web-reverse-proxy"
     host_header = "web-reverse-proxy.${var.environment}.local"
     lb_sg_id = module.sgs.web_reverse_proxy_sg_id
+    web_reverse_proxy_lb_security_group_id = module.sgs.web_reverse_proxy_lb_security_group_id
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value

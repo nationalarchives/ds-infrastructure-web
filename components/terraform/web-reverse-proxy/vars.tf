@@ -46,3 +46,4 @@ variable "public_subnet_a_id" {}
 variable "public_subnet_b_id" {}
 variable "public_ssl_cert_arn" {}
 variable "sub_sub_domain_ssl_cert_arn" {}
+variable "web_reverse_proxy_lb_security_group_id" {}

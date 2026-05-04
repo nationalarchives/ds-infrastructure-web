@@ -11,12 +11,17 @@ resource "aws_security_group" "web_reverse_proxy" {
     })
 }
 
+# resource "aws_security_group" "web_reverse_proxy_lb" {
+#   name   = "web-reverse-proxy-lb"
+#   vpc_id = var.vpc_id
+# }
+
 resource "aws_security_group_rule" "web_reverse_proxy_http_ingress" {
     description              = "port 80 traffic from LB"
     from_port                = 80
     protocol                 = "tcp"
     security_group_id        = aws_security_group.web_reverse_proxy.id
-    source_security_group_id = var.lb_security_group_id
+    source_security_group_id = aws_security_group.web_reverse_proxy.id
     to_port                  = 80
     type                     = "ingress"
 }
