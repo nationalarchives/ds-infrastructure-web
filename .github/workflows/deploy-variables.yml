@@ -99,6 +99,10 @@ jobs:
           persist-credentials: false
       - name: Run tests
         run: |
-          gh workflow run run.yml --repo nationalarchives/ds-tna-website-tests --field environment=${{ github.event.inputs.environment }} --raw-field exclude-tests=@wip --field notify-slack-on-pass=${{ inputs.notify-slack }} --field notify-slack-on-fail=${{ inputs.notify-slack }} --raw-field description="`${{ github.actor }}` deployed variables for ${{ github.event.inputs.environment }}..."
+          gh workflow run run.yml --repo nationalarchives/ds-tna-website-tests --field environment=${ENVIRONMENT} --raw-field exclude-tests=@wip --field notify-slack-on-pass=${INPUTS_NOTIFY_SLACK} --field notify-slack-on-fail=${INPUTS_NOTIFY_SLACK} --raw-field description="`${GITHUB_ACTOR}` deployed variables for ${ENVIRONMENT}..."
           sleep 5
           gh run watch --exit-status --repo nationalarchives/ds-tna-website-tests $(gh run list --repo nationalarchives/ds-tna-website-tests --workflow run.yml -L1 --json databaseId --jq .[0].databaseId)
+        env:
+          ENVIRONMENT: ${{ github.event.inputs.environment }}
+          INPUTS_NOTIFY_SLACK: ${{ github.event.inputs.notify-slack }}
+          GITHUB_ACTOR: ${{ github.actor }}
