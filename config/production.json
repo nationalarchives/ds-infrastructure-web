@@ -2,42 +2,42 @@
     "services": {
         "frontend": {
             "image": "ghcr.io/nationalarchives/ds-frontend",
-            "version": "26.05.01.1647",
+            "version": "26.05.11.1656",
             "repo": "https://github.com/nationalarchives/ds-frontend"
         },
         "wagtail": {
             "image": "ghcr.io/nationalarchives/ds-wagtail",
-            "version": "26.04.30.1578",
+            "version": "26.05.06.1588",
             "repo": "https://github.com/nationalarchives/ds-wagtail"
         },
         "wagtaildocs": {
             "image": "ghcr.io/nationalarchives/ds-frontend",
-            "version": "26.05.01.1647",
+            "version": "26.05.11.1656",
             "repo": "https://github.com/nationalarchives/ds-frontend"
         },
         "catalogue": {
             "image": "ghcr.io/nationalarchives/ds-catalogue",
-            "version": "26.05.01.2216",
+            "version": "26.05.11.2263",
             "repo": "https://github.com/nationalarchives/ds-catalogue"
         },
         "enrichment": {
             "image": "ghcr.io/nationalarchives/ds-frontend-enrichment",
-            "version": "26.05.01.121",
+            "version": "26.05.11.122",
             "repo": "https://github.com/nationalarchives/ds-frontend-enrichment"
         },
         "search": {
             "image": "ghcr.io/nationalarchives/ds-sitemap-search",
-            "version": "26.05.01.178",
+            "version": "26.05.11.180",
             "repo": "https://github.com/nationalarchives/ds-sitemap-search"
         },
         "feedback": {
             "image": "ghcr.io/nationalarchives/ds-feedback",
-            "version": "26.04.28.569",
+            "version": "26.05.11.573",
             "repo": "https://github.com/nationalarchives/ds-feedback"
         },
         "requestservicerecord": {
             "image": "ghcr.io/nationalarchives/ds-request-service-record",
-            "version": "26.05.01.740",
+            "version": "26.05.11.748",
             "repo": "https://github.com/nationalarchives/ds-request-service-record"
         },
         "forms": {
