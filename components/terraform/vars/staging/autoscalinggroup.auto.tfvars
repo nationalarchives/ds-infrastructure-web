@@ -2,7 +2,7 @@
 web_frontend_patch_group      = "web-frontend-patchgroup"
 web_frontend_deployment_group = "web-frontend-deploygroup"
 
-enable_autoscaling = false
+ enable_autoscaling           = false
 web_frontend_asg_max_size                  = 2
 web_frontend_asg_min_size                  = 1
 web_frontend_asg_desired_capacity          = 1
@@ -27,7 +27,7 @@ web_wagtail_default_cooldown               = 0
 web_wagtail_scale_in_threshold             = 0  
 web_wagtail_scale_out_threshold            = 0
 
-# Enrichment
+# Web Enrichment
 web_enrichment_patch_group      = "web-enrichment-patchgroup"
 web_enrichment_deployment_group = "web-enrichment-deploygroup"
 
@@ -81,7 +81,7 @@ web_wagtaildocs_asg_desired_capacity          = 1
 web_wagtaildocs_asg_health_check_grace_period = 150
 web_wagtaildocs_asg_health_check_type         = "EC2"
 
-# Request Service Record
+# Web Request Service Record
 web_request_service_record_patch_group      = "web-request-service-record-patchgroup"
 web_request_service_record_deployment_group = "web-request-service-record-deploygroup"
 
@@ -104,3 +104,17 @@ web_forms_asg_min_size                  = 1
 web_forms_asg_desired_capacity          = 1
 web_forms_asg_health_check_grace_period = 150
 web_forms_asg_health_check_type         = "EC2"
+
+# Reverse Proxy
+web_reverse_proxy_patch_group      = "web-reverse-proxy-patchgroup"
+web_reverse_proxy_deployment_group = "web-nginx-rp"
+
+web_reverse_proxy_asg_max_size                  = 2
+web_reverse_proxy_asg_min_size                  = 1
+web_reverse_proxy_asg_desired_capacity          = 1
+web_reverse_proxy_asg_health_check_grace_period = 150
+web_reverse_proxy_asg_health_check_type         = "EC2"
+web_reverse_proxy_autoscaling_policy_name_prefix = ""  
+web_reverse_proxy_default_cooldown               = 0   
+web_reverse_proxy_scale_in_threshold             = 0  
+web_reverse_proxy_scale_out_threshold            = 0   

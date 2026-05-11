@@ -13,55 +13,61 @@ The ds-infrastructure-web repository contains terraform configurations for migra
 ## **3. Components**
 
 **_Frontend_**
-
 - Hosted on EC2 instances (`web-frontend`) in an Auto Scaling Group (ASG).
 - Accessed via an Application Load Balancer.
 - Uses AMI for deployment (web-frontend-primer\*).
 - It serves user facing part of Etna application.
 
 **_Enrichment_**
-
 - Hosted on EC2 instances (`web-enrichment`) in an ASG.
 - Uses AMI for deployment (web-enrichment-primer\*).
 - The enrichment service is a backend component that processes and enhances data before it's delivered to users or other services.
 
 **_Wagtail_**
-
 - Wagtail refers to the **CMS(Content Management System)** component likely used to manage and serve content for Etna application.
 
-**_Cognito_**
+**_Wagtaildocs_**
+- Wagtaildocs is likely a component of the Wagtail CMS that manages document storage and retrieval.
+- Hosted on EC2 instances (`web-wagtaildocs`).
 
+**_Forms_**
+- Hosted on EC2 instances (`web-forms`).
+
+**_Search_**
+- Hosted on EC2 instances (`web-search`).
+
+**_Request-Service-Record_**
+- Hosted on EC2 instances (`web-request-service-record`).
+
+**_Catalogue_**
+- Hosted on EC2 instances (`web-catalogue`).
+- Currently reverse proxied from `beta-rp`.
+
+**_Cognito_**
 - Manages user authentication and authorization.
 - Integrated with SES for email notifications.
 
 **_Lambda Functions_**
-
 - Used for deployment and startup scripts.
 
 **_Elastic File System (EFS)_**
-
 - Used for media storage.
 
 **_Reverse Proxy_**
-
 - Hosted on EC2 instances in an ASG.
-- Uses AMI for deployment (website-reverse-proxy-primer\*).
+- Uses AMI for deployment (web-reverse-proxy-primer\*).
 - Configured with NGINX for routing traffic.
 
 **_Security Groups_**
-
 - Define network access rules for EC2 instances, ALBs and other resources.
 
 **_IAM_**
-
 - It is responsible for defining AWS permissions and roles to ensure secure access control for your infrastructure.
 
 **_Cloud Front_**
-
 - Cloud Front distribution acts as a secure CDN, caching content at edge locations and routing requests through AWS WAF before forwarding them to the reverse proxy ALB, using custom headers for origin authentication.
 
 **_Route53_**
-
 - Route53 is used for **DNS management** and **domain routing**, primarily to direct traffic to CloudFront distribution and other AWS services.
 
 ## **4. Deployment Process**
@@ -140,7 +146,11 @@ terraform plan \
   -var-file="vars/staging/cognito.auto.tfvars" \
   -var-file="vars/staging/ses.auto.tfvars" \
   -var-file="vars/staging/request-service-record.auto.tfvars" \
-  -var-file="vars/staging/forms.auto.tfvars"
+  -var-file="vars/staging/forms.auto.tfvars" \
+  -var-file="vars/staging/reverse-proxy.auto.tfvars" \
+  -var-file="vars/staging/nginx-v1.auto.tfvars" \
+  -var-file="vars/staging/nginx-v2.auto.tfvars" \
+  -var-file="vars/staging/wp-website.auto.tfvars"
 ```
 
 **_Live plan_**
@@ -185,7 +195,11 @@ terraform apply \
   -var-file="vars/dev/catalogue.auto.tfvars" \
   -var-file="vars/dev/search.auto.tfvars" \
   -var-file="vars/dev/wagtaildocs.auto.tfvars" \
-  -var-file="vars/dev/forms/auto.tfvars"
+  -var-file="vars/dev/forms/auto.tfvars" \
+  -var-file="vars/dev/reverse-proxy.auto.tfvars" \
+  -var-file="vars/dev/nginx-v1.auto.tfvars" \
+  -var-file="vars/dev/nginx-v2.auto.tfvars" \
+  -var-file="vars/dev/wp-website.auto.tfvars"
 ```
 
 **_Staging apply_**
@@ -204,7 +218,11 @@ terraform apply \
 -var-file="vars/staging/enrichment.auto.tfvars" \
 -var-file="vars/staging/redis.auto.tfvars" \
 -var-file="vars/staging/search.auto.tfvars" \
--var-file="vars/staging/wagtaildocs.auto.tfvars"
+-var-file="vars/staging/wagtaildocs.auto.tfvars" \
+-var-file="vars/staging/reverse-proxy.auto.tfvars" \
+-var-file="vars/staging/nginx-v1.auto.tfvars" \
+-var-file="vars/staging/nginx-v2.auto.tfvars" \
+-var-file="vars/staging/wp-website.auto.tfvars"
 ```
 
 **_Live apply_**
@@ -235,21 +253,25 @@ terraform apply \
 
 **_File Structure_**
 
-- backend.tf: Configures the S3 bucket for terraform state.
-- cognito.tf: Manages Cognito user pools and clients.
+- `backend.tf`: Configures the S3 bucket for terraform state.
+- `cognito.tf`: Manages Cognito user pools and clients.
 - data-ami.tf: Defines AMIs for EC2 instances.
-- data.tf: Retrieves SSM Parameters and secrets.
-- enrichment.tf: Configures the enrichment service.
-- frontend.tf: Configures the frontend service.
-- lambda.tf: Manages lambda functions and layers.
-- media-efs.tf: Configures EFS and backups.
-- iam.tf: Defines IAM roles and policies.
-- provider.tf: Configures terraform providers (AWS and klayers).
-- security-groups.tf: Defines security groups for network access.
-- wagtail.tf: Configures the wagtail CMS service.
-- global-variables.tf: Defines global variables and tags used across all Terraform modules.
-- waf.tf: Configures AWS WAF (Web Application Firewall) to protect web services from common exploits (SQL injection, XSS, DDoS).
-- reverse-proxy.tf: Configures the NGINX reverse proxy service that routes and filters traffic between CloudFront and backend services.
+- `data.tf`: Retrieves SSM Parameters and secrets.
+- `web-enrichment.tf`: Configures the enrichment service.
+- `web-frontend.tf`: Configures the frontend service.
+- `web-catalogue.tf`: Configures the catalogue service.
+- `web-wagtaildocs.tf`: Configures the wagtail docs service.
+- `web-forms.tf`: Configures the forms service.
+- `web-request-service-record.tf`: Configures the Request a Military Record service.
+- `lambda.tf`: Manages lambda functions and layers.
+- `media-efs.tf`: Configures EFS and backups.
+- `iam.tf`: Defines IAM roles and policies.
+- `provider.tf`: Configures terraform providers (AWS and klayers).
+- `security-groups.tf`: Defines security groups for network access.
+- `web-wagtail.tf`: Configures the wagtail CMS service.
+- `global-variables.tf`: Defines global variables and tags used across all Terraform modules.
+- `waf.tf`: Configures AWS WAF (Web Application Firewall) to protect web services from common exploits (SQL injection, XSS, DDoS).
+- `web-reverse-proxy.tf`: Configures the NGINX reverse proxy service that routes and filters traffic between CloudFront and backend services.
 
 **_Best Practices_**
 

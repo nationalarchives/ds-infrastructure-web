@@ -32,6 +32,10 @@ This document contains links to various resources related to the project.
 
 - [Web Request Service Record AMI](https://github.com/nationalarchives/ds-infrastructure-web/actions/workflows/web-request-service-record.yml)
 
+- [Web Forms AMI](https://github.com/nationalarchives/ds-infrastructure-web/actions/workflows/web-forms.yml)
+
+- [Web Reverse Proxy AMI](https://github.com/nationalarchives/ds-infrastructure-web/actions/workflows/web-reverse-proxy.yml)
+
 - [Terraform Plan](https://github.com/nationalarchives/ds-infrastructure-web/actions/workflows/terraform-plan.yml)
 
 - [Terraform Apply](https://github.com/nationalarchives/ds-infrastructure-web/actions/workflows/terraform-apply.yml)

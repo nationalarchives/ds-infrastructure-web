@@ -1,0 +1,1 @@
+nginx_version = "v2"
