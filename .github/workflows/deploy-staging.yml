@@ -29,6 +29,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
+
       - name: Compare to production
         id: build-comparison
         run: |
@@ -75,10 +76,12 @@ jobs:
         run: |
           VERSION=$(date +%y.%m.%d).${{ github.run_number }}
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
+
       - name: Set up git
         run: |
           git config --global user.name "${{ github.triggering_actor }}"
           git config --global user.email "<>"
+
       - name: Copy config from develop to staging
         if: inputs.copy-develop
         run: |
@@ -86,6 +89,7 @@ jobs:
           git add config/staging.json
           git commit -m "Release v${{ steps.version-tag.outputs.VERSION }} to staging" || true
           git push
+
       - name: Create tag and release
         id: create-release
         run: |
@@ -95,6 +99,7 @@ jobs:
           gh release create "v${{ steps.version-tag.outputs.VERSION }}" --title "v${{ steps.version-tag.outputs.VERSION }}" --draft --notes-file release-notes.md --latest
           COMMIT_SHA=$(git log --format="%H" -n 1)
           echo "COMMIT_SHA=$COMMIT_SHA" >> "$GITHUB_OUTPUT"
+
       - name: Get contributors
         id: get-contributors
         run: |
@@ -190,6 +195,7 @@ jobs:
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
           SLACK_MESSAGE: "🧪 Release **v${{ needs.create-release.outputs.version }}** deployed to staging: [staging-www.nationalarchives.gov.uk](http://staging-www.nationalarchives.gov.uk/)"
+
       - uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661 # v2.3.3
         if: ${{ needs.deploy.result != 'success' }}
         env:
@@ -214,8 +220,11 @@ jobs:
         with:
           ref: ${{ needs.create-release.outputs.commit-sha }}
           persist-credentials: false
+
       - name: Run tests
         run: |
-          gh workflow run run.yml --repo nationalarchives/ds-tna-website-tests --field environment=staging --raw-field exclude-tests=@wip --field notify-slack-on-pass=${{ inputs.notify-slack }} --field notify-slack-on-fail=${{ inputs.notify-slack }} --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
+          gh workflow run run.yml --repo nationalarchives/ds-tna-website-tests --field environment=staging --raw-field exclude-tests="@wip" --field notify-slack-on-pass=${INPUTS_NOTIFY_SLACK} --field notify-slack-on-fail=${INPUTS_NOTIFY_SLACK} --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
           sleep 5
           gh run watch --exit-status --repo nationalarchives/ds-tna-website-tests $(gh run list --repo nationalarchives/ds-tna-website-tests --workflow run.yml -L1 --json databaseId --jq .[0].databaseId)
+        env:
+          INPUTS_NOTIFY_SLACK: ${{ github.event.inputs.notify-slack }}
