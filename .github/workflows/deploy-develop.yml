@@ -78,7 +78,7 @@ jobs:
         run: |
           HOUR=$(date +"%H")
           DAY_OF_WEEK=$(date +%u)
-          if [ "$HOUR" -ge 7 ] && [ "$HOUR" -le 18 ] && [ "$DAY_OF_WEEK" -ge 1 ] && [ "$DAY_OF_WEEK" -le 5 ];
+          if [ "$HOUR" -ge 7 ] && [ "$HOUR" -le 19 ] && [ "$DAY_OF_WEEK" -ge 1 ] && [ "$DAY_OF_WEEK" -le 5 ];
           then
             echo "Running tests during working hours"
             gh workflow run run.yml --repo nationalarchives/ds-tna-website-tests --field environment=develop --raw-field exclude-tests="@wip" --field notify-slack-on-pass=false --field notify-slack-on-fail=true --raw-field description="$(git log -1 --pretty=%B | sed '/./,$!d' | sed '/^$/d' | sed 's/^/> /')"
