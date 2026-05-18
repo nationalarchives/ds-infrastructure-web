@@ -97,9 +97,10 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
+
       - name: Run tests
         run: |
-          gh workflow run run.yml --repo nationalarchives/ds-tna-website-tests --field environment=${ENVIRONMENT} --raw-field exclude-tests=@wip --field notify-slack-on-pass=${INPUTS_NOTIFY_SLACK} --field notify-slack-on-fail=${INPUTS_NOTIFY_SLACK} --raw-field description="`${GITHUB_ACTOR}` deployed variables for ${ENVIRONMENT}..."
+          gh workflow run run.yml --repo nationalarchives/ds-tna-website-tests --field environment=${ENVIRONMENT} --raw-field exclude-tests="@wip" --field notify-slack-on-pass=${INPUTS_NOTIFY_SLACK} --field notify-slack-on-fail=${INPUTS_NOTIFY_SLACK} --raw-field description="`${GITHUB_ACTOR}` deployed variables for ${ENVIRONMENT}..."
           sleep 5
           gh run watch --exit-status --repo nationalarchives/ds-tna-website-tests $(gh run list --repo nationalarchives/ds-tna-website-tests --workflow run.yml -L1 --json databaseId --jq .[0].databaseId)
         env:
