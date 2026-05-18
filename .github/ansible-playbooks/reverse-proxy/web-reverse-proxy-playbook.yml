@@ -109,13 +109,13 @@
       force: yes
     when: account == "live"  
 
-  # - name: template compose.traefik.yml
-  #   vars:
-  #     local_domain: "web-reverse-proxy.{{ account }}.local"
-  #   template:
-  #     src: "./templates/compose.traefik.yml.j2"
-  #     dest: "./docker/compose.traefik.yml"
-  #     force: yes
+  - name: template compose.traefik.yml
+    vars:
+      local_domain: "web-reverse-proxy.{{ account }}.local"
+    template:
+      src: "./templates/compose.traefik.yml.j2"
+      dest: "./docker/compose.traefik.yml"
+      force: yes
 
   - name: template userdata
     vars:
@@ -155,7 +155,7 @@
       tags:
         Name: "web-reverse-proxy-primer"
         Environment: "{{ account }}"
-        Service: "Web Reverse Proxy"
+        Service: "Web"
         Owner: "Digital Services"
         CreatedBy: "ansible"
         CostCentre: 53
@@ -235,6 +235,9 @@
       mode: '0755'
     loop:
       - { file_name: startup.sh }
+      - { file_name: traefik-up.sh }
+      - { file_name: traefik-down.sh }
+      - { file_name: traefik-deploy.sh }
       - { file_name: website-blue-green-deploy.sh }
 
 - name: switch to localhost
@@ -252,7 +255,7 @@
       wait: yes
       tags:
         Name: "web-reverse-proxy-primer-{{ ansible_date_time.date }} {{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}-{{ ansible_date_time.second }}"
-        Service: "Web Reverse Proxy"
+        Service: "Web"
         Owner: "Digital Services"
         CreatedBy: "ansible"
         CostCentre: 53

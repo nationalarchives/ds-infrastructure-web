@@ -1,79 +1,67 @@
 #!/bin/bash
+
 set -e
 
-COMPOSE_FILE="/var/docker/compose.yml"
+source /etc/environment
 
-BLUE="blue-web"
-GREEN="green-web"
+sudo touch /var/log/server-startup.log
 
-echo "===== BLUE-GREEN DEPLOY START ====="
+region="eu-west-2"
 
-BLUE_UP=$(sudo docker ps -a --filter name=$BLUE --format "{{.Names}}")
-GREEN_UP=$(sudo docker ps -a --filter name=$GREEN --format "{{.Names}}")
+# Install dependencies
+sudo dnf -y update && sudo dnf install -y aws-cli jq yq
 
-if [ -z "$BLUE_UP" ] && [ -z "$GREEN_UP" ]; then
-    ACTIVE=""
-    NEW="blue"
-elif sudo docker ps --filter name=$BLUE --format "{{.Names}}" | grep -q blue-web; then
-    ACTIVE="blue"
-    NEW="green"
+# Fetch images from SSM
+ssm_data=$(aws ssm get-parameter \
+  --name /application/nginx/docker-images \
+  --region "$region" \
+  --query Parameter.Value \
+  --output text)
+
+TRAEFIK_IMAGE=$(echo "$ssm_data" | jq -r '.traefik')
+NGINX_APP_IMAGE=$(echo "$ssm_data" | jq -r '.["nginx-application"]')
+
+
+if [[ -z "$TRAEFIK_IMAGE" || "$TRAEFIK_IMAGE" == "none" ]]; then
+  echo "ERROR: Invalid TRAEFIK_IMAGE"
+  exit 1
+fi
+
+if [[ -z "$NGINX_APP_IMAGE" || "$NGINX_APP_IMAGE" == "none" ]]; then
+  echo "ERROR: Invalid NGINX_APP_IMAGE"
+  exit 1
+fi
+
+echo "Using TRAEFIK_IMAGE=$TRAEFIK_IMAGE"
+echo "Using NGINX_APP_IMAGE=$NGINX_APP_IMAGE"
+
+# Get current compose values
+set_traefik_image=$(yq '.services.traefik.image' /var/docker/compose.traefik.yml)
+set_app_image=$(yq '.services.blue-web.image' /var/docker/compose.yml)
+
+# Update Traefik if changed
+if [ "$TRAEFIK_IMAGE" != "$set_traefik_image" ]; then
+    sudo yq -i ".services.traefik.image = \"$TRAEFIK_IMAGE\"" /var/docker/compose.traefik.yml
+fi
+
+# Ensure Traefik running
+if ! sudo docker ps --format '{{.Names}}' | grep -q "traefik"; then
+    echo "Starting Traefik container..."
+    sudo /usr/local/bin/traefik-deploy.sh --up
+fi
+
+# Update app image ONLY if changed
+if [ "$NGINX_APP_IMAGE" != "$set_app_image" ]; then
+    echo "Updating application image..."
+
+    sudo yq -i ".services.blue-web.image = \"$NGINX_APP_IMAGE\"" /var/docker/compose.yml
+    sudo yq -i ".services.green-web.image = \"$NGINX_APP_IMAGE\"" /var/docker/compose.yml
+fi
+
+if sudo docker ps | grep -q traefik; then
+    sudo /usr/local/bin/website-blue-green-deploy.sh
+    echo "Startup completed successfully."
 else
-    ACTIVE="green"
-    NEW="blue"
-fi
-
-ACTIVE_C="${ACTIVE}-web"
-NEW_C="${NEW}-web"
-
-echo "Switching: ${ACTIVE:-none} -> $NEW"
-
-# Start container (IMPORTANT: capture failure)
-if ! sudo docker-compose -f $COMPOSE_FILE up -d $NEW_C; then
-    echo "❌ Container failed to start"
+    echo "can't start app - traefik hasn't started"
     exit 1
 fi
-
-echo "Waiting for container to stabilize..."
-sleep 15
-
-echo "Checking container status..."
-
-# Check if container is RUNNING
-if ! sudo docker ps --filter name=$NEW_C --format "{{.Names}}" | grep -q $NEW_C; then
-    echo "❌ Container is not running"
-    sudo docker logs $NEW_C || true
-    exit 1
-fi
-
-echo "Running health check..."
-
-HEALTH_OK=0
-
-for i in {1..20}; do
-    if sudo docker exec $NEW_C nginx -t >/dev/null 2>&1; then
-        HEALTH_OK=1
-        break
-    fi
-    sleep 2
-done
-
-if [ "$HEALTH_OK" -ne 1 ]; then
-    echo "❌ NEW container failed health check"
-
-    sudo docker rm -f $NEW_C || true
-
-    if [ -n "$ACTIVE_C" ]; then
-        echo "Rolling back to $ACTIVE"
-        sudo docker-compose -f $COMPOSE_FILE up -d $ACTIVE_C || true
-    fi
-
-    exit 1
-fi
-
-echo "✅ New container healthy"
-
-if [ -n "$ACTIVE_C" ]; then
-    sudo docker rm -f $ACTIVE_C || true
-fi
-
-echo "===== DEPLOY SUCCESS: $NEW ====="
