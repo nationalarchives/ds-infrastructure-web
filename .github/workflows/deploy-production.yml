@@ -37,21 +37,21 @@ jobs:
           WORKFLOW_COMMIT_SHA=$(git log --format="%H" -n 1)
           echo "WORKFLOW_COMMIT_SHA=$WORKFLOW_COMMIT_SHA"
 
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          VERSION=$(echo "${GITHUB_REF}" | sed -e 's,.*/\(.*\),\1,')
           # Strip "v" prefix from tag name
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          [[ "${GITHUB_REF}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
           echo "VERSION=$VERSION"
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
-          SUBMITTED_BY=${{ github.actor }}
+          SUBMITTED_BY=${GITHUB_ACTOR}
           echo "SUBMITTED_BY=$SUBMITTED_BY"
           echo "SUBMITTED_BY=$SUBMITTED_BY" >> "$GITHUB_OUTPUT"
 
-          APPROVED_BY=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/approvals" --jq '.|map(select(.user.type=="User"))|map(.user.login)|join(", ")') || APPROVED_BY=unknown
+          APPROVED_BY=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/approvals" --jq '.|map(select(.user.type=="User"))|map(.user.login)|join(", ")') || APPROVED_BY=unknown
           echo "APPROVED_BY=$APPROVED_BY"
           echo "APPROVED_BY=$APPROVED_BY" >> "$GITHUB_OUTPUT"
 
-          git config --global user.name "${{ github.actor }}"
+          git config --global user.name "${GITHUB_ACTOR}"
           git config --global user.email "<>"
           cp config/staging.json config/production.json
           git add config/production.json
@@ -60,6 +60,11 @@ jobs:
           COMMIT_SHA=$(git log --format="%H" -n 1)
           echo "COMMIT_SHA=$COMMIT_SHA"
           echo "COMMIT_SHA=$COMMIT_SHA" >> "$GITHUB_OUTPUT"
+        env:
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
 
   notify-start:
     runs-on: ubuntu-latest
