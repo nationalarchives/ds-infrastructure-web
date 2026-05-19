@@ -14,8 +14,6 @@ concurrency:
 jobs:
   release-variables:
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     outputs:
       version: ${{ steps.version-number.outputs.VERSION }}
       submitted-by: ${{ steps.submitted-by.outputs.SUBMITTED_BY }}
@@ -23,6 +21,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: main
+          persist-credentials: false
 
       - name: Get the release version number
         id: version-number
