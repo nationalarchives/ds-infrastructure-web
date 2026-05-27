@@ -74,3 +74,20 @@ jobs:
           service-name: ${{ inputs.application }}
           parameter-path: /application/web/${{ inputs.application }}/docker_images
           deployed-parameter-path: /application/web/${{ inputs.application }}/deployed_version
+
+  notify:
+    runs-on: ubuntu-latest
+    needs:
+      - deploy
+    steps:
+      - uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661 # v2.3.3
+        env:
+          SLACK_TITLE: Website deployment
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_ICON: https://raw.githubusercontent.com/nationalarchives/tna-frontend/main/src/nationalarchives/assets/images/apple-touch-icon.png
+          SLACK_ICON_EMOJI: ":rocket:"
+          SLACK_COLOR: #888888
+          MSG_MINIMAL: true
+          ENABLE_ESCAPES: true
+          SLACKIFY_MARKDOWN: true
+          SLACK_MESSAGE: "🧪 **${GITHUB_ACTOR}** is deploying a version of **${{ inputs.application }}** (${{ inputs.image_tag }}) to **${{ inputs.environment }}**..."
