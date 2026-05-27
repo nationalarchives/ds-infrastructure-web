@@ -122,8 +122,6 @@ terraform plan \
   -var-file="vars/dev/request-service-record.auto.tfvars" \
   -var-file="vars/dev/forms.auto.tfvars" \
   -var-file="vars/dev/reverse-proxy.auto.tfvars" \
-  -var-file="vars/dev/nginx-v1.auto.tfvars" \
-  -var-file="vars/dev/nginx-v2.auto.tfvars" \
   -var-file="vars/dev/wp-website.auto.tfvars"
 ```
 
@@ -148,8 +146,6 @@ terraform plan \
   -var-file="vars/staging/request-service-record.auto.tfvars" \
   -var-file="vars/staging/forms.auto.tfvars" \
   -var-file="vars/staging/reverse-proxy.auto.tfvars" \
-  -var-file="vars/staging/nginx-v1.auto.tfvars" \
-  -var-file="vars/staging/nginx-v2.auto.tfvars" \
   -var-file="vars/staging/wp-website.auto.tfvars"
 ```
 
@@ -197,8 +193,6 @@ terraform apply \
   -var-file="vars/dev/wagtaildocs.auto.tfvars" \
   -var-file="vars/dev/forms/auto.tfvars" \
   -var-file="vars/dev/reverse-proxy.auto.tfvars" \
-  -var-file="vars/dev/nginx-v1.auto.tfvars" \
-  -var-file="vars/dev/nginx-v2.auto.tfvars" \
   -var-file="vars/dev/wp-website.auto.tfvars"
 ```
 
@@ -220,8 +214,6 @@ terraform apply \
 -var-file="vars/staging/search.auto.tfvars" \
 -var-file="vars/staging/wagtaildocs.auto.tfvars" \
 -var-file="vars/staging/reverse-proxy.auto.tfvars" \
--var-file="vars/staging/nginx-v1.auto.tfvars" \
--var-file="vars/staging/nginx-v2.auto.tfvars" \
 -var-file="vars/staging/wp-website.auto.tfvars"
 ```
 
