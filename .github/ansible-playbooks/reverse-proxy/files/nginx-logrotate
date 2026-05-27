@@ -1,0 +1,16 @@
+# rotating nginx log files on a daily bases
+# file location /etc/logrotate.d/
+/var/log/nginx/*log {
+    create 0644 nginx nginx
+    daily
+    rotate 10
+    missingok
+    notifempty
+    compress
+    delaycompress
+    sharedscripts
+    postrotate
+        /bin/kill -USR1 `cat /run/nginx.pid 2>/dev/null` 2>/dev/null || true
+        /usr/local/sbin/logfile_archive.sh > /var/log/nginx/logfile_archive_log.txt
+    endscript
+}
