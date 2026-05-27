@@ -11,3 +11,4 @@ resolver    = "10.128.208.2"
 vpc_cidr    = "10.128.208.0/21"
 
 nginx_folder_s3_key = "nginx"
+efs_mount_dir = "/mnt/efs"
