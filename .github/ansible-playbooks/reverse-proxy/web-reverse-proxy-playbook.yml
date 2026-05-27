@@ -5,16 +5,21 @@
   gather_facts: false
 
   tasks:
+    - name: set vpc and subnet id
+      set_fact:
+        vpc_id: "{{ lookup( 'env', 'VPC_ID') }}"
+        subnet_id: "{{ lookup( 'env', 'SUBNET_ID') }}"
+        
     - name: switch role credentials
       community.aws.sts_assume_role:
-        role_arn: "{{ lookup( 'env', 'role_arn') }}"
+        role_arn: "{{ role_arn) }}"
         role_session_name: "s-devops-web-reverse-proxy"
       register: assumed_role
 
     - name: get linux2023 AMI
       amazon.aws.ec2_ami_info:
         owners: amazon
-        region: "{{ lookup( 'env', 'region') }}"
+        region: "{{ region }}"
         filters:
           name: "al2023-ami-2023*"
           architecture: "arm64"
@@ -53,7 +58,7 @@
     - name: create base web reverse proxy IAM role
       community.aws.iam_role:
         name: "ansible-ami-web-reverse-proxy-role"
-        region: "{{ lookup( 'env', 'region') }}"
+        region: "{{ region }}"
         assume_role_policy_document: "{{ lookup('file', './ec2-role-policy.json') }}"
         managed_policies: [ "{{ s3_policy.policy.arn }}", "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM", "arn:aws:iam::aws:policy/SecretsManagerReadWrite"]
         create_instance_profile: yes
@@ -66,8 +71,8 @@
       amazon.aws.ec2_security_group:
         name: "ansible-ami-web-reverse-proxy-sg"
         description: "security group allowing updates and downloads"
-        region: "{{ lookup( 'env', 'region') }}"
-        vpc_id: "{{ lookup( 'env', 'VPC_ID') }}"
+        region: "{{ region }}"
+        vpc_id: "{{ vpc_id }}"
         rules:
           - proto: "tcp"
             from_port: 22
@@ -102,7 +107,7 @@
       vars:
         s3_deployment_bucket: "{{ lookup( 'env', 's3_deployment_bucket') }}"
         s3_deployment_root: "{{ lookup( 'env', 's3_deployment_root') }}"
-        region: "{{ lookup( 'env', 'region') }}"
+        region: "{{ region }}"
       template:
         src: "./templates/userdata.sh.j2"
         dest: "./userdata.sh"
@@ -129,8 +134,8 @@
         network:
           assign_public_ip: yes
           delete_on_termination: yes
-          subnet_id: "{{ lookup( 'env', 'SUBNET_ID') }}"
-        region: "{{ lookup( 'env', 'region') }}"
+          subnet_id: "{{ subnet_id }}"
+        region: "{{ region }}"
         security_groups: [ "{{ ec2_sec_group.group_id }}" ]
         state: "running"
         termination_protection: no
@@ -145,7 +150,7 @@
         vpc_subnet_id: "{{ lookup( 'env', 'SUBNET_ID') }}"
         tags:
           Name: "web-reverse-proxy-primer"
-          Environment: "{{ lookup( 'env', 'account') }}"
+          Environment: "{{ account }}"
           Service: "Web"
           Owner: "Digital Services"
           CreatedBy: "ansible"
@@ -241,7 +246,7 @@
         instance_id: "{{ instance_id }}"
         name: "web-reverse-proxy-primer-{{ ansible_date_time.date }} {{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}-{{ ansible_date_time.second }}"
         description: "Web Reverse Proxy Instance - ready for deployment"
-        region: "{{ lookup( 'env', 'region') }}"
+        region: "{{ region }}"
         state: "present"
         wait: yes
         tags:
@@ -255,19 +260,19 @@
     - name: terminate instance
       amazon.aws.ec2_instance:
         instance_ids: "{{ instance_id }}"
-        region: "{{ lookup( 'env', 'region') }}"
+        region: "{{ region }}"
         state: "absent"
 
     - name: remove security group
       amazon.aws.ec2_security_group:
         name: "ansible-ami-web-reverse-proxy-sg"
-        region: "{{ lookup( 'env', 'region') }}"
+        region: "{{ region }}"
         state: "absent"
 
     - name: remove IAM role
       community.aws.iam_role:
         name: "ansible-ami-web-reverse-proxy-role"
-        region: "{{ lookup( 'env', 'region') }}"
+        region: "{{ region }}"
         delete_instance_profile: yes
         state: "absent"
 
