@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# get instance id from IMDSv2
+TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+InstanceId=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/instance-id)
+
+for i in /var/log/nginx/*.gz
+        do
+                REMOVEPATH="${i#*x?}"
+                NEWNAME="${REMOVEPATH/%.gz/_$InstanceId.gz}"
+                sudo aws s3 cp "$i" s3://{{ s3_logfile_bucket }}/{{ s3_logfile_root }}/"$NEWNAME"
+        done
+
+sudo rm /var/log/nginx/*.gz

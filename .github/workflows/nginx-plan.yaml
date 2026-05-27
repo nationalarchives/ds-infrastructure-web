@@ -18,21 +18,12 @@ on:
           - staging
           - live
 
-      nginx_version:
-        type: choice
-        description: "Select nginx version"
-        required: true
-        options:
-          - v1
-          - v2
-
 jobs:
   plan-nginx-dev:
     if: ${{ inputs.deploy-environment  == 'dev' }}
     uses: nationalarchives/ds-infrastructure-web/.github/workflows/plan-nginx.yml@main
     with:
       deploy-environment: "${{ inputs.deploy-environment }}"
-      nginx_version: "${{ inputs.nginx_version }}" 
       github-environment: "dev-deploy"
       account_id: "846769538626"
       role-to-assume: "arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL"
@@ -43,7 +34,6 @@ jobs:
     uses: nationalarchives/ds-infrastructure-web/.github/workflows/plan-nginx.yml@main
     with:
       deploy-environment: "${{ inputs.deploy-environment }}"
-      nginx_version: "${{ inputs.nginx_version }}" 
       github-environment: "staging-deploy"
       account_id: "337670467269"
       role-to-assume: "arn:aws:iam::337670467269:role/GitHubActionRole"
@@ -54,7 +44,6 @@ jobs:
     uses: nationalarchives/ds-infrastructure-web/.github/workflows/plan-nginx.yml@main
     with:
       deploy-environment: "${{ inputs.deploy-environment }}"
-      nginx_version: "${{ inputs.nginx_version }}" 
       github-environment: "live-deploy"
       account_id: "968803923593"
       role-to-assume: "arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0"

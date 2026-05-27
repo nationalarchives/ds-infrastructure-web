@@ -1,69 +1,101 @@
 #!/bin/bash
 
-sudo touch /var/log/ami-install.log
-
-echo "$(date '+%Y-%m-%d %T') - update system" | sudo tee -a  /var/log/ami-install.log > /dev/null
-sudo dnf update
+# Update dnf
+sudo dnf update -y
 
 # create swap file
-echo "$(date '+%Y-%m-%d %T') - create swap file" | sudo tee -a  /var/log/ami-install.log > /dev/null
 sudo /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024
-sudo chmod 0600 /var/swap.1
 sudo /sbin/mkswap /var/swap.1
-sudo /sbin/swapon /var/swap.1
+sudo chown root:root /var/swap.1
+sudo chmod 600 /var/swap.1
+sudo echo "/var/swap.1 swap swap defaults 0 0" >> /etc/fstab
+sudo swapon -a
+
+# Install NFS packages
+sudo dnf install -y amazon-efs-utils
+sudo dnf install -y nfs-utils
+sudo service nfs start
+sudo service nfs status
 
 # Install Cloudwatch agent
-echo "$(date '+%Y-%m-%d %T') - install CloudWatch agent" | sudo tee -a  /var/log/ami-install.log > /dev/null
 sudo dnf install amazon-cloudwatch-agent -y
-sudo aws s3 cp s3://{{ s3_deployment_bucket }}/{{ s3_deployment_root }}/cloudwatch/cloudwatch-agent-config.json /opt/aws/amazon-cloudwatch-agent/bin/config.json
+sudo amazon-linux-extras install -y collectd
+sudo aws s3 cp s3://{{ s3_deployment_bucket }}/web/cloudwatch/cloudwatch-agent-config.json /opt/aws/amazon-cloudwatch-agent/bin/config.json
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json
 
-echo "$(date '+%Y-%m-%d %T') - install collectd" | sudo tee -a  /var/log/ami-install.log > /dev/null
-sudo dnf install collectd -y
+# Copy configuration files for nginx
+sudo aws s3 cp s3://{{ s3_deployment_bucket }}/{{ s3_deployment_root }}/nginx/ /etc/nginx/ --recursive --exclude "*" --include "*.conf" --include "mime.types"
 
-echo "$(date '+%Y-%m-%d %T') - install docker" | sudo tee -a  /var/log/ami-install.log > /dev/null
-sudo dnf install docker -y
-sudo usermod -aG docker ssm-user
-sudo usermod -aG docker ec2-user
-sudo mkdir /var/docker
+# install all tools required for nginx compilation
+sudo dnf install -y git
+sudo dnf install -y gcc gcc-c++ make
+sudo dnf install -y pcre-devel zlib-devel openssl-devel gperftools
 
-echo "$(date '+%Y-%m-%d %T') - install wget" | sudo tee -a  /var/log/ami-install.log > /dev/null
-sudo dnf -y install wget
+echo -------------------------------------------
+sudo git clone https://github.com/yaoweibin/ngx_http_substitutions_filter_module.git
+sudo git clone https://github.com/openresty/echo-nginx-module.git
+sudo git clone https://github.com/nginx/nginx.git
+cd nginx
+sudo auto/configure --prefix=/usr/share/nginx \
+                 --sbin-path=/usr/sbin/nginx \
+                 --modules-path=/usr/lib64/nginx/modules \
+                 --conf-path=/etc/nginx/nginx.conf \
+                 --error-log-path=/var/log/nginx/error.log \
+                 --http-log-path=/var/log/nginx/access.log \
+                 --http-client-body-temp-path=/var/lib/nginx/tmp/client_body \
+                 --http-proxy-temp-path=/var/lib/nginx/tmp/proxy \
+                 --http-fastcgi-temp-path=/var/lib/nginx/tmp/fastcgi \
+                 --http-uwsgi-temp-path=/var/lib/nginx/tmp/uwsgi \
+                 --http-scgi-temp-path=/var/lib/nginx/tmp/scgi \
+                 --pid-path=/run/nginx.pid \
+                 --lock-path=/run/lock/subsys/nginx \
+                 --user=nginx \
+                 --group=nginx \
+                 --with-compat \
+                 --with-http_ssl_module \
+                 --with-http_v2_module \
+                 --with-http_realip_module \
+                 --with-stream_ssl_preread_module \
+                 --with-http_sub_module \
+                 --with-http_mp4_module \
+                 --with-http_gunzip_module \
+                 --with-http_gzip_static_module \
+                 --with-http_degradation_module \
+                 --with-http_stub_status_module \
+                 --with-http_auth_request_module \
+                 --with-pcre \
+                 --with-pcre-jit \
+                 --with-stream=dynamic \
+                 --with-stream_ssl_module \
+                 --with-debug \
+                 --add-module=../ngx_http_substitutions_filter_module \
+                 --add-module=../echo-nginx-module
+sudo make
+sudo make install
 
-# install docker-compose
-echo "$(date '+%Y-%m-%d %T') - install docker-compose" | sudo tee -a  /var/log/ami-install.log > /dev/null
-sudo curl -s https://api.github.com/repos/docker/compose/releases/latest \
-  | grep browser_download_url \
-  | grep docker-compose-linux-x86_64 \
-  | cut -d '"' -f 4 \
-  | sudo wget -qi -
-sudo chmod +x docker-compose-linux-x86_64
-sudo mv docker-compose-linux-x86_64 /usr/local/bin/docker-compose
+sudo groupadd nginx
+sudo useradd -c "Nginx web server" -g nginx -d /var/lib/nginx -s /sbin/nologin nginx
 
-# install yq
-echo "$(date '+%Y-%m-%d %T') - install yq" | sudo tee -a  /var/log/ami-install.log > /dev/null
-sudo wget https://github.com/mikefarah/yq/releases/download/v4.43.1/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
+sudo mkdir /var/lib/nginx
+sudo mkdir /var/lib/nginx/tmp
+sudo mkdir /var/lib/nginx/tmp/client_body
+sudo mkdir /var/lib/nginx/tmp/fastcgi
+sudo mkdir /var/lib/nginx/tmp/proxy
+sudo mkdir /var/lib/nginx/tmp/scgi
+sudo mkdir /var/lib/nginx/tmp/uwsgi
 
-echo "$(date '+%Y-%m-%d %T') - start docker" | sudo tee -a  /var/log/ami-install.log > /dev/null
-sudo systemctl enable docker
-sudo systemctl start docker
+sudo chown -R nginx:nginx /var/lib/nginx/
+sudo chown -R nginx:nginx /var/log/nginx/
 
-# prepare mount for uploaded files
-echo "$(date '+%Y-%m-%d %T') - create mount directory" | sudo tee -a  /var/log/ami-install.log > /dev/null
-sudo mkdir -p /app
-sudo mkdir -p /app/media
-#sudo chown -R apache:apache /media
-sudo chmod 2775 /app/media && find /app/media -type d -exec sudo chmod 2775 {} \;
-sudo find /app/media -type f -exec sudo chmod 0664 {} \;
+sudo systemctl enable nginx
+sudo systemctl start nginx
 
-## TODO
-## create a script checking the connection to database and if docker is running
-## on error send notification
-
-# set environment variables
-echo "$(date '+%Y-%m-%d %T') - set environment variables" | sudo tee -a  /var/log/ami-install.log > /dev/null
-echo 'export TRAEFIK_IMAGE="none"' |tee -a /etc/environment
-echo 'export FRONTEND_APP_IMAGE="none"' | tee -a /etc/environment
+%{ if region != "" ~ }}
+# install ssm agent -x86_64
+sudo dnf install -y https://s3.{{ region }}.amazonaws.com/amazon-ssm-{{ region }}/latest/linux_amd64/amazon-ssm-agent.rpm
+sudo systemctl enable amazon-ssm-agent
+sudo systemctl start amazon-ssm-agent
+%{ endif ~ }}
 
 cat << EOF > /var/finish-init.txt
 [status]

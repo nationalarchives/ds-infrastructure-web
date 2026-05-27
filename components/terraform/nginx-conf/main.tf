@@ -1,7 +1,7 @@
 resource "aws_s3_object" "admin_conf" {
     bucket = var.deployment_s3_bucket
-    key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/wp_admin.conf"
-    content = templatefile("${path.module}/scripts/${var.nginx_version}/wp_admin.conf", {
+    key    = "${var.service}/${var.nginx_folder_s3_key}/wp_admin.conf"
+    content = templatefile("${path.module}/scripts/wp_admin.conf", {
         environment      = var.environment,
         set_real_ip_from = var.set_real_ip_from,
         resolver         = var.resolver
@@ -10,16 +10,16 @@ resource "aws_s3_object" "admin_conf" {
 
 resource "aws_s3_object" "admin_ips_conf" {
     bucket = var.deployment_s3_bucket
-    key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/admin_ips.conf"
-    content = templatefile("${path.module}/scripts/${var.nginx_version}/admin_ips.conf", {
+    key    = "${var.service}/${var.nginx_folder_s3_key}/admin_ips.conf"
+    content = templatefile("${path.module}/scripts/admin_ips.conf", {
         admin_list = var.admin_list
     })
 }
 
 resource "aws_s3_object" "admin_subdomain_conf" {
     bucket = var.deployment_s3_bucket
-    key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/wp_admin_subdomain.conf"
-    content = templatefile("${path.module}/scripts/${var.nginx_version}/wp_admin_subdomain.conf", {
+    key    = "${var.service}/${var.nginx_folder_s3_key}/wp_admin_subdomain.conf"
+    content = templatefile("${path.module}/scripts/wp_admin_subdomain.conf", {
         environment      = var.environment,
         set_real_ip_from = var.set_real_ip_from,
         resolver         = var.resolver
@@ -28,38 +28,38 @@ resource "aws_s3_object" "admin_subdomain_conf" {
 
 resource "aws_s3_object" "blog_conf" {
     bucket = var.deployment_s3_bucket
-    key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/blog.conf"
-    content = templatefile("${path.module}/scripts/${var.nginx_version}/blog.conf", {
+    key    = "${var.service}/${var.nginx_folder_s3_key}/blog.conf"
+    content = templatefile("${path.module}/scripts/blog.conf", {
         environment = var.environment
     })
 }
 
 resource "aws_s3_object" "cloudfront_ips_conf" {
   bucket = var.deployment_s3_bucket
-  key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/cloudfront_ips.conf"
-  source = "${path.module}/scripts/${var.nginx_version}/cloudfront_ips.conf"
-  source_hash = filemd5("${path.module}/scripts/${var.nginx_version}/cloudfront_ips.conf")
+  key    = "${var.service}/${var.nginx_folder_s3_key}/cloudfront_ips.conf"
+  source = "${path.module}/scripts/cloudfront_ips.conf"
+  source_hash = filemd5("${path.module}/scripts/cloudfront_ips.conf")
 }
 
 resource "aws_s3_object" "media_conf" {
     bucket = var.deployment_s3_bucket
-    key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/media.conf"
-    content = templatefile("${path.module}/scripts/${var.nginx_version}/media.conf", {
+    key    = "${var.service}/${var.nginx_folder_s3_key}/media.conf"
+    content = templatefile("${path.module}/scripts/media.conf", {
         environment = var.environment
     })
 }
 
 resource "aws_s3_object" "mime_types" {
   bucket = var.deployment_s3_bucket
-  key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/mime.types"
-  source = "${path.module}/scripts/${var.nginx_version}/mime.types"
-  source_hash = filemd5("${path.module}/scripts/${var.nginx_version}/mime.types")
+  key    = "${var.service}/${var.nginx_folder_s3_key}/mime.types"
+  source = "${path.module}/scripts/mime.types"
+  source_hash = filemd5("${path.module}/scripts/mime.types")
 }
 
 resource "aws_s3_object" "nginx_conf" {
   bucket = var.deployment_s3_bucket
-  key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/nginx.conf"
-  content = templatefile("${path.module}/scripts/${var.nginx_version}/nginx.conf", {
+  key    = "${var.service}/${var.nginx_folder_s3_key}/nginx.conf"
+  content = templatefile("${path.module}/scripts/nginx.conf", {
         environment      = var.environment,
         set_real_ip_from = var.set_real_ip_from,
         resolver         = var.resolver,
@@ -78,26 +78,25 @@ resource "aws_s3_object" "nginx_conf" {
 
 resource "aws_s3_object" "redirects_conf" {
   bucket = var.deployment_s3_bucket
-  key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/redirects.conf"
-  source = "${path.module}/scripts/${var.nginx_version}/redirects.conf"
-  source_hash = filemd5("${path.module}/scripts/${var.nginx_version}/redirects.conf")
+  key    = "${var.service}/${var.nginx_folder_s3_key}/redirects.conf"
+  source = "${path.module}/scripts/redirects.conf"
+  source_hash = filemd5("${path.module}/scripts/redirects.conf")
 }
 
 resource "aws_s3_object" "update_nginx_confs" {
   bucket = var.deployment_s3_bucket
-  key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/update_nginx_confs.sh"
-  content = templatefile("${path.module}/scripts/${var.nginx_version}/update_nginx_confs.sh", {
+  key    = "${var.service}/${var.nginx_folder_s3_key}/update_nginx_confs.sh"
+  content = templatefile("${path.module}/scripts/update_nginx_confs.sh", {
     deployment_s3_bucket = var.deployment_s3_bucket,
     nginx_folder_s3_key  = var.nginx_folder_s3_key,
-    service              = var.service,
-    nginx_version        = var.nginx_version
+    service              = var.service
   })
 }
 
 resource "aws_s3_object" "variables_conf" {
   bucket = var.deployment_s3_bucket
-  key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/variables.conf"
-  content = templatefile("${path.module}/scripts/${var.nginx_version}/variables.conf", {
+  key    = "${var.service}/${var.nginx_folder_s3_key}/variables.conf"
+  content = templatefile("${path.module}/scripts/variables.conf", {
         environment          = var.environment,
         set_real_ip_from     = var.set_real_ip_from,
         resolver             = var.resolver,
@@ -115,8 +114,8 @@ resource "aws_s3_object" "variables_conf" {
 
 resource "aws_s3_object" "wagtail_admin_conf" {
   bucket = var.deployment_s3_bucket
-  key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/wagtail_admin.conf"
-  content = templatefile("${path.module}/scripts/${var.nginx_version}/wagtail_admin.conf", {
+  key    = "${var.service}/${var.nginx_folder_s3_key}/wagtail_admin.conf"
+  content = templatefile("${path.module}/scripts/wagtail_admin.conf", {
     environment      = var.environment,
     set_real_ip_from = var.set_real_ip_from
   })
@@ -124,8 +123,8 @@ resource "aws_s3_object" "wagtail_admin_conf" {
 
 resource "aws_s3_object" "web_enrichment_conf" {
   bucket = var.deployment_s3_bucket
-  key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/web-enrichment.conf"
-  content = templatefile("${path.module}/scripts/${var.nginx_version}/web-enrichment.conf", {
+  key    = "${var.service}/${var.nginx_folder_s3_key}/web-enrichment.conf"
+  content = templatefile("${path.module}/scripts/web-enrichment.conf", {
     environment      = var.environment,
     set_real_ip_from = var.set_real_ip_from
   })
@@ -133,8 +132,8 @@ resource "aws_s3_object" "web_enrichment_conf" {
 
 resource "aws_s3_object" "web_forms_conf" {
   bucket = var.deployment_s3_bucket
-  key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/web-forms.conf"
-  content = templatefile("${path.module}/scripts/${var.nginx_version}/web-forms.conf", {
+  key    = "${var.service}/${var.nginx_folder_s3_key}/web-forms.conf"
+  content = templatefile("${path.module}/scripts/web-forms.conf", {
     environment      = var.environment,
     set_real_ip_from = var.set_real_ip_from
   })
@@ -142,8 +141,8 @@ resource "aws_s3_object" "web_forms_conf" {
 
 resource "aws_s3_object" "web_frontend_conf" {
   bucket = var.deployment_s3_bucket
-  key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/web-frontend.conf"
-  content = templatefile("${path.module}/scripts/${var.nginx_version}/web-frontend.conf", {
+  key    = "${var.service}/${var.nginx_folder_s3_key}/web-frontend.conf"
+  content = templatefile("${path.module}/scripts/web-frontend.conf", {
     environment      = var.environment,
     set_real_ip_from = var.set_real_ip_from
   })
@@ -151,8 +150,8 @@ resource "aws_s3_object" "web_frontend_conf" {
 
 resource "aws_s3_object" "whitelist_conf" {
   bucket = var.deployment_s3_bucket
-  key    = "${var.service}/${var.nginx_folder_s3_key}/${var.nginx_version}/whitelist.conf"
-  content = templatefile("${path.module}/scripts/${var.nginx_version}/whitelist.conf", {
+  key    = "${var.service}/${var.nginx_folder_s3_key}/whitelist.conf"
+  content = templatefile("${path.module}/scripts/whitelist.conf", {
     environment      = var.environment,
     set_real_ip_from = var.set_real_ip_from,
     resolver         = var.resolver
