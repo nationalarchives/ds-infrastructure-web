@@ -53,7 +53,7 @@ jobs:
           MSG_MINIMAL: true
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
-          SLACK_MESSAGE: "👀 Release **[v${{ needs.release-variables.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.release-variables.outputs.version }})** needs approval to deploy to production. [Review the release](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.release-variables.outputs.version }})"
+          SLACK_MESSAGE: "👀 Release **[v${{ needs.release-variables.outputs.version }}](${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ needs.release-variables.outputs.version }})** needs approval to deploy to production. [Review the workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
 
   prepare:
     runs-on: ubuntu-latest
@@ -117,7 +117,7 @@ jobs:
           MSG_MINIMAL: true
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
-          SLACK_MESSAGE: "🚀 Release **[v${{ needs.release-variables.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.release-variables.outputs.version }})** deploying to production... *(approved by ${{ needs.prepare.outputs.approved-by }})*"
+          SLACK_MESSAGE: "🚀 Release **[v${{ needs.release-variables.outputs.version }}](${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ needs.release-variables.outputs.version }})** deploying to production... *(approved by ${{ needs.prepare.outputs.approved-by }})*"
 
   deploy:
     runs-on: ubuntu-latest
