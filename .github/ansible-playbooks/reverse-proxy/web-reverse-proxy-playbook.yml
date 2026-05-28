@@ -90,32 +90,6 @@
           rule_desc: "allow replies"
       state: "present"
     register: ec2_sec_group
-  - name: template compose.yml for dev and staging
-    vars:
-      sub_domain: "web-reverse-proxy.{{ account }}.local"
-    template:
-      src: "./templates/compose.yml.j2"
-      dest: "./docker/compose.yml"
-      force: yes
-    when: account == "dev" or
-          account == "staging"
-
-  - name: template compose.yml for live
-    vars:
-      sub_domain: "web-reverse-proxy.{{ account }}.local"
-    template:
-      src: "./templates/compose.yml.j2"
-      dest: "./docker/compose.yml"
-      force: yes
-    when: account == "live"  
-
-  - name: template compose.traefik.yml
-    vars:
-      local_domain: "web-reverse-proxy.{{ account }}.local"
-    template:
-      src: "./templates/compose.traefik.yml.j2"
-      dest: "./docker/compose.traefik.yml"
-      force: yes
 
   - name: template userdata
     vars:
@@ -213,32 +187,6 @@
     until: "init_finished.stat.exists"
     retries: 15
     delay: 20
-
-  - name: copy docker files to remote
-    ansible.builtin.copy:
-      src: ./docker/
-      dest: /var/docker/
-      force: yes
-    become: true
-
-  - name: copy scripts to remote
-    ansible.builtin.copy:
-      src: ./files/
-      dest: /usr/local/bin/
-      force: yes
-      mode: 0755
-    become: true
-
-  - name: set mode for scripts
-    ansible.builtin.file:
-      path: '/usr/local/bin/{{ item.file_name }}'
-      mode: '0755'
-    loop:
-      - { file_name: startup.sh }
-      - { file_name: traefik-up.sh }
-      - { file_name: traefik-down.sh }
-      - { file_name: traefik-deploy.sh }
-      - { file_name: website-blue-green-deploy.sh }
 
 - name: switch to localhost
   hosts: localhost
