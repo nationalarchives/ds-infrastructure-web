@@ -12,7 +12,7 @@
         
     - name: switch role credentials
       community.aws.sts_assume_role:
-        role_arn: "{{ role_arn) }}"
+        role_arn: "{{ role_arn }}"
         role_session_name: "s-devops-web-reverse-proxy"
       register: assumed_role
 
@@ -124,7 +124,7 @@
     - name: provisioning instance
       amazon.aws.ec2_instance:
         key_name: "{{ lookup( 'env', 'key_name') }}"
-        image_id: "{{ latest_ami.image_id }}"#
+        image_id: "{{ latest_ami.image_id }}"
         instance_role: "ansible-ami-web-reverse-proxy-role"
         instance_type: "{{ lookup( 'env', 'instance_type') }}"
         metadata_options:
