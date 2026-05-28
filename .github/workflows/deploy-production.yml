@@ -12,8 +12,54 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  release-variables:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version-number.outputs.VERSION }}
+      submitted-by: ${{ steps.submitted-by.outputs.SUBMITTED_BY }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Get the release version number
+        id: version-number
+        run: |
+          VERSION=$(echo "${GITHUB_REF}" | sed -e 's,.*/\(.*\),\1,')
+          [[ "${GITHUB_REF}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          echo "VERSION=$VERSION"
+          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Get the submitted by
+        id: submitted-by
+        run: |
+          SUBMITTED_BY=${GITHUB_ACTOR}
+          echo "SUBMITTED_BY=$SUBMITTED_BY"
+          echo "SUBMITTED_BY=$SUBMITTED_BY" >> "$GITHUB_OUTPUT"
+
+  notify-approval:
+    runs-on: ubuntu-latest
+    needs:
+      - release-variables
+    steps:
+      - uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661 # v2.3.3
+        env:
+          SLACK_TITLE: Website deployment to production needs approval
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_ICON: https://raw.githubusercontent.com/nationalarchives/tna-frontend/main/src/nationalarchives/assets/images/apple-touch-icon.png
+          SLACK_ICON_EMOJI: ":eyes:"
+          SLACK_COLOR: #4d91f7
+          MSG_MINIMAL: true
+          ENABLE_ESCAPES: true
+          SLACKIFY_MARKDOWN: true
+          SLACK_MESSAGE: "👀 Release **[v${{ needs.release-variables.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.release-variables.outputs.version }})** needs approval to deploy to production. [Review the release](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.release-variables.outputs.version }})"
+
   prepare:
     runs-on: ubuntu-latest
+    needs:
+      - release-variables
+      - notify-approval
     environment:
       name: production
       url: https://www.nationalarchives.gov.uk/
@@ -21,8 +67,6 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     outputs:
       commit-sha: ${{ steps.copy-config.outputs.COMMIT_SHA }}
-      version: ${{ steps.copy-config.outputs.VERSION }}
-      submitted-by: ${{ steps.copy-config.outputs.SUBMITTED_BY }}
       approved-by: ${{ steps.copy-config.outputs.APPROVED_BY }}
     permissions:
       contents: write
@@ -36,16 +80,6 @@ jobs:
         run: |
           WORKFLOW_COMMIT_SHA=$(git log --format="%H" -n 1)
           echo "WORKFLOW_COMMIT_SHA=$WORKFLOW_COMMIT_SHA"
-
-          VERSION=$(echo "${GITHUB_REF}" | sed -e 's,.*/\(.*\),\1,')
-          # Strip "v" prefix from tag name
-          [[ "${GITHUB_REF}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-          echo "VERSION=$VERSION"
-          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
-
-          SUBMITTED_BY=${GITHUB_ACTOR}
-          echo "SUBMITTED_BY=$SUBMITTED_BY"
-          echo "SUBMITTED_BY=$SUBMITTED_BY" >> "$GITHUB_OUTPUT"
 
           APPROVED_BY=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/approvals" --jq '.|map(select(.user.type=="User"))|map(.user.login)|join(", ")') || APPROVED_BY=unknown
           echo "APPROVED_BY=$APPROVED_BY"
@@ -65,11 +99,13 @@ jobs:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_RUN_ID: ${{ github.run_id }}
+          VERSION: ${{ needs.release-variables.outputs.version }}
 
   notify-start:
     runs-on: ubuntu-latest
     needs:
       - prepare
+      - release-variables
     steps:
       - uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661 # v2.3.3
         env:
@@ -81,7 +117,7 @@ jobs:
           MSG_MINIMAL: true
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
-          SLACK_MESSAGE: "🚀 Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** deploying to production... *(approved by ${{ needs.prepare.outputs.approved-by }})*"
+          SLACK_MESSAGE: "🚀 Release **[v${{ needs.release-variables.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.release-variables.outputs.version }})** deploying to production... *(approved by ${{ needs.prepare.outputs.approved-by }})*"
 
   deploy:
     runs-on: ubuntu-latest
@@ -132,7 +168,7 @@ jobs:
   notify-end-status:
     runs-on: ubuntu-latest
     needs:
-      - prepare
+      - release-variables
       - deploy
     if: ${{ !cancelled() }}
     steps:
@@ -147,7 +183,7 @@ jobs:
           MSG_MINIMAL: true
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
-          SLACK_MESSAGE: "🎉 Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** deployed to production: [www.nationalarchives.gov.uk](http://www.nationalarchives.gov.uk/)"
+          SLACK_MESSAGE: "🎉 Release **[v${{ needs.release-variables.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.release-variables.outputs.version }})** deployed to production: [www.nationalarchives.gov.uk](http://www.nationalarchives.gov.uk/)"
 
       - uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661 # v2.3.3
         if: ${{ needs.deploy.result != 'success' }}
@@ -160,7 +196,7 @@ jobs:
           MSG_MINIMAL: true
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
-          SLACK_MESSAGE: "❌ Release **[v${{ needs.prepare.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.prepare.outputs.version }})** failed to deploy to production"
+          SLACK_MESSAGE: "❌ Release **[v${{ needs.release-variables.outputs.version }}](https://github.com/nationalarchives/ds-infrastructure-web/releases/tag/v${{ needs.release-variables.outputs.version }})** failed to deploy to production"
 
   tests:
     runs-on: ubuntu-latest
