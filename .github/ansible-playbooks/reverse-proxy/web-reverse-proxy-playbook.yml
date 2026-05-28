@@ -32,8 +32,8 @@
 
     - name: template deployment policy
       vars:
-        s3_deployment_bucket: ${{ s3_deployment_bucket }}
-        s3_deployment_root: ${{ s3_deployment_root }}
+        s3_deployment_bucket: {{ s3_deployment_bucket }}
+        s3_deployment_root: {{ s3_deployment_root }}
       template:
         src: "./templates/instance-role-policy.json.j2"
         dest: "./instance-role-policy.json"
@@ -41,8 +41,8 @@
 
     - name: template log archive script
       vars:
-        s3_logfile_bucket: ${{ s3_logfile_bucket }}
-        s3_logfile_root: ${{ s3_logfile_root }}
+        s3_logfile_bucket: {{ s3_logfile_bucket }}
+        s3_logfile_root: {{ s3_logfile_root }}
       template:
         src: "./templates/logfile_archive.sh.j2"
         dest: "./logfile_archive.sh"
@@ -105,8 +105,8 @@
 
     - name: template userdata
       vars:
-        s3_deployment_bucket: ${{ s3_deployment_bucket }}
-        s3_deployment_root: ${{ s3_deployment_root }}
+        s3_deployment_bucket: {{ s3_deployment_bucket }}
+        s3_deployment_root: {{ s3_deployment_root }}
         region: "{{ region }}"
       template:
         src: "./templates/userdata.sh.j2"
@@ -115,7 +115,7 @@
 
     - name: upload python requirement file to S3
       amazon.aws.s3_object:
-        bucket: ${{ s3_deployment_bucket }}
+        bucket: {{ s3_deployment_bucket }}
         object: "/{{ s3_deployment_root }}/wordpress/base-python-req.txt"
         src: "./files/base-python-req.txt"
         mode: put
@@ -123,10 +123,10 @@
 
     - name: provisioning instance
       amazon.aws.ec2_instance:
-        key_name: ${{ key_name }}
+        key_name: {{ key_name }}
         image_id: "{{ latest_ami.image_id }}"
         instance_role: "ansible-ami-web-reverse-proxy-role"
-        instance_type: ${{ instance_type }}
+        instance_type: {{ instance_type }}
         metadata_options:
           http_endpoint: "enabled"
           http_tokens: "required"
@@ -146,8 +146,8 @@
             ebs:
               delete_on_termination: true
               encrypted: true
-              volume_size: ${{ volume_size }}
-        vpc_subnet_id: ${{ SUBNET_ID }}
+              volume_size: {{ volume_size }}
+        vpc_subnet_id: {{ SUBNET_ID }}
         tags:
           Name: "web-reverse-proxy-primer"
           Environment: "{{ account }}"
