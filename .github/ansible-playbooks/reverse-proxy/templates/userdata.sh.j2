@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Update dnf
-sudo dnf update -y
+# Update yum
+sudo yum update -y
 
 # create swap file
 sudo /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024
@@ -12,13 +12,13 @@ sudo echo "/var/swap.1 swap swap defaults 0 0" >> /etc/fstab
 sudo swapon -a
 
 # Install NFS packages
-sudo dnf install -y amazon-efs-utils
-sudo dnf install -y nfs-utils
+sudo yum install -y amazon-efs-utils
+sudo yum install -y nfs-utils
 sudo service nfs start
 sudo service nfs status
 
 # Install Cloudwatch agent
-sudo dnf install amazon-cloudwatch-agent -y
+sudo yum install amazon-cloudwatch-agent -y
 sudo amazon-linux-extras install -y collectd
 sudo aws s3 cp s3://{{ s3_deployment_bucket }}/web/cloudwatch/cloudwatch-agent-config.json /opt/aws/amazon-cloudwatch-agent/bin/config.json
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json
@@ -27,9 +27,11 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-c
 sudo aws s3 cp s3://{{ s3_deployment_bucket }}/{{ s3_deployment_root }}/nginx/ /etc/nginx/ --recursive --exclude "*" --include "*.conf" --include "mime.types"
 
 # install all tools required for nginx compilation
-sudo dnf install -y git
-sudo dnf install -y gcc gcc-c++ make
-sudo dnf install -y pcre-devel zlib-devel openssl-devel gperftools
+sudo yum install -y git
+sudo yum install -y pcre-devel zlib-devel openssl-devel gcc gcc-c++ make
+sudo yum install -y system-rpm-config
+sudo yum install -y wget openssl-devel libxml2-devel libxslt-devel gd-devel
+sudo yum install -y perl-ExtUtils-Embed GeoIP-devel gperftools gperftools-devel libatomic_ops-devel
 
 echo -------------------------------------------
 sudo git clone https://github.com/yaoweibin/ngx_http_substitutions_filter_module.git
@@ -87,12 +89,39 @@ sudo mkdir /var/lib/nginx/tmp/uwsgi
 sudo chown -R nginx:nginx /var/lib/nginx/
 sudo chown -R nginx:nginx /var/log/nginx/
 
+# prepare nginx as service
+sudo cat << EOF > ~/nginx.service
+[Unit]
+Description=The nginx HTTP and reverse proxy server
+After=network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=forking
+PIDFile=/run/nginx.pid
+# Nginx will fail to start if /run/nginx.pid already exists but has the wrong
+# SELinux context. This might happen when running `nginx -t` from the cmdline.
+# https://bugzilla.redhat.com/show_bug.cgi?id=1268621
+ExecStartPre=/usr/bin/rm -f /run/nginx.pid
+ExecStartPre=/usr/sbin/nginx -t
+ExecStart=/usr/sbin/nginx
+ExecReload=/bin/kill -s HUP $MAINPID
+KillSignal=SIGQUIT
+TimeoutStopSec=5
+KillMode=mixed
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo cp ~/nginx.service /lib/systemd/system/nginx.service
+
 sudo systemctl enable nginx
 sudo systemctl start nginx
 
 %{ if region != "" ~ }}
 # install ssm agent -x86_64
-sudo dnf install -y https://s3.{{ region }}.amazonaws.com/amazon-ssm-{{ region }}/latest/linux_amd64/amazon-ssm-agent.rpm
+sudo yum install -y https://s3.{{ region }}.amazonaws.com/amazon-ssm-{{ region }}/latest/linux_amd64/amazon-ssm-agent.rpm
 sudo systemctl enable amazon-ssm-agent
 sudo systemctl start amazon-ssm-agent
 %{ endif ~ }}
