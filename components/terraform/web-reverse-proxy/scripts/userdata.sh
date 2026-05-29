@@ -23,6 +23,7 @@ sudo chmod 777 ${mount_dir}
 sudo echo "${mount_target}:/ ${mount_dir} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,fsc,_netdev 0 0" >> /etc/fstab
 
 # Link directory to EFS mount directory
+sudo mkdir -p /var/nationalarchives.gov.uk
 sudo ln -snf ${web_wagtail_efs_mount_dir} /var/nationalarchives.gov.uk/media
 
 # Copy configuration files and scripts
