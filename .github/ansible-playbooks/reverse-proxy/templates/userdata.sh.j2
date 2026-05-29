@@ -6,9 +6,9 @@ sudo yum update -y
 # create swap file
 sudo /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024
 sudo /sbin/mkswap /var/swap.1
-sudo chown root:root /var/swap.1
 sudo chmod 600 /var/swap.1
-sudo echo "/var/swap.1 swap swap defaults 0 0" >> /etc/fstab
+sudo chown root:root /var/swap.1
+echo "/var/swap.1 swap swap defaults 0 0" | sudo tee -a /etc/fstab
 sudo swapon -a
 
 # Install NFS packages
@@ -26,6 +26,10 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-c
 # Copy configuration files for nginx
 sudo aws s3 cp s3://{{ s3_deployment_bucket }}/{{ s3_deployment_root }}/nginx/ /etc/nginx/ --recursive --exclude "*" --include "*.conf" --include "mime.types"
 
+cd /opt
+
+sudo rm -rf nginx ngx_http_substitutions_filter_module echo-nginx-module
+
 # install all tools required for nginx compilation
 sudo yum install -y git
 sudo yum install -y pcre-devel zlib-devel openssl-devel gcc gcc-c++ make
@@ -34,11 +38,12 @@ sudo yum install -y wget openssl-devel libxml2-devel libxslt-devel gd-devel
 sudo yum install -y perl-ExtUtils-Embed GeoIP-devel gperftools gperftools-devel libatomic_ops-devel
 
 echo -------------------------------------------
+sudo git clone https://github.com/nginx/nginx.git
 sudo git clone https://github.com/yaoweibin/ngx_http_substitutions_filter_module.git
 sudo git clone https://github.com/openresty/echo-nginx-module.git
-sudo git clone https://github.com/nginx/nginx.git
+
 cd nginx
-sudo auto/configure --prefix=/usr/share/nginx \
+./auto/configure --prefix=/usr/share/nginx \
                  --sbin-path=/usr/sbin/nginx \
                  --modules-path=/usr/lib64/nginx/modules \
                  --conf-path=/etc/nginx/nginx.conf \

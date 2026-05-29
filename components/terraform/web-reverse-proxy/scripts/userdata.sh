@@ -3,8 +3,7 @@
 # Update yum
 sudo yum update -y
 
-# Install nginx
-sudo yum install nginx -y
+
 # Start nginx
 sudo systemctl enable nginx
 sudo systemctl start nginx
