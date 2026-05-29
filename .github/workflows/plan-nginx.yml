@@ -11,9 +11,6 @@ on:
       deploy-environment:
         type: string
         required: true
-      nginx_version:
-        type: string
-        required: true
       github-environment:
         type: string
         required: true
@@ -90,9 +87,6 @@ jobs:
             working-directory: ${{ env.working-directory }}
 
           - name: Terraform Plan
+            id: plan
+            run: terraform plan -target module.nginx_conf
             working-directory: ${{ env.working-directory }}
-            run: |
-             echo "Selected nginx version: ${{ inputs.nginx_version }}"
-
-             terraform plan \
-              -var="nginx_version=${{ inputs.nginx_version }}"
