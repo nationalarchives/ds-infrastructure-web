@@ -40,3 +40,6 @@ output "web_reverse_proxy_sg_id" {
 output "web_reverse_proxy_lb_security_group_id" {
   value = aws_security_group.web_reverse_proxy.id
 }
+output "web_hosprec_sg_id" {
+    value = aws_security_group.web_hosprec.id
+}
