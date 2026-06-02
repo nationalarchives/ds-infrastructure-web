@@ -1,4 +1,6 @@
 ---
+name: Build Web Request Service Record AMI
+
 on:
   workflow_call:
     inputs:

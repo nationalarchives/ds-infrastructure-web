@@ -1,4 +1,5 @@
 ---
+name: Build WebSearch AMI
 on:
   workflow_call:
     inputs:

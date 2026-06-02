@@ -1,4 +1,5 @@
 ---
+name: Web Terraform Plan
 
 permissions:
       id-token: write

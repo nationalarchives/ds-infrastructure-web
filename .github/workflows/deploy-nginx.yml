@@ -1,4 +1,6 @@
 ---
+name: Nginx Config Deploy
+
 permissions:
   id-token: write
   contents: write

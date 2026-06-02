@@ -1,4 +1,5 @@
 ---
+name: Build Web Wagtail Docs AMI
 on:
   workflow_call:
     inputs:

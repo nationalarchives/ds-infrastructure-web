@@ -1,4 +1,6 @@
 ---
+name: Nginx Config Plan
+
 permissions:
       id-token: write
       contents: write

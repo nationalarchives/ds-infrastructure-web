@@ -1,4 +1,6 @@
 ---
+name: Build Web Catalogue AMI
+
 on:
   workflow_call:
     inputs:

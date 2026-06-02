@@ -1,4 +1,5 @@
 ---
+name: Build Enrichment AMI
 on:
   workflow_call:
     inputs:
