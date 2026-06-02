@@ -75,9 +75,9 @@ resource "aws_route53_record" "web_forms" {
     ]
 }
 
-resource "aws_route53_record" "web_reverse_proxy" {
+resource "aws_route53_record" "web_hosprec" {
     zone_id = var.route53_zone
-    name    = "web-reverse-proxy.${var.environment}.local"
+    name    = "web-hosprec.${var.environment}.local"
     type    = "CNAME"
     ttl     = 15
 

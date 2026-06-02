@@ -1,6 +1,6 @@
 ---
-name: Web hosprec AMI
-run-name: Web hosprec AMI web-hosprec-primer-(date-time) to ${{ inputs.account }} by @${{ github.actor }}
+name: Web Hosprec AMI
+run-name: Web Hosprec AMI web-hosprec-primer-(date-time) to ${{ inputs.account }} by @${{ github.actor }}
 
 permissions:
   id-token: write
