@@ -1,6 +1,4 @@
 ---
-name: Build Web Reverse Proxy AMI
-
 on:
   workflow_call:
     inputs:

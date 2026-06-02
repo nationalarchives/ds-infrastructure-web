@@ -1,5 +1,4 @@
 ---
-name: Build Frontend AMI
 on:
   workflow_call:
     inputs:

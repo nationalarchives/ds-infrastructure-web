@@ -1,6 +1,4 @@
----
-  name: Web Terraform Apply
-  
+---  
   permissions:
         id-token: write
         contents: write
