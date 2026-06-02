@@ -1,4 +1,5 @@
 ---
+name: Build Hosprec AMI
 on:
   workflow_call:
     inputs:
