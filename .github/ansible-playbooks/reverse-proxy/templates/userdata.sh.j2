@@ -125,7 +125,6 @@ sudo systemctl enable nginx
 sudo systemctl start nginx
 
 %{ if region != "" ~ }}
-# install ssm agent -x86_64
 sudo yum install -y https://s3.{{ region }}.amazonaws.com/amazon-ssm-{{ region }}/latest/linux_amd64/amazon-ssm-agent.rpm
 sudo systemctl enable amazon-ssm-agent
 sudo systemctl start amazon-ssm-agent
