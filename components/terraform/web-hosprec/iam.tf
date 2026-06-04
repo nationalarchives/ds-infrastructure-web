@@ -1,20 +1,12 @@
-resource "aws_iam_role" "web_hosprec_role" {
-    name = "web-hosprec-assume-role"
-    assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
-}
-
-resource "aws_iam_instance_profile" "web_hosprec_profile" {
-    name = "web-hosprec-profile"
-    role = aws_iam_role.web_hosprec_role.name
-}
-
 resource "aws_iam_role_policy_attachment" "ssm_managed_instance" {
-    role       = aws_iam_role.web_hosprec_role.name
+    #role       = aws_iam_role.web_hosprec_role.name
+    role       = var.web_hosprec_role_name
     policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 resource "aws_iam_role_policy_attachment" "service_role_ssm" {
-    role       = aws_iam_role.web_hosprec_role.name
+    #role       = aws_iam_role.web_hosprec_role.name
+    role       = var.web_hosprec_role_name
     policy_arn = aws_iam_policy.web_hosprec_deployment_s3.arn
 }
 resource "aws_iam_policy" "web_hosprec_deployment_s3" {

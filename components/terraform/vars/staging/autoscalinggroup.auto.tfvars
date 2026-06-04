@@ -118,3 +118,13 @@ web_reverse_proxy_autoscaling_policy_name_prefix = ""
 web_reverse_proxy_default_cooldown               = 0   
 web_reverse_proxy_scale_in_threshold             = 0  
 web_reverse_proxy_scale_out_threshold            = 0   
+
+# Web Hosprec
+web_hosprec_patch_group      = "web-hosprec-patchgroup"
+web_hosprec_deployment_group = "web-hosprec-deploygroup"
+
+web_hosprec_asg_max_size                  = 2
+web_hosprec_asg_min_size                  = 1
+web_hosprec_asg_desired_capacity          = 1
+web_hosprec_asg_health_check_grace_period = 150
+web_hosprec_asg_health_check_type         = "EC2"

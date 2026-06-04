@@ -42,3 +42,10 @@ output "lambda_web_rsr_cron_role_arn"{
 output "lambda_web_rsr_role_name" {
   value = aws_iam_role.lambda_web_rsr_cron_role.name
 }
+output "web_hosprec_role_name" {
+  value = aws_iam_role.web_hosprec_role.name
+}
+
+output "web_hosprec_instance_profile_arn" {
+  value = aws_iam_instance_profile.web_hosprec_profile.arn
+}

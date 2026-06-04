@@ -18,6 +18,8 @@ module "web_hosprec" {
     source = "./web-hosprec"
 
     ami_id = data.aws_ami.web_hosprec_ami.id
+    web_hosprec_role_name            = module.roles.web_hosprec_role_name
+    web_hosprec_instance_profile_arn = module.roles.web_hosprec_instance_profile_arn
 
     lb_listener_arn = module.load-balancer.lb_listener_arn
     x_target_header = "web-hosprec"
