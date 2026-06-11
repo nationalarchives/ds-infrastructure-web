@@ -38,3 +38,5 @@ variable "folder_s3_key" {}
 
 variable "asg_tags" {}
 variable "tags" {}
+variable "web_frontend_instance_profile_arn" {}
+variable "web_frontend_role_name" {}

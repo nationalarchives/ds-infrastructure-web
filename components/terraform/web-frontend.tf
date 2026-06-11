@@ -24,11 +24,13 @@ module "web_frontend" {
     source = "./web-frontend"
 
     ami_id = data.aws_ami.web_frontend_ami.id
+    web_frontend_role_name = module.roles.web_frontend_role_name
+    web_frontend_instance_profile_arn = module.roles.web_frontend_instance_profile_arn
 
     lb_listener_arn = module.load-balancer.lb_listener_arn
     x_target_header = "web-frontend"
     host_header = "web-frontend.${var.environment}.local"
-
+    
     lb_security_group_id = module.load-balancer.lb_security_group_id
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value

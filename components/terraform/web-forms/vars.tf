@@ -31,3 +31,5 @@ variable "tags" {}
 variable "efs_dns_name" {}
 variable "enable_monitoring" {}
 variable "web_forms_sg_id" {}
+variable "web_forms_instance_profile_arn" {}
+variable "web_forms_role_name" {}

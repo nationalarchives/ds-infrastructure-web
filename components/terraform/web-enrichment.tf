@@ -1,7 +1,6 @@
 variable "web_enrichment_instance_type" {}
 variable "web_enrichment_key_name" {}
 variable "web_enrichment_root_block_device_size" {}
-
 variable "web_enrichment_asg_max_size" {}
 variable "web_enrichment_asg_min_size" {}
 variable "web_enrichment_asg_desired_capacity" {}
@@ -19,6 +18,8 @@ module "web_enrichment" {
     source = "./web-enrichment"
 
     ami_id = data.aws_ami.web_enrichment_ami.id
+    web_enrichment_role_name            = module.roles.web_enrichment_role_name
+    web_enrichment_instance_profile_arn = module.roles.web_enrichment_instance_profile_arn
 
     lb_listener_arn = module.load-balancer.lb_listener_arn
     x_target_header = "web-enrichment"
@@ -45,10 +46,9 @@ module "web_enrichment" {
     auto_switch_on = var.web_enrichment_auto_switch_on
     deployment_group = var.web_enrichment_deployment_group
     patch_group = var.web_enrichment_patch_group
-
+    
     deployment_s3_bucket = var.web_enrichment_deployment_s3_bucket
     folder_s3_key = var.web_enrichment_folder_s3_key
-
     asg_tags = local.asg_default_tags
     tags = local.tags
 }

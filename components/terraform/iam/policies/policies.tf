@@ -137,3 +137,24 @@ resource "aws_iam_role_policy_attachment" "lambda_web_rsr_policy_attach" {
   role       = var.lambda_role_name
   policy_arn = aws_iam_policy.lambda_web_rsr_policy.arn
 }
+
+resource "aws_iam_policy" "application_parameter_store_policy" {
+  name        = "application-parameter-store-policy"
+  description = "Parameter Store and SecureString access for application parameters"
+
+  policy = templatefile("${path.module}/templates/application-parameter-store-policy.json", {
+    account_id = var.account_id
+  })
+
+  tags = var.tags
+}
+
+resource "aws_iam_policy" "web_enrichment_deployment_s3" {
+  name        = "web-enrichment-source-s3-policy"
+  description = "deployment S3 access for web enrichment"
+
+  policy = templatefile("${path.module}/templates/deployment-source-s3-access.json", {
+    deployment_s3_bucket = var.deployment_s3_bucket
+    service              = "web"
+  })
+}

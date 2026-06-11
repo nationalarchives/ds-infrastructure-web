@@ -22,6 +22,7 @@ variable "asg_min_size" {}
 variable "asg_desired_capacity" {}
 variable "asg_health_check_grace_period" {}
 variable "asg_health_check_type" {}
+
 variable "web_reverse_proxy_autoscaling_policy_name_prefix" {}
 variable "autoscaling_policy_name_prefix" {}
 variable "default_cooldown" {}
@@ -48,3 +49,6 @@ variable "public_subnet_b_id" {}
 variable "public_ssl_cert_arn" {}
 variable "sub_sub_domain_ssl_cert_arn" {}
 variable "web_reverse_proxy_lb_security_group_id" {}
+
+variable "web_reverse_proxy_role_name" {}
+variable "web_reverse_proxy_instance_profile_arn" {}

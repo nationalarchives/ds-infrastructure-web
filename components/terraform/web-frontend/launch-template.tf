@@ -5,7 +5,7 @@ resource "aws_launch_template" "web_frontend" {
     name = "web-frontend"
 
     iam_instance_profile {
-        arn = aws_iam_instance_profile.web_frontend_profile.arn
+        arn = var.web_frontend_instance_profile_arn
     }
 
     image_id               = var.ami_id

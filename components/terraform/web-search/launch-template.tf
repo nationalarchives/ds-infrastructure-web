@@ -5,7 +5,7 @@ resource "aws_launch_template" "web_search" {
     name = "web-search"
 
     iam_instance_profile {
-        arn = aws_iam_instance_profile.web_search_profile.arn
+        arn = var.web_search_instance_profile_arn
     }
 
     image_id               = var.ami_id

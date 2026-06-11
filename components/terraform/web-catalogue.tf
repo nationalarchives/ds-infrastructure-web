@@ -35,6 +35,8 @@ module "web_catalogue" {
     source = "./web-catalogue"
 
     ami_id = data.aws_ami.web_catalogue_ami.id
+    web_catalogue_role_name            = module.roles.web_catalogue_role_name
+    web_catalogue_instance_profile_arn = module.roles.web_catalogue_instance_profile_arn
 
     lb_listener_arn = module.load-balancer.lb_listener_arn
     x_target_header = "web-catalogue"

@@ -1,13 +1,15 @@
 resource "aws_cloudfront_distribution" "web" {
-    origin {
-        domain_name = var.lb_dns_name
-        origin_id   = lookup(var.cf_dist, "cfd_origin_id", "")
+    dynamic "origin" {
+        for_each = local.cloudfront_distribution.cloudfront_origins
+        content {
+            domain_name = origin.value["domain_name"]
+            origin_id   = origin.value["origin_id"]
 
         custom_origin_config {
             http_port              = 80
             https_port             = 443
             origin_protocol_policy = "https-only"
-            origin_ssl_protocols   = ["TLSv1.2"]
+            origin_ssl_protocols = ["TLSv1.2"]
         }
 
         custom_header {
@@ -15,40 +17,62 @@ resource "aws_cloudfront_distribution" "web" {
             value = var.custom_header_value
         }
     }
+}
 
-    http_version = "http2"
-    price_class  = lookup(var.cf_dist, "cfd_price_class", "")
-    enabled      = lookup(var.cf_dist, "cfd_enabled", "")
+    http_version = "http3"
+    price_class = lookup(local.cloudfront_distribution, "price_class", "")
+    enabled = lookup(local.cloudfront_distribution, "enabled", "")
 
-    aliases = lookup(var.cf_dist, "cfd_aliases", "")
+    dynamic "logging_config" {
+        for_each = lookup(local.cloudfront_distribution, "enable_logging", [])
+        content {
+            bucket = "${var.account}-logfiles.s3.amazonaws.com"
+            prefix = "web/cloudfront/"
+        }
+    }
+
+    aliases = lookup(local.cloudfront_distribution, "aliases", "")
 
     default_cache_behavior {
-        target_origin_id = lookup(var.cf_dist, "cfd_origin_id", "")
-        allowed_methods  = lookup(var.cf_dist, "cfd_default_behaviour_allowed_methods", "")
-        cached_methods   = lookup(var.cf_dist, "cfd_default_behaviour_cached_methods", "")
+        target_origin_id = local.origin_id_www
+        allowed_methods = lookup(local.cloudfront_distribution, "default_behaviour_allowed_methods", "")
+        cached_methods = lookup(local.cloudfront_distribution, "default_behaviour_cached_methods", "")
 
-        cache_policy_id          = lookup(var.cf_dist, "cfd_Managed_CachingOptimized_cache_policy_id", "")
-        origin_request_policy_id = lookup(var.cf_dist, "cfd_Managed_AllViewer_origin_request_policy_id", "")
+        cache_policy_id          = local.default_cache_policy_id
+        origin_request_policy_id = local.Managed_AllViewer_origin_request_policy_id
 
-        viewer_protocol_policy = lookup(var.cf_dist, "cfd_behaviour_default_viewer_protocol_policy", "")
-        compress               = lookup(var.cf_dist, "cfd_behaviour_compress", "")
+        viewer_protocol_policy = lookup(local.cloudfront_distribution, "behaviour_default_viewer_protocol_policy", "")
+        compress = lookup(local.cloudfront_distribution, "behaviour_compress", "")
     }
 
     # Managed Caching Disabled and Managed All Viewer policies
     dynamic "ordered_cache_behavior" {
-        for_each = lookup(var.cf_dist, "cfd_cache_disabled_path_patterns", "")
+        for_each = local.ordered_cache_behaviors
         iterator = b
         content {
-            path_pattern     = b.value
-            target_origin_id = lookup(var.cf_dist, "cfd_origin_id", "")
-            allowed_methods  = lookup(var.cf_dist, "cfd_default_behaviour_allowed_methods", "")
-            cached_methods   = lookup(var.cf_dist, "cfd_default_behaviour_cached_methods", "")
+            path_pattern     = b.value.path_pattern
+            target_origin_id = b.value.target_origin_id
+            allowed_methods  = b.value.allowed_methods
+            cached_methods   = b.value.cached_methods
 
-            cache_policy_id          = lookup(var.cf_dist, "cfd_Managed_CachingDisabled_cache_policy_id", "")
-            origin_request_policy_id = lookup(var.cf_dist, "cfd_Managed_AllViewer_origin_request_policy_id", "")
+            cache_policy_id          = b.value.cache_policy_id
+            origin_request_policy_id = b.value.origin_request_policy_id
+            response_headers_policy_id = lookup(b.value, "response_headers_policy_id", null)
 
-            viewer_protocol_policy = lookup(var.cf_dist, "cfd_behaviour_viewer_protocol_policy", "")
-            compress               = lookup(var.cf_dist, "cfd_behaviour_compress", "")
+            viewer_protocol_policy = b.value.viewer_protocol_policy
+            compress               = b.value.compress
+
+            min_ttl     = b.value.min_ttl
+            default_ttl = b.value.default_ttl
+            max_ttl     = b.value.max_ttl
+            dynamic function_association {
+                for_each = lookup(b.value, "functions", [])
+                iterator = f
+                content {
+                    function_arn = f.value.function_arn
+                    event_type   = f.value.event_type
+                }
+            }
         }
     }
 
@@ -58,7 +82,9 @@ resource "aws_cloudfront_distribution" "web" {
         }
     }
 
-    tags = var.tags
+    tags = merge(var.default_tags, {
+        service = "web"
+    })
 
     viewer_certificate {
         cloudfront_default_certificate = false
@@ -68,5 +94,5 @@ resource "aws_cloudfront_distribution" "web" {
     }
 
     # get arn to indicate WAFv2
-    web_acl_id = element(split(",", var.web_waf_info), 1)
+    #web_acl_id = element(split(",", var.web_waf_info), 1)
 }

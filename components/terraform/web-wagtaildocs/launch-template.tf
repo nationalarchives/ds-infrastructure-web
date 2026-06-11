@@ -5,7 +5,7 @@ resource "aws_launch_template" "web_wagtaildocs" {
     name = "web-wagtaildocs"
 
     iam_instance_profile {
-        arn = aws_iam_instance_profile.web_wagtaildocs_profile.arn
+        arn = var.web_wagtaildocs_instance_profile_arn
     }
 
     image_id               = var.ami_id

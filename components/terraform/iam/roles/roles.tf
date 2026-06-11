@@ -52,6 +52,11 @@ resource "aws_iam_role" "web_hosprec_role" {
   assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
+# Web Reverse Proxy Role
+resource "aws_iam_role" "web_reverse_proxy_role" {
+    name = "web-reverse-proxy-assume-role"
+    assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
+}
 
 # Request Service Record Role - MoD FoI
 resource "aws_iam_role" "web_request_service_record_role" {
@@ -156,6 +161,24 @@ resource "aws_iam_instance_profile" "web_hosprec_profile" {
   role = aws_iam_role.web_hosprec_role.name
 }
 
+## Instance Profile for Web Reverse Proxy Role
+resource "aws_iam_instance_profile" "web_reverse_proxy_profile" {
+    name = "web-reverse-proxy-profile"
+    role = aws_iam_role.web_reverse_proxy_role.name
+}
+
+## Instance Profile for Web Search Role
+resource "aws_iam_instance_profile" "web_search_profile" {
+    name = "web-search-profile"
+    role = aws_iam_role.web_search_role.name
+}
+
+## Instance Profile for Web Catalogue Role
+resource "aws_iam_instance_profile" "web_catalogue_profile" {
+    name = "web-catalogue-profile"
+    role = aws_iam_role.web_catalogue_role.name
+}
+
 #---------------------------------------------------------------------------
 ################### Policies ##########################################
 #---------------------------------------------------------------------------
@@ -189,7 +212,7 @@ resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_5" {
 
 resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_6" {
   role       = aws_iam_role.web_frontend_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
+  policy_arn = var.application_parameter_store_policy_arn
 }
 
 resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_7" {
@@ -236,14 +259,14 @@ resource "aws_iam_role_policy_attachment" "web_catalogue_policy_attachment_4" {
   policy_arn = var.org_level_logging_arn
 }
 
-resource "aws_iam_role_policy_attachment" "web_catalogue_policy_attachment_5" {
-  role       = aws_iam_role.web_catalogue_role.name
-  policy_arn = var.deployment_s3_policy
-}
+# resource "aws_iam_role_policy_attachment" "web_catalogue_policy_attachment_5" {
+#   role       = aws_iam_role.web_catalogue_role.name
+#   policy_arn = var.deployment_s3_policy
+# }
 
 resource "aws_iam_role_policy_attachment" "web_catalogue_policy_attachment_6" {
   role       = aws_iam_role.web_catalogue_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
+  policy_arn = var.application_parameter_store_policy_arn
 }
 
 resource "aws_iam_role_policy_attachment" "web_catalogue_policy_attachment_7" {
@@ -272,14 +295,14 @@ resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_4" {
   policy_arn = var.org_level_logging_arn
 }
 
-resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_5" {
-  role       = aws_iam_role.web_search_role.name
-  policy_arn = var.deployment_s3_policy
-}
+# resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_5" {
+#   role       = aws_iam_role.web_search_role.name
+#   policy_arn = var.deployment_s3_policy
+# }
 
 resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_6" {
   role       = aws_iam_role.web_search_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
+  policy_arn = var.application_parameter_store_policy_arn
 }
 
 ######### Attach Policies to Web Wagtail Role
@@ -310,7 +333,7 @@ resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_5" {
 
 resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_6" {
   role       = aws_iam_role.web_wagtail_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
+  policy_arn = var.application_parameter_store_policy_arn
 }
 resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_7" {
   role       = aws_iam_role.web_wagtail_role.name
@@ -339,14 +362,14 @@ resource "aws_iam_role_policy_attachment" "web_wagtaildocs_policy_attachment_4" 
   policy_arn = var.org_level_logging_arn
 }
 
-resource "aws_iam_role_policy_attachment" "web_wagtaildocs_policy_attachment_5" {
-  role       = aws_iam_role.web_wagtaildocs_role.name
-  policy_arn = var.deployment_s3_policy
-}
+# resource "aws_iam_role_policy_attachment" "web_wagtaildocs_policy_attachment_5" {
+#   role       = aws_iam_role.web_wagtaildocs_role.name
+#   policy_arn = var.deployment_s3_policy
+# }
 
 resource "aws_iam_role_policy_attachment" "web_wagtaildocs_policy_attachment_6" {
   role       = aws_iam_role.web_wagtaildocs_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
+  policy_arn = var.application_parameter_store_policy_arn
 }
 
 resource "aws_iam_role_policy_attachment" "web_wagtaildocs_policy_attachment_7" {
@@ -408,15 +431,15 @@ resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_4" {
   role       = aws_iam_role.web_forms_role.name
   policy_arn = var.org_level_logging_arn
 }
+# resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_5" {
+#   role       = aws_iam_role.web_forms_role.name
+#   policy_arn = var.deployment_s3_policy
+# }
 resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_5" {
   role       = aws_iam_role.web_forms_role.name
-  policy_arn = var.deployment_s3_policy
+  policy_arn = var.application_parameter_store_policy_arn
 }
 resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_6" {
-  role       = aws_iam_role.web_forms_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
-}
-resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_7" {
   role       = aws_iam_role.web_forms_role.name
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
@@ -440,15 +463,56 @@ resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_4" {
   role       = aws_iam_role.web_hosprec_role.name
   policy_arn = var.org_level_logging_arn
 }
-resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_5" {
-  role       = aws_iam_role.web_hosprec_role.name
-  policy_arn = var.deployment_s3_policy
-}
+# resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_5" {
+#   role       = aws_iam_role.web_hosprec_role.name
+#   policy_arn = var.deployment_s3_policy
+# }
 resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_6" {
   role       = aws_iam_role.web_hosprec_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
+  policy_arn = var.application_parameter_store_policy_arn
 }
 resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_7" {
   role       = aws_iam_role.web_hosprec_role.name
+  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
+}
+
+## Attach Policies to Web Enrichment Role
+resource "aws_iam_role_policy_attachment" "web_enrichment_policy_attachment_1" {
+  role       = aws_iam_role.web_enrichment_role.name
+  policy_arn = var.application_parameter_store_policy_arn
+}
+resource "aws_iam_role_policy_attachment" "web_enrichment_policy_attachment_2" {
+  role       = aws_iam_role.web_enrichment_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+resource "aws_iam_role_policy_attachment" "web_enrichment_policy_attachment_3" {
+    role       = aws_iam_role.web_enrichment_role.name
+    policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
+resource "aws_iam_role_policy_attachment" "web_enrichment_policy_attachment_4" {
+  role       = aws_iam_role.web_enrichment_role.name
+  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
+}
+# resource "aws_iam_role_policy_attachment" "web_enrichment_policy_attachment_5" {
+#   role       = aws_iam_role.web_enrichment_role.name
+#   policy_arn = var.web_enrichment_deployment_s3_policy_arn
+# }
+
+
+# Attach Policies to Web Reverse Proxy Role
+resource "aws_iam_role_policy_attachment" "web_reverse_proxy_policy_attachment_1" {
+  role       = aws_iam_role.web_reverse_proxy_role.name
+  policy_arn = var.application_parameter_store_policy_arn
+}
+resource "aws_iam_role_policy_attachment" "web_reverse_proxy_policy_attachment_2" {
+  role       = aws_iam_role.web_reverse_proxy_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+resource "aws_iam_role_policy_attachment" "web_reverse_proxy_policy_attachment_3" {
+    role       = aws_iam_role.web_reverse_proxy_role.name
+    policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
+resource "aws_iam_role_policy_attachment" "web_reverse_proxy_policy_attachment_4" {
+  role       = aws_iam_role.web_reverse_proxy_role.name
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }

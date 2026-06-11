@@ -20,5 +20,37 @@ variable "foi_s3_bucket" {}
 variable "lambda_web_request_sqs_queue_arn" {}
 variable "foi_s3_bucket_arn" {}
 variable "process_submitted_files_queue_arn" {}
-
 variable "process_submitted_files_queue_url" {}
+
+variable "wp_secretsmanager_secret_arn" {
+    description = "Wordpress secrets"
+}
+variable "default_tags"{}
+# cloudfront
+variable "cf_default_ttl" {
+    default = 300
+}
+variable "cf_max_ttl" {
+    default = 1200
+}
+variable "cf_min_ttl" {
+    default = 60
+}
+variable "help_with_your_research_default_ttl" {
+    default = 3600
+}
+variable "help_with_your_research_max_ttl" {
+    default = 86400
+}
+variable "help_with_your_research_min_ttl" {
+    default = 300
+}
+variable "web_5_minute_update_default_ttl" {
+    default = 300
+}
+variable "web_5_minute_update_max_ttl" {
+    default = 1200
+}
+variable "web_5_minute_update_min_ttl" {
+    default = 60
+}

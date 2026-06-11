@@ -18,6 +18,8 @@ module "web_forms" {
     source = "./web-forms"
 
     ami_id = data.aws_ami.web_forms_ami.id
+    web_forms_role_name            = module.roles.web_forms_role_name
+    web_forms_instance_profile_arn = module.roles.web_forms_instance_profile_arn
 
     lb_listener_arn = module.load-balancer.lb_listener_arn
     x_target_header = "web-forms"

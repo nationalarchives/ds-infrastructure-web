@@ -6,3 +6,5 @@ variable "tags" {}
 variable "foi_s3_bucket" {}
 variable "web_request_s3_copy_policy_arn" {}
 variable "lambda_web_request_rsr_sqs_arn" {}
+variable "application_parameter_store_policy_arn" {}
+variable "web_enrichment_deployment_s3_policy_arn" {}

@@ -1,22 +1,18 @@
 ## -----------------------------------------------------------------------------
 ## variable definitions
-
-variable "cf_dist" {}
-variable "lb_dns_name" {}
-
+## -----------------------------------------------------------------------------
 variable "wildcard_certificate_arn" {}
+#variable "web_waf_info" {}
+variable "default_tags" {}
 
-# customer header used to limit traffic to load balancers
+variable "web_monthly_update_policy_id" {}
+variable "web_weekly_update_policy_id" {}
+variable "web_5_minute_update_policy_id" {}
+
+variable "web_reverse_proxy_lb_dns_name" {}
+
+variable "account" {}
+variable "environment" {}
+
 variable "custom_header_name" {}
 variable "custom_header_value" {}
-
-variable "tags" {}
-
-variable "web_waf_info" {
-  description = "Taken from aws ssm parameter store data"
-  default     = {}
-}
-
-# ======================================================================================================================
-# Local Values - Sets Default Tags
-# ======================================================================================================================

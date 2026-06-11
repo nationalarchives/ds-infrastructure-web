@@ -33,4 +33,5 @@ variable "web_wagtaildocs_sg_id" {}
 
 variable "web_wagtaildocs_efs_mount_dir" {}
 variable "efs_dns_name" {}
-
+variable "web_wagtaildocs_instance_profile_arn" {}
+variable "web_wagtaildocs_role_name" {}

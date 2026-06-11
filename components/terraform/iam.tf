@@ -11,6 +11,7 @@ module "policies" {
     process_submitted_files_queue_arn = var.process_submitted_files_queue_arn
     process_submitted_files_queue_url = var.process_submitted_files_queue_url
     account_id = data.aws_caller_identity.current.account_id
+    tags = local.tags
 }
 
 module "roles" {
@@ -22,5 +23,7 @@ module "roles" {
     foi_s3_bucket                           = var.foi_s3_bucket
     web_request_s3_copy_policy_arn          = module.policies.web_request_s3_copy_policy_arn
     lambda_web_request_rsr_sqs_arn          = module.policies.lambda_web_request_rsr_sqs_arn
+    application_parameter_store_policy_arn  = module.policies.application_parameter_store_policy_arn
+    web_enrichment_deployment_s3_policy_arn = module.policies.web_enrichment_deployment_s3_policy_arn
     tags = local.tags
 }

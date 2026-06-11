@@ -5,7 +5,7 @@ resource "aws_launch_template" "web_catalogue" {
     name = "web-catalogue"
 
     iam_instance_profile {
-        arn = aws_iam_instance_profile.web_catalogue_profile.arn
+        arn = var.web_catalogue_instance_profile_arn
     }
 
     image_id               = var.ami_id

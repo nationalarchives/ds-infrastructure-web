@@ -19,6 +19,8 @@ module "web_search" {
     source = "./web-search"
 
     ami_id = data.aws_ami.web_search_ami.id
+    web_search_role_name            = module.roles.web_search_role_name
+    web_search_instance_profile_arn = module.roles.web_search_instance_profile_arn
 
     lb_listener_arn = module.load-balancer.lb_listener_arn
     x_target_header = "web-search"

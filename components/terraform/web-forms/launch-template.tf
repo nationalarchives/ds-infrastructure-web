@@ -5,7 +5,7 @@ resource "aws_launch_template" "web_forms" {
     name = "web-forms"
 
     iam_instance_profile {
-        arn = aws_iam_instance_profile.web_forms_profile.arn
+        arn = var.web_forms_instance_profile_arn
     }
 
     image_id               = var.ami_id

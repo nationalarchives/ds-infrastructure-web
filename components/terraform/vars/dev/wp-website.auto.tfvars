@@ -2,6 +2,7 @@ service = "web"
 
 deployment_s3_bucket               = "ds-dev-deployment-source"
 logfile_s3_bucket                  = "ds-dev-logfiles"
+public_domain_name                 = "dev-www.nationalarchives.gov.uk"
 
 resolver             = "10.128.208.2"
 ups_appslb           = "test-apps.nationalarchives.web.local"
@@ -48,7 +49,7 @@ admin_list = [
     # AJ 2026-02-24
     "109.153.100.149/32",
     # Vaishnavi 2026-03-19
-    "86.182.65.98/32",
+    "95.144.30.2/32",
 ]
 
 # site_access_list contains the list of IP ranges with access to the
@@ -72,5 +73,7 @@ streamline_access_list = [
     "195.35.90.0/23"
     # streamline provided IP range
 ]
+wp_secretsmanager_secret_arn = "arn:aws:secretsmanager:eu-west-2:846769538626:secret:dev/WordPress-5IJdVp"
 
-
+intersite_vpc_and_clientvpn_cidr = "10.128.224.0/21"
+vpc_cidr                         = "10.128.208.0/21"

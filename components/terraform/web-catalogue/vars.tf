@@ -40,3 +40,5 @@ variable "web_catalogue_sg_id" {}
 
 variable "web_catalogue_efs_mount_dir" {}
 variable "efs_dns_name" {}
+variable "web_catalogue_instance_profile_arn" {}
+variable "web_catalogue_role_name" {}

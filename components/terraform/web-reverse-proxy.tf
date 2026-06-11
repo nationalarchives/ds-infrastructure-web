@@ -37,6 +37,8 @@ module "web_reverse_proxy" {
     source = "./web-reverse-proxy"
 
     ami_id = data.aws_ami.web_reverse_proxy_ami.id
+    web_reverse_proxy_role_name            = module.roles.web_reverse_proxy_role_name
+    web_reverse_proxy_instance_profile_arn = module.roles.web_reverse_proxy_instance_profile_arn
     service = var.service
     efs_dns_name = module.media_efs.media_efs_dns_name
     efs_mount_dir = var.efs_mount_dir

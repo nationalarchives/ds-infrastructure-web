@@ -19,6 +19,8 @@ module "web_wagtaildocs" {
     source = "./web-wagtaildocs"
 
     ami_id = data.aws_ami.web_wagtaildocs_ami.id
+    web_wagtaildocs_role_name = module.roles.web_wagtaildocs_role_name
+    web_wagtaildocs_instance_profile_arn = module.roles.web_wagtaildocs_instance_profile_arn
 
     lb_listener_arn = module.load-balancer.lb_listener_arn
     x_target_header = "web-wagtaildocs"

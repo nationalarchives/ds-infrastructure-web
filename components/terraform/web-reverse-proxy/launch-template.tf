@@ -5,7 +5,7 @@ resource "aws_launch_template" "web_reverse_proxy" {
     name = "web-reverse-proxy"
 
     iam_instance_profile {
-        arn = aws_iam_instance_profile.web_reverse_proxy_profile.arn
+        arn = var.web_reverse_proxy_instance_profile_arn
     }
 
     image_id               = var.ami_id

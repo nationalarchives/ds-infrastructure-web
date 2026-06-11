@@ -5,7 +5,7 @@ resource "aws_launch_template" "web_enrichment" {
     name = "web-enrichment"
 
     iam_instance_profile {
-        arn = aws_iam_instance_profile.web_enrichment_profile.arn
+        arn = var.web_enrichment_instance_profile_arn
     }
 
     image_id               = var.ami_id
