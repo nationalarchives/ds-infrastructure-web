@@ -184,43 +184,37 @@ resource "aws_iam_instance_profile" "web_catalogue_profile" {
 #---------------------------------------------------------------------------
 
 ####  Attach Policies to Frontend Role
-
 resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_1" {
-  role       = aws_iam_role.web_frontend_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
-}
-
-resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_2" {
   role       = aws_iam_role.web_frontend_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
-resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_3" {
+resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_2" {
   role       = aws_iam_role.web_frontend_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_4" {
+resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_3" {
   role       = aws_iam_role.web_frontend_role.name
   policy_arn = var.org_level_logging_arn
 }
 
-resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_5" {
+resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_4" {
   role       = aws_iam_role.web_frontend_role.name
   policy_arn = var.deployment_s3_policy
 }
 
-resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_6" {
+resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_5" {
   role       = aws_iam_role.web_frontend_role.name
   policy_arn = var.application_parameter_store_policy_arn
 }
 
-resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_7" {
+resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_6" {
   role       = aws_iam_role.web_frontend_role.name
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
 
-resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_8" {
+resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_7" {
   role       = aws_iam_role.web_frontend_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudFrontFullAccess"
 }
@@ -241,20 +235,15 @@ resource "aws_iam_role_policy_attachment" "lambda_policy_attachment_2" {
 #### Attach Policies to Web Catalogue Role
 resource "aws_iam_role_policy_attachment" "web_catalogue_policy_attachment_1" {
   role       = aws_iam_role.web_catalogue_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
 resource "aws_iam_role_policy_attachment" "web_catalogue_policy_attachment_2" {
   role       = aws_iam_role.web_catalogue_role.name
-  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
-}
-
-resource "aws_iam_role_policy_attachment" "web_catalogue_policy_attachment_3" {
-  role       = aws_iam_role.web_catalogue_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-resource "aws_iam_role_policy_attachment" "web_catalogue_policy_attachment_4" {
+resource "aws_iam_role_policy_attachment" "web_catalogue_policy_attachment_3" {
   role       = aws_iam_role.web_catalogue_role.name
   policy_arn = var.org_level_logging_arn
 }
@@ -264,12 +253,12 @@ resource "aws_iam_role_policy_attachment" "web_catalogue_policy_attachment_4" {
 #   policy_arn = var.deployment_s3_policy
 # }
 
-resource "aws_iam_role_policy_attachment" "web_catalogue_policy_attachment_6" {
+resource "aws_iam_role_policy_attachment" "web_catalogue_policy_attachment_4" {
   role       = aws_iam_role.web_catalogue_role.name
   policy_arn = var.application_parameter_store_policy_arn
 }
 
-resource "aws_iam_role_policy_attachment" "web_catalogue_policy_attachment_7" {
+resource "aws_iam_role_policy_attachment" "web_catalogue_policy_attachment_5" {
   role       = aws_iam_role.web_catalogue_role.name
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
@@ -277,20 +266,15 @@ resource "aws_iam_role_policy_attachment" "web_catalogue_policy_attachment_7" {
 ####### Attach Policies to Web Search Role
 resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_1" {
   role       = aws_iam_role.web_search_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
 resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_2" {
   role       = aws_iam_role.web_search_role.name
-  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
-}
-
-resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_3" {
-  role       = aws_iam_role.web_search_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_4" {
+resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_3" {
   role       = aws_iam_role.web_search_role.name
   policy_arn = var.org_level_logging_arn
 }
@@ -300,7 +284,7 @@ resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_4" {
 #   policy_arn = var.deployment_s3_policy
 # }
 
-resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_6" {
+resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_4" {
   role       = aws_iam_role.web_search_role.name
   policy_arn = var.application_parameter_store_policy_arn
 }
@@ -308,34 +292,29 @@ resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_6" {
 ######### Attach Policies to Web Wagtail Role
 resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_1" {
   role       = aws_iam_role.web_wagtail_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
 resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_2" {
   role       = aws_iam_role.web_wagtail_role.name
-  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_3" {
   role       = aws_iam_role.web_wagtail_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  policy_arn = var.org_level_logging_arn
 }
 
 resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_4" {
   role       = aws_iam_role.web_wagtail_role.name
-  policy_arn = var.org_level_logging_arn
+  policy_arn = var.deployment_s3_policy
 }
 
 resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_5" {
   role       = aws_iam_role.web_wagtail_role.name
-  policy_arn = var.deployment_s3_policy
-}
-
-resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_6" {
-  role       = aws_iam_role.web_wagtail_role.name
   policy_arn = var.application_parameter_store_policy_arn
 }
-resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_7" {
+resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_6" {
   role       = aws_iam_role.web_wagtail_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudFrontFullAccess"
 }
@@ -344,20 +323,15 @@ resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_7" {
 ############# Attach Policies to Wagtaildocs Role
 resource "aws_iam_role_policy_attachment" "web_wagtaildocs_policy_attachment_1" {
   role       = aws_iam_role.web_wagtaildocs_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
 resource "aws_iam_role_policy_attachment" "web_wagtaildocs_policy_attachment_2" {
   role       = aws_iam_role.web_wagtaildocs_role.name
-  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
-}
-
-resource "aws_iam_role_policy_attachment" "web_wagtaildocs_policy_attachment_3" {
-  role       = aws_iam_role.web_wagtaildocs_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-resource "aws_iam_role_policy_attachment" "web_wagtaildocs_policy_attachment_4" {
+resource "aws_iam_role_policy_attachment" "web_wagtaildocs_policy_attachment_3" {
   role       = aws_iam_role.web_wagtaildocs_role.name
   policy_arn = var.org_level_logging_arn
 }
@@ -367,42 +341,36 @@ resource "aws_iam_role_policy_attachment" "web_wagtaildocs_policy_attachment_4" 
 #   policy_arn = var.deployment_s3_policy
 # }
 
-resource "aws_iam_role_policy_attachment" "web_wagtaildocs_policy_attachment_6" {
+resource "aws_iam_role_policy_attachment" "web_wagtaildocs_policy_attachment_4" {
   role       = aws_iam_role.web_wagtaildocs_role.name
   policy_arn = var.application_parameter_store_policy_arn
 }
 
-resource "aws_iam_role_policy_attachment" "web_wagtaildocs_policy_attachment_7" {
+resource "aws_iam_role_policy_attachment" "web_wagtaildocs_policy_attachment_5" {
   role       = aws_iam_role.web_wagtaildocs_role.name
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
 
-
 ######### Attach Policies to Request Service Record Role 
-
 resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_1" {
-  role       = aws_iam_role.web_request_service_record_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
-}
-resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_2" {
   role       = aws_iam_role.web_request_service_record_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
-resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_3" {
+resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_2" {
   role       = aws_iam_role.web_request_service_record_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
-resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_4" {
+resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_3" {
   role       = aws_iam_role.web_request_service_record_role.name
   policy_arn = var.org_level_logging_arn
   }
-resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_5" {
+resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_4" {
   role       = aws_iam_role.web_request_service_record_role.name
   policy_arn = var.deployment_s3_policy
 }
-resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_6" {
+resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_5" {
   role       = aws_iam_role.web_request_service_record_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
+  policy_arn = var.application_parameter_store_policy_arn
 }
 resource "aws_iam_role_policy_attachment" "attach_web_request_s3_copy" {
   role       = aws_iam_role.web_request_service_record_role.name
@@ -414,52 +382,41 @@ resource "aws_iam_role_policy_attachment" "attach_lambda_rsr_sqs" {
   policy_arn = var.lambda_web_request_rsr_sqs_arn
 }
 ####### Attach Policies to Forms Role
-
 resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_1" {
-  role       = aws_iam_role.web_forms_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
-}
-resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_2" {
   role       = aws_iam_role.web_forms_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
-resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_3" {
+resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_2" {
   role       = aws_iam_role.web_forms_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
-resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_4" {
+resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_3" {
   role       = aws_iam_role.web_forms_role.name
   policy_arn = var.org_level_logging_arn
 }
-# resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_5" {
+# resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_4" {
 #   role       = aws_iam_role.web_forms_role.name
 #   policy_arn = var.deployment_s3_policy
 # }
-resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_5" {
+resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_4" {
   role       = aws_iam_role.web_forms_role.name
   policy_arn = var.application_parameter_store_policy_arn
 }
-resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_6" {
+resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_5" {
   role       = aws_iam_role.web_forms_role.name
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
 
-
 ####### Attach Policies to HOSPREC Role
-
 resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_1" {
-  role       = aws_iam_role.web_hosprec_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
-}
-resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_2" {
   role       = aws_iam_role.web_hosprec_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
-resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_3" {
+resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_2" {
   role       = aws_iam_role.web_hosprec_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
-resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_4" {
+resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_3" {
   role       = aws_iam_role.web_hosprec_role.name
   policy_arn = var.org_level_logging_arn
 }
@@ -467,11 +424,11 @@ resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_4" {
 #   role       = aws_iam_role.web_hosprec_role.name
 #   policy_arn = var.deployment_s3_policy
 # }
-resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_6" {
+resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_4" {
   role       = aws_iam_role.web_hosprec_role.name
   policy_arn = var.application_parameter_store_policy_arn
 }
-resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_7" {
+resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_5" {
   role       = aws_iam_role.web_hosprec_role.name
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
