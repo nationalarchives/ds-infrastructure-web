@@ -10,4 +10,5 @@ variable "lambda_web_request_sqs_queue_arn" {}
 variable "environment" {}
 variable "lambda_role_name" {}
 variable "tags" {}
+variable "s3_deployment_source_arn" {}
     

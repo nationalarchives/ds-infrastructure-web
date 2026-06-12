@@ -108,6 +108,26 @@ resource "aws_iam_role_policy_attachment" "lambda_vpc_access" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
+# CodeDeploy Service Role for Web Role
+resource "aws_iam_role" "codedeploy_web_reverse_proxy_service_role" {
+    name = "codedeploy-web-reverse-proxy-service_role"
+    assume_role_policy = file("${path.root}/shared-templates/codedeploy-service-policy.json")
+    tags = var.tags
+}
+
+# CodeDeploy Service Role for Web Role
+resource "aws_iam_role" "codedeploy_web_service_role" {
+    name = "codedeploy-web-service_role"
+    assume_role_policy = file("${path.root}/shared-templates/codedeploy-service-policy.json")
+    tags = var.tags
+}
+
+resource "aws_iam_role" "web_lambda_sync_s3_to_efs" {
+    name = "web-lambda-sync-s3-to-efs"
+    assume_role_policy = file("${path.root}/shared-templates/assume-role-lambda-policy.json")
+    tags = var.tags
+}
+
 # --------------------------------------------------------------
 ############# Instance profiles###############
 # --------------------------------------------------------------
@@ -218,8 +238,9 @@ resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_7" {
   role       = aws_iam_role.web_frontend_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudFrontFullAccess"
 }
-
+##-------------------------------------------------------------------
 ##### Attach Policies to Lambda Web Docker Deployment Role
+##-------------------------------------------------------------------
 
 resource "aws_iam_role_policy_attachment" "lambda_policy_attachment_1" {
   role       = aws_iam_role.lambda_web_docker_deployment_role.name
@@ -231,8 +252,10 @@ resource "aws_iam_role_policy_attachment" "lambda_policy_attachment_2" {
   policy_arn = var.lambda_web_docker_deployment_policy_arn
 }
 
-
+##-------------------------------------------------------------------
 #### Attach Policies to Web Catalogue Role
+##-------------------------------------------------------------------
+
 resource "aws_iam_role_policy_attachment" "web_catalogue_policy_attachment_1" {
   role       = aws_iam_role.web_catalogue_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
@@ -262,8 +285,11 @@ resource "aws_iam_role_policy_attachment" "web_catalogue_policy_attachment_5" {
   role       = aws_iam_role.web_catalogue_role.name
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
-  
+
+##-------------------------------------------------------------  
 ####### Attach Policies to Web Search Role
+##-------------------------------------------------------------
+
 resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_1" {
   role       = aws_iam_role.web_search_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
@@ -289,7 +315,10 @@ resource "aws_iam_role_policy_attachment" "web_search_policy_attachment_4" {
   policy_arn = var.application_parameter_store_policy_arn
 }
 
-######### Attach Policies to Web Wagtail Role
+##-------------------------------------------------------------  
+####### Attach Policies to Web Wagtail Role
+##-------------------------------------------------------------
+
 resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_1" {
   role       = aws_iam_role.web_wagtail_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
@@ -319,8 +348,10 @@ resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_6" {
   policy_arn = "arn:aws:iam::aws:policy/CloudFrontFullAccess"
 }
 
-
+##-------------------------------------------------------------
 ############# Attach Policies to Wagtaildocs Role
+##-------------------------------------------------------------
+
 resource "aws_iam_role_policy_attachment" "web_wagtaildocs_policy_attachment_1" {
   role       = aws_iam_role.web_wagtaildocs_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
@@ -351,7 +382,10 @@ resource "aws_iam_role_policy_attachment" "web_wagtaildocs_policy_attachment_5" 
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
 
+##-------------------------------------------------------------
 ######### Attach Policies to Request Service Record Role 
+##-------------------------------------------------------------
+
 resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_1" {
   role       = aws_iam_role.web_request_service_record_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
@@ -381,7 +415,11 @@ resource "aws_iam_role_policy_attachment" "attach_lambda_rsr_sqs" {
   role       = aws_iam_role.lambda_web_request_service_record_role.name
   policy_arn = var.lambda_web_request_rsr_sqs_arn
 }
+
+##-------------------------------------------------------------  
 ####### Attach Policies to Forms Role
+##-------------------------------------------------------------
+
 resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_1" {
   role       = aws_iam_role.web_forms_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
@@ -407,7 +445,10 @@ resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_5" {
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
 
+##-------------------------------------------------------------  
 ####### Attach Policies to HOSPREC Role
+##-------------------------------------------------------------
+
 resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_1" {
   role       = aws_iam_role.web_hosprec_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
@@ -433,7 +474,10 @@ resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_5" {
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
 
-## Attach Policies to Web Enrichment Role
+##-------------------------------------------------------------  
+####### Attach Policies to Web Enrichment Role
+##-------------------------------------------------------------
+
 resource "aws_iam_role_policy_attachment" "web_enrichment_policy_attachment_1" {
   role       = aws_iam_role.web_enrichment_role.name
   policy_arn = var.application_parameter_store_policy_arn
@@ -455,8 +499,10 @@ resource "aws_iam_role_policy_attachment" "web_enrichment_policy_attachment_4" {
 #   policy_arn = var.web_enrichment_deployment_s3_policy_arn
 # }
 
+##--------------------------------------------------------------  
+####### Attach Policies to Web Search Role
+##--------------------------------------------------------------
 
-# Attach Policies to Web Reverse Proxy Role
 resource "aws_iam_role_policy_attachment" "web_reverse_proxy_policy_attachment_1" {
   role       = aws_iam_role.web_reverse_proxy_role.name
   policy_arn = var.application_parameter_store_policy_arn
@@ -473,3 +519,47 @@ resource "aws_iam_role_policy_attachment" "web_reverse_proxy_policy_attachment_4
   role       = aws_iam_role.web_reverse_proxy_role.name
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
+
+##-------------------------------------------------------------  
+####### Attach Policies to code deploy Role
+##-------------------------------------------------------------
+
+resource "aws_iam_role_policy_attachment" "codedeploy_web_service_role_AWSCodeDeploy" {
+    role       = aws_iam_role.codedeploy_web_service_role.name
+    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy"
+}
+resource "aws_iam_role_policy_attachment" "codedeploy_web_service_role_asg_policy" {
+    role       = aws_iam_role.codedeploy_web_service_role.name
+    policy_arn = var.codedeploy_web_asg_policy_arn
+}
+resource "aws_iam_role_policy_attachment" "codedeploy_web_service_role_access_policy" {
+    role       = aws_iam_role.codedeploy_web_service_role.name
+    policy_arn = var.codedeploy_web_access_policy
+}
+
+resource "aws_iam_role_policy_attachment" "codedeploy_web_reverse_proxy_service_role_AWSCodeDeploy" {
+    role       = aws_iam_role.codedeploy_web_reverse_proxy_service_role.name
+    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy"
+}
+resource "aws_iam_role_policy_attachment" "codedeploy_web_reverse_proxy_service_role_asg_policy" {
+    role       = aws_iam_role.codedeploy_web_reverse_proxy_service_role.name
+    policy_arn = var.codedeploy_web_reverse_proxy_asg_policy_arn
+}
+resource "aws_iam_role_policy_attachment" "codedeploy_web_reverse_proxy_service_role_access_policy" {
+    role       = aws_iam_role.codedeploy_web_reverse_proxy_service_role.name
+    policy_arn = var.codedeploy_web_reverse_proxy_access_policy
+}
+
+
+resource "aws_iam_role_policy_attachment" "codedeploy_web_lambda_sync_s3_to_efs_full_access" {
+    role       = aws_iam_role.codedeploy_web_service_role.name
+    policy_arn = "arn:aws:iam::aws:policy/AmazonElasticFileSystemClientFullAccess"
+}
+resource "aws_iam_role_policy_attachment" "codedeploy_web_lambda_sync_s3_to_efs_execution" {
+    role       = aws_iam_role.codedeploy_web_service_role.name
+    policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+}
+# resource "aws_iam_role_policy_attachment" "codedeploy_web_lambda_sync_s3_to_efs_read_content" {
+#     role       = aws_iam_role.codedeploy_web_service_role.name
+#     policy_arn = var.s3_deployment_source_static_content_read_arn
+# }

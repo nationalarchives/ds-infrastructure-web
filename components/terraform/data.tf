@@ -106,3 +106,22 @@ data "aws_ssm_parameter" "ses_nationalarchives_gov_uk_domain_arn" {
 data "aws_ssm_parameter" "foi1939_register_write_policy_arn" {
     name = "/infrastructure/s3/policies/write/foi1939_register_arn"
 }
+
+# ------------------------------------------------------------------------------
+# web waf rule values for request headers
+# - they need to be used by defining the condition in locals
+# ------------------------------------------------------------------------------
+data "aws_ssm_parameter" "web_rh_external_application_testing" {
+    count = var.waf_rule_external_application_testing == true ? 1 : 0
+    name = "/infrastructure/web/waf/request-header/external-application-testing"
+}
+data "aws_ssm_parameter" "web_rh_api_unthrottled_key" {
+    count = var.waf_rule_api_unthrottled_access == true ? 1 : 0
+    name = "/infrastructure/web/waf/request-header/api-unthrottled-key"
+}
+
+# codedeploy
+# ----------------
+data "aws_ssm_parameter" "s3_deployment_source_arn" {
+    name = "/infrastructure/s3/deployment_source_arn"
+}

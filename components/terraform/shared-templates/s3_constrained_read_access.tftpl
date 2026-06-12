@@ -1,0 +1,33 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowRootAndSelectedPrefixListingOfBucket",
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "${s3_bucket_arn}"
+            ],
+            "Condition": {
+                    "StringEquals": ${jsonencode({
+                    "s3:prefix": [for prefix in prefix_list : "${prefix}"],
+                    "s3:delimiter": [
+                        "/"
+                    ]})}
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:Get*",
+                "s3:List*",
+                "s3:Describe*",
+                "s3-object-lambda:Get*",
+                "s3-object-lambda:List*"
+            ],
+            "Resource": "${s3_bucket_arn}/*"
+        }
+    ]
+}

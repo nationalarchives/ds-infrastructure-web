@@ -21,3 +21,31 @@ output "application_parameter_store_policy_arn" {
 output "web_enrichment_deployment_s3_policy_arn" {
   value = aws_iam_policy.web_enrichment_deployment_s3.arn
 }
+
+output "codedeploy_web_access_policy" {
+  value = aws_iam_policy.codedeploy_web_access_policy.arn
+}
+
+output "codedeploy_web_asg_policy_arn" {
+  value = aws_iam_policy.codedeploy_web_asg_policy.arn
+}
+
+output "codedeploy_web_s3_access_arn" {
+  value = aws_iam_policy.codedeploy_web_s3_access.arn
+}
+
+output "codedeploy_web_reverse_proxy_access_policy" {
+  value = aws_iam_policy.codedeploy_web_reverse_proxy_access_policy.arn
+}
+
+output "codedeploy_web_reverse_proxy_asg_policy_arn" {
+  value = aws_iam_policy.codedeploy_web_reverse_proxy_asg_policy.arn
+}
+
+output "codedeploy_web_reverse_proxy_s3_access_arn" {
+  value = aws_iam_policy.codedeploy_web_reverse_proxy_s3_access.arn
+}
+
+# output "s3_deployment_source_web_static_content_read_arn" {
+#   value = aws_iam_policy.s3_deployment_source_web_static_content_read.arn
+# }

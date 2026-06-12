@@ -48,8 +48,8 @@ admin_list = [
     "62.56.19.212/32",
     # AJ 2026-02-24
     "109.153.100.149/32",
-    # Vaishnavi 2026-03-19
-    "95.144.30.2/32",
+    # Vaishnavi 2026-06-11
+    "86.167.246.163/32",
 ]
 
 # site_access_list contains the list of IP ranges with access to the

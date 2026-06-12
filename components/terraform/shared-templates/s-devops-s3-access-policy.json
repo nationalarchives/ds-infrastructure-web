@@ -1,0 +1,30 @@
+{
+    "Statement": [
+        {
+            "Sid": "GeneralBucketAccess",
+            "Action": [
+                "s3:GetBucketLocation",
+                "s3:ListBucket"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "${s3_deployment_source_arn}"
+            ]
+        },
+        {
+            "Sid": "FolderAccess",
+            "Action": [
+                "s3:PutObject",
+                "s3:PutObjectAcl",
+                "s3:GetObject",
+                "s3:GetObjectAcl",
+                "s3:DeleteObject"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "${s3_deployment_source_arn}/web/*"
+            ]
+        }
+    ],
+    "Version": "2012-10-17"
+}

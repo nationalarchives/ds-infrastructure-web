@@ -26,7 +26,7 @@ resource "aws_cloudfront_distribution" "web" {
     dynamic "logging_config" {
         for_each = lookup(local.cloudfront_distribution, "enable_logging", [])
         content {
-            bucket = "${var.account}-logfiles.s3.amazonaws.com"
+            bucket = "ds-${var.account}-logfiles.s3.amazonaws.com"
             prefix = "web/cloudfront/"
         }
     }

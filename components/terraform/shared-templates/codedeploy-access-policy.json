@@ -1,0 +1,53 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "CodeDeployAccessPolicy",
+            "Effect": "Allow",
+            "Action": [
+                "autoscaling:*",
+                "cloudwatch:*",
+                "codedeploy:*",
+                "ec2:*",
+                "elasticloadbalancing:*",
+                "iam:AddRoleToInstanceProfile",
+                "iam:AttachRolePolicy",
+                "iam:CreateInstanceProfile",
+                "iam:CreateRole",
+                "iam:DeleteInstanceProfile",
+                "iam:DeleteRole",
+                "iam:DeleteRolePolicy",
+                "iam:GetInstanceProfile",
+                "iam:GetRole",
+                "iam:GetRolePolicy",
+                "iam:ListInstanceProfilesForRole",
+                "iam:ListRolePolicies",
+                "iam:ListRoles",
+                "iam:PutRolePolicy",
+                "iam:RemoveRoleFromInstanceProfile",
+                "s3:*",
+                "ssm:*"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "CodeDeployRolePolicy",
+            "Effect": "Allow",
+            "Action": [
+                "iam:PassRole"
+            ],
+            "Resource": "${service_policy_arn}"
+        },
+        {
+            "Action": [
+                "s3:Get*",
+                "s3:List*"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:s3:::aws-codedeploy-eu-west-2/*"
+            ],
+            "Sid": "CodeDeployS3Access"
+        }
+    ]
+}

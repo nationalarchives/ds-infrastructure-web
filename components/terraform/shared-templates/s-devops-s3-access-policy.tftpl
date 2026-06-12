@@ -1,0 +1,26 @@
+{
+    "Statement": [
+        {
+            "Sid": "GeneralBucketAccess",
+            "Action": [
+                "s3:GetBucketLocation",
+                "s3:ListBucket"
+            ],
+            "Effect": "Allow",
+            "Resource": ${jsonencode(bucket_arns)}
+        },
+        {
+            "Sid": "FolderAccess",
+            "Action": [
+                "s3:PutObject",
+                "s3:PutObjectAcl",
+                "s3:GetObject",
+                "s3:GetObjectAcl",
+                "s3:DeleteObject"
+            ],
+            "Effect": "Allow",
+            "Resource": ${jsonencode(object_arns)}
+        }
+    ],
+    "Version": "2012-10-17"
+}

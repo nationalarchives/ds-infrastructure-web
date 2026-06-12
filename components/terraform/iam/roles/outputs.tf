@@ -111,3 +111,15 @@ output "web_wagtaildocs_role_name" {
 output "web_wagtaildocs_instance_profile_arn" {
   value = aws_iam_instance_profile.web_wagtaildocs_profile.arn
 }
+
+output "codedeploy_web_service_role_arn" {
+    value = aws_iam_role.codedeploy_web_service_role.arn
+}
+
+output "codedeploy_web_reverse_proxy_service_role_arn" {
+    value = aws_iam_role.codedeploy_web_reverse_proxy_service_role.arn
+}
+
+output "web_lambda_sync_s3_to_efs_role_arn" {
+    value = aws_iam_role.web_lambda_sync_s3_to_efs.arn
+}

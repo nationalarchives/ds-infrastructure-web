@@ -110,7 +110,6 @@ terraform plan \
   -var-file="vars/dev/global.auto.tfvars" \
   -var-file="vars/dev/route53.auto.tfvars" \
   -var-file="vars/dev/media-efs.auto.tfvars" \
-  -var-file="vars/dev/cloudfront.auto.tfvars" \
   -var-file="vars/dev/cognito.auto.tfvars" \
   -var-file="vars/dev/ses.auto.tfvars" \
   -var-file="vars/dev/wagtail.auto.tfvars" \
@@ -125,7 +124,10 @@ terraform plan \
   -var-file="vars/dev/wp-website.auto.tfvars" \
   -var-file="vars/dev/hosprec.auto.tfvars" \
   -var-file="vars/dev/cloudfront.auto.tfvars" \
-  -var-file="vars/dev/environment.auto.tfvars"
+  -var-file="vars/dev/environment.auto.tfvars" \
+  -var-file="vars/dev/waf.auto.tfvars" \
+  -var-file="vars/dev/waf-rules.auto.tfvars" \
+  -var-file="vars/dev/codedeploy.auto.tfvars"
 ```
 
 **_Staging plan_**
@@ -137,7 +139,6 @@ terraform plan \
   -var-file="vars/staging/global.auto.tfvars" \
   -var-file="vars/staging/route53.auto.tfvars" \
   -var-file="vars/staging/media-efs.auto.tfvars" \
-  -var-file="vars/staging/cloudfront.auto.tfvars" \
   -var-file="vars/staging/enrichment.auto.tfvars" \
   -var-file="vars/staging/wagtail.auto.tfvars" \
   -var-file="vars/staging/redis.auto.tfvars" \
@@ -149,7 +150,10 @@ terraform plan \
   -var-file="vars/staging/request-service-record.auto.tfvars" \
   -var-file="vars/staging/forms.auto.tfvars" \
   -var-file="vars/staging/reverse-proxy.auto.tfvars" \
-  -var-file="vars/staging/wp-website.auto.tfvars"
+  -var-file="vars/staging/wp-website.auto.tfvars" \
+  -var-file="vars/staging/hosprec.auto.tfvars" \
+  -var-file="vars/staging/cloudfront.auto.tfvars" \
+  -var-file="vars/staging/environment.auto.tfvars"
 ```
 
 **_Live plan_**
@@ -196,7 +200,10 @@ terraform apply \
   -var-file="vars/dev/wagtaildocs.auto.tfvars" \
   -var-file="vars/dev/forms/auto.tfvars" \
   -var-file="vars/dev/reverse-proxy.auto.tfvars" \
-  -var-file="vars/dev/wp-website.auto.tfvars"
+  -var-file="vars/dev/wp-website.auto.tfvars" \
+  -var-file="vars/dev/hosprec.auto.tfvars" \
+  -var-file="vars/dev/cloudfront.auto.tfvars" \
+  -var-file="vars/dev/environment.auto.tfvars"
 ```
 
 **_Staging apply_**
@@ -217,7 +224,10 @@ terraform apply \
 -var-file="vars/staging/search.auto.tfvars" \
 -var-file="vars/staging/wagtaildocs.auto.tfvars" \
 -var-file="vars/staging/reverse-proxy.auto.tfvars" \
--var-file="vars/staging/wp-website.auto.tfvars"
+-var-file="vars/staging/wp-website.auto.tfvars" \
+-var-file="vars/staging/hosprec.auto.tfvars" \
+-var-file="vars/staging/cloudfront.auto.tfvars" \
+-var-file="vars/staging/environment.auto.tfvars"
 ```
 
 **_Live apply_**

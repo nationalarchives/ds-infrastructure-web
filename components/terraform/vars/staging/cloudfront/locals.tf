@@ -3,11 +3,8 @@ locals {
     Managed_CachingDisabled_cache_policy_id    = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
     default_cache_policy_id                    = var.web_5_minute_update_policy_id
 
-    origin_id_www   = "dev-www.nationalarchives.gov.uk"
-    origin_id_wagtail = "dev-wagtail.nationalarchives.gov.uk"
-    # remove blog and/or media - March 2027
-    #origin_id_blog  = "dev-blog.nationalarchives.gov.uk"
-    #origin_id_media = "dev-media.nationalarchives.gov.uk"
+    origin_id_www     = "staging-www.nationalarchives.gov.uk"
+    origin_id_wagtail = "staging-wagtail.nationalarchives.gov.uk"
 
     cloudfront_distribution = {
         "cloudfront_origins" = [
@@ -19,15 +16,6 @@ locals {
                 "origin_id"   = local.origin_id_wagtail
                 "domain_name" = var.web_reverse_proxy_lb_dns_name
             },
-            # remove blog and/or media - March 2027
-            #{
-            #    "origin_id"   = local.origin_id_blog
-            #    "domain_name" = var.web_reverse_proxy_lb_dns_name
-            #},
-            #{
-            #    "origin_id"   = local.origin_id_media
-            #    "domain_name" = var.web_reverse_proxy_lb_dns_name
-            #},
         ]
         "create_distribution" = true
         "domain_name"         = var.web_reverse_proxy_lb_dns_name
@@ -37,9 +25,6 @@ locals {
         "aliases" = [
             local.origin_id_www,
             local.origin_id_wagtail,
-            # remove blog and/or media - March 2027
-            #local.origin_id_blog,
-            #local.origin_id_media,
         ]
         "default_behaviour_allowed_methods" = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
         "default_behaviour_cached_methods" = ["GET", "HEAD"]
@@ -320,7 +305,7 @@ locals {
             min_ttl                  = 0
             origin_request_policy_id = local.Managed_AllViewer_origin_request_policy_id
             smooth_streaming         = false
-            target_origin_id         = local.origin_id_wagtail
+            target_origin_id         = local.origin_id_www
             trusted_key_groups = []
             trusted_signers = []
             viewer_protocol_policy   = "redirect-to-https"
@@ -336,7 +321,7 @@ locals {
             min_ttl                  = 0
             origin_request_policy_id = local.Managed_AllViewer_origin_request_policy_id
             smooth_streaming         = false
-            target_origin_id         = local.origin_id_wagtail
+            target_origin_id         = local.origin_id_www
             trusted_key_groups = []
             trusted_signers = []
             viewer_protocol_policy   = "redirect-to-https"
@@ -358,9 +343,25 @@ locals {
             viewer_protocol_policy   = "redirect-to-https"
         },
         {
-            path_pattern             = "/wagtail-documents/*"
+            path_pattern             = "/cookies/*"
             allowed_methods = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
             cache_policy_id          = local.Managed_CachingDisabled_cache_policy_id
+            cached_methods = ["GET", "HEAD"]
+            compress                 = true
+            default_ttl              = 0
+            max_ttl                  = 0
+            min_ttl                  = 0
+            origin_request_policy_id = local.Managed_AllViewer_origin_request_policy_id
+            smooth_streaming         = false
+            target_origin_id         = local.origin_id_www
+            trusted_key_groups = []
+            trusted_signers = []
+            viewer_protocol_policy   = "redirect-to-https"
+        },
+        {
+            path_pattern             = "/wagtail-static/*"
+            allowed_methods = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+            cache_policy_id          = var.web_monthly_update_policy_id
             cached_methods = ["GET", "HEAD"]
             compress                 = true
             default_ttl              = 0

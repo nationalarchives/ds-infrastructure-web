@@ -158,3 +158,80 @@ resource "aws_iam_policy" "web_enrichment_deployment_s3" {
     service              = "web"
   })
 }
+
+
+resource "aws_iam_policy" "codedeploy_web_s3_access" {
+    name        = "codedeploy-web-s3-access-policy"
+    description = "allow code deploy agent access to s3"
+
+    policy = file("${path.root}/shared-templates/codedeploy-s3-policy.json")
+}
+
+resource "aws_iam_policy" "codedeploy_web_asg_policy" {
+    name        = "codedeploy-web-asg-policy"
+    description = "codedeploy access to ASG policy"
+
+    policy = file("${path.root}/shared-templates/codedeploy-asg-policy.json")
+}
+
+resource "aws_iam_policy" "codedeploy_web_access_policy" {
+    name        = "codedeploy-web-access-policy"
+    description = "codedeploy access role policy"
+
+    policy = templatefile("${path.root}/shared-templates/codedeploy-access-policy.json",
+        {
+            service_policy_arn = aws_iam_policy.codedeploy_web_s3_access.arn
+        }
+    )
+}
+
+resource "aws_iam_policy" "s3_deployment_source_access_policy" {
+    name        = "s3-web-deployment-source-access-policy"
+    description = "access to source code"
+
+    policy = templatefile("${path.root}/shared-templates/s-devops-s3-access-policy.tftpl",
+        {
+            bucket_arns = [
+                var.s3_deployment_source_arn.value,
+            ]
+            object_arns = local.object_arns
+        }
+    )
+}
+
+resource "aws_iam_policy" "codedeploy_web_reverse_proxy_s3_access" {
+    name        = "codedeploy-web-reverse-proxy-s3-access-policy"
+    description = "allow code deploy agent access to s3"
+
+    policy = file("${path.root}/shared-templates/codedeploy-s3-policy.json")
+}
+
+resource "aws_iam_policy" "codedeploy_web_reverse_proxy_asg_policy" {
+    name        = "codedeploy-web-reverse-proxy-asg-policy"
+    description = "codedeploy access to ASG policy"
+
+    policy = file("${path.root}/shared-templates/codedeploy-asg-policy.json")
+}
+
+resource "aws_iam_policy" "codedeploy_web_reverse_proxy_access_policy" {
+    name        = "codedeploy-web-reverse-proxy-access-policy"
+    description = "codedeploy access role policy"
+
+    policy = templatefile("${path.root}/shared-templates/codedeploy-access-policy.json",
+        {
+            service_policy_arn = aws_iam_policy.codedeploy_web_reverse_proxy_s3_access.arn
+        }
+    )
+}
+
+# resource "aws_iam_policy" "s3_deployment_source_static_content_read" {
+#     name        = "s3-deployment-source-static-content-read"
+#     description = "read access to the ds-<env>-deployment-source/static_content folder"
+
+#     policy = templatefile("${path.root}/shared-templates/s3_constrained_read_access.tftpl",
+#         {
+#             s3_bucket_arn = var.s3_deployment_source_arn.value
+#             prefix_list   = ["","static_content/","static_content/accessions/"]
+#         }
+#     )
+# }

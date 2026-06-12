@@ -2,7 +2,7 @@ service = "web"
 
 deployment_s3_bucket               = "ds-staging-deployment-source"
 logfile_s3_bucket                  = "ds-staging-logfiles"
-
+public_domain_name                 = "staging-www.nationalarchives.gov.uk"
 
 resolver             = "10.128.216.2"
 ups_appslb           = "test-apps.nationalarchives.web.local"
@@ -44,8 +44,8 @@ admin_list = [
     "86.147.251.17/32",
     # Saurabh 2024-07-17
     "62.56.19.212/32",
-    # Vaishnavi 2026-03-19
-    "86.182.65.98/32",
+    # Vaishnavi 2026-06-11
+    "86.167.246.163/32",
 ]
 
 site_access_list = [
@@ -75,3 +75,7 @@ streamline_access_list = [
     "195.35.90.0/23"
     # streamline provided IP range
 ]
+
+wp_secretsmanager_secret_arn = "arn:aws:secretsmanager:eu-west-2:337670467269:secret:staging/WordPress-Jkjpah"
+intersite_vpc_and_clientvpn_cidr = "10.128.224.0/21"
+vpc_cidr                         = "10.128.216.0/21"
