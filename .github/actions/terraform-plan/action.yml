@@ -14,7 +14,7 @@ runs:
   steps:
     - name: copy variables
       run: |
-        cp ./components/terraform/vars/${{ inputs.account }}/* ./${{ env.working_dir }}/
+        cp -r ./components/terraform/vars/${{ inputs.account }}/* ./${{ env.working_dir }}/
       shell: bash
 
     - name: run terraform
