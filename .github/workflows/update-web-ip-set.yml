@@ -10,38 +10,40 @@ on:
         options:
           - "-- Select your name --"
           - AJ
-          - Allan
-          - Amy
+          - Allan Fernandes
+          - Amy Bayley
           - Andrew Curry
           - Ashley
           - Ayo
           - Brian
           - Catherine
-          - Charlie
+          - Charlie Jones
           - Corporate Wifi
-          - Elise
+          - Elise Wong
           - Gnanesh
           - Gov Wifi
-          - Guy
-          - Helen
-          - James
-          - Jason
+          - Guy Grannum
+          - Helen Oake
+          - Ian Jenkins
+          - Internal AWS IPs
+          - James Biggs
+          - Jason Stemarthe
           - Julie
-          - Karl
-          - Lizzy
+          - Karl Kern
+          - Lizzy Bullock
           - Maria
-          - Matt
+          - Matt B
           - Nicola
           - On-prem
           - Pulse VPN
           - Rachel
           - Rose
-          - Ruth
+          - Ruth Roberts
           - Samantha
           - Simon H
           - Simon W
-          - Sophie
-          - Steven
+          - Sophie Glickman
+          - Steven Hirschorn
           - TNA Wifi
           - Vaishnavi
           - VPN Intersite
