@@ -3,12 +3,57 @@ name: Update Beta IP Set
 on:
   workflow_dispatch:
     inputs:
+      user_name:
+        description: "Select your name"
+        required: true
+        type: choice
+        options:
+          - "-- Select your name --"
+          - AJ
+          - Allan Fernandes
+          - Amy Bayley
+          - Andrew Curry
+          - Ashley
+          - AVD Range
+          - Ayo
+          - Brian
+          - Catherine
+          - Charlie Jones
+          - Corporate Wifi
+          - Elise Wong
+          - Gnanesh
+          - Gov Wifi
+          - Guy Grannum
+          - Helen Oake
+          - Ian Jenkins
+          - Internal AWS IPs
+          - James Biggs
+          - Jason Stemarthe
+          - Julie
+          - Karl Kern
+          - Lizzy Bullock
+          - Maria
+          - Matt B
+          - Nicola
+          - On-prem
+          - Pulse VPN
+          - Rachel
+          - Rose
+          - Ruth Roberts
+          - Samantha
+          - Simon H
+          - Simon W
+          - Sophie Glickman
+          - Steven Hirschorn
+          - tna dblclk
+          - TNA Wifi
+          - Torch Box
+          - Vaishnavi
+          - VPN Intersite
+
       new_ip:
         description: 'Enter your new IP/CIDR (e.g., 203.0.113.5/32 or 10.0.0.0/24)'
         required: true
-      old_ip:
-        description: 'Enter old IP/CIDR to delete (optional)'
-        required: false
 
 permissions:
   id-token: write
@@ -27,7 +72,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4.9.1
         with:
-          python-version: '3.11'
+          python-version: "3.13"
 
       - name: Install boto3
         run: pip install boto3
@@ -43,34 +88,70 @@ jobs:
 
       - name: Update WAF IP Set for Dev Environment
         run: |
-          python3 - <<EOF
+          python3 - <<'EOF'
           import boto3
+          import json
+          import ipaddress
 
+          user_name = '${{ github.event.inputs.user_name }}'.strip()
           new_ip = '${{ github.event.inputs.new_ip }}'.strip()
-          old_ip = '${{ github.event.inputs.old_ip }}'.strip()
+          
+          ip_set_name = 'beta-access'
           ip_set_id = '8c36e883-8d54-452f-84d1-676523699d30'
+          param_name = '/waf/beta-access/user-ips/dev'
 
+          try:
+              ipaddress.ip_network(new_ip, strict=False)
+          except ValueError:
+              raise Exception(f"Invalid IP/CIDR entered: {new_ip}")
+          
           waf = boto3.client('wafv2', region_name='us-east-1')
+          ssm = boto3.client('ssm', region_name='eu-west-2')
 
-          resp = waf.get_ip_set(Name='beta-access', Scope='CLOUDFRONT', Id=ip_set_id)
+          try:
+              param = ssm.get_parameter(Name=param_name)
+              user_ips = json.loads(param['Parameter']['Value'])
+          except ssm.exceptions.ParameterNotFound:
+              user_ips = {}
+
+          old_ip = user_ips.get(user_name)
+
+          resp = waf.get_ip_set(
+              Name=ip_set_name,
+              Scope='CLOUDFRONT',
+              Id=ip_set_id
+          )
+
           lock_token = resp['LockToken']
           addresses = resp['IPSet']['Addresses']
 
+          if old_ip and old_ip in addresses:
+              addresses.remove(old_ip)
+              print(f"[Dev] Removed old IP for {user_name}: {old_ip}")
+
           if new_ip not in addresses:
               addresses.append(new_ip)
-              print(f"[Dev] Added new IP: {new_ip}")
+              print(f"[Dev] Added new IP for {user_name}: {new_ip}")
           else:
               print(f"[Dev] IP {new_ip} already exists")
 
-          if old_ip:
-              if old_ip in addresses:
-                  addresses.remove(old_ip)
-                  print(f"[Dev] Removed old IP: {old_ip}")
-              else:
-                  print(f"[Dev] Old IP {old_ip} not found")
+          waf.update_ip_set(
+              Name=ip_set_name,
+              Scope='CLOUDFRONT',
+              Id=ip_set_id,
+              Addresses=addresses,
+              LockToken=lock_token
+          )
 
-          waf.update_ip_set(Name='beta-access', Scope='CLOUDFRONT', Id=ip_set_id,
-                            Addresses=addresses, LockToken=lock_token)
+          user_ips[user_name] = new_ip
+
+          ssm.put_parameter(
+              Name=param_name,
+              Value=json.dumps(user_ips, indent=2),
+              Type='String',
+              Overwrite=True
+          )
+
           print("[Dev] WAF IP set update completed")
           EOF
 
@@ -85,33 +166,68 @@ jobs:
 
       - name: Update WAF IP Set for Staging Environment
         run: |
-          python3 - <<EOF
+          python3 - <<'EOF'
           import boto3
+          import json
+          import ipaddress
 
+          user_name = '${{ github.event.inputs.user_name }}'.strip()
           new_ip = '${{ github.event.inputs.new_ip }}'.strip()
-          old_ip = '${{ github.event.inputs.old_ip }}'.strip()
+          
+          ip_set_name = 'beta-access'
           ip_set_id = 'bd2a5ce8-8090-42f0-9843-e0c89448cd3e'
+          param_name = '/waf/beta-access/user-ips/staging'
+
+          try:
+              ipaddress.ip_network(new_ip, strict=False)
+          except ValueError:
+              raise Exception(f"Invalid IP/CIDR entered: {new_ip}")
 
           waf = boto3.client('wafv2', region_name='us-east-1')
+          ssm = boto3.client('ssm', region_name='eu-west-2')
 
-          resp = waf.get_ip_set(Name='beta-access', Scope='CLOUDFRONT', Id=ip_set_id)
+          try:
+              param = ssm.get_parameter(Name=param_name)
+              user_ips = json.loads(param['Parameter']['Value'])
+          except ssm.exceptions.ParameterNotFound:
+              user_ips = {}
+
+          old_ip = user_ips.get(user_name)
+
+          resp = waf.get_ip_set(
+              Name=ip_set_name,
+              Scope='CLOUDFRONT',
+              Id=ip_set_id
+          )
+
           lock_token = resp['LockToken']
           addresses = resp['IPSet']['Addresses']
 
+          if old_ip and old_ip in addresses:
+              addresses.remove(old_ip)
+              print(f"[Staging] Removed old IP for {user_name}: {old_ip}")
+
           if new_ip not in addresses:
               addresses.append(new_ip)
-              print(f"[Staging] Added new IP: {new_ip}")
+              print(f"[Staging] Added new IP for {user_name}: {new_ip}")
           else:
               print(f"[Staging] IP {new_ip} already exists")
 
-          if old_ip:
-              if old_ip in addresses:
-                  addresses.remove(old_ip)
-                  print(f"[Staging] Removed old IP: {old_ip}")
-              else:
-                  print(f"[Staging] Old IP {old_ip} not found")
+          waf.update_ip_set(
+              Name=ip_set_name,
+              Scope='CLOUDFRONT',
+              Id=ip_set_id,
+              Addresses=addresses,
+              LockToken=lock_token
+          )
+          user_ips[user_name] = new_ip
 
-          waf.update_ip_set(Name='beta-access', Scope='CLOUDFRONT', Id=ip_set_id,
-                            Addresses=addresses, LockToken=lock_token)
+          ssm.put_parameter(
+              Name=param_name,
+              Value=json.dumps(user_ips, indent=2),
+              Type='String',
+              Overwrite=True
+          )
+
           print("[Staging] WAF IP set update completed")
           EOF
