@@ -519,6 +519,10 @@ resource "aws_iam_role_policy_attachment" "web_reverse_proxy_policy_attachment_4
   role       = aws_iam_role.web_reverse_proxy_role.name
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
+resource "aws_iam_role_policy_attachment" "web_reverse_proxy_policy_attachment_5" {
+  role       = aws_iam_role.web_reverse_proxy_role.name
+  policy_arn = var.deployment_s3_policy
+}
 
 ##-------------------------------------------------------------  
 ####### Attach Policies to code deploy Role
