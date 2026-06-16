@@ -44,6 +44,11 @@
             "image": "ghcr.io/nationalarchives/ds-forms",
             "version": "26.05.15.108",
             "repo": "https://github.com/nationalarchives/ds-forms"
+        },
+        "merlin": {
+            "image": "ghcr.io/nationalarchives/ds-merlin",
+            "version": "0.0.0.0",
+            "repo": "https://github.com/nationalarchives/ds-merlin"
         }
     }
 }

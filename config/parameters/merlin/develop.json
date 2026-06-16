@@ -1,0 +1,7 @@
+{
+  "APPLICATION_PROTOCOL" : "http",
+  "ENVIRONMENT_NAME": "develop",
+  "CONFIG": "config.Develop",
+  "COOKIE_DOMAIN": ".nationalarchives.gov.uk",
+  "LOG_LEVEL": "debug"
+}

@@ -1,0 +1,6 @@
+{
+  "APPLICATION_PROTOCOL" : "http",
+  "ENVIRONMENT_NAME": "staging",  
+  "CONFIG": "config.Staging",
+  "COOKIE_DOMAIN": ".nationalarchives.gov.uk"
+}

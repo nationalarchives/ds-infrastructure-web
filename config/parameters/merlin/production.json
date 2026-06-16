@@ -1,0 +1,6 @@
+{
+  "APPLICATION_PROTOCOL" : "http",
+  "ENVIRONMENT_NAME": "production",  
+  "CONFIG": "config.Production",
+  "COOKIE_DOMAIN": ".nationalarchives.gov.uk"
+}
