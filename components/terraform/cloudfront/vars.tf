@@ -2,7 +2,7 @@
 ## variable definitions
 ## -----------------------------------------------------------------------------
 variable "wildcard_certificate_arn" {}
-#variable "web_waf_info" {}
+variable "web_waf_info" {}
 variable "default_tags" {}
 
 variable "web_monthly_update_policy_id" {}

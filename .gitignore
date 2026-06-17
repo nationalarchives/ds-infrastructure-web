@@ -47,5 +47,5 @@ test-results
 
 #ignore lambda zip files
 components/terraform/lambda/**/*.zip
-
+.terraform.lock.hcl
 .venv
