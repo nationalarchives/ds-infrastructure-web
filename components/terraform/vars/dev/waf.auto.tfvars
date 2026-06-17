@@ -1,4 +1,4 @@
-waf_rule_default_action_allow                    = false
+waf_rule_default_action_allow = false
 
 site_ips = [
     "2.30.135.93/32", # Andrew, 2023-03-06
