@@ -72,14 +72,6 @@ resource "aws_iam_role" "lambda_web_request_service_record_role" {
   tags               = var.tags
 }
 
-# Lambda Web Docker Deployment Role
-resource "aws_iam_role" "lambda_web_docker_deployment_role" {
-  name               = "lambda-web-docker-deployment-role"
-  assume_role_policy = file("${path.root}/shared-templates/assume-role-lambda-policy.json")
-  description        = "allow lambda to call script on instances"
-  tags               = var.tags
-}
-
 # Lambda AutoRunStartupScript Role
 resource "aws_iam_role" "lambda_auto_run_startup_script_role" {
   name               = "LambdaSSMExecutionRole"
@@ -237,19 +229,6 @@ resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_6" {
 resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_7" {
   role       = aws_iam_role.web_frontend_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudFrontFullAccess"
-}
-##-------------------------------------------------------------------
-##### Attach Policies to Lambda Web Docker Deployment Role
-##-------------------------------------------------------------------
-
-resource "aws_iam_role_policy_attachment" "lambda_policy_attachment_1" {
-  role       = aws_iam_role.lambda_web_docker_deployment_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
-}
-
-resource "aws_iam_role_policy_attachment" "lambda_policy_attachment_2" {
-  role       = aws_iam_role.lambda_web_docker_deployment_role.name
-  policy_arn = var.lambda_web_docker_deployment_policy_arn
 }
 
 ##-------------------------------------------------------------------

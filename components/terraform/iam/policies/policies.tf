@@ -12,18 +12,6 @@ resource "aws_iam_policy" "deployment_s3" {
 }
 
 ##########################################
-# IAM Policy: Lambda Web Docker Deployment
-##########################################
-resource "aws_iam_policy" "lambda_web_docker_deployment_policy" {
-    name        = "lambda-web-docker-deployment-policy"
-    description = "receive instance data and manipulate status"
-
-    policy = templatefile("${path.module}/templates/lambda-web-docker-deployment-policy.json", {
-        account_id = var.account_id
-    })
-}
-
-##########################################
 # IAM Policy: SSM Access for Web Frontend
 ##########################################
 resource "aws_iam_policy" "web_ssm" {

@@ -19,10 +19,9 @@ resource "aws_lambda_layer_version" "datetime" {
     ]
 }
 
-module "web_docker_deployment" {
+module "lambda" {
     source = "./lambda"
 
-    web_docker_deployment_role_arn = module.roles.lambda_web_docker_deployment_role_arn
     auto_run_startup_script_role_arn = module.roles.lambda_auto_run_startup_script_role_arn
     wagtail_cron_trigger_role_arn = module.roles.lambda_wagtail_cron_trigger_role_arn
     web_request_service_record_role_arn = module.roles.lambda_web_request_service_record_role_arn

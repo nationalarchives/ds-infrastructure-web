@@ -19,7 +19,6 @@ module "roles" {
     source = "./iam/roles"
     environment = var.environment
     deployment_s3_policy                    = module.policies.deployment_s3_policy_arn
-    lambda_web_docker_deployment_policy_arn = module.policies.lambda_web_docker_deployment_policy_arn
     org_level_logging_arn                   = data.aws_iam_policy.org_session_manager_logs.arn
     foi_s3_bucket                           = var.foi_s3_bucket
     web_request_s3_copy_policy_arn          = module.policies.web_request_s3_copy_policy_arn

@@ -105,87 +105,87 @@ terraform init
 
 ```bash
 terraform plan \
-  -var-file="vars/dev/autoscalinggroup.auto.tfvars" \
-  -var-file="vars/dev/frontend.auto.tfvars" \
-  -var-file="vars/dev/global.auto.tfvars" \
-  -var-file="vars/dev/route53.auto.tfvars" \
-  -var-file="vars/dev/media-efs.auto.tfvars" \
-  -var-file="vars/dev/cognito.auto.tfvars" \
-  -var-file="vars/dev/ses.auto.tfvars" \
-  -var-file="vars/dev/wagtail.auto.tfvars" \
-  -var-file="vars/dev/enrichment.auto.tfvars" \
-  -var-file="vars/dev/redis.auto.tfvars" \
-  -var-file="vars/dev/catalogue.auto.tfvars" \
-  -var-file="vars/dev/search.auto.tfvars" \
-  -var-file="vars/dev/wagtaildocs.auto.tfvars" \
-  -var-file="vars/dev/request-service-record.auto.tfvars" \
-  -var-file="vars/dev/forms.auto.tfvars" \
-  -var-file="vars/dev/reverse-proxy.auto.tfvars" \
-  -var-file="vars/dev/wp-website.auto.tfvars" \
-  -var-file="vars/dev/hosprec.auto.tfvars" \
-  -var-file="vars/dev/cloudfront.auto.tfvars" \
-  -var-file="vars/dev/environment.auto.tfvars" \
-  -var-file="vars/dev/waf.auto.tfvars" \
-  -var-file="vars/dev/waf-rules.auto.tfvars" \
-  -var-file="vars/dev/codedeploy.auto.tfvars"
+  -var-file="_vars/dev/autoscalinggroup.auto.tfvars" \
+  -var-file="_vars/dev/frontend.auto.tfvars" \
+  -var-file="_vars/dev/global.auto.tfvars" \
+  -var-file="_vars/dev/route53.auto.tfvars" \
+  -var-file="_vars/dev/media-efs.auto.tfvars" \
+  -var-file="_vars/dev/cognito.auto.tfvars" \
+  -var-file="_vars/dev/ses.auto.tfvars" \
+  -var-file="_vars/dev/wagtail.auto.tfvars" \
+  -var-file="_vars/dev/enrichment.auto.tfvars" \
+  -var-file="_vars/dev/redis.auto.tfvars" \
+  -var-file="_vars/dev/catalogue.auto.tfvars" \
+  -var-file="_vars/dev/search.auto.tfvars" \
+  -var-file="_vars/dev/wagtaildocs.auto.tfvars" \
+  -var-file="_vars/dev/request-service-record.auto.tfvars" \
+  -var-file="_vars/dev/forms.auto.tfvars" \
+  -var-file="_vars/dev/reverse-proxy.auto.tfvars" \
+  -var-file="_vars/dev/wp-website.auto.tfvars" \
+  -var-file="_vars/dev/hosprec.auto.tfvars" \
+  -var-file="_vars/dev/cloudfront.auto.tfvars" \
+  -var-file="_vars/dev/environment.auto.tfvars" \
+  -var-file="_vars/dev/waf.auto.tfvars" \
+  -var-file="_vars/dev/waf-rules.auto.tfvars" \
+  -var-file="_vars/dev/codedeploy.auto.tfvars"
 ```
 
 **_Staging plan_**
 
 ```bash
 terraform plan \
-  -var-file="vars/staging/autoscalinggroup.auto.tfvars" \
-  -var-file="vars/staging/frontend.auto.tfvars" \
-  -var-file="vars/staging/global.auto.tfvars" \
-  -var-file="vars/staging/route53.auto.tfvars" \
-  -var-file="vars/staging/media-efs.auto.tfvars" \
-  -var-file="vars/staging/enrichment.auto.tfvars" \
-  -var-file="vars/staging/wagtail.auto.tfvars" \
-  -var-file="vars/staging/redis.auto.tfvars" \
-  -var-file="vars/staging/catalogue.auto.tfvars" \
-  -var-file="vars/staging/search.auto.tfvars" \
-  -var-file="vars/staging/wagtaildocs.auto.tfvars" \
-  -var-file="vars/staging/cognito.auto.tfvars" \
-  -var-file="vars/staging/ses.auto.tfvars" \
-  -var-file="vars/staging/request-service-record.auto.tfvars" \
-  -var-file="vars/staging/forms.auto.tfvars" \
-  -var-file="vars/staging/reverse-proxy.auto.tfvars" \
-  -var-file="vars/staging/wp-website.auto.tfvars" \
-  -var-file="vars/staging/hosprec.auto.tfvars" \
-  -var-file="vars/staging/cloudfront.auto.tfvars" \
-  -var-file="vars/staging/environment.auto.tfvars" \
-  -var-file="vars/staging/waf.auto.tfvars" \
-  -var-file="vars/staging/waf-rules.auto.tfvars" \
-  -var-file="vars/staging/codedeploy.auto.tfvars"
+  -var-file="_vars/staging/autoscalinggroup.auto.tfvars" \
+  -var-file="_vars/staging/frontend.auto.tfvars" \
+  -var-file="_vars/staging/global.auto.tfvars" \
+  -var-file="_vars/staging/route53.auto.tfvars" \
+  -var-file="_vars/staging/media-efs.auto.tfvars" \
+  -var-file="_vars/staging/enrichment.auto.tfvars" \
+  -var-file="_vars/staging/wagtail.auto.tfvars" \
+  -var-file="_vars/staging/redis.auto.tfvars" \
+  -var-file="_vars/staging/catalogue.auto.tfvars" \
+  -var-file="_vars/staging/search.auto.tfvars" \
+  -var-file="_vars/staging/wagtaildocs.auto.tfvars" \
+  -var-file="_vars/staging/cognito.auto.tfvars" \
+  -var-file="_vars/staging/ses.auto.tfvars" \
+  -var-file="_vars/staging/request-service-record.auto.tfvars" \
+  -var-file="_vars/staging/forms.auto.tfvars" \
+  -var-file="_vars/staging/reverse-proxy.auto.tfvars" \
+  -var-file="_vars/staging/wp-website.auto.tfvars" \
+  -var-file="_vars/staging/hosprec.auto.tfvars" \
+  -var-file="_vars/staging/cloudfront.auto.tfvars" \
+  -var-file="_vars/staging/environment.auto.tfvars" \
+  -var-file="_vars/staging/waf.auto.tfvars" \
+  -var-file="_vars/staging/waf-rules.auto.tfvars" \
+  -var-file="_vars/staging/codedeploy.auto.tfvars"
 ```
 
 **_Live plan_**
 
 ```bash
 terraform plan \
--var-file="vars/live/autoscalinggroup.auto.tfvars" \
--var-file="vars/live/frontend.auto.tfvars" \
--var-file="vars/live/global.auto.tfvars" \
--var-file="vars/live/route53.auto.tfvars" \
--var-file="vars/live/media-efs.auto.tfvars" \
--var-file="vars/live/enrichment.auto.tfvars" \
--var-file="vars/live/wagtail.auto.tfvars" \
--var-file="vars/live/redis.auto.tfvars" \
--var-file="vars/live/catalogue.auto.tfvars" \
--var-file="vars/live/search.auto.tfvars" \
--var-file="vars/live/wagtaildocs.auto.tfvars" \
--var-file="vars/live/cognito.auto.tfvars" \
--var-file="vars/live/ses.auto.tfvars" \
--var-file="vars/live/request-service-record.auto.tfvars" \
--var-file="vars/live/forms.auto.tfvars" \
--var-file="vars/live/reverse-proxy.auto.tfvars" \
--var-file="vars/live/wp-website.auto.tfvars" \
--var-file="vars/live/hosprec.auto.tfvars" \
--var-file="vars/live/cloudfront.auto.tfvars" \
--var-file="vars/live/environment.auto.tfvars" \
--var-file="vars/live/waf.auto.tfvars" \
--var-file="vars/live/waf-rules.auto.tfvars" \
--var-file="vars/live/codedeploy.auto.tfvars"
+-var-file="_vars/live/autoscalinggroup.auto.tfvars" \
+-var-file="_vars/live/frontend.auto.tfvars" \
+-var-file="_vars/live/global.auto.tfvars" \
+-var-file="_vars/live/route53.auto.tfvars" \
+-var-file="_vars/live/media-efs.auto.tfvars" \
+-var-file="_vars/live/enrichment.auto.tfvars" \
+-var-file="_vars/live/wagtail.auto.tfvars" \
+-var-file="_vars/live/redis.auto.tfvars" \
+-var-file="_vars/live/catalogue.auto.tfvars" \
+-var-file="_vars/live/search.auto.tfvars" \
+-var-file="_vars/live/wagtaildocs.auto.tfvars" \
+-var-file="_vars/live/cognito.auto.tfvars" \
+-var-file="_vars/live/ses.auto.tfvars" \
+-var-file="_vars/live/request-service-record.auto.tfvars" \
+-var-file="_vars/live/forms.auto.tfvars" \
+-var-file="_vars/live/reverse-proxy.auto.tfvars" \
+-var-file="_vars/live/wp-website.auto.tfvars" \
+-var-file="_vars/live/hosprec.auto.tfvars" \
+-var-file="_vars/live/cloudfront.auto.tfvars" \
+-var-file="_vars/live/environment.auto.tfvars" \
+-var-file="_vars/live/waf.auto.tfvars" \
+-var-file="_vars/live/waf-rules.auto.tfvars" \
+-var-file="_vars/live/codedeploy.auto.tfvars"
 ```
 
 **_4. Apply Configuration_**
@@ -194,87 +194,87 @@ terraform plan \
 
 ```bash
 terraform apply \
-  -var-file="vars/dev/autoscalinggroup.auto.tfvars" \
-  -var-file="vars/dev/frontend.auto.tfvars" \
-  -var-file="vars/dev/global.auto.tfvars" \
-  -var-file="vars/dev/route53.auto.tfvars" \
-  -var-file="vars/dev/media-efs.auto.tfvars" \
-  -var-file="vars/dev/cloudfront.auto.tfvars" \
-  -var-file="vars/dev/cognito.auto.tfvars" \
-  -var-file="vars/dev/ses.auto.tfvars" \
-  -var-file="vars/dev/wagtail.auto.tfvars" \
-  -var-file="vars/dev/enrichment.auto.tfvars" \
-  -var-file="vars/dev/redis.auto.tfvars" \
-  -var-file="vars/dev/catalogue.auto.tfvars" \
-  -var-file="vars/dev/search.auto.tfvars" \
-  -var-file="vars/dev/wagtaildocs.auto.tfvars" \
-  -var-file="vars/dev/forms/auto.tfvars" \
-  -var-file="vars/dev/reverse-proxy.auto.tfvars" \
-  -var-file="vars/dev/wp-website.auto.tfvars" \
-  -var-file="vars/dev/hosprec.auto.tfvars" \
-  -var-file="vars/dev/cloudfront.auto.tfvars" \
-  -var-file="vars/dev/environment.auto.tfvars" \
-  -var-file="vars/dev/waf.auto.tfvars" \
-  -var-file="vars/dev/waf-rules.auto.tfvars" \
-  -var-file="vars/dev/codedeploy.auto.tfvars"
+  -var-file="_vars/dev/autoscalinggroup.auto.tfvars" \
+  -var-file="_vars/dev/frontend.auto.tfvars" \
+  -var-file="_vars/dev/global.auto.tfvars" \
+  -var-file="_vars/dev/route53.auto.tfvars" \
+  -var-file="_vars/dev/media-efs.auto.tfvars" \
+  -var-file="_vars/dev/cloudfront.auto.tfvars" \
+  -var-file="_vars/dev/cognito.auto.tfvars" \
+  -var-file="_vars/dev/ses.auto.tfvars" \
+  -var-file="_vars/dev/wagtail.auto.tfvars" \
+  -var-file="_vars/dev/enrichment.auto.tfvars" \
+  -var-file="_vars/dev/redis.auto.tfvars" \
+  -var-file="_vars/dev/catalogue.auto.tfvars" \
+  -var-file="_vars/dev/search.auto.tfvars" \
+  -var-file="_vars/dev/wagtaildocs.auto.tfvars" \
+  -var-file="_vars/dev/forms/auto.tfvars" \
+  -var-file="_vars/dev/reverse-proxy.auto.tfvars" \
+  -var-file="_vars/dev/wp-website.auto.tfvars" \
+  -var-file="_vars/dev/hosprec.auto.tfvars" \
+  -var-file="_vars/dev/cloudfront.auto.tfvars" \
+  -var-file="_vars/dev/environment.auto.tfvars" \
+  -var-file="_vars/dev/waf.auto.tfvars" \
+  -var-file="_vars/dev/waf-rules.auto.tfvars" \
+  -var-file="_vars/dev/codedeploy.auto.tfvars"
 ```
 
 **_Staging apply_**
 
 ```bash
 terraform apply \
--var-file="vars/staging/autoscalinggroup.auto.tfvars" \
-  -var-file="vars/staging/frontend.auto.tfvars" \
-  -var-file="vars/staging/global.auto.tfvars" \
-  -var-file="vars/staging/route53.auto.tfvars" \
-  -var-file="vars/staging/media-efs.auto.tfvars" \
-  -var-file="vars/staging/enrichment.auto.tfvars" \
-  -var-file="vars/staging/wagtail.auto.tfvars" \
-  -var-file="vars/staging/redis.auto.tfvars" \
-  -var-file="vars/staging/catalogue.auto.tfvars" \
-  -var-file="vars/staging/search.auto.tfvars" \
-  -var-file="vars/staging/wagtaildocs.auto.tfvars" \
-  -var-file="vars/staging/cognito.auto.tfvars" \
-  -var-file="vars/staging/ses.auto.tfvars" \
-  -var-file="vars/staging/request-service-record.auto.tfvars" \
-  -var-file="vars/staging/forms.auto.tfvars" \
-  -var-file="vars/staging/reverse-proxy.auto.tfvars" \
-  -var-file="vars/staging/wp-website.auto.tfvars" \
-  -var-file="vars/staging/hosprec.auto.tfvars" \
-  -var-file="vars/staging/cloudfront.auto.tfvars" \
-  -var-file="vars/staging/environment.auto.tfvars" \
-  -var-file="vars/staging/waf.auto.tfvars" \
-  -var-file="vars/staging/waf-rules.auto.tfvars" \
-  -var-file="vars/staging/codedeploy.auto.tfvars"
+  -var-file="_vars/staging/autoscalinggroup.auto.tfvars" \
+  -var-file="_vars/staging/frontend.auto.tfvars" \
+  -var-file="_vars/staging/global.auto.tfvars" \
+  -var-file="_vars/staging/route53.auto.tfvars" \
+  -var-file="_vars/staging/media-efs.auto.tfvars" \
+  -var-file="_vars/staging/enrichment.auto.tfvars" \
+  -var-file="_vars/staging/wagtail.auto.tfvars" \
+  -var-file="_vars/staging/redis.auto.tfvars" \
+  -var-file="_vars/staging/catalogue.auto.tfvars" \
+  -var-file="_vars/staging/search.auto.tfvars" \
+  -var-file="_vars/staging/wagtaildocs.auto.tfvars" \
+  -var-file="_vars/staging/cognito.auto.tfvars" \
+  -var-file="_vars/staging/ses.auto.tfvars" \
+  -var-file="_vars/staging/request-service-record.auto.tfvars" \
+  -var-file="_vars/staging/forms.auto.tfvars" \
+  -var-file="_vars/staging/reverse-proxy.auto.tfvars" \
+  -var-file="_vars/staging/wp-website.auto.tfvars" \
+  -var-file="_vars/staging/hosprec.auto.tfvars" \
+  -var-file="_vars/staging/cloudfront.auto.tfvars" \
+  -var-file="_vars/staging/environment.auto.tfvars" \
+  -var-file="_vars/staging/waf.auto.tfvars" \
+  -var-file="_vars/staging/waf-rules.auto.tfvars" \
+  -var-file="_vars/staging/codedeploy.auto.tfvars"
 ```
 
 **_Live apply_**
 
 ```bash
 terraform apply \
--var-file="vars/live/autoscalinggroup.auto.tfvars" \
--var-file="vars/live/frontend.auto.tfvars" \
--var-file="vars/live/global.auto.tfvars" \
--var-file="vars/live/route53.auto.tfvars" \
--var-file="vars/live/media-efs.auto.tfvars" \
--var-file="vars/live/enrichment.auto.tfvars" \
--var-file="vars/live/wagtail.auto.tfvars" \
--var-file="vars/live/redis.auto.tfvars" \
--var-file="vars/live/catalogue.auto.tfvars" \
--var-file="vars/live/search.auto.tfvars" \
--var-file="vars/live/wagtaildocs.auto.tfvars" \
--var-file="vars/live/cognito.auto.tfvars" \
--var-file="vars/live/ses.auto.tfvars" \
--var-file="vars/live/request-service-record.auto.tfvars" \
--var-file="vars/live/forms.auto.tfvars" \
--var-file="vars/live/reverse-proxy.auto.tfvars" \
--var-file="vars/live/wp-website.auto.tfvars" \
--var-file="vars/live/hosprec.auto.tfvars" \
--var-file="vars/live/cloudfront.auto.tfvars" \
--var-file="vars/live/environment.auto.tfvars" \
--var-file="vars/live/waf.auto.tfvars" \
--var-file="vars/live/waf-rules.auto.tfvars" \
--var-file="vars/live/codedeploy.auto.tfvars"
+-var-file="_vars/live/autoscalinggroup.auto.tfvars" \
+-var-file="_vars/live/frontend.auto.tfvars" \
+-var-file="_vars/live/global.auto.tfvars" \
+-var-file="_vars/live/route53.auto.tfvars" \
+-var-file="_vars/live/media-efs.auto.tfvars" \
+-var-file="_vars/live/enrichment.auto.tfvars" \
+-var-file="_vars/live/wagtail.auto.tfvars" \
+-var-file="_vars/live/redis.auto.tfvars" \
+-var-file="_vars/live/catalogue.auto.tfvars" \
+-var-file="_vars/live/search.auto.tfvars" \
+-var-file="_vars/live/wagtaildocs.auto.tfvars" \
+-var-file="_vars/live/cognito.auto.tfvars" \
+-var-file="_vars/live/ses.auto.tfvars" \
+-var-file="_vars/live/request-service-record.auto.tfvars" \
+-var-file="_vars/live/forms.auto.tfvars" \
+-var-file="_vars/live/reverse-proxy.auto.tfvars" \
+-var-file="_vars/live/wp-website.auto.tfvars" \
+-var-file="_vars/live/hosprec.auto.tfvars" \
+-var-file="_vars/live/cloudfront.auto.tfvars" \
+-var-file="_vars/live/environment.auto.tfvars" \
+-var-file="_vars/live/waf.auto.tfvars" \
+-var-file="_vars/live/waf-rules.auto.tfvars" \
+-var-file="_vars/live/codedeploy.auto.tfvars"
 ```
 
 **_5. Verify Deployment_**
