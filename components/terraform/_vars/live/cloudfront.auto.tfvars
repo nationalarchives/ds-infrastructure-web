@@ -1,10 +1,10 @@
 cf_dist = {
     "create_distribution"                            = true
     "cfd_domain_name"                                = "internal-web-frontend-360074626.eu-west-2.elb.amazonaws.com"
-    "cfd_origin_id"                                  = "live-www.nationalarchives.gov.uk"
+    "cfd_origin_id"                                  = "www.nationalarchives.gov.uk"
     "cfd_price_class"                                = "PriceClass_100"
     "cfd_enabled"                                    = true
-    "cfd_aliases"                                    = ["live-www.nationalarchives.gov.uk"]
+    "cfd_aliases"                                    = ["www.nationalarchives.gov.uk"]
     "cfd_default_behaviour_allowed_methods"          = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     "cfd_default_behaviour_cached_methods"           = ["GET", "HEAD"]
     "cfd_behaviour_default_viewer_protocol_policy"   = "redirect-to-https"
@@ -15,3 +15,17 @@ cf_dist = {
     "cfd_Managed_AllViewer_origin_request_policy_id" = "216adef6-5c7f-47e4-b989-5492eafa07d3"
     "cfd_Managed_CachingDisabled_cache_policy_id"    = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
 }
+
+cf_default_ttl = 300
+cf_min_ttl     = 60
+cf_max_ttl     = 1200
+
+#
+# policy TTLs
+help_with_your_research_default_ttl = 3600
+help_with_your_research_max_ttl = 86400
+help_with_your_research_min_ttl = 300
+
+web_5_minute_update_default_ttl = 60
+web_5_minute_update_max_ttl = 150
+web_5_minute_update_min_ttl = 0

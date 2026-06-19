@@ -18,6 +18,7 @@ variable "web_reverse_proxy_deployment_s3_bucket" {}
 variable "web_reverse_proxy_folder_s3_key" {}
 variable "nginx_folder_s3_key" {}
 variable "vpc_cidr" {}
+variable "intersite_vpc_and_clientvpn_cidr" {}
 variable "resolver" {}
 variable "ups_ecommerce_be" {}
 variable "ups_services" {}
@@ -32,6 +33,7 @@ variable "admin_list" {}
 variable "ups_pronom" {}
 variable "streamline_access_list" {}
 variable "efs_mount_dir" {}
+variable "public_domain_name" {}
 
 module "web_reverse_proxy" {
     source = "./web-reverse-proxy"
@@ -50,6 +52,8 @@ module "web_reverse_proxy" {
     web_reverse_proxy_lb_security_group_id = module.sgs.web_reverse_proxy_lb_security_group_id
 
     vpc_id = data.aws_ssm_parameter.vpc_id.value
+    vpn_cidr      = var.intersite_vpc_and_clientvpn_cidr
+    public_domain_name             = var.public_domain_name
     private_subnet_a_id = data.aws_ssm_parameter.private_subnet_2a_id.value
     private_subnet_b_id = data.aws_ssm_parameter.private_subnet_2b_id.value
     public_subnet_a_id  = data.aws_ssm_parameter.public_subnet_2a_id.value

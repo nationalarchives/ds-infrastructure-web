@@ -94,5 +94,5 @@ resource "aws_cloudfront_distribution" "web" {
     }
 
     # get arn to indicate WAFv2
-    #web_acl_id = element(split(",", var.web_waf_info), 1)
+    web_acl_id = element(split(",", var.web_waf_info), 1)
 }

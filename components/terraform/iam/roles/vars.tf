@@ -1,5 +1,4 @@
 variable "deployment_s3_policy" {}
-variable "lambda_web_docker_deployment_policy_arn" {}
 variable "org_level_logging_arn" {}
 variable "environment" {}
 variable "tags" {}
@@ -17,3 +16,5 @@ variable "codedeploy_web_access_policy" {}
 variable "codedeploy_web_reverse_proxy_asg_policy_arn" {}
 variable "codedeploy_web_reverse_proxy_access_policy" {}
 #variable "s3_deployment_source_static_content_read_arn" {}
+variable "web_request_service_record_ses_access_policy_arn" {}
+variable "web_request_service_record_ec2_access_arn" {}

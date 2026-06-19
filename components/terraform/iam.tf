@@ -13,20 +13,21 @@ module "policies" {
     s3_deployment_source_arn = data.aws_ssm_parameter.s3_deployment_source_arn
     account_id = data.aws_caller_identity.current.account_id
     tags = local.tags
+    ses_nationalarchives_gov_uk_domain_arn = data.aws_ssm_parameter.ses_nationalarchives_gov_uk_domain_arn.value
 }
 
 module "roles" {
     source = "./iam/roles"
     environment = var.environment
     deployment_s3_policy                    = module.policies.deployment_s3_policy_arn
-    lambda_web_docker_deployment_policy_arn = module.policies.lambda_web_docker_deployment_policy_arn
     org_level_logging_arn                   = data.aws_iam_policy.org_session_manager_logs.arn
     foi_s3_bucket                           = var.foi_s3_bucket
     web_request_s3_copy_policy_arn          = module.policies.web_request_s3_copy_policy_arn
     lambda_web_request_rsr_sqs_arn          = module.policies.lambda_web_request_rsr_sqs_arn
     application_parameter_store_policy_arn  = module.policies.application_parameter_store_policy_arn
     web_enrichment_deployment_s3_policy_arn = module.policies.web_enrichment_deployment_s3_policy_arn
-
+    web_request_service_record_ses_access_policy_arn = module.policies.web_request_service_record_ses_access_policy_arn
+    web_request_service_record_ec2_access_arn = module.policies.web_request_service_record_ec2_access_policy_arn
     codedeploy_web_asg_policy_arn = module.policies.codedeploy_web_asg_policy_arn
     codedeploy_web_s3_access_arn  = module.policies.codedeploy_web_s3_access_arn
     codedeploy_web_access_policy  = module.policies.codedeploy_web_access_policy

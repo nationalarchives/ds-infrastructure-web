@@ -12,18 +12,6 @@ resource "aws_iam_policy" "deployment_s3" {
 }
 
 ##########################################
-# IAM Policy: Lambda Web Docker Deployment
-##########################################
-resource "aws_iam_policy" "lambda_web_docker_deployment_policy" {
-    name        = "lambda-web-docker-deployment-policy"
-    description = "receive instance data and manipulate status"
-
-    policy = templatefile("${path.module}/templates/lambda-web-docker-deployment-policy.json", {
-        account_id = var.account_id
-    })
-}
-
-##########################################
 # IAM Policy: SSM Access for Web Frontend
 ##########################################
 resource "aws_iam_policy" "web_ssm" {
@@ -235,3 +223,15 @@ resource "aws_iam_policy" "codedeploy_web_reverse_proxy_access_policy" {
 #         }
 #     )
 # }
+
+resource "aws_iam_policy" "ses_access" {
+  name        = "web-request-service-record-ses-access-policy"
+  description = "ses access for web-request-service-record"
+  policy      = data.aws_iam_policy_document.ses_access.json
+}
+
+resource "aws_iam_policy" "ec2_access" {
+  name        = "web-request-service-record-ec2-access-policy"
+  description = "ec2 access for web-request-service-record"
+  policy      = data.aws_iam_policy_document.ec2_access.json
+}

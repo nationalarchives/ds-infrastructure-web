@@ -2,10 +2,6 @@ output "deployment_s3_policy_arn" {
   value = aws_iam_policy.deployment_s3.arn
 }
 
-output "lambda_web_docker_deployment_policy_arn" {
-  value = aws_iam_policy.lambda_web_docker_deployment_policy.arn
-}
-
 output "web_request_s3_copy_policy_arn" {
   value = aws_iam_policy.web_request_s3_copy_policy.arn
 }
@@ -49,3 +45,11 @@ output "codedeploy_web_reverse_proxy_s3_access_arn" {
 # output "s3_deployment_source_web_static_content_read_arn" {
 #   value = aws_iam_policy.s3_deployment_source_web_static_content_read.arn
 # }
+
+output "web_request_service_record_ses_access_policy_arn" {
+  value = aws_iam_policy.ses_access.arn
+}
+
+output "web_request_service_record_ec2_access_policy_arn" {
+  value = aws_iam_policy.ec2_access.arn
+}

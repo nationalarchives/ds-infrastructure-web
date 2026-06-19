@@ -148,6 +148,15 @@ resource "aws_s3_object" "web_frontend_conf" {
   })
 }
 
+resource "aws_s3_object" "web_hosprec_conf" {
+  bucket = var.deployment_s3_bucket
+  key    = "${var.service}/${var.nginx_folder_s3_key}/web-hosprec.conf"
+  content = templatefile("${path.module}/scripts/web-hosprec.conf", {
+    environment      = var.environment,
+    set_real_ip_from = var.set_real_ip_from
+  })
+}
+
 resource "aws_s3_object" "whitelist_conf" {
   bucket = var.deployment_s3_bucket
   key    = "${var.service}/${var.nginx_folder_s3_key}/whitelist.conf"

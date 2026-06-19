@@ -5,7 +5,7 @@ resource "aws_launch_template" "web_request_service_record" {
     name = "web-request-service-record"
 
     iam_instance_profile {
-        name = aws_iam_instance_profile.web_request_service_record_profile.name
+        arn = var.web_request_service_record_instance_profile_arn
     }
 
     image_id               = var.ami_id

@@ -72,14 +72,6 @@ resource "aws_iam_role" "lambda_web_request_service_record_role" {
   tags               = var.tags
 }
 
-# Lambda Web Docker Deployment Role
-resource "aws_iam_role" "lambda_web_docker_deployment_role" {
-  name               = "lambda-web-docker-deployment-role"
-  assume_role_policy = file("${path.root}/shared-templates/assume-role-lambda-policy.json")
-  description        = "allow lambda to call script on instances"
-  tags               = var.tags
-}
-
 # Lambda AutoRunStartupScript Role
 resource "aws_iam_role" "lambda_auto_run_startup_script_role" {
   name               = "LambdaSSMExecutionRole"
@@ -237,19 +229,6 @@ resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_6" {
 resource "aws_iam_role_policy_attachment" "web_frontend_policy_attachment_7" {
   role       = aws_iam_role.web_frontend_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudFrontFullAccess"
-}
-##-------------------------------------------------------------------
-##### Attach Policies to Lambda Web Docker Deployment Role
-##-------------------------------------------------------------------
-
-resource "aws_iam_role_policy_attachment" "lambda_policy_attachment_1" {
-  role       = aws_iam_role.lambda_web_docker_deployment_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
-}
-
-resource "aws_iam_role_policy_attachment" "lambda_policy_attachment_2" {
-  role       = aws_iam_role.lambda_web_docker_deployment_role.name
-  policy_arn = var.lambda_web_docker_deployment_policy_arn
 }
 
 ##-------------------------------------------------------------------
@@ -415,6 +394,14 @@ resource "aws_iam_role_policy_attachment" "attach_lambda_rsr_sqs" {
   role       = aws_iam_role.lambda_web_request_service_record_role.name
   policy_arn = var.lambda_web_request_rsr_sqs_arn
 }
+resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_6"{
+  role = aws_iam_role.web_request_service_record_role.name
+  policy_arn = var.web_request_service_record_ses_access_policy_arn
+}
+resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_7" {
+    role       = aws_iam_role.web_request_service_record_role.name
+    policy_arn = var.web_request_service_record_ec2_access_arn
+}
 
 ##-------------------------------------------------------------  
 ####### Attach Policies to Forms Role
@@ -518,6 +505,10 @@ resource "aws_iam_role_policy_attachment" "web_reverse_proxy_policy_attachment_3
 resource "aws_iam_role_policy_attachment" "web_reverse_proxy_policy_attachment_4" {
   role       = aws_iam_role.web_reverse_proxy_role.name
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
+}
+resource "aws_iam_role_policy_attachment" "web_reverse_proxy_policy_attachment_5" {
+  role       = aws_iam_role.web_reverse_proxy_role.name
+  policy_arn = var.deployment_s3_policy
 }
 
 ##-------------------------------------------------------------  

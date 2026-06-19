@@ -3,6 +3,7 @@ variable "x_target_header" {}
 variable "host_header" {}
 
 variable "vpc_id" {}
+variable "vpn_cidr" {}
 variable "private_subnet_a_id" {}
 variable "private_subnet_b_id" {}
 
@@ -47,6 +48,7 @@ variable "public_subnet_a_id" {}
 
 variable "public_subnet_b_id" {}
 variable "public_ssl_cert_arn" {}
+variable "public_domain_name" {}
 variable "sub_sub_domain_ssl_cert_arn" {}
 variable "web_reverse_proxy_lb_security_group_id" {}
 
