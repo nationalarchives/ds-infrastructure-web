@@ -16,3 +16,5 @@ variable "codedeploy_web_access_policy" {}
 variable "codedeploy_web_reverse_proxy_asg_policy_arn" {}
 variable "codedeploy_web_reverse_proxy_access_policy" {}
 #variable "s3_deployment_source_static_content_read_arn" {}
+variable "web_request_service_record_ses_access_policy_arn" {}
+variable "web_request_service_record_ec2_access_arn" {}

@@ -223,3 +223,15 @@ resource "aws_iam_policy" "codedeploy_web_reverse_proxy_access_policy" {
 #         }
 #     )
 # }
+
+resource "aws_iam_policy" "ses_access" {
+  name        = "web-request-service-record-ses-access-policy"
+  description = "ses access for web-request-service-record"
+  policy      = data.aws_iam_policy_document.ses_access.json
+}
+
+resource "aws_iam_policy" "ec2_access" {
+  name        = "web-request-service-record-ec2-access-policy"
+  description = "ec2 access for web-request-service-record"
+  policy      = data.aws_iam_policy_document.ec2_access.json
+}

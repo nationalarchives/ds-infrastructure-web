@@ -45,3 +45,11 @@ output "codedeploy_web_reverse_proxy_s3_access_arn" {
 # output "s3_deployment_source_web_static_content_read_arn" {
 #   value = aws_iam_policy.s3_deployment_source_web_static_content_read.arn
 # }
+
+output "web_request_service_record_ses_access_policy_arn" {
+  value = aws_iam_policy.ses_access.arn
+}
+
+output "web_request_service_record_ec2_access_policy_arn" {
+  value = aws_iam_policy.ec2_access.arn
+}

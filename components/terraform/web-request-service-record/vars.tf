@@ -47,7 +47,8 @@ variable "foi1939_register_write_policy_arn" {}
 variable "asg_tags" {}
 variable "tags" {}
 
-variable "ses_nationalarchives_gov_uk_domain_arn" {}
-
 variable "web_request_service_record_sg_id" {}
 variable "org_level_logging_arn" {}
+
+variable "web_request_service_record_instance_profile_arn" {}
+variable "web_request_service_record_role_name" {}

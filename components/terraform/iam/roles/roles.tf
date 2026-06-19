@@ -394,6 +394,14 @@ resource "aws_iam_role_policy_attachment" "attach_lambda_rsr_sqs" {
   role       = aws_iam_role.lambda_web_request_service_record_role.name
   policy_arn = var.lambda_web_request_rsr_sqs_arn
 }
+resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_6"{
+  role = aws_iam_role.web_request_service_record_role.name
+  policy_arn = var.web_request_service_record_ses_access_policy_arn
+}
+resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_7" {
+    role       = aws_iam_role.web_request_service_record_role.name
+    policy_arn = var.web_request_service_record_ec2_access_arn
+}
 
 ##-------------------------------------------------------------  
 ####### Attach Policies to Forms Role

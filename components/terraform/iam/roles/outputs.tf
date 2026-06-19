@@ -2,9 +2,9 @@ output "web_request_service_record_role_arn" {
    value = aws_iam_role.web_request_service_record_role.arn
 }
 
-output "web_request_service_record_role_name" {
-   value = aws_iam_role.web_request_service_record_role.name
-}
+# output "web_request_service_record_role_name" {
+#    value = aws_iam_role.web_request_service_record_role.name
+# }
 
 output "web_request_service_record_profile_name" {
    value = aws_iam_instance_profile.web_request_service_record_profile.name
@@ -137,4 +137,13 @@ output "codedeploy_web_reverse_proxy_service_role_arn" {
 
 output "web_lambda_sync_s3_to_efs_role_arn" {
     value = aws_iam_role.web_lambda_sync_s3_to_efs.arn
+}
+
+## RSR
+output "web_request_service_record_role_name" {
+  value = aws_iam_role.web_request_service_record_role.name
+}
+
+output "web_request_service_record_instance_profile_arn"{
+  value = aws_iam_instance_profile.web_request_service_record_profile.arn
 }

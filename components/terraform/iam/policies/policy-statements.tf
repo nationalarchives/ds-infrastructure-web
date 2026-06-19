@@ -7,7 +7,7 @@ data "aws_iam_policy_document" "ec2_access" {
         ]
         resources = [
             "arn:aws:s3:::${var.deployment_s3_bucket}",
-            "arn:aws:s3:::${var.deployment_s3_bucket}/${local.service_name}/*",
+            "arn:aws:s3:::${var.deployment_s3_bucket}/web-request-service-record/*",
         ]
     }
 
