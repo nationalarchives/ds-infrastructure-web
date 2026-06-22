@@ -90,6 +90,31 @@ For more details on our CI/CD pipleine, check our [GitHub Actions Workflow](http
 git clone https://github.com/nationalarchives/ds-infrastructure-web.git
 cd ds-infrastructure-web
 ```
+Before initializing Terraform, copy the required variable files for the target environment into the Terraform working directory.
+
+Example:
+
+### Dev
+```
+cp -r _vars/dev/* .
+```
+
+### Staging
+```
+cp -r _vars/staging/* .
+```
+
+### Live
+```
+cp -r _vars/live/* .
+```
+
+## **Note**: 
+After completing your Terraform operations, ensure that all copied variable and local files are removed from the Terraform working directory to avoid accidentally using the wrong environment configuration in subsequent runs.
+
+```
+rm -f *.auto.tfvars backend.tf
+```
 
 **_2. Initialise Terraform_**
 
@@ -102,6 +127,12 @@ terraform init
 - Review the plan (additions, replacements and destroying of resources).
 
 **_Development Plan_**
+
+If you have already copied the required variable files into the Terraform working directory, run:
+```
+terraform plan
+```
+Otherwise, specify the required variable files explicitly:
 
 ```bash
 terraform plan \
@@ -132,6 +163,12 @@ terraform plan \
 
 **_Staging plan_**
 
+If you have already copied the required variable files into the Terraform working directory, run:
+```
+terraform plan
+```
+Otherwise, specify the required variable files explicitly:
+
 ```bash
 terraform plan \
   -var-file="_vars/staging/autoscalinggroup.auto.tfvars" \
@@ -160,6 +197,12 @@ terraform plan \
 ```
 
 **_Live plan_**
+
+If you have already copied the required variable files into the Terraform working directory, run:
+```
+terraform plan
+```
+Otherwise, specify the required variable files explicitly:
 
 ```bash
 terraform plan \
@@ -192,6 +235,12 @@ terraform plan \
 
 **_Development apply_**
 
+If you have already copied the required variable files into the Terraform working directory, run:
+```
+terraform apply
+```
+Otherwise, specify the required variable files explicitly:
+
 ```bash
 terraform apply \
   -var-file="_vars/dev/autoscalinggroup.auto.tfvars" \
@@ -221,6 +270,12 @@ terraform apply \
 
 **_Staging apply_**
 
+If you have already copied the required variable files into the Terraform working directory, run:
+```
+terraform apply
+```
+Otherwise, specify the required variable files explicitly:
+
 ```bash
 terraform apply \
   -var-file="_vars/staging/autoscalinggroup.auto.tfvars" \
@@ -249,6 +304,12 @@ terraform apply \
 ```
 
 **_Live apply_**
+
+If you have already copied the required variable files into the Terraform working directory, run:
+```
+terraform apply
+```
+Otherwise, specify the required variable files explicitly:
 
 ```bash
 terraform apply \
