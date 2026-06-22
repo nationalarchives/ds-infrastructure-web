@@ -48,7 +48,7 @@
       name: "ansible-ami-web-reverse-proxy-role"
       region: "{{ region }}"
       assume_role_policy_document: "{{ lookup('file', './ec2-role-policy.json') }}"
-      managed_policies: ["{{ s3_policy.policy.arn }}", "arn:aws:iam::aws:policy/service-role/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/SecretsManagerReadWrite"]
+      managed_policies: ["{{ s3_policy.policy.arn }}", "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/SecretsManagerReadWrite"]
       create_instance_profile: yes
       delete_instance_profile: yes
       purge_policies: yes
