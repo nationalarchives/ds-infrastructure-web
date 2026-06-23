@@ -174,9 +174,9 @@ jobs:
           user_name = '${{ github.event.inputs.user_name }}'.strip()
           new_ip = '${{ github.event.inputs.new_ip }}'.strip()
 
-          ip_set_name = 'wp-website-access'
-          ip_set_id = 'eb3183da-cb52-4788-8d0d-00bed2675808'
-          param_name = '/waf/wp-website-access/user-ips/staging'
+          ip_set_name = 'web-access'
+          ip_set_id = '33724646-e071-4d7f-b003-0c59aa127da7'
+          param_name = '/waf/web-access/user-ips/staging'
 
           try:
               ipaddress.ip_network(new_ip, strict=False)
