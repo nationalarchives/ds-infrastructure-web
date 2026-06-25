@@ -1,3 +1,8 @@
+variable "waf_rule_group_emergency" {
+    description = "create rule group"
+    default     = false
+}
+
 variable "waf_rule_default_action_allow" {}
 variable "site_ips" {}
 variable "waf_tags" {}

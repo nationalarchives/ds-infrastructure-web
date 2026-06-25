@@ -1,4 +1,4 @@
-waf_rule_default_action_allow             = true
+waf_rule_default_action_allow = true
 
 site_ips = [
     "198.16.66.139/32",
