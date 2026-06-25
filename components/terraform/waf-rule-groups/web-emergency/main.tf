@@ -105,9 +105,14 @@ resource "aws_wafv2_rule_group" "web_emergency_rg" {
             }
         }
         visibility_config {
-            cloudwatch_metrics_enabled = false
+            cloudwatch_metrics_enabled = true
             metric_name                = "web-emergency-block-asp"
-            sampled_requests_enabled   = false
+            sampled_requests_enabled   = true
         }
+    }
+    visibility_config {
+        cloudwatch_metrics_enabled = true
+        metric_name                = "web-emergency"
+        sampled_requests_enabled   = true
     }
 }
