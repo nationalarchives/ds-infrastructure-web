@@ -2,7 +2,7 @@ services:
   blue-web: &frontend
     container_name: blue-web
     env_file: /var/docker/frontend.env
-    image: "ghcr.io/nationalarchives/ds-frontend:25.05.30.1210"
+    image: "ghcr.io/nationalarchives/ds-frontend:feature-arm"
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network='traefik_webgateway'"
