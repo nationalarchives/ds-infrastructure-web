@@ -1,6 +1,7 @@
 resource "aws_wafv2_rule_group" "web_emergency_rg" {
     name     = "web-emergency-rg"
     scope    = "CLOUDFRONT"
+    region   = "us-east-1"
     capacity = 150
 
     rule {
