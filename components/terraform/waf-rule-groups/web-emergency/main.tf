@@ -45,7 +45,7 @@ resource "aws_wafv2_rule_group" "web_emergency_rg" {
                 }
                 statement {
                     byte_match_statement {
-                        positional_constraint = "START_WITH"
+                        positional_constraint = "STARTS_WITH"
                         search_string         = "/nra"
                         field_to_match {
                             uri_path {}
@@ -76,7 +76,7 @@ resource "aws_wafv2_rule_group" "web_emergency_rg" {
                     not_statement {
                         statement {
                             byte_match_statement {
-                                positional_constraint = "START_WITH"
+                                positional_constraint = "STARTS_WITH"
                                 search_string         = "/pronom"
                                 field_to_match {
                                     uri_path {}
