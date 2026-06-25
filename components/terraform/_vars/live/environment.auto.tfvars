@@ -2,12 +2,11 @@
 # Environment Specific Variables
 # -------------------------------------------------------------------------------------------------------------------
 
-owner          = "Digital Services"
-cost_centre    = "53"
-environment    = "live"
-created_by     = "Digital Services Platform Team"
-location       = "eu-west-2"
-account        = "live"
+owner       = "Digital Services"
+cost_centre = "53"
+environment = "live"
+region      = "eu-west-2"
+account     = "live"
 
 default_tags = {
     Owner       = "Digital Services"
