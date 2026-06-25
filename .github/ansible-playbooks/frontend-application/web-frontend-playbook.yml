@@ -22,7 +22,7 @@
       region: "{{ region }}"
       filters:
         name: "al2023-ami-2023*"
-        architecture: "x86_64"
+        architecture: "arm64"
     register: findami
 
   - name: set latest AMI
