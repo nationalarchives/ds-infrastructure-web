@@ -1,0 +1,36 @@
+---
+name: Web Bulkdownload AMI
+run-name: Web Bulkdownload AMI web-bulkdownload-primer-(date-time) to ${{ inputs.account }} by @${{ github.actor }}
+
+permissions:
+  id-token: write
+  contents: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      account:
+        type: choice
+        description: Environment
+        required: true
+        options:
+          - live
+
+jobs:    
+  # ------------------------------------------------------------------------------
+  # live deployment
+  # ------------------------------------------------------------------------------
+  web-bulkdownload-ami-live:
+    if: github.event.inputs.account == 'live'
+    uses: nationalarchives/ds-infrastructure-web/.github/workflows/web-bulkdownload-ami-build.yml@main
+    with:
+      base_role: "arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0"
+      playbook_role: "arn:aws:iam::968803923593:role/s-devops-ansible-amis"
+      region: "eu-west-2"
+      branch: "${{ github.event.inputs.branch }}"
+      account: "${{ github.event.inputs.account }}"
+      key_name: "web-frontend-${{ github.event.inputs.account }}-eu-west-2"
+      instance_type: "t3a.medium"
+      volume_size: 100
+      s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
+      s3_deployment_root: "web/bulkdownload"
