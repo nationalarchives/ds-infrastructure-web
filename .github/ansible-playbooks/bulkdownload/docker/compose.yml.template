@@ -2,7 +2,7 @@ services:
   blue-web: &bulkdownload
     container_name: blue-web
     env_file: /var/docker/bulkdownload.env
-    image: "ghcr.io/nationalarchives/ds-frontend-bulkdownload:25.06.02.37"
+    image: "ghcr.io/nationalarchives/ds-bulk-download:25.06.02.37"
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik_webgateway"

@@ -3,7 +3,7 @@ module "sgs" {
     
     vpc_id = data.aws_ssm_parameter.vpc_id.value
     lb_security_group_id = module.load-balancer.lb_security_group_id
-    
+    environment = var.environment
 
     instance_cidr = [
         data.aws_ssm_parameter.private_subnet_2a_cidr.value,
