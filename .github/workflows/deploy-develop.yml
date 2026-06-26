@@ -31,7 +31,7 @@ jobs:
           - search
           - wagtaildocs
           - requestservicerecord
-          - bulkdownload
+          # - bulkdownload
           - forms
     permissions:
       id-token: write
