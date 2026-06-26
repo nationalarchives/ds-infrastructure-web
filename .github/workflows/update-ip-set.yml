@@ -1,4 +1,4 @@
-name: Update Web IP Set
+name: Update IP Sets
 
 on:
   workflow_dispatch:
@@ -408,4 +408,3 @@ jobs:
 
           print(f"[{environment}] WAF IP set update completed for {ip_set_name}")
           EOF
-          
