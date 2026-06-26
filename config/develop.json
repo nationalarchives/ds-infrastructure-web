@@ -47,7 +47,7 @@
         },
         "bulkdownload": {
             "image": "ghcr.io/nationalarchives/ds-bulk-download",
-            "version": "0.0.0.0",
+            "version": "26.06.26.36",
             "repo": "https://github.com/nationalarchives/ds-bulk-download"
         }
     }
