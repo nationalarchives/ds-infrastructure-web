@@ -1,4 +1,4 @@
-name: Update IP Sets
+name: Update Web IP Set
 
 on:
   workflow_dispatch:
@@ -61,15 +61,6 @@ on:
           - wp-admins
           - wagtail-admins
 
-      environment:
-        description: "Only used for web-exceptions"
-        required: true
-        type: choice
-        options:
-          - dev
-          - staging
-          - live
-
       new_ip:
         description: "Enter your new IP/CIDR (e.g., 203.0.113.5/32)"
         required: true
@@ -107,8 +98,7 @@ jobs:
         if: |
           github.event.inputs.ip_set_name == 'web-access' ||
           github.event.inputs.ip_set_name == 'wp-admins' ||
-          github.event.inputs.ip_set_name == 'wagtail-admins' ||
-          (github.event.inputs.ip_set_name == 'web-exceptions' && github.event.inputs.environment == 'dev')
+          github.event.inputs.ip_set_name == 'wagtail-admins'
         uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
         with:
           aws-region: us-east-1
@@ -121,8 +111,7 @@ jobs:
         if: |
           github.event.inputs.ip_set_name == 'web-access' ||
           github.event.inputs.ip_set_name == 'wp-admins' ||
-          github.event.inputs.ip_set_name == 'wagtail-admins' ||
-          (github.event.inputs.ip_set_name == 'web-exceptions' && github.event.inputs.environment == 'dev')
+          github.event.inputs.ip_set_name == 'wagtail-admins'
         env:
           ENVIRONMENT: dev
           IP_SET_NAME: ${{ github.event.inputs.ip_set_name }}
@@ -214,8 +203,7 @@ jobs:
         if: |
           github.event.inputs.ip_set_name == 'web-access' ||
           github.event.inputs.ip_set_name == 'wp-admins' ||
-          github.event.inputs.ip_set_name == 'wagtail-admins' ||
-          (github.event.inputs.ip_set_name == 'web-exceptions' && github.event.inputs.environment == 'staging')
+          github.event.inputs.ip_set_name == 'wagtail-admins'
         uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
         with:
           aws-region: us-east-1
@@ -228,8 +216,7 @@ jobs:
         if: |
           github.event.inputs.ip_set_name == 'web-access' ||
           github.event.inputs.ip_set_name == 'wp-admins' ||
-          github.event.inputs.ip_set_name == 'wagtail-admins' ||
-          (github.event.inputs.ip_set_name == 'web-exceptions' && github.event.inputs.environment == 'staging')
+          github.event.inputs.ip_set_name == 'wagtail-admins'
         env:
           ENVIRONMENT: staging
           IP_SET_NAME: ${{ github.event.inputs.ip_set_name }}
@@ -321,7 +308,7 @@ jobs:
         if: |
           github.event.inputs.ip_set_name == 'wp-admins' ||
           github.event.inputs.ip_set_name == 'wagtail-admins' ||
-          (github.event.inputs.ip_set_name == 'web-exceptions' && github.event.inputs.environment == 'live')
+          github.event.inputs.ip_set_name == 'web-exceptions'
         uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
         with:
           aws-region: us-east-1
@@ -334,7 +321,7 @@ jobs:
         if: |
           github.event.inputs.ip_set_name == 'wp-admins' ||
           github.event.inputs.ip_set_name == 'wagtail-admins' ||
-          (github.event.inputs.ip_set_name == 'web-exceptions' && github.event.inputs.environment == 'live')
+          github.event.inputs.ip_set_name == 'web-exceptions'
         env:
           ENVIRONMENT: live
           IP_SET_NAME: ${{ github.event.inputs.ip_set_name }}
@@ -421,3 +408,4 @@ jobs:
 
           print(f"[{environment}] WAF IP set update completed for {ip_set_name}")
           EOF
+          
