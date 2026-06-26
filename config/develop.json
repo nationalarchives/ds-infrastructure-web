@@ -46,7 +46,9 @@
             "repo": "https://github.com/nationalarchives/ds-forms"
         },
         "bulkdownload": {
-            "version": "26.06.26.36"
+            "image": "ghcr.io/nationalarchives/ds-bulk-download",
+            "version": "26.06.26.36",
+            "repo": "https://github.com/nationalarchives/ds-bulk-download"
         }
     }
 }
