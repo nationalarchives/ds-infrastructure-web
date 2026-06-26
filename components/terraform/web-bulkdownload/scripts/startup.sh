@@ -19,7 +19,7 @@ then
   # running container with this tag
 
   # image exists already
-  image_id=$(sudo docker image ls --quiet ghcr.io/nationalarchives/ds-forms:$docker_image_tag)
+  image_id=$(sudo docker image ls --quiet ghcr.io/nationalarchives/ds-bulk-download:$docker_image_tag)
   if [[ $image_id != '' ]]
   then
     # check if container is running
@@ -31,16 +31,16 @@ then
       sudo docker container rm $running_image
     fi
     # remove image
-    sudo docker rmi ghcr.io/nationalarchives/ds-forms:$docker_image_tag
+    sudo docker rmi ghcr.io/nationalarchives/ds-bulk-download:$docker_image_tag
   else
     # do  nothing
     echo "no image on system"
   fi
 
   # pull image
-  sudo docker image pull ghcr.io/nationalarchives/ds-forms:$docker_image_tag
+  sudo docker image pull ghcr.io/nationalarchives/ds-bulk-download:$docker_image_tag
   # get image id
-  image_id=$(sudo docker image ls --quiet ghcr.io/nationalarchives/ds-forms:$docker_image_tag)
+  image_id=$(sudo docker image ls --quiet ghcr.io/nationalarchives/ds-bulk-download:$docker_image_tag)
   # run container
   sudo docker run --name django-wagtail $image_id
 else
