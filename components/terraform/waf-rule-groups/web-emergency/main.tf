@@ -56,19 +56,6 @@ resource "aws_wafv2_rule_group" "web_emergency_rg" {
                         }
                     }
                 }
-                statement {
-                    byte_match_statement {
-                        positional_constraint = "STARTS_WITH"
-                        search_string         = "/infoservice"
-                        field_to_match {
-                            uri_path {}
-                        }
-                        text_transformation {
-                            priority = 0
-                            type     = "LOWERCASE"
-                        }
-                    }
-                }
             }
         }
         visibility_config {
@@ -119,6 +106,19 @@ resource "aws_wafv2_rule_group" "web_emergency_rg" {
                                     byte_match_statement {
                                         positional_constraint = "STARTS_WITH"
                                         search_string         = "/irlist"
+                                        field_to_match {
+                                            uri_path {}
+                                        }
+                                        text_transformation {
+                                            priority = 0
+                                            type     = "LOWERCASE"
+                                        }
+                                    }
+                                }
+                                statement {
+                                    byte_match_statement {
+                                        positional_constraint = "STARTS_WITH"
+                                        search_string         = "/infoservice"
                                         field_to_match {
                                             uri_path {}
                                         }
