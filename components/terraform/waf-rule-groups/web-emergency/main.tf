@@ -11,7 +11,6 @@ resource "aws_wafv2_rule_group" "web_emergency_rg" {
             count {}
         }
         statement {
-
             geo_match_statement {
                 country_codes = ["BR", "RU", "CN"]
             }
@@ -48,6 +47,19 @@ resource "aws_wafv2_rule_group" "web_emergency_rg" {
                     byte_match_statement {
                         positional_constraint = "STARTS_WITH"
                         search_string         = "/nra"
+                        field_to_match {
+                            uri_path {}
+                        }
+                        text_transformation {
+                            priority = 0
+                            type     = "LOWERCASE"
+                        }
+                    }
+                }
+                statement {
+                    byte_match_statement {
+                        positional_constraint = "STARTS_WITH"
+                        search_string         = "/infoservice"
                         field_to_match {
                             uri_path {}
                         }
