@@ -45,5 +45,5 @@ output "web_hosprec_sg_id" {
 }
 
 output "web_bulkdownload_sg_id" {
-  value = var.environment == "live" ? aws_security_group.web_bulkdownload[0].id : null
+  value = aws_security_group.web_bulkdownload.id
 }
