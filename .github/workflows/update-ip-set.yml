@@ -95,6 +95,11 @@ jobs:
             exit 1
           fi
 
+          if [ "${{ github.event.inputs.ip_set_name }}" = "-- Select your IP set --" ]; then
+            echo "Please select a valid IP set"
+            exit 1
+          fi
+
       - name: Configure AWS credentials for Dev
         if: |
           github.event.inputs.ip_set_name == 'web-access' ||
@@ -125,6 +130,30 @@ jobs:
           import ipaddress
           import os
 
+          def get_ip_set_id(waf, ip_set_name):
+              next_marker = None
+
+              while True:
+                  kwargs = {
+                      "Scope": "CLOUDFRONT",
+                      "Limit": 100
+                  }
+
+                  if next_marker:
+                      kwargs["NextMarker"] = next_marker
+
+                  response = waf.list_ip_sets(**kwargs)
+
+                  for ip_set in response["IPSets"]:
+                      if ip_set["Name"] == ip_set_name:
+                          return ip_set["Id"]
+
+                  next_marker = response.get("NextMarker")
+                  if not next_marker:
+                      break
+
+              raise Exception(f"IP set not found: {ip_set_name}")
+
           environment = os.environ["ENVIRONMENT"]
           ip_set_name = os.environ["IP_SET_NAME"].strip()
           user_name = os.environ["USER_NAME"].strip()
@@ -138,19 +167,7 @@ jobs:
           waf = boto3.client("wafv2", region_name="us-east-1")
           ssm = boto3.client("ssm", region_name="eu-west-2")
 
-          paginator = waf.get_paginator("list_ip_sets")
-          matching_ip_sets = []
-
-          for page in paginator.paginate(Scope="CLOUDFRONT"):
-              matching_ip_sets.extend(
-                  ip_set for ip_set in page["IPSets"]
-                  if ip_set["Name"] == ip_set_name
-              )
-
-          if not matching_ip_sets:
-              raise Exception(f"[{environment}] IP set not found: {ip_set_name}")
-
-          ip_set_id = matching_ip_sets[0]["Id"]
+          ip_set_id = get_ip_set_id(waf, ip_set_name)
           param_name = f"/waf/{ip_set_name}/user-ips/{environment}"
 
           try:
@@ -230,6 +247,30 @@ jobs:
           import ipaddress
           import os
 
+          def get_ip_set_id(waf, ip_set_name):
+              next_marker = None
+
+              while True:
+                  kwargs = {
+                      "Scope": "CLOUDFRONT",
+                      "Limit": 100
+                  }
+
+                  if next_marker:
+                      kwargs["NextMarker"] = next_marker
+
+                  response = waf.list_ip_sets(**kwargs)
+
+                  for ip_set in response["IPSets"]:
+                      if ip_set["Name"] == ip_set_name:
+                          return ip_set["Id"]
+
+                  next_marker = response.get("NextMarker")
+                  if not next_marker:
+                      break
+
+              raise Exception(f"IP set not found: {ip_set_name}")
+
           environment = os.environ["ENVIRONMENT"]
           ip_set_name = os.environ["IP_SET_NAME"].strip()
           user_name = os.environ["USER_NAME"].strip()
@@ -243,19 +284,7 @@ jobs:
           waf = boto3.client("wafv2", region_name="us-east-1")
           ssm = boto3.client("ssm", region_name="eu-west-2")
 
-          paginator = waf.get_paginator("list_ip_sets")
-          matching_ip_sets = []
-
-          for page in paginator.paginate(Scope="CLOUDFRONT"):
-              matching_ip_sets.extend(
-                  ip_set for ip_set in page["IPSets"]
-                  if ip_set["Name"] == ip_set_name
-              )
-
-          if not matching_ip_sets:
-              raise Exception(f"[{environment}] IP set not found: {ip_set_name}")
-
-          ip_set_id = matching_ip_sets[0]["Id"]
+          ip_set_id = get_ip_set_id(waf, ip_set_name)
           param_name = f"/waf/{ip_set_name}/user-ips/{environment}"
 
           try:
@@ -335,6 +364,30 @@ jobs:
           import ipaddress
           import os
 
+          def get_ip_set_id(waf, ip_set_name):
+              next_marker = None
+
+              while True:
+                  kwargs = {
+                      "Scope": "CLOUDFRONT",
+                      "Limit": 100
+                  }
+
+                  if next_marker:
+                      kwargs["NextMarker"] = next_marker
+
+                  response = waf.list_ip_sets(**kwargs)
+
+                  for ip_set in response["IPSets"]:
+                      if ip_set["Name"] == ip_set_name:
+                          return ip_set["Id"]
+
+                  next_marker = response.get("NextMarker")
+                  if not next_marker:
+                      break
+
+              raise Exception(f"IP set not found: {ip_set_name}")
+
           environment = os.environ["ENVIRONMENT"]
           ip_set_name = os.environ["IP_SET_NAME"].strip()
           user_name = os.environ["USER_NAME"].strip()
@@ -348,19 +401,7 @@ jobs:
           waf = boto3.client("wafv2", region_name="us-east-1")
           ssm = boto3.client("ssm", region_name="eu-west-2")
 
-          paginator = waf.get_paginator("list_ip_sets")
-          matching_ip_sets = []
-
-          for page in paginator.paginate(Scope="CLOUDFRONT"):
-              matching_ip_sets.extend(
-                  ip_set for ip_set in page["IPSets"]
-                  if ip_set["Name"] == ip_set_name
-              )
-
-          if not matching_ip_sets:
-              raise Exception(f"[{environment}] IP set not found: {ip_set_name}")
-
-          ip_set_id = matching_ip_sets[0]["Id"]
+          ip_set_id = get_ip_set_id(waf, ip_set_name)
           param_name = f"/waf/{ip_set_name}/user-ips/{environment}"
 
           try:
@@ -409,3 +450,4 @@ jobs:
 
           print(f"[{environment}] WAF IP set update completed for {ip_set_name}")
           EOF
+          
