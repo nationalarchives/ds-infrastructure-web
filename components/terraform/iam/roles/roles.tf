@@ -60,7 +60,6 @@ resource "aws_iam_role" "web_reverse_proxy_role" {
 
 # Web Bulkdownload Role
 resource "aws_iam_role" "web_bulkdownload_role" {
-    count = var.environment == "live" ? 1 : 0
     name = "web-bulkdownload-role"
     assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
@@ -200,10 +199,8 @@ resource "aws_iam_instance_profile" "web_catalogue_profile" {
 
 ## Instance Profile for Web Bulkdownload Role
 resource "aws_iam_instance_profile" "web_bulkdownload_profile" {
-  count = var.environment == "live" ? 1 : 0
-
   name = "web-bulkdownload-profile"
-  role = aws_iam_role.web_bulkdownload_role[0].name
+  role = aws_iam_role.web_bulkdownload_role.name
 }
 
 #---------------------------------------------------------------------------
@@ -575,38 +572,32 @@ resource "aws_iam_role_policy_attachment" "codedeploy_web_lambda_sync_s3_to_efs_
 ##-------------------------------------------------------------
 
 resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_1" {
-  count      = var.environment == "live" ? 1 : 0
-  role       = aws_iam_role.web_bulkdownload_role[0].name
+  role       = aws_iam_role.web_bulkdownload_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
 resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_2" {
-  count      = var.environment == "live" ? 1 : 0
-  role       = aws_iam_role.web_bulkdownload_role[0].name
+  role       = aws_iam_role.web_bulkdownload_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_3" {
-  count      = var.environment == "live" ? 1 : 0
-  role       = aws_iam_role.web_bulkdownload_role[0].name
+  role       = aws_iam_role.web_bulkdownload_role.name
   policy_arn = var.org_level_logging_arn
 }
 
 resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_4" {
-  count      = var.environment == "live" ? 1 : 0
-  role       = aws_iam_role.web_bulkdownload_role[0].name
+  role       = aws_iam_role.web_bulkdownload_role.name
   policy_arn = var.deployment_s3_policy
 }
 
 resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_5" {
-  count      = var.environment == "live" ? 1 : 0
-  role       = aws_iam_role.web_bulkdownload_role[0].name
+  role       = aws_iam_role.web_bulkdownload_role.name
   policy_arn = var.application_parameter_store_policy_arn
 }
 
 resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_6" {
-  count      = var.environment == "live" ? 1 : 0
-  role       = aws_iam_role.web_bulkdownload_role[0].name
+  role       = aws_iam_role.web_bulkdownload_role.name
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
 

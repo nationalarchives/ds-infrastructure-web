@@ -150,9 +150,9 @@ output "web_request_service_record_instance_profile_arn"{
 
 ## Bulkdownload
 output "web_bulkdownload_role_name" {
-  value = var.environment == "live" ? aws_iam_role.web_bulkdownload_role[0].name : null
+  value = aws_iam_role.web_bulkdownload_role.name
 }
 
 output "web_bulkdownload_instance_profile_arn" {
-  value = var.environment == "live" ? aws_iam_instance_profile.web_bulkdownload_profile[0].arn : null
+  value = aws_iam_instance_profile.web_bulkdownload_profile.arn
 }

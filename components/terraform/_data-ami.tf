@@ -253,7 +253,6 @@ data "aws_ami" "web_hosprec_ami" {
 }
 
 data "aws_ami" "web_bulkdownload_ami" {
-    count = var.environment == "live" ? 1 : 0
     most_recent = true
 
     filter {

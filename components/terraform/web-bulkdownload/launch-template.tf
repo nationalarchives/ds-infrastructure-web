@@ -1,5 +1,4 @@
 resource "aws_launch_template" "web_bulkdownload" {
-    count = var.environment == "live" ? 1 : 0
 
     name = "web-bulkdownload"
 
@@ -34,7 +33,7 @@ resource "aws_launch_template" "web_bulkdownload" {
     metadata_options {
         http_endpoint               = "enabled"
         http_tokens                 = "required"
-        http_put_response_hop_limit = 2
+        http_put_response_hop_limit = 1
         instance_metadata_tags      = "enabled"
     }
 

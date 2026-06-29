@@ -16,8 +16,7 @@ variable "web_bulkdownload_folder_s3_key" {}
 
 module "web_bulkdownload" {
     source = "./web-bulkdownload"
-    environment = var.environment
-    ami_id = var.environment == "live" ? data.aws_ami.web_bulkdownload_ami[0].id : null
+    ami_id = var.environment == data.aws_ami.web_bulkdownload_ami.id
     web_bulkdownload_role_name            = module.roles.web_bulkdownload_role_name
     web_bulkdownload_instance_profile_arn = module.roles.web_bulkdownload_instance_profile_arn
 

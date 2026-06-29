@@ -32,13 +32,12 @@ locals {
 }
 
 resource "aws_autoscaling_group" "web_bulkdownload" {
-    count = var.environment == "live" ? 1 : 0
 
     name = "web-bulkdownload"
 
     launch_template {
-        id      = aws_launch_template.web_bulkdownload[0].id
-        version = aws_launch_template.web_bulkdownload[0].latest_version
+        id      = aws_launch_template.web_bulkdownload.id
+        version = aws_launch_template.web_bulkdownload.latest_version
     }
 
     vpc_zone_identifier = [
@@ -81,28 +80,25 @@ resource "aws_autoscaling_group" "web_bulkdownload" {
 }
 
 resource "aws_autoscaling_attachment" "web_bulkdownload" {
-    count = var.environment == "live" ? 1 : 0
 
-    autoscaling_group_name = aws_autoscaling_group.web_bulkdownload[0].id
-    lb_target_group_arn    = aws_lb_target_group.web_bulkdownload[0].arn
+    autoscaling_group_name = aws_autoscaling_group.web_bulkdownload.id
+    lb_target_group_arn    = aws_lb_target_group.web_bulkdownload.arn
 }
 
 resource "aws_autoscaling_policy" "web_bulkdownload_up_policy" {
-    count = var.environment == "live" ? 1 : 0
 
     name                   = "web-bulkdownload-up-policy"
     scaling_adjustment     = 1
     adjustment_type        = "ChangeInCapacity"
     cooldown               = 300
-    autoscaling_group_name = aws_autoscaling_group.web_bulkdownload[0].name
+    autoscaling_group_name = aws_autoscaling_group.web_bulkdownload.name
 }
 
 resource "aws_autoscaling_policy" "web_bulkdownload_down_policy" {
-    count = var.environment == "live" ? 1 : 0
 
     name                   = "web-bulkdownload-down-policy"
     scaling_adjustment     = -1
     adjustment_type        = "ChangeInCapacity"
     cooldown               = 300
-    autoscaling_group_name = aws_autoscaling_group.web_bulkdownload[0].name
+    autoscaling_group_name = aws_autoscaling_group.web_bulkdownload.name
 }

@@ -130,11 +130,11 @@ web_hosprec_asg_health_check_grace_period = 150
 web_hosprec_asg_health_check_type         = "EC2"
 
 # Bulkdownload
-web_bulkdownload_deployment_group              = ""
-web_bulkdownload_patch_group                   = ""
+web_bulkdownload_deployment_group              = "web-bulkdownload-patchgroup"
+web_bulkdownload_patch_group                   = "web-bulkdownload-deploygroup"
 
-web_bulkdownload_asg_max_size                  = 0
-web_bulkdownload_asg_min_size                  = 0
-web_bulkdownload_asg_desired_capacity          = 0
+web_bulkdownload_asg_max_size                  = 2
+web_bulkdownload_asg_min_size                  = 1
+web_bulkdownload_asg_desired_capacity          = 1
 web_bulkdownload_asg_health_check_grace_period = 150
 web_bulkdownload_asg_health_check_type         = "EC2"

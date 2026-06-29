@@ -1,6 +1,4 @@
 resource "aws_lb_target_group" "web_bulkdownload" {
-    count = var.environment == "live" ? 1 : 0
-
     name     = "web-bulkdownload"
     port     = 80
     protocol = "HTTP"
@@ -20,14 +18,13 @@ resource "aws_lb_target_group" "web_bulkdownload" {
 }
 
 resource "aws_lb_listener_rule" "x_target_header_routing" {
-    count = var.environment == "live" ? 1 : 0
 
     listener_arn = var.lb_listener_arn
     priority     = 110
 
     action {
         type             = "forward"
-        target_group_arn = aws_lb_target_group.web_bulkdownload[0].arn
+        target_group_arn = aws_lb_target_group.web_bulkdownload.arn
     }
 
     condition {
@@ -39,14 +36,13 @@ resource "aws_lb_listener_rule" "x_target_header_routing" {
 }
 
 resource "aws_lb_listener_rule" "host_based_routing" {
-    count = var.environment == "live" ? 1 : 0
 
     listener_arn = var.lb_listener_arn
     priority     = 115
 
     action {
         type             = "forward"
-        target_group_arn = aws_lb_target_group.web_bulkdownload[0].arn
+        target_group_arn = aws_lb_target_group.web_bulkdownload.arn
     }
 
     condition {
