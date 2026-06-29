@@ -1,4 +1,34 @@
 module "emergency_group" {
-    count = var.waf_rule_group_emergency ? 1 : 0
+    count  = var.waf_rule_group_emergency ? 1 : 0
     source = "./waf-rule-groups/web-emergency"
+}
+
+module "know_ips" {
+    count  = var.waf_rule_group_known_ips ? 1 : 0
+    source = "./waf-rule-groups/web-known-ips"
+
+    environment = var.environment
+    # changes to the different IP sets should be done using the CI/CD piplines in GitHub
+    known_ipset_arn               = module.waf.access_ip_set_arn
+    exception_ipset_arn           = module.waf.exception_ip_set_arn
+    wagtail_admin_ipset_arn       = module.waf.wagtail_admin_ip_set_arn
+    wp_admin_ipset_arn            = module.waf.wp_admin_ip_set_arn
+    tourchbox_seo_audit_ipset_arn = module.waf.tourchbox_seo_audit_ip_set_arn
+}
+
+module "api_access" {
+    count = var.waf_rule_group_api_access ? 1 : 0
+    source = "./waf-rule-groups/web-api-access"
+
+    unthrottled_api_header_value = var.waf_rule_api_unthrottled_access == true ? data.aws_ssm_parameter.web_rh_api_unthrottled_key[0].value : ""
+}
+
+module "block" {
+    count  = var.waf_rule_group_block ? 1 : 0
+    source = "./waf-rule-groups/web-block-rules"
+}
+
+module "rate_limits" {
+    count  = var.waf_rule_group_rate_limits ? 1 : 0
+    source = "./waf-rule-groups/web-rate-limits"
 }

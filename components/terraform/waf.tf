@@ -4,7 +4,8 @@ module "waf" {
     }
     source = "./waf"
 
-    site_ips = var.site_ips
+    site_ips           = var.site_ips
+    exception_site_ips = var.exception_site_ips
 
     waf_rule_default_action_allow   = var.waf_rule_default_action_allow
     waf_rule_shield_advanced_active = var.waf_rule_shield_advanced_active
@@ -46,7 +47,8 @@ module "waf_rule_api_unthrottled_access" {
     source = "./waf-rules/api-unthrottled-access"
 
     web_acl_arn  = module.waf.web_acl_arn
-    header_value = var.waf_rule_api_unthrottled_access == true ? data.aws_ssm_parameter.web_rh_api_unthrottled_key[0].value : ""
+    header_value = var.waf_rule_api_unthrottled_access == true ?
+        data.aws_ssm_parameter.web_rh_api_unthrottled_key[0].value : ""
     priority     = var.waf_rule_api_unthrottled_access_priority
 }
 module "waf_rule_geo_restriction" {

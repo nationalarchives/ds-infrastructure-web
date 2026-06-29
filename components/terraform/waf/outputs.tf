@@ -7,3 +7,15 @@ output "web_acl_arn" {
 output "access_ip_set_arn" {
     value = aws_wafv2_ip_set.web_access.arn
 }
+output "exception_ip_set_arn" {
+    value = aws_wafv2_ip_set.web_exceptions.arn
+}
+output "wagtail_admin_ip_set_arn" {
+    value = aws_wafv2_ip_set.wagtail-admins.arn
+}
+output "wp_admin_ip_set_arn" {
+    value = aws_wafv2_ip_set.wp_admins.arn
+}
+output "tourchbox_seo_audit_ip_set_arn" {
+    value = aws_wafv2_ip_set.tourchbox_seo_audit
+}

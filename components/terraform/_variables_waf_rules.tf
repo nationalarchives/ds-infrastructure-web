@@ -1,11 +1,41 @@
+#
+# rule groups
 variable "waf_rule_group_emergency" {
-    description = "create rule group"
+    description = "create rule group emergency"
     default     = false
 }
+variable "waf_rule_group_known_ips" {
+    description = "create rule group known ips"
+    default = true
+}
+variable "waf_rule_group_api_access" {
+    description = "create rule group for api access"
+    default = false
+}
+variable "waf_rule_group_block" {
+    description = "create rulegroup block"
+    default = false
+}
+variable "waf_rule_group_rate_limits" {
+    description = "create rule group rate limits"
+    default = false
+}
 
-variable "waf_rule_default_action_allow" {}
-variable "site_ips" {}
-variable "waf_tags" {}
+variable "waf_rule_default_action_allow" {
+    description = "action allowing access by web acl"
+    default = false
+}
+variable "site_ips" {
+    description = "ip list - allowing oe blocking ips opposite of the default action"
+    default = []
+}
+variable "exception_site_ips" {
+    description = "ip list - exception of the site_ips"
+    default = []
+}
+variable "waf_tags" {
+    default = []
+}
 variable "waf_rule_shield_advanced_active" {
     default = false
 }
