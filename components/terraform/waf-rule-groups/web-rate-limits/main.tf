@@ -21,6 +21,13 @@ resource "aws_wafv2_rule_group" "web_rate_limit_rg" {
                             byte_match_statement {
                                 positional_constraint = "STARTS_WITH"
                                 search_string         = "/images"
+                                field_to_match {
+                                    uri_path {}
+                                }
+                                text_transformation {
+                                    priority = 0
+                                    type     = "LOWERCASE"
+                                }
                             }
                         }
                     }
@@ -31,6 +38,13 @@ resource "aws_wafv2_rule_group" "web_rate_limit_rg" {
                             byte_match_statement {
                                 positional_constraint = "STARTS_WITH"
                                 search_string         = "/static"
+                                field_to_match {
+                                    uri_path {}
+                                }
+                                text_transformation {
+                                    priority = 0
+                                    type     = "LOWERCASE"
+                                }
                             }
                         }
                     }
@@ -41,11 +55,23 @@ resource "aws_wafv2_rule_group" "web_rate_limit_rg" {
                             byte_match_statement {
                                 positional_constraint = "STARTS_WITH"
                                 search_string         = "/wp-content"
+                                field_to_match {
+                                    uri_path {}
+                                }
+                                text_transformation {
+                                    priority = 0
+                                    type     = "LOWERCASE"
+                                }
                             }
                         }
                     }
                 }
             }
+        }
+        visibility_config {
+            cloudwatch_metrics_enabled = true
+            metric_name                = "web-include-in-rate-limiting-label"
+            sampled_requests_enabled   = true
         }
     }
     rule {

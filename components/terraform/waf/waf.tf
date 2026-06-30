@@ -69,7 +69,7 @@ resource "aws_wafv2_ip_set" "tourchbox_seo_audit" {
     description        = "IP set containing Touchbox SEO audit IP addresses."
     scope              = "CLOUDFRONT"
     ip_address_version = "IPV4"
-    addresses          = var.tourchbox_seo_audit
+    addresses          = var.tourchbox_seo_audit_ips
 
     tags = var.tags
 
