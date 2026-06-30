@@ -47,8 +47,7 @@ module "waf_rule_api_unthrottled_access" {
     source = "./waf-rules/api-unthrottled-access"
 
     web_acl_arn  = module.waf.web_acl_arn
-    header_value = var.waf_rule_api_unthrottled_access == true ?
-        data.aws_ssm_parameter.web_rh_api_unthrottled_key[0].value : ""
+    header_value = var.waf_rule_api_unthrottled_access == true ? data.aws_ssm_parameter.web_rh_api_unthrottled_key[0].value : ""
     priority     = var.waf_rule_api_unthrottled_access_priority
 }
 module "waf_rule_geo_restriction" {
