@@ -1,6 +1,10 @@
 variable "tags" {}
 variable "environment" {}
 
+variable "waf_protection_pack_name" {
+    description = "name of the waf protection pack"
+    default     = ""
+}
 variable "site_ips" {
     description = "ip addresses opposing to general waf acl action"
     default = []

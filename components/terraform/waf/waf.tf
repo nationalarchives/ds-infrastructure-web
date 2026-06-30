@@ -81,7 +81,7 @@ resource "aws_wafv2_ip_set" "torchbox_seo_audit" {
 resource "aws_wafv2_web_acl" "web" {
     provider = aws.aws-cf-waf
 
-    name  = "web"
+    name  = var.waf_protection_pack_name
     scope = "CLOUDFRONT"
 
     default_action {

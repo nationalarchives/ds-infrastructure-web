@@ -26,6 +26,10 @@ variable "waf_rule_group_rate_limits" {
     default     = false
 }
 
+variable "waf_protection_pack_name" {
+    description = "name of the protection pack"
+    default = "web"
+}
 variable "waf_rule_default_action_allow" {
     description = "action allowing access by web acl"
     default     = false

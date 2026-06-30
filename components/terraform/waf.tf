@@ -7,6 +7,7 @@ module "waf" {
     site_ips           = var.site_ips
     exception_site_ips = var.exception_site_ips
 
+    waf_protection_pack_name        = var.waf_protection_pack_name
     waf_rule_default_action_allow   = var.waf_rule_default_action_allow
     waf_rule_shield_advanced_active = var.waf_rule_shield_advanced_active
 
@@ -24,8 +25,8 @@ module "waf_rule_emergency_rule_group" {
     count  = var.waf_rule_emergency_rule_group == true ? 1 : 0
     source = "./waf-rules/emergency-rule-group"
 
-    web_acl_arn = module.waf.web_acl_arn
-    priority    = 100
+    web_acl_arn    = module.waf.web_acl_arn
+    priority       = 100
     rule_group_arn = module.emergency_group[0].web_emergency_rule_group_arn
 }
 
@@ -51,7 +52,8 @@ module "external_application_testing" {
     source = "./waf-rules/external-application-testing"
 
     web_acl_arn  = module.waf.web_acl_arn
-    header_value = var.waf_rule_external_application_testing == true ? data.aws_ssm_parameter.web_rh_external_application_testing[0].value : ""
+    header_value = var.waf_rule_external_application_testing == true ?
+        data.aws_ssm_parameter.web_rh_external_application_testing[0].value : ""
     priority     = var.waf_rule_external_application_testing_priority
 }
 module "waf_rule_api_unthrottled_access" {
@@ -62,7 +64,8 @@ module "waf_rule_api_unthrottled_access" {
     source = "./waf-rules/api-unthrottled-access"
 
     web_acl_arn  = module.waf.web_acl_arn
-    header_value = var.waf_rule_api_unthrottled_access == true ? data.aws_ssm_parameter.web_rh_api_unthrottled_key[0].value : ""
+    header_value = var.waf_rule_api_unthrottled_access == true ?
+        data.aws_ssm_parameter.web_rh_api_unthrottled_key[0].value : ""
     priority     = var.waf_rule_api_unthrottled_access_priority
 }
 module "waf_rule_geo_restriction" {
