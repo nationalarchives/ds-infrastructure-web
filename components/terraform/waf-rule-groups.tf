@@ -7,7 +7,8 @@ module "known_ips" {
     count  = var.waf_rule_group_known_ips ? 1 : 0
     source = "./waf-rule-groups/web-known-ips"
 
-    environment = var.environment
+    environment  = var.environment
+    allow_action = var.waf_rule_default_action_allow
     # changes to the different IP sets should be done using the CI/CD piplines in GitHub
     known_ipset_arn               = module.waf.access_ip_set_arn
     exception_ipset_arn           = module.waf.exception_ip_set_arn

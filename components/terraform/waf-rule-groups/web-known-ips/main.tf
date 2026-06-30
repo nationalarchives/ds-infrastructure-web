@@ -83,7 +83,7 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
     }
     rule {
         name     = "torchbox-seo-audit-ips-list-exceptions"
-        priority = 1
+        priority = 2
         action {
             allow {}
         }
@@ -101,7 +101,7 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
     }
     rule {
         name     = "wagtail-admin-ips"
-        priority = 2
+        priority = 3
         action {
             allow {}
         }
@@ -137,7 +137,7 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
     }
     rule {
         name     = "wp-admin-ips"
-        priority = 3
+        priority = 4
         action {
             allow {}
         }
