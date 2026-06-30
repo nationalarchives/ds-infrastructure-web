@@ -18,7 +18,7 @@ resource "aws_wafv2_web_acl_rule" "emergency_rule_group" {
         none {}
     }
     statement {
-        rule_group_reference_statment {
+        rule_group_reference_statement {
             arn = var.rule_group_arn
         }
     }
