@@ -52,8 +52,7 @@ module "external_application_testing" {
     source = "./waf-rules/external-application-testing"
 
     web_acl_arn  = module.waf.web_acl_arn
-    header_value = var.waf_rule_external_application_testing == true ?
-        data.aws_ssm_parameter.web_rh_external_application_testing[0].value : ""
+    header_value = var.waf_rule_external_application_testing == true ? data.aws_ssm_parameter.web_rh_external_application_testing[0].value : ""
     priority     = var.waf_rule_external_application_testing_priority
 }
 module "waf_rule_api_unthrottled_access" {
@@ -64,8 +63,7 @@ module "waf_rule_api_unthrottled_access" {
     source = "./waf-rules/api-unthrottled-access"
 
     web_acl_arn  = module.waf.web_acl_arn
-    header_value = var.waf_rule_api_unthrottled_access == true ?
-        data.aws_ssm_parameter.web_rh_api_unthrottled_key[0].value : ""
+    header_value = var.waf_rule_api_unthrottled_access == true ? data.aws_ssm_parameter.web_rh_api_unthrottled_key[0].value : ""
     priority     = var.waf_rule_api_unthrottled_access_priority
 }
 module "waf_rule_geo_restriction" {
