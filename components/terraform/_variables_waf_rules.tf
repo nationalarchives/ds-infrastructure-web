@@ -8,7 +8,10 @@ variable "waf_rule_emergency_rule_group" {
     description = "add rule group to WAF rules"
     default     = true
 }
-
+variable "waf_rule_group_external_servce_testing" {
+    description = "add rule group to WAF rules"
+    default     = true
+}
 variable "waf_rule_group_known_ips" {
     description = "create rule group known ips"
     default     = true

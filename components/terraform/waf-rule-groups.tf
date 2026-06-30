@@ -3,6 +3,11 @@ module "emergency_group" {
     source = "./waf-rule-groups/web-emergency"
 }
 
+module "external_servce_testing" {
+    count  = var.waf_rule_group_external_servce_testing ? 1 : 0
+    source = "./waf-rule-groups/web-external-service-testing"
+}
+
 module "known_ips" {
     count  = var.waf_rule_group_known_ips ? 1 : 0
     source = "./waf-rule-groups/web-known-ips"
