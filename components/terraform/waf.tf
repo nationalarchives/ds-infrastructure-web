@@ -34,7 +34,7 @@ module "waf_rule_external_service_testing_rule_group" {
         aws.aws-cf-waf = aws.aws-cf-waf
     }
     count  = var.waf_rule_external_application_testing_rule_group == true ? 1 : 0
-    source = "./waf-rules/emergency-rule-group"
+    source = "./waf-rules/external-service-testing-rule-group"
 
     web_acl_arn    = module.waf.web_acl_arn
     priority       = 180
