@@ -3,7 +3,7 @@ module "emergency_group" {
     source = "./waf-rule-groups/web-emergency"
 }
 
-module "know_ips" {
+module "known_ips" {
     count  = var.waf_rule_group_known_ips ? 1 : 0
     source = "./waf-rule-groups/web-known-ips"
 
