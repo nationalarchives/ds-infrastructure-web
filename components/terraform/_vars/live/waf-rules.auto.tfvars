@@ -1,3 +1,6 @@
+waf_rule_emergency_rule_group = true
+
+
 waf_rule_external_application_testing          = true
 waf_rule_external_application_testing_priority = 100
 

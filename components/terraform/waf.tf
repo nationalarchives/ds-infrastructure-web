@@ -15,6 +15,21 @@ module "waf" {
 }
 
 #
+# rule groups
+# -----------
+module "waf_rule_emergency_rule_group" {
+    providers = {
+        aws.aws-cf-waf = aws.aws-cf-waf
+    }
+    count  = var.waf_rule_emergency_rule_group == true ? 1 : 0
+    source = "./waf-rules/emergency-rule-group"
+
+    web_acl_arn = module.waf.web_acl_arn
+    priority    = 100
+    rule_group_arn = module.emergency_group.web_emergency_rule_group_arn
+}
+
+#
 # Custom Rules
 # ------------
 module "waf_rule_api_access" {
