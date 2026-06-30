@@ -17,5 +17,5 @@ output "wp_admin_ip_set_arn" {
     value = aws_wafv2_ip_set.wp_admins.arn
 }
 output "torchbox_seo_audit_ip_set_arn" {
-    value = aws_wafv2_ip_set.torchbox_seo_audit
+    value = aws_wafv2_ip_set.torchbox_seo_audit.arn
 }
