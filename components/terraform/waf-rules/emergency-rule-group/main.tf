@@ -13,7 +13,7 @@ resource "aws_wafv2_web_acl_rule" "emergency_rule_group" {
 
     web_acl_arn = var.web_acl_arn
     name        = "emergency-rule-group"
-    priority    = 100
+    priority    = var.priority
     override_action {
         none {}
     }
