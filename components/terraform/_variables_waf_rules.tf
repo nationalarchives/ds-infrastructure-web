@@ -8,7 +8,7 @@ variable "waf_rule_emergency_rule_group" {
     description = "add rule group to WAF protection pack"
     default     = true
 }
-variable "waf_rule_group_external_servce_testing" {
+variable "waf_rule_group_external_service_testing" {
     description = "add rule group to WAF rules"
     default     = true
 }
