@@ -1,7 +1,7 @@
 variable "x_external_access_key" {}
 
 resource "aws_wafv2_rule_group" "web_external_service_testing" {
-    name     = "web-external-servie-testing"
+    name     = "web-external-service-testing"
     scope    = "CLOUDFRONT"
     region   = "us-east-1"
     capacity = 50
@@ -35,7 +35,7 @@ resource "aws_wafv2_rule_group" "web_external_service_testing" {
     }
     visibility_config {
         cloudwatch_metrics_enabled = true
-        metric_name                = "web-external-servie-testing"
+        metric_name                = "web-external-service-testing"
         sampled_requests_enabled   = true
     }
 }

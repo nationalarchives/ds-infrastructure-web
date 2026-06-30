@@ -38,7 +38,7 @@ module "waf_rule_external_service_testing_rule_group" {
 
     web_acl_arn    = module.waf.web_acl_arn
     priority       = 180
-    rule_group_arn = module.external_servce_testing[0].web_external_service_testing_rule_group_arn
+    rule_group_arn = module.external_service_testing[0].web_external_service_testing_rule_group_arn
 }
 
 #
