@@ -33,7 +33,7 @@ resource "aws_wafv2_rule_group" "web_api_access" {
     }
     rule {
         name     = "external-application-testing"
-        priority = 0
+        priority = 1
         action {
             allow {}
         }
