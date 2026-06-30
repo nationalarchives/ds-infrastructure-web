@@ -1,4 +1,4 @@
-resource "aws_wafv2_rule_group" "web_block_rules_rg" {
+resource "aws_wafv2_rule_group" "web_block_rules" {
     name     = "web-block-rules-rg"
     scope    = "CLOUDFRONT"
     region   = "us-east-1"
