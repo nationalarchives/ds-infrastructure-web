@@ -22,7 +22,7 @@ variable "wp_admin_ipset_arn" {
 
 locals {
     wagtail_admin_prefix = var.environment == "live" ? "wagtail." : "${var.environment}-wagtail."
-    wp_admin_prefix = "${var.environment}wp."
+    wp_admin_prefix      = "${var.environment}wp."
 }
 
 resource "aws_wafv2_rule_group" "web_known_ips_rg" {
@@ -128,6 +128,11 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
                     }
                 }
             }
+        }
+        visibility_config {
+            cloudwatch_metrics_enabled = true
+            metric_name                = "wagtail-admin-ips"
+            sampled_requests_enabled   = true
         }
     }
     rule {

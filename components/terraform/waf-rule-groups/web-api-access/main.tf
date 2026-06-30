@@ -1,7 +1,7 @@
 variable "unthrottled_api_header_value" {}
 
-resource "aws_wafv2_rule_group" "web_api_access_rg" {
-    name     = "web-api-rg"
+resource "aws_wafv2_rule_group" "web_api_access" {
+    name     = "web-api-access"
     scope    = "CLOUDFRONT"
     region   = "us-east-1"
     capacity = 50
@@ -74,5 +74,10 @@ resource "aws_wafv2_rule_group" "web_api_access_rg" {
             metric_name                = "web-external-application-testing"
             sampled_requests_enabled   = true
         }
+    }
+    visibility_config {
+        cloudwatch_metrics_enabled = true
+        metric_name                = "web-api-access"
+        sampled_requests_enabled   = true
     }
 }
