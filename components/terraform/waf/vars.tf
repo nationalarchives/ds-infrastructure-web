@@ -17,8 +17,8 @@ variable "wagtail_admin_ips" {
     description = "ip addresses of wagtail admins"
     default = []
 }
-variable "tourchbox_seo_audit_ips" {
-    description = "ip addresses of tourchbox seo audit"
+variable "torchbox_seo_audit_ips" {
+    description = "ip addresses of torchbox seo audit"
     default = []
 }
 

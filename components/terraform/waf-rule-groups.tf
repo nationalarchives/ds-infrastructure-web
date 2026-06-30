@@ -13,7 +13,7 @@ module "know_ips" {
     exception_ipset_arn           = module.waf.exception_ip_set_arn
     wagtail_admin_ipset_arn       = module.waf.wagtail_admin_ip_set_arn
     wp_admin_ipset_arn            = module.waf.wp_admin_ip_set_arn
-    tourchbox_seo_audit_ipset_arn = module.waf.tourchbox_seo_audit_ip_set_arn
+    torchbox_seo_audit_ipset_arn = module.waf.torchbox_seo_audit_ip_set_arn
 }
 
 module "api_access" {

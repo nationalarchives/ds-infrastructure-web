@@ -62,14 +62,14 @@ resource "aws_wafv2_ip_set" "wagtail_admins" {
     }
 }
 
-resource "aws_wafv2_ip_set" "tourchbox_seo_audit" {
+resource "aws_wafv2_ip_set" "torchbox_seo_audit" {
     provider = aws.aws-cf-waf
 
-    name               = "tourchbox-seo-audit"
+    name               = "torchbox-seo-audit"
     description        = "IP set containing Touchbox SEO audit IP addresses."
     scope              = "CLOUDFRONT"
     ip_address_version = "IPV4"
-    addresses          = var.tourchbox_seo_audit_ips
+    addresses          = var.torchbox_seo_audit_ips
 
     tags = var.tags
 

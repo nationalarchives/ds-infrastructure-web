@@ -10,7 +10,7 @@ variable "known_ipset_arn" {
 variable "exception_ipset_arn" {
     description = "ipset exception to known ipset"
 }
-variable "tourchbox_seo_audit_ipset_arn" {
+variable "torchbox_seo_audit_ipset_arn" {
     description = "ipset exception to known ipset"
 }
 variable "wagtail_admin_ipset_arn" {
@@ -90,7 +90,7 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
 
         statement {
             ip_set_reference_statement {
-                arn = var.tourchbox_seo_audit_ipset_arn
+                arn = var.torchbox_seo_audit_ipset_arn
             }
         }
         visibility_config {
