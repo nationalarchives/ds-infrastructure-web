@@ -51,6 +51,17 @@ module "waf_rule_api_access_rule_group" {
     priority       = 190
     rule_group_arn = module.api_access[0].web_api_access_rule_group_arn
 }
+module "waf_rule_known_ips_rule_group" {
+    providers = {
+        aws.aws-cf-waf = aws.aws-cf-waf
+    }
+    count  = var.waf_rule_known_ips_rule_group == true ? 1 : 0
+    source = "./waf-rules/known-ips-rule-group"
+
+    web_acl_arn    = module.waf.web_acl_arn
+    priority       = 190
+    rule_group_arn = module.known_ips[0].web_known_ips_group_arn
+}
 
 #
 # Custom Rules
