@@ -49,8 +49,12 @@ variable "waf_rule_targetted_blocks_rule_group" {
     description = "add rule group to WAF protection pack"
     default     = false
 }
-variable "waf_rule_group_rate_limits" {
-    description = "create rule group rate limits"
+variable "waf_rule_group_rate_limiting" {
+    description = "create rule group rate limiting"
+    default     = false
+}
+variable "waf_rule_rate_limiting_rule_group" {
+    description = "add rule group to WAF protection pack"
     default     = false
 }
 

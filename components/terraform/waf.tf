@@ -73,7 +73,17 @@ module "waf_rule_targetted_blocks_rule_group" {
     priority       = 210
     rule_group_arn = module.targetted_blocks[0].web_targetted_blocks_rule_group_arn
 }
+module "waf_rule_rate_limiting_rule_group" {
+    providers = {
+        aws.aws-cf-waf = aws.aws-cf-waf
+    }
+    count  = var.waf_rule_rate_limiting_rule_group == true ? 1 : 0
+    source = "./waf-rules/rate-limiting-rule-group"
 
+    web_acl_arn    = module.waf.web_acl_arn
+    priority       = 220
+    rule_group_arn = module.rate_limiting[0].web_rate_limiting_rule_group_arn
+}
 #
 # Custom Rules
 # ------------

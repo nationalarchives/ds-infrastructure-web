@@ -1,5 +1,5 @@
-resource "aws_wafv2_rule_group" "web_rate_limit_rg" {
-    name     = "web-rate-limit-rg"
+resource "aws_wafv2_rule_group" "web_rate_limiting_rg" {
+    name     = "web-rate-limiting-rg"
     scope    = "CLOUDFRONT"
     region   = "us-east-1"
     capacity = 50
@@ -104,7 +104,7 @@ resource "aws_wafv2_rule_group" "web_rate_limit_rg" {
     }
     visibility_config {
         cloudwatch_metrics_enabled = true
-        metric_name                = "web-rate-limit"
+        metric_name                = "web-rate-limiting"
         sampled_requests_enabled   = true
     }
 }
