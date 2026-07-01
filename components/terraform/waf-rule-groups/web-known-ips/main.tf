@@ -33,7 +33,7 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
 
     rule {
         name     = "known-ips-list-exceptions"
-        priority = 1
+        priority = 0
         action {
             dynamic "allow" {
                 for_each = var.allow_action == true ? [""] : []
@@ -58,7 +58,7 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
     }
     rule {
         name     = "known-ips-list"
-        priority = 0
+        priority = 1
         action {
             dynamic "allow" {
                 for_each = var.allow_action == false ? [""] : []
