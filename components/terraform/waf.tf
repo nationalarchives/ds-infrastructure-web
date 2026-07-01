@@ -55,17 +55,6 @@ module "waf_rule_api_access" {
     priority    = var.waf_rule_api_access_priority
 }
 
-module "external_application_testing" {
-    providers = {
-        aws.aws-cf-waf = aws.aws-cf-waf
-    }
-    count  = var.waf_rule_external_application_testing == true ? 1 : 0
-    source = "./waf-rules/external-application-testing"
-
-    web_acl_arn  = module.waf.web_acl_arn
-    header_value = var.waf_rule_external_application_testing == true ? data.aws_ssm_parameter.web_rh_external_service_testing[0].value : ""
-    priority     = var.waf_rule_external_application_testing_priority
-}
 module "waf_rule_api_unthrottled_access" {
     providers = {
         aws.aws-cf-waf = aws.aws-cf-waf

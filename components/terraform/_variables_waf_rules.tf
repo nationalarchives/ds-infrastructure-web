@@ -1,3 +1,12 @@
+variable "waf_protection_pack_name" {
+    description = "name of the protection pack"
+    default = "web"
+}
+variable "waf_rule_default_action_allow" {
+    description = "action allowing access by web acl"
+    default     = false
+}
+
 #
 # rule groups
 variable "waf_rule_group_emergency" {
@@ -33,14 +42,6 @@ variable "waf_rule_group_rate_limits" {
     default     = false
 }
 
-variable "waf_protection_pack_name" {
-    description = "name of the protection pack"
-    default = "web"
-}
-variable "waf_rule_default_action_allow" {
-    description = "action allowing access by web acl"
-    default     = false
-}
 variable "site_ips" {
     description = "ip list - allowing oe blocking ips opposite of the default action"
     default = []
@@ -56,21 +57,14 @@ variable "waf_rule_shield_advanced_active" {
     default = false
 }
 
+
+
 variable "waf_rule_api_access" {
     description = "allow access to API endpoints by matching a specific URI path pattern"
     default     = false
 }
 variable "waf_rule_api_access_priority" {
     description = "priority of the API access rule"
-    default     = 0
-}
-
-variable "waf_rule_external_application_testing" {
-    description = "allow external application testing by matching a specific header value"
-    default     = false
-}
-variable "waf_rule_external_application_testing_priority" {
-    description = "priority of the external application testing rule"
     default     = 0
 }
 
