@@ -7,7 +7,7 @@ module "external_service_testing" {
     count  = var.waf_rule_group_external_service_testing ? 1 : 0
     source = "./waf-rule-groups/web-external-service-testing"
 
-    x_external_access_key = var.waf_rule_external_application_testing == true ? data.aws_ssm_parameter.web_rh_external_application_testing[0].value : ""
+    x_external_access_key = var.waf_rule_group_external_service_testing == true ? data.aws_ssm_parameter.web_rh_external_service_testing[0].value : ""
 }
 
 module "known_ips" {
