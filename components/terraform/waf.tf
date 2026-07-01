@@ -70,7 +70,7 @@ module "waf_rule_targetted_blocks_rule_group" {
     source = "./waf-rules/targetted-blocks-rule-group"
 
     web_acl_arn    = module.waf.web_acl_arn
-    priority       = 200
+    priority       = 210
     rule_group_arn = module.targetted_blocks[0].web_targetted_blocks_rule_group_arn
 }
 
