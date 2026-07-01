@@ -124,8 +124,10 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
                 }
                 statement {
                     not_statement {
-                        ip_set_reference_statement {
-                            arn = var.wagtail_admin_ipset_arn
+                        statement {
+                            ip_set_reference_statement {
+                                arn = var.wagtail_admin_ipset_arn
+                            }
                         }
                     }
                 }
@@ -162,8 +164,10 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
                 }
                 statement {
                     not_statement {
-                        ip_set_reference_statement {
-                            arn = var.wp_admin_ipset_arn
+                        statement {
+                            ip_set_reference_statement {
+                                arn = var.wp_admin_ipset_arn
+                            }
                         }
                     }
                 }
