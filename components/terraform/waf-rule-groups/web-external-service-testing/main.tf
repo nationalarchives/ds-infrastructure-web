@@ -53,7 +53,13 @@ resource "aws_wafv2_rule_group" "web_external_service_testing" {
                     priority = 0
                     type     = "NONE"
                 }
-            }}
+            }
+        }
+        visibility_config {
+            cloudwatch_metrics_enabled = true
+            metric_name                = "kuma-health-check"
+            sampled_requests_enabled   = true
+        }
     }
     visibility_config {
         cloudwatch_metrics_enabled = true
