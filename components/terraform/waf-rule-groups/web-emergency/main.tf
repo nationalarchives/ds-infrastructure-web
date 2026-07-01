@@ -16,6 +16,9 @@ resource "aws_wafv2_rule_group" "web_emergency_rg" {
                 country_codes = ["BR", "RU", "CN"]
             }
         }
+        rule_label {
+            name = "web-emergency-geo-match"
+        }
         visibility_config {
             cloudwatch_metrics_enabled = true
             metric_name                = "web-emergency-geo-match"

@@ -32,31 +32,6 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
     capacity = 50
 
     rule {
-        name     = "known-ips-list"
-        priority = 0
-        action {
-            dynamic "allow" {
-                for_each = var.allow_action == false ? [""] : []
-                content {}
-            }
-            dynamic "block" {
-                for_each = var.allow_action == true ? [""] : []
-                content {}
-            }
-        }
-
-        statement {
-            ip_set_reference_statement {
-                arn = var.known_ipset_arn
-            }
-        }
-        visibility_config {
-            cloudwatch_metrics_enabled = true
-            metric_name                = "web-known-ips-list"
-            sampled_requests_enabled   = true
-        }
-    }
-    rule {
         name     = "known-ips-list-exceptions"
         priority = 1
         action {
@@ -78,6 +53,31 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
         visibility_config {
             cloudwatch_metrics_enabled = true
             metric_name                = "web-known-ips-list-exceptions"
+            sampled_requests_enabled   = true
+        }
+    }
+    rule {
+        name     = "known-ips-list"
+        priority = 0
+        action {
+            dynamic "allow" {
+                for_each = var.allow_action == false ? [""] : []
+                content {}
+            }
+            dynamic "block" {
+                for_each = var.allow_action == true ? [""] : []
+                content {}
+            }
+        }
+
+        statement {
+            ip_set_reference_statement {
+                arn = var.known_ipset_arn
+            }
+        }
+        visibility_config {
+            cloudwatch_metrics_enabled = true
+            metric_name                = "web-known-ips-list"
             sampled_requests_enabled   = true
         }
     }
