@@ -38,5 +38,5 @@ module "targetted_blocks" {
 
 module "rate_limiting" {
     count  = var.waf_rule_group_rate_limiting ? 1 : 0
-    source = "waf-rule-groups/web-rate-limiting"
+    source = "./waf-rule-groups/web-rate-limiting"
 }
