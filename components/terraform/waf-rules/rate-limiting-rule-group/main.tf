@@ -8,11 +8,11 @@ variable "priority" {
 }
 variable "rule_group_arn" {}
 
-resource "aws_wafv2_web_acl_rule" "tagrgetted_blocks_rule_group" {
+resource "aws_wafv2_web_acl_rule" "rate_limiting_rule_group" {
     provider = aws.aws-cf-waf
 
     web_acl_arn = var.web_acl_arn
-    name        = "targetted-blocks-rule-group"
+    name        = "rate-limiting-rule-group"
     priority    = var.priority
     override_action {
         none {}
@@ -24,7 +24,7 @@ resource "aws_wafv2_web_acl_rule" "tagrgetted_blocks_rule_group" {
     }
     visibility_config {
         cloudwatch_metrics_enabled = true
-        metric_name                = "targetted-blocks-rule-group"
+        metric_name                = "rate-limiting-rule-group"
         sampled_requests_enabled   = true
     }
 }
