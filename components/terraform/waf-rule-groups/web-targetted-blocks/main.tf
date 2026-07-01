@@ -1,5 +1,5 @@
-resource "aws_wafv2_rule_group" "web_block_rules" {
-    name     = "web-block-rules-rg"
+resource "aws_wafv2_rule_group" "web_targetted_blocks" {
+    name     = "web-targetted-blocks-rg"
     scope    = "CLOUDFRONT"
     region   = "us-east-1"
     capacity = 150
@@ -50,7 +50,7 @@ resource "aws_wafv2_rule_group" "web_block_rules" {
     }
     visibility_config {
         cloudwatch_metrics_enabled = true
-        metric_name                = "web-block-rules"
+        metric_name                = "web-targetted-blocks"
         sampled_requests_enabled   = true
     }
 }

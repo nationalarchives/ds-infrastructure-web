@@ -41,7 +41,7 @@ variable "waf_rule_api_access_rule_group" {
     description = "add rule group to WAF protection pack"
     default     = false
 }
-variable "waf_rule_group_block" {
+variable "waf_rule_group_targetted_blocks" {
     description = "create rulegroup block"
     default     = false
 }

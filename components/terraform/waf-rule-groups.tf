@@ -31,9 +31,9 @@ module "api_access" {
     unthrottled_api_header_value = var.waf_rule_api_unthrottled_access == true ? data.aws_ssm_parameter.web_rh_api_unthrottled_key[0].value : ""
 }
 
-module "block" {
-    count  = var.waf_rule_group_block ? 1 : 0
-    source = "./waf-rule-groups/web-block-rules"
+module "targetted_blocks" {
+    count  = var.waf_rule_group_targetted_blocks ? 1 : 0
+    source = "./waf-rule-groups/web-targetted-blocks"
 }
 
 module "rate_limits" {
