@@ -42,7 +42,7 @@ resource "aws_wafv2_rule_group" "web_external_service_testing" {
         statement {
             byte_match_statement {
                 positional_constraint = "STARTS_WITH"
-                search_string         = "/Uptime-Kuma"
+                search_string         = "Uptime-Kuma"
                 field_to_match {
                     single_header {
                         name = "user-agent"
