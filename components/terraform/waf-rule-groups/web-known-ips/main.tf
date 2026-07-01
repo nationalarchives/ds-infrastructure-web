@@ -103,7 +103,7 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
         name     = "wagtail-admin-ips"
         priority = 3
         action {
-            allow {}
+            block {}
         }
         statement {
             and_statement {
@@ -123,8 +123,10 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
                     }
                 }
                 statement {
-                    ip_set_reference_statement {
-                        arn = var.wagtail_admin_ipset_arn
+                    not_statement {
+                        ip_set_reference_statement {
+                            arn = var.wagtail_admin_ipset_arn
+                        }
                     }
                 }
             }
@@ -139,7 +141,7 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
         name     = "wp-admin-ips"
         priority = 4
         action {
-            allow {}
+            block {}
         }
         statement {
             and_statement {
@@ -159,8 +161,10 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
                     }
                 }
                 statement {
-                    ip_set_reference_statement {
-                        arn = var.wp_admin_ipset_arn
+                    not_statement {
+                        ip_set_reference_statement {
+                            arn = var.wp_admin_ipset_arn
+                        }
                     }
                 }
             }
