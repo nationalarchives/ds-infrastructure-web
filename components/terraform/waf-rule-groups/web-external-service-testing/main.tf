@@ -33,6 +33,28 @@ resource "aws_wafv2_rule_group" "web_external_service_testing" {
             sampled_requests_enabled   = true
         }
     }
+    rule {
+        name     = "kuma-health-check"
+        priority = 1
+        action {
+            allow {}
+        }
+        statement {
+            byte_match_statement {
+                positional_constraint = "STARTS_WITH"
+                search_string         = "/Uptime-Kuma"
+                field_to_match {
+                    single_header {
+                        name = "user-agent"
+
+                    }
+                }
+                text_transformation {
+                    priority = 0
+                    type     = "NONE"
+                }
+            }}
+    }
     visibility_config {
         cloudwatch_metrics_enabled = true
         metric_name                = "web-external-service-testing"
