@@ -130,6 +130,15 @@ resource "aws_s3_object" "web_enrichment_conf" {
   })
 }
 
+resource "aws_s3_object" "web_bulkdownload_conf" {
+  bucket = var.deployment_s3_bucket
+  key    = "${var.service}/${var.nginx_folder_s3_key}/web-bulkdownload.conf"
+  content = templatefile("${path.module}/scripts/web-bulkdownload.conf", {
+    environment      = var.environment,
+    set_real_ip_from = var.set_real_ip_from
+  })
+}
+
 resource "aws_s3_object" "web_forms_conf" {
   bucket = var.deployment_s3_bucket
   key    = "${var.service}/${var.nginx_folder_s3_key}/web-forms.conf"

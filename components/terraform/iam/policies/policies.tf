@@ -212,17 +212,17 @@ resource "aws_iam_policy" "codedeploy_web_reverse_proxy_access_policy" {
     )
 }
 
-# resource "aws_iam_policy" "s3_deployment_source_static_content_read" {
-#     name        = "s3-deployment-source-static-content-read"
-#     description = "read access to the ds-<env>-deployment-source/static_content folder"
+resource "aws_iam_policy" "s3_deployment_source_static_content_read" {
+    name        = "s3-deployment-source-static-content-read"
+    description = "read access to the ds-<env>-deployment-source/static_content folder"
 
-#     policy = templatefile("${path.root}/shared-templates/s3_constrained_read_access.tftpl",
-#         {
-#             s3_bucket_arn = var.s3_deployment_source_arn.value
-#             prefix_list   = ["","static_content/","static_content/accessions/"]
-#         }
-#     )
-# }
+    policy = templatefile("${path.root}/shared-templates/s3_constrained_read_access.tftpl",
+        {
+            s3_bucket_arn = var.s3_deployment_source_arn.value
+            prefix_list   = ["","static_content/","static_content/accessions/"]
+        }
+    )
+}
 
 resource "aws_iam_policy" "ses_access" {
   name        = "web-request-service-record-ses-access-policy"

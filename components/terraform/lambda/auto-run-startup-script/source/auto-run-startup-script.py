@@ -123,7 +123,8 @@ def lambda_handler(event, context):
         "search":"web-search",
         "wagtaildocs":"web-wagtaildocs",
         "requestservicerecord":"web-request-service-record",
-        "forms":"web-forms"
+        "forms":"web-forms",
+        "bulkdownload":"web-bulkdownload"
     }
 
     if 'service' in event:

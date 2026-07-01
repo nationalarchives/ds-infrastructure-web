@@ -133,6 +133,7 @@ jobs:
           - search
           - wagtaildocs
           - requestservicerecord
+          # - bulkdownload
     timeout-minutes: 15
     permissions:
       id-token: write

@@ -85,3 +85,14 @@ resource "aws_route53_record" "web_hosprec" {
         module.load-balancer.load_balancer_dns_name
     ]
 }
+
+resource "aws_route53_record" "web_bulkdownload" {
+    zone_id = var.route53_zone
+    name    = "web-bulkdownload.${var.environment}.local"
+    type    = "CNAME"
+    ttl     = 15
+
+    records = [
+        module.load-balancer.load_balancer_dns_name
+    ]
+}
