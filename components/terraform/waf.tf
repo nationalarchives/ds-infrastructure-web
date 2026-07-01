@@ -59,7 +59,7 @@ module "waf_rule_known_ips_rule_group" {
     source = "./waf-rules/known-ips-rule-group"
 
     web_acl_arn    = module.waf.web_acl_arn
-    priority       = 190
+    priority       = 200
     rule_group_arn = module.known_ips[0].web_known_ips_group_arn
 }
 
