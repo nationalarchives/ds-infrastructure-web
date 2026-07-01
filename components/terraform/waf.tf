@@ -62,6 +62,17 @@ module "waf_rule_known_ips_rule_group" {
     priority       = 200
     rule_group_arn = module.known_ips[0].web_known_ips_group_arn
 }
+module "waf_rule_targetted_blocks_rule_group" {
+    providers = {
+        aws.aws-cf-waf = aws.aws-cf-waf
+    }
+    count  = var.waf_rule_targetted_blocks_rule_group == true ? 1 : 0
+    source = "./waf-rules/targetted-blocks-rule-group"
+
+    web_acl_arn    = module.waf.web_acl_arn
+    priority       = 200
+    rule_group_arn = module.targetted_blocks[0].web_targetted_blocks_rule_group_arn
+}
 
 #
 # Custom Rules

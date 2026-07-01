@@ -45,6 +45,10 @@ variable "waf_rule_group_targetted_blocks" {
     description = "create rulegroup block"
     default     = false
 }
+variable "waf_rule_targetted_blocks_rule_group" {
+    description = "add rule group to WAF protection pack"
+    default     = false
+}
 variable "waf_rule_group_rate_limits" {
     description = "create rule group rate limits"
     default     = false
