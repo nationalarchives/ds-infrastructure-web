@@ -3,7 +3,7 @@ waf_rule_external_application_testing_rule_group = true
 waf_rule_api_access_rule_group                   = true
 waf_rule_known_ips_rule_group                    = true
 waf_rule_targetted_blocks_rule_group             = true
-
+waf_rule_rate_limiting_rule_group                = true
 
 
 waf_rule_api_unthrottled_access          = true
