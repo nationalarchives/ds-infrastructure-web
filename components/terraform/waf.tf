@@ -16,7 +16,7 @@ module "waf" {
 }
 
 #
-# rule groups
+# rule groups in protection pack
 # -----------
 module "waf_rule_emergency_rule_group" {
     providers = {
@@ -39,6 +39,17 @@ module "waf_rule_external_service_testing_rule_group" {
     web_acl_arn    = module.waf.web_acl_arn
     priority       = 180
     rule_group_arn = module.external_service_testing[0].web_external_service_testing_rule_group_arn
+}
+module "waf_rule_api_access_rule_group" {
+    providers = {
+        aws.aws-cf-waf = aws.aws-cf-waf
+    }
+    count  = var.waf_rule_api_access_rule_group == true ? 1 : 0
+    source = "./waf-rules/api-access-rule-group"
+
+    web_acl_arn    = module.waf.web_acl_arn
+    priority       = 190
+    rule_group_arn = module.api_access[0].web_api_access_rule_group_arn
 }
 
 #

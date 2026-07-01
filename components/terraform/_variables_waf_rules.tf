@@ -33,6 +33,10 @@ variable "waf_rule_group_api_access" {
     description = "create rule group for api access"
     default     = false
 }
+variable "waf_rule_api_access_rule_group" {
+    description = "add rule group to WAF protection pack"
+    default     = false
+}
 variable "waf_rule_group_block" {
     description = "create rulegroup block"
     default     = false
