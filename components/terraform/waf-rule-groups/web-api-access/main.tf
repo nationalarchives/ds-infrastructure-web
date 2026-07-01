@@ -32,7 +32,7 @@ resource "aws_wafv2_rule_group" "web_api_access" {
         }
     }
     rule {
-        name     = "external-application-testing"
+        name     = "check-header-value"
         priority = 1
         action {
             allow {}
@@ -71,7 +71,7 @@ resource "aws_wafv2_rule_group" "web_api_access" {
         }
         visibility_config {
             cloudwatch_metrics_enabled = true
-            metric_name                = "web-external-application-testing"
+            metric_name                = "web-check-header-value"
             sampled_requests_enabled   = true
         }
     }
