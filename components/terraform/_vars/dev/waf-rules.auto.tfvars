@@ -1,14 +1,9 @@
-waf_rule_external_application_testing          = true
-waf_rule_external_application_testing_priority = 0
-
-waf_rule_api_unthrottled_access          = true
-waf_rule_api_unthrottled_access_priority = 1
-
-waf_rule_ip_address_access          = true
-waf_rule_ip_address_access_priority = 2
-
-waf_rule_api_access          = true
-waf_rule_api_access_priority = 4
+waf_rule_emergency_rule_group                    = false
+waf_rule_external_application_testing_rule_group = true
+waf_rule_api_access_rule_group                   = true
+waf_rule_known_ips_rule_group                    = true
+waf_rule_targetted_blocks_rule_group             = false
+waf_rule_rate_limiting_rule_group                = false
 
 waf_rule_exclude_from_sql_injection_managed_rule          = true
 waf_rule_exclude_from_sql_injection_managed_rule_priority = 7

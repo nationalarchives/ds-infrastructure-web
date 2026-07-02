@@ -6,26 +6,25 @@ variable "priority" {
     description = "Priority of the WAF rule. Lower numbers have higher priority."
     type        = number
 }
+variable "rule_group_arn" {}
 
-resource "aws_wafv2_web_acl_rule" "waf_rule_block_bytespider" {
+resource "aws_wafv2_web_acl_rule" "emergency_rule_group" {
     provider = aws.aws-cf-waf
 
     web_acl_arn = var.web_acl_arn
-    name        = "block_bytespider"
+    name        = "emergency-rule-group"
     priority    = var.priority
-    action {
-        block {}
+    override_action {
+        none {}
     }
     statement {
-        label_match_statement {
-            key   = "awswaf:managed:aws:bot-control:bot:name:bytespider"
-            scope = "LABEL"
+        rule_group_reference_statement {
+            arn = var.rule_group_arn
         }
     }
-
     visibility_config {
         cloudwatch_metrics_enabled = true
-        metric_name                = "block_bytespider"
+        metric_name                = "emergency-rule-container"
         sampled_requests_enabled   = true
     }
 }

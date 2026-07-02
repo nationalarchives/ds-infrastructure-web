@@ -1,100 +1,76 @@
-variable "waf_rule_default_action_allow" {}
-variable "site_ips" {}
-variable "waf_tags" {}
-variable "waf_rule_shield_advanced_active" {
-    default = false
+variable "waf_protection_pack_name" {
+    description = "name of the protection pack"
+    default = "web"
 }
-
-variable "waf_rule_api_access" {
-    description = "allow access to API endpoints by matching a specific URI path pattern"
+variable "waf_rule_default_action_allow" {
+    description = "action allowing access by web acl"
     default     = false
 }
-variable "waf_rule_api_access_priority" {
-    description = "priority of the API access rule"
-    default     = 0
-}
 
-variable "waf_rule_external_application_testing" {
-    description = "allow external application testing by matching a specific header value"
+#
+# rule groups
+variable "waf_rule_group_emergency" {
+    description = "create rule group emergency"
     default     = false
 }
-variable "waf_rule_external_application_testing_priority" {
-    description = "priority of the external application testing rule"
-    default     = 0
+variable "waf_rule_emergency_rule_group" {
+    description = "add rule group to WAF protection pack"
+    default     = true
 }
-
-variable "waf_rule_api_unthrottled_access" {
-    description = "allow api unthrottled access by matching a specific header value"
+variable "waf_rule_group_external_service_testing" {
+    description = "add rule group to WAF rules"
+    default     = true
+}
+variable "waf_rule_external_application_testing_rule_group" {
+    description = "add rule group to WAF protection pack"
+    default = true
+}
+variable "waf_rule_group_known_ips" {
+    description = "create rule group known ips"
+    default     = true
+}
+variable "waf_rule_known_ips_rule_group" {
+    description = "add rule group to WAF protection pack"
+    default = true
+}
+variable "waf_rule_group_api_access" {
+    description = "create rule group for api access"
     default     = false
 }
-variable "waf_rule_api_unthrottled_access_priority" {
-    description = "priority of the api unthrottled access rule"
-    default     = 0
-}
-
-variable "waf_rule_geo_restrictions" {
-    description = "block access from specific countries"
+variable "waf_rule_api_access_rule_group" {
+    description = "add rule group to WAF protection pack"
     default     = false
 }
-variable "waf_rule_geo_restriction_priority" {
-    description = "priority of the geo restriction rule"
-    default     = 0
+variable "waf_rule_group_targetted_blocks" {
+    description = "create rulegroup block"
+    default     = false
 }
-variable "waf_rule_geo_restriction_action" {
-    description = "action to take when a request matches the geo restriction rule"
-    type        = string
-    default     = "block"
+variable "waf_rule_targetted_blocks_rule_group" {
+    description = "add rule group to WAF protection pack"
+    default     = false
 }
-variable "waf_rule_geo_restriction_countries" {
-    description = "list of country codes to block access from"
-    type = list(string)
+variable "waf_rule_group_rate_limiting" {
+    description = "create rule group rate limiting"
+    default     = false
+}
+variable "waf_rule_rate_limiting_rule_group" {
+    description = "add rule group to WAF protection pack"
+    default     = false
+}
+
+variable "site_ips" {
+    description = "ip list - allowing oe blocking ips opposite of the default action"
     default = []
 }
-
-variable "waf_rule_ip_address_access" {
-    description = "allow or block access based on IP addresses in an IP set"
-    default     = false
+variable "exception_site_ips" {
+    description = "ip list - exception of the site_ips"
+    default = []
 }
-variable "waf_rule_ip_address_access_priority" {
-    description = "priority of the IP address access rule"
-    default     = 0
+variable "waf_tags" {
+    default = []
 }
-
-variable "waf_rule_rate_limiting" {
-    description = "limit the number of requests from a single IP address over a specified time period"
-    default     = false
-}
-variable "waf_rule_rate_limiting_priority" {
-    description = "priority of the rate limiting rule"
-    default     = 0
-}
-variable "waf_rule_rate_limiting_limit" {
-    description = "the maximum number of requests allowed in the specified evaluation window before the rule action"
-    default     = 0
-}
-variable "waf_rule_rate_limiting_aggregate_key_type" {
-    description = "the method used to aggregate the request counts. Valid values are: IP, FORWARDED_IP, or CUSTOM_KEY."
-    default     = "IP"
-}
-variable "waf_rule_rate_limiting_evaluation_window_sec" {
-    description = "the time period, in seconds, over which the specified rate limit applies. Valid values are between 1 and 3600 seconds."
-    default     = 300
-}
-variable "waf_rule_block_bytespider" {
-    description = "block requests from the ByteSpider bot by matching a specific label"
-    default     = false
-}
-variable "waf_rule_block_bytespider_priority" {
-    description = "priority of the ByteSpider blocking rule"
-    default     = 0
-}
-variable "waf_rule_mozlila_digitalocean" {
-    description = "block requests from the Mozilla DigitalOcean bot by matching a specific label"
-    default     = false
-}
-variable "waf_rule_mozlila_digitalocean_priority" {
-    description = "priority of the Mozilla DigitalOcean blocking rule"
-    default     = 0
+variable "waf_rule_shield_advanced_active" {
+    default = false
 }
 
 #

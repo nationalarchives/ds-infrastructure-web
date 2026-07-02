@@ -5,7 +5,71 @@ resource "aws_wafv2_ip_set" "web_access" {
     description        = "IP set containing allowed or blocked IP addresses, depending on the default action."
     scope              = "CLOUDFRONT"
     ip_address_version = "IPV4"
-    addresses          = []
+    addresses          = var.site_ips
+
+    tags = var.tags
+
+    lifecycle {
+        ignore_changes = [addresses]
+    }
+}
+
+resource "aws_wafv2_ip_set" "web_exceptions" {
+    provider = aws.aws-cf-waf
+
+    name               = "web-exceptions"
+    description        = "IP set containing exception IP addresses, depending on the default action."
+    scope              = "CLOUDFRONT"
+    ip_address_version = "IPV4"
+    addresses          = var.exception_site_ips
+
+    tags = var.tags
+
+    lifecycle {
+        ignore_changes = [addresses]
+    }
+}
+
+resource "aws_wafv2_ip_set" "wp_admins" {
+    provider = aws.aws-cf-waf
+
+    name               = "wp-admins"
+    description        = "IP set containing WordPress admin IP addresses."
+    scope              = "CLOUDFRONT"
+    ip_address_version = "IPV4"
+    addresses          = var.wp_admin_ips
+
+    tags = var.tags
+
+    lifecycle {
+        ignore_changes = [addresses]
+    }
+}
+
+resource "aws_wafv2_ip_set" "wagtail_admins" {
+    provider = aws.aws-cf-waf
+
+    name               = "wagtail-admins"
+    description        = "IP set containing Wagtail admin IP addresses."
+    scope              = "CLOUDFRONT"
+    ip_address_version = "IPV4"
+    addresses          = var.wagtail_admin_ips
+
+    tags = var.tags
+
+    lifecycle {
+        ignore_changes = [addresses]
+    }
+}
+
+resource "aws_wafv2_ip_set" "torchbox_seo_audit" {
+    provider = aws.aws-cf-waf
+
+    name               = "torchbox-seo-audit"
+    description        = "IP set containing Touchbox SEO audit IP addresses."
+    scope              = "CLOUDFRONT"
+    ip_address_version = "IPV4"
+    addresses          = var.torchbox_seo_audit_ips
 
     tags = var.tags
 
@@ -17,7 +81,7 @@ resource "aws_wafv2_ip_set" "web_access" {
 resource "aws_wafv2_web_acl" "web" {
     provider = aws.aws-cf-waf
 
-    name  = "web"
+    name  = var.waf_protection_pack_name
     scope = "CLOUDFRONT"
 
     default_action {
@@ -41,67 +105,4 @@ resource "aws_wafv2_web_acl" "web" {
         ignore_changes = [rule]
     }
     tags = var.tags
-}
-
-resource "aws_wafv2_regex_pattern_set" "web_admin_url_pattern" {
-    provider = aws.aws-cf-waf
-
-    name        = "web-admin-url-pattern"
-    description = "pattern for web admin section"
-    scope       = "CLOUDFRONT"
-
-    regular_expression {
-        regex_string = "^https:\\/\\/wp-admin/*"
-    }
-
-    tags = var.tags
-}
-
-resource "aws_wafv2_ip_set" "wagtail_admins" {
-  provider = aws.aws-cf-waf
-
-  name               = "wagtail-admins"
-  description        = "IP set containing IP addresses allowed to access Wagtail admin."
-  scope              = "CLOUDFRONT"
-  ip_address_version = "IPV4"
-  addresses          = []
-
-  tags = var.tags
-
-  lifecycle {
-    ignore_changes = [addresses]
-  }
-}
-
-resource "aws_wafv2_ip_set" "wp_admins" {
-  provider = aws.aws-cf-waf
-
-  name               = "wp-admins"
-  description        = "IP set containing IP addresses allowed to access WordPress admin."
-  scope              = "CLOUDFRONT"
-  ip_address_version = "IPV4"
-  addresses          = []
-
-  tags = var.tags
-
-  lifecycle {
-    ignore_changes = [addresses]
-  }
-}
-
-resource "aws_wafv2_ip_set" "web_exceptions" {
-  count    = var.environment == "live" ? 1 : 0
-  provider = aws.aws-cf-waf
-
-  name               = "web-exceptions"
-  description        = "IP set containing exception IP addresses for live website access."
-  scope              = "CLOUDFRONT"
-  ip_address_version = "IPV4"
-  addresses          = []
-
-  tags = var.tags
-
-  lifecycle {
-    ignore_changes = [addresses]
-  }
 }

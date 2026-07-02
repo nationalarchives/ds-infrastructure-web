@@ -1,30 +1,9 @@
-waf_rule_external_application_testing          = true
-waf_rule_external_application_testing_priority = 0
-
-waf_rule_rate_limiting                       = false
-waf_rule_rate_limiting_priority              = 5
-waf_rule_rate_limiting_limit                 = 2000
-waf_rule_rate_limiting_aggregate_key_type    = "IP"
-waf_rule_rate_limiting_evaluation_window_sec = 300
-
-waf_rule_exclude_from_sql_injection_managed_rule          = true
-waf_rule_exclude_from_sql_injection_managed_rule_priority = 5
-
-waf_rule_api_unthrottled_access          = false
-waf_rule_api_unthrottled_access_priority = 2
-
-waf_rule_geo_restrictions          = false
-waf_rule_geo_restriction_priority  = 4
-waf_rule_geo_restriction_countries = ["BR", "RU", "CN"]
-
-waf_rule_ip_address_access          = true
-waf_rule_ip_address_access_priority = 1
-
-waf_rule_block_bytespider          = false
-waf_rule_block_bytespider_priority = 6
-
-waf_rule_mozlila_digitalocean          = false
-waf_rule_mozlila_digitalocean_priority = 7
+waf_rule_emergency_rule_group                    = false
+waf_rule_external_application_testing_rule_group = true
+waf_rule_api_access_rule_group                   = true
+waf_rule_known_ips_rule_group                    = true
+waf_rule_targetted_blocks_rule_group             = false
+waf_rule_rate_limiting_rule_group                = false
 
 waf_rule_aws_managed_bot_control_rule_set                  = true
 waf_rule_aws_managed_bot_control_rule_set_priority         = 2
