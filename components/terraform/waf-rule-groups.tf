@@ -28,7 +28,7 @@ module "api_access" {
     count = var.waf_rule_group_api_access ? 1 : 0
     source = "./waf-rule-groups/web-api-access"
 
-    unthrottled_api_header_value = var.waf_rule_api_unthrottled_access == true ? data.aws_ssm_parameter.web_rh_api_unthrottled_key[0].value : ""
+    unthrottled_api_header_value = var.waf_rule_group_api_access == true ? data.aws_ssm_parameter.web_rh_api_access_key[0].value : ""
 }
 
 module "targetted_blocks" {

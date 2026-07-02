@@ -115,9 +115,9 @@ data "aws_ssm_parameter" "web_rh_external_service_testing" {
     count = var.waf_rule_group_external_service_testing == true ? 1 : 0
     name = "/infrastructure/web/waf/request-header/external-service-testing"
 }
-data "aws_ssm_parameter" "web_rh_api_unthrottled_key" {
-    count = var.waf_rule_api_unthrottled_access == true ? 1 : 0
-    name = "/infrastructure/web/waf/request-header/api-unthrottled-key"
+data "aws_ssm_parameter" "web_rh_api_access_key" {
+    count = var.waf_rule_group_api_access == true ? 1 : 0
+    name = "/infrastructure/web/waf/request-header/api-access-key"
 }
 
 # codedeploy
