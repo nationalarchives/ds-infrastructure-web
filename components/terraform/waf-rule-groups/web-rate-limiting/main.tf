@@ -14,7 +14,7 @@ resource "aws_wafv2_rule_group" "web_rate_limiting_rg" {
             name = "include-in-rate-limiting"
         }
         statement {
-            or_statement {
+            and_statement {
                 statement {
                     not_statement {
                         statement {
