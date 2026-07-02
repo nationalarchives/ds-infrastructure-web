@@ -8,7 +8,7 @@ variable "priority" {
 }
 variable "rule_group_arn" {}
 
-resource "aws_wafv2_web_acl_rule" "tagrgetted_blocks_rule_group" {
+resource "aws_wafv2_web_acl_rule" "targetted_blocks_rule_group" {
     provider = aws.aws-cf-waf
 
     web_acl_arn = var.web_acl_arn
