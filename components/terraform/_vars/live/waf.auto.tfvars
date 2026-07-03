@@ -1,4 +1,5 @@
-waf_rule_default_action_allow             = true
+waf_protection_pack_name = "wp-website"
+waf_rule_default_action_allow = true
 
 site_ips = [
     "198.16.66.139/32",
