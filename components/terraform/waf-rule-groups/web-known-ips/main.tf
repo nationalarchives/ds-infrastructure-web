@@ -103,7 +103,7 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
         name     = "wagtail-admin-ips"
         priority = 3
         action {
-            block {}
+            allow {}
         }
         statement {
             and_statement {
@@ -143,7 +143,7 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
         name     = "wp-admin-ips"
         priority = 4
         action {
-            block {}
+            allow {}
         }
         statement {
             and_statement {
