@@ -84,9 +84,6 @@ module "waf_rule_rate_limiting_rule_group" {
     priority       = 220
     rule_group_arn = module.rate_limiting[0].web_rate_limiting_rule_group_arn
 }
-#
-# Custom Rules
-# ------------
 
 #
 # AWS Managed Rules
