@@ -21,7 +21,7 @@ variable "waf_rule_group_external_service_testing" {
     description = "add rule group to WAF rules"
     default     = false
 }
-variable "waf_rule_external_application_testing_rule_group" {
+variable "waf_rule_external_service_testing_rule_group" {
     description = "add rule group to WAF protection pack"
     default = false
 }
