@@ -1,17 +1,17 @@
 module "emergency_group" {
-    count  = var.waf_rule_group_emergency ? 1 : 0
+    count  = var.waf_rule_group_emergency == true ? 1 : 0
     source = "./waf-rule-groups/web-emergency"
 }
 
 module "external_service_testing" {
-    count  = var.waf_rule_group_external_service_testing ? 1 : 0
+    count  = var.waf_rule_group_external_service_testing == true ? 1 : 0
     source = "./waf-rule-groups/web-external-service-testing"
 
     x_external_access_key = var.waf_rule_group_external_service_testing == true ? data.aws_ssm_parameter.web_rh_external_service_testing[0].value : ""
 }
 
 module "known_ips" {
-    count  = var.waf_rule_group_known_ips ? 1 : 0
+    count  = var.waf_rule_group_known_ips == true ? 1 : 0
     source = "./waf-rule-groups/web-known-ips"
 
     environment  = var.environment
@@ -25,18 +25,18 @@ module "known_ips" {
 }
 
 module "api_access" {
-    count = var.waf_rule_group_api_access ? 1 : 0
+    count = var.waf_rule_group_api_access == true ? 1 : 0
     source = "./waf-rule-groups/web-api-access"
 
-    unthrottled_api_header_value = var.waf_rule_group_api_access == true ? data.aws_ssm_parameter.web_rh_api_access_key[0].value : ""
+    api_access_header_value = var.waf_rule_group_api_access == true ? data.aws_ssm_parameter.web_rh_api_access_key[0].value : ""
 }
 
 module "targetted_blocks" {
-    count  = var.waf_rule_group_targetted_blocks ? 1 : 0
+    count  = var.waf_rule_group_targetted_blocks == true ? 1 : 0
     source = "./waf-rule-groups/web-targetted-blocks"
 }
 
 module "rate_limiting" {
-    count  = var.waf_rule_group_rate_limiting ? 1 : 0
+    count  = var.waf_rule_group_rate_limiting == true ? 1 : 0
     source = "./waf-rule-groups/web-rate-limiting"
 }

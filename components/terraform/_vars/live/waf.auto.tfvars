@@ -1,4 +1,4 @@
-waf_protection_pack_name = "wp-website"
+waf_protection_pack_name = "web"
 waf_rule_default_action_allow = true
 
 site_ips = [

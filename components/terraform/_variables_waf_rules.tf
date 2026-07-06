@@ -15,23 +15,23 @@ variable "waf_rule_group_emergency" {
 }
 variable "waf_rule_emergency_rule_group" {
     description = "add rule group to WAF protection pack"
-    default     = true
+    default     = false
 }
 variable "waf_rule_group_external_service_testing" {
     description = "add rule group to WAF rules"
-    default     = true
+    default     = false
 }
-variable "waf_rule_external_application_testing_rule_group" {
+variable "waf_rule_external_service_testing_rule_group" {
     description = "add rule group to WAF protection pack"
-    default = true
+    default = false
 }
 variable "waf_rule_group_known_ips" {
     description = "create rule group known ips"
-    default     = true
+    default     = false
 }
 variable "waf_rule_known_ips_rule_group" {
     description = "add rule group to WAF protection pack"
-    default = true
+    default = false
 }
 variable "waf_rule_group_api_access" {
     description = "create rule group for api access"

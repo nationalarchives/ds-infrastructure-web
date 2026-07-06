@@ -1,4 +1,4 @@
-variable "unthrottled_api_header_value" {}
+variable "api_access_header_value" {}
 
 resource "aws_wafv2_rule_group" "web_api_access" {
     name     = "web-api-access"
@@ -55,7 +55,7 @@ resource "aws_wafv2_rule_group" "web_api_access" {
                 statement {
                     byte_match_statement {
                         positional_constraint = "EXACTLY"
-                        search_string         = var.unthrottled_api_header_value
+                        search_string         = var.api_access_header_value
                         field_to_match {
                             single_header {
                                 name = "x-api-unthrottled"

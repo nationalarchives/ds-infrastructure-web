@@ -33,7 +33,7 @@ module "waf_rule_external_service_testing_rule_group" {
     providers = {
         aws.aws-cf-waf = aws.aws-cf-waf
     }
-    count  = var.waf_rule_external_application_testing_rule_group == true ? 1 : 0
+    count  = var.waf_rule_external_service_testing_rule_group == true ? 1 : 0
     source = "./waf-rules/external-service-testing-rule-group"
 
     web_acl_arn    = module.waf.web_acl_arn
@@ -84,9 +84,6 @@ module "waf_rule_rate_limiting_rule_group" {
     priority       = 220
     rule_group_arn = module.rate_limiting[0].web_rate_limiting_rule_group_arn
 }
-#
-# Custom Rules
-# ------------
 
 #
 # AWS Managed Rules

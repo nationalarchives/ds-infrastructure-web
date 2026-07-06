@@ -1,12 +1,23 @@
-waf_rule_emergency_rule_group                    = true
-waf_rule_external_application_testing_rule_group = true
-waf_rule_api_access_rule_group                   = true
-waf_rule_known_ips_rule_group                    = true
-waf_rule_targetted_blocks_rule_group             = true
-waf_rule_rate_limiting_rule_group                = true
+waf_rule_emergency_rule_group = true
+waf_rule_group_emergency      = true
+
+waf_rule_external_service_testing_rule_group = true
+waf_rule_group_external_service_testing          = true
+
+waf_rule_known_ips_rule_group = true
+waf_rule_group_known_ips      = true
+
+waf_rule_api_access_rule_group = true
+waf_rule_group_api_access      = true
+
+waf_rule_targetted_blocks_rule_group = true
+waf_rule_group_targetted_blocks      = true
+
+waf_rule_rate_limiting_rule_group = true
+waf_rule_group_rate_limiting      = true
 
 waf_rule_aws_managed_bot_control_rule_set                  = true
-waf_rule_aws_managed_bot_control_rule_set_priority         = 800
+waf_rule_aws_managed_bot_control_rule_set_priority         = 801
 waf_rule_aws_managed_bot_control_rule_set_overwrite_action = "none"
 waf_rule_aws_managed_bot_control_rule_set_inspection_level = "COMMON"
 waf_rule_aws_managed_bot_control_rule_set_action_overrides = [
