@@ -17,7 +17,7 @@ waf_rule_rate_limiting_rule_group = true
 waf_rule_group_rate_limiting      = true
 
 waf_rule_aws_managed_bot_control_rule_set                  = true
-waf_rule_aws_managed_bot_control_rule_set_priority         = 800
+waf_rule_aws_managed_bot_control_rule_set_priority         = 801
 waf_rule_aws_managed_bot_control_rule_set_overwrite_action = "none"
 waf_rule_aws_managed_bot_control_rule_set_inspection_level = "COMMON"
 waf_rule_aws_managed_bot_control_rule_set_action_overrides = [
