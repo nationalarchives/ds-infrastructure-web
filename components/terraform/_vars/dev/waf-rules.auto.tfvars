@@ -16,9 +16,6 @@ waf_rule_group_targetted_blocks      = false
 waf_rule_rate_limiting_rule_group = false
 waf_rule_group_rate_limiting      = false
 
-waf_rule_exclude_from_sql_injection_managed_rule          = true
-waf_rule_exclude_from_sql_injection_managed_rule_priority = 800
-
 waf_rule_aws_managed_bot_control_rule_set                  = true
 waf_rule_aws_managed_bot_control_rule_set_priority         = 500
 waf_rule_aws_managed_bot_control_rule_set_overwrite_action = "count"
@@ -136,6 +133,8 @@ waf_rule_managed_rules_wordpress_rule_set_priority         = 700
 waf_rule_managed_rules_wordpress_rule_set_overwrite_action = "none"
 waf_rule_managed_rules_wordpress_rule_set_action_overrides = []
 
+waf_rule_exclude_from_sql_injection_managed_rule          = true
+waf_rule_exclude_from_sql_injection_managed_rule_priority = 800
 waf_rule_managed_rules_sqli_rule_set                  = true
 waf_rule_managed_rules_sqli_rule_set_priority         = 890
 waf_rule_managed_rules_sqli_rule_set_overwrite_action = "none"
