@@ -1,7 +1,6 @@
 import {
   to = module.emergency_group[0].aws_wafv2_rule_group.web_emergency_rg
-  id = "df52d9dd-ec4a-4c18-8b25-f414aa0452fc/web-emergency-rg/CLOUDFRONT"
-    region = "us-east-1"
+  id = "df52d9dd-ec4a-4c18-8b25-f414aa0452fc/web-emergency-rg/Global"
 }
 
 module "emergency_group" {
