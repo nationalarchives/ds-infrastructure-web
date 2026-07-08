@@ -18,12 +18,13 @@ resource "aws_launch_template" "web_reverse_proxy" {
     ]
 
     user_data = base64encode(templatefile("${path.module}/scripts/userdata.sh", {
-        mount_target         = var.efs_dns_name,
-        deployment_s3_bucket = var.deployment_s3_bucket,
-        nginx_folder_s3_key  = var.folder_s3_key,
-        web_wagtail_efs_mount_dir = var.web_wagtail_efs_mount_dir,
-        mount_dir              = var.efs_mount_dir,
-        service               = var.service
+        deployment_s3_bucket          = var.deployment_s3_bucket,
+        nginx_folder_s3_key           = var.folder_s3_key,
+        mount_target                  = var.mount_target,
+        web_reverse_proxy_wagtail_efs_mount_dir     = var.web_reverse_proxy_wagtail_efs_mount_dir,
+        mount_dir                     = var.efs_mount_dir,
+        mount_wagtail_media            = var.mount_wagtail_media,
+        service                       = var.service
     }))
 
     block_device_mappings {

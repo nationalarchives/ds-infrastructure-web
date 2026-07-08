@@ -38,9 +38,9 @@ variable "folder_s3_key" {}
 variable "asg_tags" {}
 variable "tags" {}
 
-variable "efs_dns_name" {}
+#variable "efs_dns_name" {}
 variable "web_reverse_proxy_sg_id" {}
-variable "web_wagtail_efs_mount_dir" {}
+variable "web_reverse_proxy_wagtail_efs_mount_dir" {}
 variable "efs_mount_dir" {}
 variable "service" {}
 variable "lb_sg_id" {}
@@ -54,3 +54,5 @@ variable "web_reverse_proxy_lb_security_group_id" {}
 
 variable "web_reverse_proxy_role_name" {}
 variable "web_reverse_proxy_instance_profile_arn" {}
+variable "mount_target" {}
+variable "mount_wagtail_media" {}

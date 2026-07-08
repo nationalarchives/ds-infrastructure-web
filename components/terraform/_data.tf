@@ -125,3 +125,8 @@ data "aws_ssm_parameter" "web_rh_api_access_key" {
 data "aws_ssm_parameter" "s3_deployment_source_arn" {
     name = "/infrastructure/s3/deployment_source_arn"
 }
+
+########
+data "aws_ssm_parameter" "website_efs_reverse_proxy_dns_name" {
+  name = "/infrastructure/website-efs-reverse-proxy/dns-name"
+}

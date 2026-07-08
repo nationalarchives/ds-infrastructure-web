@@ -19,7 +19,7 @@ resource "aws_cloudfront_distribution" "web" {
     }
 }
 
-    http_version = "http3"
+    http_version = "http1.1"
     price_class = lookup(local.cloudfront_distribution, "price_class", "")
     enabled = lookup(local.cloudfront_distribution, "enabled", "")
 
