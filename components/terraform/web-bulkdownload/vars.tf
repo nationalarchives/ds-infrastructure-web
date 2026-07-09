@@ -44,3 +44,5 @@ variable "enable_monitoring" {}
 variable "web_bulkdownload_sg_id" {}
 variable "web_bulkdownload_instance_profile_arn" {}
 variable "web_bulkdownload_role_name" {}
+
+variable "environment" {}

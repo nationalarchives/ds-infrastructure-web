@@ -41,7 +41,7 @@ module "web_bulkdownload" {
     instance_type = var.web_bulkdownload_instance_type
     key_name = "web-frontend-${var.environment}-eu-west-2"
     root_block_device_size = "100"
-
+    environment = var.environment
     auto_switch_off = var.web_bulkdownload_auto_switch_off
     auto_switch_on = var.web_bulkdownload_auto_switch_on
     deployment_group = var.web_bulkdownload_deployment_group

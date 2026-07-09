@@ -235,3 +235,16 @@ resource "aws_iam_policy" "ec2_access" {
   description = "ec2 access for web-request-service-record"
   policy      = data.aws_iam_policy_document.ec2_access.json
 }
+
+
+resource "aws_iam_policy" "web_bulkdownload_s3_access" {
+  name        = "web-bulkdownload-s3-access"
+  description = "Allow web bulkdownload EC2 instances access to downloads S3 bucket"
+
+  policy = templatefile(
+    "${path.module}/templates/web-bulkdownload-s3-access.json",
+    {
+      environment = var.environment
+    }
+  )
+}

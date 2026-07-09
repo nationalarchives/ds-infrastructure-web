@@ -53,3 +53,7 @@ output "web_request_service_record_ses_access_policy_arn" {
 output "web_request_service_record_ec2_access_policy_arn" {
   value = aws_iam_policy.ec2_access.arn
 }
+
+output "web_bulkdownload_s3_access_policy_arn" {
+  value = aws_iam_policy.web_bulkdownload_s3_access.arn
+}
