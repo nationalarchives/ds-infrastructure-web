@@ -16,6 +16,7 @@ variable "web_reverse_proxy_deployment_group" {}
 variable "web_reverse_proxy_patch_group" {}
 variable "web_reverse_proxy_deployment_s3_bucket" {}
 variable "web_reverse_proxy_folder_s3_key" {}
+variable "web_reverse_proxy_wagtail_efs_mount_dir" {}
 variable "nginx_folder_s3_key" {}
 variable "vpc_cidr" {}
 variable "intersite_vpc_and_clientvpn_cidr" {}
@@ -42,9 +43,11 @@ module "web_reverse_proxy" {
     web_reverse_proxy_role_name            = module.roles.web_reverse_proxy_role_name
     web_reverse_proxy_instance_profile_arn = module.roles.web_reverse_proxy_instance_profile_arn
     service = var.service
-    efs_dns_name = module.media_efs.media_efs_dns_name
+    #efs_dns_name = module.media_efs.media_efs_dns_name
     efs_mount_dir = var.efs_mount_dir
-    web_wagtail_efs_mount_dir = var.web_wagtail_efs_mount_dir  
+    web_reverse_proxy_wagtail_efs_mount_dir = var.web_reverse_proxy_wagtail_efs_mount_dir  
+    mount_target = data.aws_ssm_parameter.website_efs_reverse_proxy_dns_name.value
+    mount_wagtail_media = data.aws_ssm_parameter.wagtail_efs_media_dns_name.value
     lb_listener_arn = module.load-balancer.lb_listener_arn
     x_target_header = "web-reverse-proxy"
     host_header = "web-reverse-proxy.${var.environment}.local"

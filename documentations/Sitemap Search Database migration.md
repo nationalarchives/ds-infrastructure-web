@@ -24,7 +24,7 @@ This document outlines the migration process for the Sitemap Search database.
 sudo aws s3 cp s3://<path>/<filename>(sitemap_urls.sql) /tmp/
 ```
 
-- Verify whether the dump file is downlaoded
+- Verify whether the dump file is downloaded
 
 ```bash
 ls -lh /tmp/

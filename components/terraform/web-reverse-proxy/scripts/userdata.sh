@@ -3,33 +3,39 @@
 # Update yum
 sudo yum update -y
 
-
 # Start nginx
 sudo systemctl enable nginx
 sudo systemctl start nginx
 
 sudo yum install -y amazon-efs-utils nfs-utils
 
-
-# Mount EFS (Wagtail Media)
-sudo mkdir -p ${web_wagtail_efs_mount_dir}
-sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 ${mount_target}:/ ${web_wagtail_efs_mount_dir}
-sudo chmod 777 ${web_wagtail_efs_mount_dir}
-sudo echo "${mount_target}:/ ${web_wagtail_efs_mount_dir} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,fsc,_netdev 0 0" >> /etc/fstab
-
+# Mount EFS
 sudo mkdir -p ${mount_dir}
+sudo mkdir -p ${web_reverse_proxy_wagtail_efs_mount_dir}
 sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 ${mount_target}:/ ${mount_dir}
+sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 ${mount_wagtail_media}:/ ${web_reverse_proxy_wagtail_efs_mount_dir}
 sudo chmod 777 ${mount_dir}
+sudo chmod 777 ${web_reverse_proxy_wagtail_efs_mount_dir}
+cd ${mount_dir}
+sudo chmod go+rw .
+cd ${web_reverse_proxy_wagtail_efs_mount_dir}
+sudo chmod go+rw .
+cd /
+
+# Auto mount EFS storage on reboot
 sudo echo "${mount_target}:/ ${mount_dir} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,fsc,_netdev 0 0" >> /etc/fstab
+# mount EFS wagtail storage on reboot
+sudo echo "${mount_wagtail_media}:/ ${web_reverse_proxy_wagtail_efs_mount_dir} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,fsc,_netdev 0 0" >> /etc/fstab
 
 # Link directory to EFS mount directory
-sudo mkdir -p /var/nationalarchives.gov.uk
-sudo ln -snf ${web_wagtail_efs_mount_dir} /var/nationalarchives.gov.uk/media
+sudo ln -snf ${mount_dir} /var/nationalarchives.gov.uk
+sudo ln -snf ${web_reverse_proxy_wagtail_efs_mount_dir} /var/nationalarchives.gov.uk/media
 
 # Copy configuration files and scripts
 sudo aws s3 cp s3://${deployment_s3_bucket}/${service}/${nginx_folder_s3_key}/ /etc/nginx/ --recursive --exclude "*" --include "*.conf" --include "mime.types"
 sudo aws s3 cp s3://${deployment_s3_bucket}/${service}/${nginx_folder_s3_key}/update_nginx_confs.sh ~/update_nginx_confs.sh
 
+# Restart nginx to reload new config file
 sudo systemctl restart nginx
 
 sudo mv ~/update_nginx_confs.sh /usr/local/sbin/update_nginx_confs.sh

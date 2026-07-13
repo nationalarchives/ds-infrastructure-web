@@ -58,6 +58,12 @@ resource "aws_iam_role" "web_reverse_proxy_role" {
     assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
+# Web Bulkdownload Role
+resource "aws_iam_role" "web_bulkdownload_role" {
+    name = "web-bulkdownload-role"
+    assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
+}
+
 # Request Service Record Role - MoD FoI
 resource "aws_iam_role" "web_request_service_record_role" {
   name = "web-request-service-record-role"
@@ -189,6 +195,12 @@ resource "aws_iam_instance_profile" "web_search_profile" {
 resource "aws_iam_instance_profile" "web_catalogue_profile" {
     name = "web-catalogue-profile"
     role = aws_iam_role.web_catalogue_role.name
+}
+
+## Instance Profile for Web Bulkdownload Role
+resource "aws_iam_instance_profile" "web_bulkdownload_profile" {
+  name = "web-bulkdownload-profile"
+  role = aws_iam_role.web_bulkdownload_role.name
 }
 
 #---------------------------------------------------------------------------
@@ -554,3 +566,42 @@ resource "aws_iam_role_policy_attachment" "codedeploy_web_lambda_sync_s3_to_efs_
 #     role       = aws_iam_role.codedeploy_web_service_role.name
 #     policy_arn = var.s3_deployment_source_static_content_read_arn
 # }
+
+##-------------------------------------------------------------  
+####### Attach Policies to Web Bulk Download Role
+##-------------------------------------------------------------
+
+resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_1" {
+  role       = aws_iam_role.web_bulkdownload_role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_2" {
+  role       = aws_iam_role.web_bulkdownload_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_3" {
+  role       = aws_iam_role.web_bulkdownload_role.name
+  policy_arn = var.org_level_logging_arn
+}
+
+resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_4" {
+  role       = aws_iam_role.web_bulkdownload_role.name
+  policy_arn = var.deployment_s3_policy
+}
+
+resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_5" {
+  role       = aws_iam_role.web_bulkdownload_role.name
+  policy_arn = var.application_parameter_store_policy_arn
+}
+
+resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_6" {
+  role       = aws_iam_role.web_bulkdownload_role.name
+  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
+}
+
+resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_7" {
+  role       = aws_iam_role.web_bulkdownload_role.name
+  policy_arn = var.web_bulkdownload_s3_access_policy_arn
+}

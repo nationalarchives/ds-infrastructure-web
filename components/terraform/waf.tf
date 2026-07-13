@@ -4,8 +4,10 @@ module "waf" {
     }
     source = "./waf"
 
-    site_ips = var.site_ips
+    site_ips           = var.site_ips
+    exception_site_ips = var.exception_site_ips
 
+    waf_protection_pack_name        = var.waf_protection_pack_name
     waf_rule_default_action_allow   = var.waf_rule_default_action_allow
     waf_rule_shield_advanced_active = var.waf_rule_shield_advanced_active
 
@@ -14,97 +16,73 @@ module "waf" {
 }
 
 #
-# Custom Rules
-# ------------
-module "waf_rule_api_access" {
+# rule groups in protection pack
+# -----------
+module "waf_rule_emergency_rule_group" {
     providers = {
         aws.aws-cf-waf = aws.aws-cf-waf
     }
-    count  = var.waf_rule_api_access == true ? 1 : 0
-    source = "./waf-rules/api-access"
+    count  = var.waf_rule_emergency_rule_group == true ? 1 : 0
+    source = "./waf-rules/emergency-rule-group"
 
-    web_acl_arn = module.waf.web_acl_arn
-    priority    = var.waf_rule_api_access_priority
+    web_acl_arn    = module.waf.web_acl_arn
+    priority       = 100
+    rule_group_arn = module.emergency_group[0].web_emergency_rule_group_arn
 }
-
-module "external_application_testing" {
+module "waf_rule_external_service_testing_rule_group" {
     providers = {
         aws.aws-cf-waf = aws.aws-cf-waf
     }
-    count  = var.waf_rule_external_application_testing == true ? 1 : 0
-    source = "./waf-rules/external-application-testing"
+    count  = var.waf_rule_external_service_testing_rule_group == true ? 1 : 0
+    source = "./waf-rules/external-service-testing-rule-group"
 
-    web_acl_arn  = module.waf.web_acl_arn
-    header_value = var.waf_rule_external_application_testing == true ? data.aws_ssm_parameter.web_rh_external_application_testing[0].value : ""
-    priority     = var.waf_rule_external_application_testing_priority
+    web_acl_arn    = module.waf.web_acl_arn
+    priority       = 180
+    rule_group_arn = module.external_service_testing[0].web_external_service_testing_rule_group_arn
 }
-module "waf_rule_api_unthrottled_access" {
+module "waf_rule_api_access_rule_group" {
     providers = {
         aws.aws-cf-waf = aws.aws-cf-waf
     }
-    count  = var.waf_rule_api_unthrottled_access == true ? 1 : 0
-    source = "./waf-rules/api-unthrottled-access"
+    count  = var.waf_rule_api_access_rule_group == true ? 1 : 0
+    source = "./waf-rules/api-access-rule-group"
 
-    web_acl_arn  = module.waf.web_acl_arn
-    header_value = var.waf_rule_api_unthrottled_access == true ? data.aws_ssm_parameter.web_rh_api_unthrottled_key[0].value : ""
-    priority     = var.waf_rule_api_unthrottled_access_priority
+    web_acl_arn    = module.waf.web_acl_arn
+    priority       = 190
+    rule_group_arn = module.api_access[0].web_api_access_rule_group_arn
 }
-module "waf_rule_geo_restriction" {
+module "waf_rule_known_ips_rule_group" {
     providers = {
         aws.aws-cf-waf = aws.aws-cf-waf
     }
-    count  = var.waf_rule_geo_restrictions == true ? 1 : 0
-    source = "./waf-rules/geo-restrictions"
+    count  = var.waf_rule_known_ips_rule_group == true ? 1 : 0
+    source = "./waf-rules/known-ips-rule-group"
 
-    web_acl_arn = module.waf.web_acl_arn
-    priority    = var.waf_rule_geo_restriction_priority
-    action      = "${var.waf_rule_geo_restriction_action}"
-    countries   = var.waf_rule_geo_restriction_countries
+    web_acl_arn    = module.waf.web_acl_arn
+    priority       = 200
+    rule_group_arn = module.known_ips[0].web_known_ips_group_arn
 }
-module "waf_rule_ip_address_access" {
+module "waf_rule_targetted_blocks_rule_group" {
     providers = {
         aws.aws-cf-waf = aws.aws-cf-waf
     }
-    count  = var.waf_rule_ip_address_access == true ? 1 : 0
-    source = "./waf-rules/ip-address-access"
+    count  = var.waf_rule_targetted_blocks_rule_group == true ? 1 : 0
+    source = "./waf-rules/targetted-blocks-rule-group"
 
-    web_acl_arn                   = module.waf.web_acl_arn
-    priority                      = var.waf_rule_ip_address_access_priority
-    waf_rule_default_action_allow = var.waf_rule_default_action_allow
-    access_ip_set_arn             = module.waf.access_ip_set_arn
+    web_acl_arn    = module.waf.web_acl_arn
+    priority       = 210
+    rule_group_arn = module.targetted_blocks[0].web_targetted_blocks_rule_group_arn
 }
-module "waf_rule_rate_limiting" {
+module "waf_rule_rate_limiting_rule_group" {
     providers = {
         aws.aws-cf-waf = aws.aws-cf-waf
     }
-    count  = var.waf_rule_rate_limiting == true ? 1 : 0
-    source = "./waf-rules/rate-limiting"
+    count  = var.waf_rule_rate_limiting_rule_group == true ? 1 : 0
+    source = "./waf-rules/rate-limiting-rule-group"
 
-    web_acl_arn           = module.waf.web_acl_arn
-    priority              = var.waf_rule_rate_limiting_priority
-    limit                 = var.waf_rule_rate_limiting_limit
-    aggregate_key_type    = var.waf_rule_rate_limiting_aggregate_key_type
-    evaluation_window_sec = var.waf_rule_rate_limiting_evaluation_window_sec
-}
-module "waf_rule_block_bytespider" {
-    providers = {
-        aws.aws-cf-waf = aws.aws-cf-waf
-    }
-    count  = var.waf_rule_block_bytespider == true ? 1 : 0
-    source = "./waf-rules/block_bytespider"
-
-    web_acl_arn = module.waf.web_acl_arn
-    priority    = var.waf_rule_block_bytespider_priority
-}
-module "waf_rule_mozlila_digitalocean" {
-    providers = {
-        aws.aws-cf-waf = aws.aws-cf-waf
-    }
-    count  = var.waf_rule_mozlila_digitalocean == true ? 1 : 0
-    source = "./waf-rules/mozlila-digitalocean"
-
-    web_acl_arn = module.waf.web_acl_arn
-    priority    = var.waf_rule_mozlila_digitalocean_priority
+    web_acl_arn    = module.waf.web_acl_arn
+    priority       = 220
+    rule_group_arn = module.rate_limiting[0].web_rate_limiting_rule_group_arn
 }
 
 #

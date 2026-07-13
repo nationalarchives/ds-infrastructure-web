@@ -1,20 +1,23 @@
-waf_rule_external_application_testing          = true
-waf_rule_external_application_testing_priority = 0
+waf_rule_emergency_rule_group = false
+waf_rule_group_emergency      = false
 
-waf_rule_api_unthrottled_access          = true
-waf_rule_api_unthrottled_access_priority = 1
+waf_rule_external_service_testing_rule_group = true
+waf_rule_group_external_service_testing      = true
 
-waf_rule_ip_address_access          = true
-waf_rule_ip_address_access_priority = 2
+waf_rule_known_ips_rule_group = true
+waf_rule_group_known_ips      = true
 
-waf_rule_api_access          = true
-waf_rule_api_access_priority = 4
+waf_rule_api_access_rule_group = true
+waf_rule_group_api_access      = true
 
-waf_rule_exclude_from_sql_injection_managed_rule          = true
-waf_rule_exclude_from_sql_injection_managed_rule_priority = 7
+waf_rule_targetted_blocks_rule_group = false
+waf_rule_group_targetted_blocks      = false
+
+waf_rule_rate_limiting_rule_group = false
+waf_rule_group_rate_limiting      = false
 
 waf_rule_aws_managed_bot_control_rule_set                  = true
-waf_rule_aws_managed_bot_control_rule_set_priority         = 3
+waf_rule_aws_managed_bot_control_rule_set_priority         = 500
 waf_rule_aws_managed_bot_control_rule_set_overwrite_action = "count"
 waf_rule_aws_managed_bot_control_rule_set_inspection_level = "COMMON"
 waf_rule_aws_managed_bot_control_rule_set_action_overrides = [
@@ -121,17 +124,19 @@ waf_rule_aws_managed_bot_control_rule_set_action_overrides = [
 ]
 
 waf_rule_managed_rules_known_bad_inputs                  = true
-waf_rule_managed_rules_known_bad_inputs_priority         = 5
+waf_rule_managed_rules_known_bad_inputs_priority         = 600
 waf_rule_managed_rules_known_bad_inputs_overwrite_action = "none"
 waf_rule_managed_rules_known_bad_inputs_action_overrides = []
 
 waf_rule_managed_rules_wordpress_rule_set                  = true
-waf_rule_managed_rules_wordpress_rule_set_priority         = 6
+waf_rule_managed_rules_wordpress_rule_set_priority         = 700
 waf_rule_managed_rules_wordpress_rule_set_overwrite_action = "none"
 waf_rule_managed_rules_wordpress_rule_set_action_overrides = []
 
+waf_rule_exclude_from_sql_injection_managed_rule          = true
+waf_rule_exclude_from_sql_injection_managed_rule_priority = 800
 waf_rule_managed_rules_sqli_rule_set                  = true
-waf_rule_managed_rules_sqli_rule_set_priority         = 8
+waf_rule_managed_rules_sqli_rule_set_priority         = 890
 waf_rule_managed_rules_sqli_rule_set_overwrite_action = "none"
 waf_rule_managed_rules_sqli_rule_set_action_overrides = [
     {

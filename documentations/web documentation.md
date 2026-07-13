@@ -421,3 +421,23 @@ terraform apply \
 
 - Verify backup configuration in AWS Backup.
 - Check IAM permissions for AWS Backup.
+
+
+
+**Useful commands**
+
+- Check version of nginx - `nginx -v`
+- More details of nginx - `nginx -V`
+- Location of nginx - `which nginx`
+- Check mounts/disk usage - `df -h`
+- EFS mount - `sudo mount -t nfs4 -o nfsvers=4.1 <efs-dns-name>:/ /path/`
+- Normal unmount - `sudo umount /path/`
+- If target is busy - `sudo umount -l /path/`
+- Symlink - `sudo ln -s <target> <link_name>` (Eg: `sudo ln -s /mnt/efs /var/nationalarchives.gov.uk`)
+- Check symlink - `ls -l /var/nationalarchives.gov.uk`
+- Find where a symlink points - `readlink /var/nationalarchives.gov.uk`
+- remove symlink - `sudo rm /var/nationalarchives.gov.uk` or `sudo unlink /var/nationalarchives.gov.uk`
+- update/change a symlink - `sudo ln -sfn /new/path /old/path/`
+- Check CPU/process uage - `top`
+
+
