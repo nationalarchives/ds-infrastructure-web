@@ -17,6 +17,6 @@
   "_SENTRY_DSN": "https://3e24f4f474026e113e6dcdeccf2abded@o1230303.ingest.us.sentry.io/4507458864087040",
   "WAGTAIL_API_URL": "http://web-wagtail.staging.local/api/v2",
   "ENRICHMENT_TIMING_ENABLED": "true",
-  "ENABLE_PARALLEL_API_CALLS": "false",
+  "ENABLE_PARALLEL_API_CALLS": "true",
   "CACHE_REDIS_URL": "redis://platform-redis.staging.local:6379"
 }
