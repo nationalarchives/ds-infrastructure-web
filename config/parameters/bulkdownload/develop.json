@@ -3,9 +3,9 @@
   "ENVIRONMENT_NAME": "develop",
   "CONFIG": "config.Develop",
   "COOKIE_DOMAIN": ".nationalarchives.gov.uk",
-  "LOG_LEVEL": "debug",
-  "S3_EXPORT_BUCKET": "ds-dev-downloads",
   "S3_SOURCE_BUCKET_MERLIN": "ds-dev-digital-files",
   "S3_SOURCE_PREFIX_MERLIN": "66/ES/38",
-  "S3_HOST_URL": "https://merlin.nationalarchives.gov.uk"
+  "S3_EXPORT_BUCKET": "ds-dev-downloads",
+  "S3_EXPORT_BUCKET_HOST_URL": "https://dev-download.nationalarchives.gov.uk",
+  "LOG_LEVEL": "debug"
 }

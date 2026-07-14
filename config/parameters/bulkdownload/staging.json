@@ -3,8 +3,8 @@
   "ENVIRONMENT_NAME": "staging",  
   "CONFIG": "config.Staging",
   "COOKIE_DOMAIN": ".nationalarchives.gov.uk",
-  "S3_EXPORT_BUCKET": "ds-staging-downloads",
   "S3_SOURCE_BUCKET_MERLIN": "ds-staging-digital-files",
   "S3_SOURCE_PREFIX_MERLIN": "66/ES/38",
-  "S3_HOST_URL": "https://merlin.nationalarchives.gov.uk"
+  "S3_EXPORT_BUCKET": "ds-staging-downloads",
+  "S3_EXPORT_BUCKET_HOST_URL": "https://staging-download.nationalarchives.gov.uk"
 }
