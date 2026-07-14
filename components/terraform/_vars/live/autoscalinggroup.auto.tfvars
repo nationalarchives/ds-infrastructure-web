@@ -109,7 +109,7 @@ web_forms_asg_health_check_type         = "EC2"
 web_reverse_proxy_patch_group      = "web-reverse-proxy-patchgroup"
 web_reverse_proxy_deployment_group = "web-nginx-rp"
 
-web_reverse_proxy_asg_max_size                  = 3
+web_reverse_proxy_asg_max_size                  = 2
 web_reverse_proxy_asg_min_size                  = 2
 web_reverse_proxy_asg_desired_capacity          = 2
 web_reverse_proxy_asg_health_check_grace_period = 150
