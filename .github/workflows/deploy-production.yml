@@ -53,7 +53,7 @@ jobs:
           MSG_MINIMAL: true
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
-          SLACK_MESSAGE: "👀 Release **[v${{ needs.release-variables.outputs.version }}](${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ needs.release-variables.outputs.version }})** needs approval to deploy to production. [Review the workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+          SLACK_MESSAGE: "@here 👀 Release **[v${{ needs.release-variables.outputs.version }}](${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ needs.release-variables.outputs.version }})** needs approval to deploy to production. [Review the workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
 
   prepare:
     runs-on: ubuntu-latest
