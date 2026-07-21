@@ -249,6 +249,9 @@ resource "aws_iam_policy" "web_bulkdownload_s3_access" {
   )
 }
 
+##########################################
+# IAM Policy: Web Forms SES Access
+##########################################
 resource "aws_iam_policy" "web_forms_ses_policy" {
   name        = "web-forms-ses-policy"
   description = "Allow web forms service to send emails through Amazon SES"
@@ -256,4 +259,31 @@ resource "aws_iam_policy" "web_forms_ses_policy" {
   policy = templatefile("${path.module}/templates/web-forms-ses-policy.json", {
     account_id = var.account_id
   })
+}
+
+##########################################
+# IAM Policy: Wagtail Cron Execution
+##########################################
+resource "aws_iam_policy" "lambda_wagtail_cron_trigger_policy" {
+  name        = "WagtailCronTriggerLambdaPolicy"
+  description = "Permissions for Wagtail Cron Trigger Lambda"
+
+  policy = templatefile(
+    "${path.module}/templates/wagtail-cron-trigger-policy.json",
+    {
+      account_id = var.account_id
+    }
+  )
+}
+
+##########################################
+# IAM Policy: Lambda SSM Execution
+##########################################
+resource "aws_iam_policy" "lambda_ssm_execution" {
+  name        = "lambda-ssm-execution-policy"
+  description = "Least-privilege permissions for Lambda to use EC2, SSM and CloudWatch Logs"
+
+  policy = file(
+    "${path.root}/iam/policies/templates/lambda-ssm-execution-policy.json"
+  )
 }

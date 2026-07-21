@@ -61,3 +61,11 @@ output "web_bulkdownload_s3_access_policy_arn" {
 output "web_forms_ses_policy_arn" {
   value = aws_iam_policy.web_forms_ses_policy.arn
 }
+
+output "lambda_wagtail_cron_trigger_policy_arn" {
+  value = aws_iam_policy.lambda_wagtail_cron_trigger_policy.arn
+}
+
+output "lambda_ssm_execution_policy_arn" {
+  value = aws_iam_policy.lambda_ssm_execution.arn
+}

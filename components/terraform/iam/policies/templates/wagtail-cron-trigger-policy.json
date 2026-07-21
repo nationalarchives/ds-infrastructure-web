@@ -1,0 +1,65 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "EC2Permissions",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeInstances",
+        "ec2:DescribeLocalGatewayRouteTablePermissions",
+        "ec2:DescribeVerifiedAccessInstanceWebAclAssociations"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "SSMPermissions",
+      "Effect": "Allow",
+      "Action": [
+        "ssm:ExecuteAPI",
+        "ssm:GetCalendar",
+        "ssm:GetCommandInvocation",
+        "ssm:SendCommand",
+        "ssm:StartExecutionPreview"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "CloudWatchLogsPermissions",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogDelivery",
+        "logs:CreateLogStream",
+        "logs:DeleteLogDelivery",
+        "logs:GetLogDelivery",
+        "logs:Link",
+        "logs:ListEntitiesForLogGroup",
+        "logs:ListLogDeliveries",
+        "logs:PutLogEvents",
+        "logs:Unmask",
+        "logs:UpdateLogDelivery"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "EventBridgeSchedulerPassRole",
+      "Effect": "Allow",
+      "Action": [
+        "iam:PassRole"
+      ],
+      "Condition": {
+        "StringLike": {
+          "iam:PassedToService": "scheduler.amazonaws.com"
+        }
+      },
+      "Resource": "arn:aws:iam::*:role/*"
+    },
+    {
+      "Sid": "InvokeWagtailCronTrigger",
+      "Effect": "Allow",
+      "Action": [
+        "lambda:InvokeFunction"
+      ],
+      "Resource": "arn:aws:lambda:eu-west-2:${account_id}:function:WagtailCronTrigger"
+    }
+  ]
+}

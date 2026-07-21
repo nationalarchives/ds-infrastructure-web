@@ -37,6 +37,7 @@ module "roles" {
 
     web_bulkdownload_s3_access_policy_arn = module.policies.web_bulkdownload_s3_access_policy_arn
     web_forms_ses_policy_arn = module.policies.web_forms_ses_policy_arn
-    
+    lambda_wagtail_cron_trigger_policy_arn = module.policies.lambda_wagtail_cron_trigger_policy_arn
+    lambda_ssm_execution_policy_arn = module.policies.lambda_ssm_execution_policy_arn
     tags = local.tags
 }
