@@ -30,6 +30,10 @@ output "lambda_wagtail_cron_trigger_role_arn"{
     value = aws_iam_role.lambda_wagtail_cron_trigger_role.arn
 }
 
+output "lambda_wagtail_cron_trigger_role_name" {
+  value = aws_iam_role.lambda_wagtail_cron_trigger_role.name
+}
+
 output "lambda_web_request_service_record_role_arn"{
     value = aws_iam_role.lambda_web_request_service_record_role.arn
 }

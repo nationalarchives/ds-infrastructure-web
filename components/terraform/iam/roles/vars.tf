@@ -20,3 +20,6 @@ variable "web_request_service_record_ses_access_policy_arn" {}
 variable "web_request_service_record_ec2_access_arn" {}
 variable "web_bulkdownload_s3_access_policy_arn" {}
 variable "web_forms_ses_policy_arn" {}
+
+variable "lambda_wagtail_cron_trigger_policy_arn" {}
+variable "lambda_ssm_execution_policy_arn" {}

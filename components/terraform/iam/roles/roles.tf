@@ -609,3 +609,20 @@ resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_7"
   role       = aws_iam_role.web_bulkdownload_role.name
   policy_arn = var.web_bulkdownload_s3_access_policy_arn
 }
+
+##-------------------------------------------------------------  
+####### Attach Policies to wagtail cron trigger Role
+##-------------------------------------------------------------
+
+resource "aws_iam_role_policy_attachment" "lambda_wagtail_cron_trigger_policy" {
+  role       = aws_iam_role.lambda_wagtail_cron_trigger_role.name
+  policy_arn = var.lambda_wagtail_cron_trigger_policy_arn
+}
+
+##-------------------------------------------------------------  
+####### Attach Policies to Lambda SSM Execution Role
+##-------------------------------------------------------------
+resource "aws_iam_role_policy_attachment" "lambda_ssm_execution_policy" {
+  role       = aws_iam_role.lambda_auto_run_startup_script_role.name
+  policy_arn = var.lambda_ssm_execution_policy_arn
+}
