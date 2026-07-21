@@ -36,6 +36,7 @@ module "roles" {
     codedeploy_web_reverse_proxy_access_policy  = module.policies.codedeploy_web_reverse_proxy_access_policy
 
     web_bulkdownload_s3_access_policy_arn = module.policies.web_bulkdownload_s3_access_policy_arn
+    web_forms_ses_policy_arn = module.policies.web_forms_ses_policy_arn
     
     tags = local.tags
 }

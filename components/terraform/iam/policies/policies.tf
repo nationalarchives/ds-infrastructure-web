@@ -248,3 +248,12 @@ resource "aws_iam_policy" "web_bulkdownload_s3_access" {
     }
   )
 }
+
+resource "aws_iam_policy" "web_forms_ses_policy" {
+  name        = "web-forms-ses-policy"
+  description = "Allow web forms service to send emails through Amazon SES"
+
+  policy = templatefile("${path.module}/templates/web-forms-ses-policy.json", {
+    account_id = var.account_id
+  })
+}

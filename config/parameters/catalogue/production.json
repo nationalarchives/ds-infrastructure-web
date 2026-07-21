@@ -16,5 +16,6 @@
   "ROSETTA_API_URL": "https://rosetta-prod.k-int.com/rosetta/data",
   "_SENTRY_DSN": "https://3e24f4f474026e113e6dcdeccf2abded@o1230303.ingest.us.sentry.io/4507458864087040",
   "WAGTAIL_API_URL": "http://web-wagtail.live.local/api/v2",
-  "CACHE_REDIS_URL": "redis://platform-redis.live.local:6379"
+  "CACHE_REDIS_URL": "redis://platform-redis.live.local:6379",
+  "FEATURE_ENABLE_HELD_BY_DISCOVERY": "false"
 }

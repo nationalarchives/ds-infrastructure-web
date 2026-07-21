@@ -443,6 +443,10 @@ resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_5" {
   role       = aws_iam_role.web_forms_role.name
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
+resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_6" {
+  role       = aws_iam_role.web_forms_role.name
+  policy_arn = var.web_forms_ses_policy_arn
+}
 
 ##-------------------------------------------------------------  
 ####### Attach Policies to HOSPREC Role

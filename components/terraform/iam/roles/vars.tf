@@ -19,3 +19,4 @@ variable "codedeploy_web_reverse_proxy_access_policy" {}
 variable "web_request_service_record_ses_access_policy_arn" {}
 variable "web_request_service_record_ec2_access_arn" {}
 variable "web_bulkdownload_s3_access_policy_arn" {}
+variable "web_forms_ses_policy_arn" {}
