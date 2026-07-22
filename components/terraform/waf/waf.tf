@@ -2,7 +2,7 @@ resource "aws_wafv2_ip_set" "web_access" {
     provider = aws.aws-cf-waf
 
     name               = "web-access"
-    description        = "IP set containing allowed or blocked IP addresses, depending on the default action."
+    description        = "IP set containing allowed or blocked IP addresses,depending on the default action."
     scope              = "CLOUDFRONT"
     ip_address_version = "IPV4"
     addresses          = var.site_ips
@@ -18,7 +18,7 @@ resource "aws_wafv2_ip_set" "web_exceptions" {
     provider = aws.aws-cf-waf
 
     name               = "web-exceptions"
-    description        = "IP set containing exception IP addresses, depending on the default action."
+    description        = "IP set containing exception IP addresses,depending on the default action."
     scope              = "CLOUDFRONT"
     ip_address_version = "IPV4"
     addresses          = var.exception_site_ips

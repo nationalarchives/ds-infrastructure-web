@@ -33,6 +33,29 @@ runs:
       shell: bash
       run: echo "NEW_VERSION=${{ inputs.version }}" >> "$GITHUB_ENV"
 
+    - name: Log in to GHCR
+      shell: bash
+      run: |
+        echo "${{ github.token }}" | docker login ghcr.io \
+          --username "${{ github.actor }}" \
+          --password-stdin
+
+    - name: Validate Docker image exists
+      shell: bash
+      run: |
+        NEW_IMAGE=$(jq -r '.services."'${{ inputs.service-name }}'".image' config/${{ inputs.config-file }})
+
+        IMAGE="${NEW_IMAGE}:${NEW_VERSION}"
+
+        echo "Checking whether image exists: $IMAGE"
+
+        if ! docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
+          echo "::error::Docker image does not exist: $IMAGE"
+          exit 1
+        fi
+
+        echo "Image exists: $IMAGE"
+
     - name: Update AWS Parameter Store
       shell: bash
       id: update

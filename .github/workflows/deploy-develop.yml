@@ -35,6 +35,7 @@ jobs:
           - forms
     permissions:
       id-token: write
+      packages: read
     timeout-minutes: 15
     steps:
       - name: Checkout repo
