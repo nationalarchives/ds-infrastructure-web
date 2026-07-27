@@ -11,7 +11,7 @@
         "ssm:DescribeParameters",
         "ssm:PutParameter"
       ],
-      "Resource": "arn:aws:ssm:eu-west-2:${account_id}:parameter/application/*"
+      "Resource": "arn:aws:ssm:eu-west-2:${account_id}:parameter/application/web/*"
     },
     {
       "Sid": "SSMRunCommand",
