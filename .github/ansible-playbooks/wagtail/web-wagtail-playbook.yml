@@ -230,6 +230,15 @@
       mode: 0755
     become: true
 
+  - name: template upload media backup script
+    ansible.builtin.template:
+      src: ./templates/upload-media-to-s3.sh.j2
+      dest: /usr/local/bin/upload-media-to-s3.sh
+      owner: root
+      group: root
+      mode: '0755'
+    become: true
+
   - name: set mode for scripts
     ansible.builtin.file:
       path: '/usr/local/bin/{{ item.file_name }}'
