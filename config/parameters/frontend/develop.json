@@ -7,7 +7,7 @@
   "CACHE_TYPE": "RedisCache",
   "CONFIG": "config.Develop",
   "COOKIE_DOMAIN": ".nationalarchives.gov.uk",
-  "CSP_CONNECT_SRC": "'self',https://*.nationalarchives.gov.uk,https://*.google-analytics.com,https://*.sentry.io,https://noembed.com,https://www.googletagmanager.com",
+  "CSP_CONNECT_SRC": "'self',https://*.google-analytics.com,https://*.sentry.io,https://noembed.com,https://www.googletagmanager.com",
   "CSP_FEATURE_FULLSCREEN": "'self',https://www.youtube-nocookie.com",
   "CSP_FEATURE_PICTURE_IN_PICTURE": "'self',https://www.youtube-nocookie.com",
   "CSP_FONT_SRC": "'self',https://fonts.gstatic.com,https://use.typekit.net",
