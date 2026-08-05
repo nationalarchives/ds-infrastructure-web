@@ -7,7 +7,7 @@
         },
         "wagtail": {
             "image": "ghcr.io/nationalarchives/ds-wagtail",
-            "version": "26.08.03.2053",
+            "version": "26.08.05.2085",
             "repo": "https://github.com/nationalarchives/ds-wagtail"
         },
         "wagtaildocs": {
@@ -47,7 +47,7 @@
         },
         "bulkdownload": {
             "image": "ghcr.io/nationalarchives/ds-bulk-download",
-            "version": "26.07.27.57",
+            "version": "26.08.04.59",
             "repo": "https://github.com/nationalarchives/ds-bulk-download"
         }
     }
