@@ -2,32 +2,32 @@
     "services": {
         "frontend": {
             "image": "ghcr.io/nationalarchives/ds-frontend",
-            "version": "26.07.30.1839",
+            "version": "26.08.06.1863",
             "repo": "https://github.com/nationalarchives/ds-frontend"
         },
         "wagtail": {
             "image": "ghcr.io/nationalarchives/ds-wagtail",
-            "version": "26.08.05.2085",
+            "version": "26.08.07.2103",
             "repo": "https://github.com/nationalarchives/ds-wagtail"
         },
         "wagtaildocs": {
             "image": "ghcr.io/nationalarchives/ds-frontend",
-            "version": "26.07.30.1839",
+            "version": "26.08.06.1863",
             "repo": "https://github.com/nationalarchives/ds-frontend"
         },
         "catalogue": {
             "image": "ghcr.io/nationalarchives/ds-catalogue",
-            "version": "26.07.24.2495",
+            "version": "26.08.05.2499",
             "repo": "https://github.com/nationalarchives/ds-catalogue"
         },
         "enrichment": {
             "image": "ghcr.io/nationalarchives/ds-frontend-enrichment",
-            "version": "26.06.10.142",
+            "version": "26.08.05.148",
             "repo": "https://github.com/nationalarchives/ds-frontend-enrichment"
         },
         "search": {
             "image": "ghcr.io/nationalarchives/ds-sitemap-search",
-            "version": "26.05.15.185",
+            "version": "26.08.05.191",
             "repo": "https://github.com/nationalarchives/ds-sitemap-search"
         },
         "feedback": {
@@ -37,17 +37,17 @@
         },
         "requestservicerecord": {
             "image": "ghcr.io/nationalarchives/ds-request-service-record",
-            "version": "26.07.30.789",
+            "version": "26.08.05.792",
             "repo": "https://github.com/nationalarchives/ds-request-service-record"
         },
         "forms": {
             "image": "ghcr.io/nationalarchives/ds-forms",
-            "version": "26.07.30.123",
+            "version": "26.08.05.125",
             "repo": "https://github.com/nationalarchives/ds-forms"
         },
         "bulkdownload": {
             "image": "ghcr.io/nationalarchives/ds-bulk-download",
-            "version": "26.08.04.59",
+            "version": "26.08.05.61",
             "repo": "https://github.com/nationalarchives/ds-bulk-download"
         }
     }
