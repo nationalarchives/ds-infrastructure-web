@@ -186,6 +186,7 @@ jobs:
 
           lock_token = resp["LockToken"]
           addresses = resp["IPSet"]["Addresses"]
+          description = resp["IPSet"].get("Description")
 
           if old_ip and old_ip in addresses:
               addresses.remove(old_ip)
@@ -202,7 +203,8 @@ jobs:
               Scope="CLOUDFRONT",
               Id=ip_set_id,
               Addresses=addresses,
-              LockToken=lock_token
+              LockToken=lock_token,
+              Description=description
           )
 
           user_ips[user_name] = new_ip
