@@ -19,14 +19,14 @@ on:
         type: choice
         options:
           - "-- Select application --"
-          - web-frontend
           - web-search
-          - web-wagtail
+          - web-frontend
           - web-wagtaildocs
           - web-catalogue
           - web-hosprec
           - web-forms
           - web-enrichment
+          - web-wagtail
           - web-bulkdownload
           - web-request-service-record
 
@@ -57,12 +57,12 @@ jobs:
       - name: Validate selected inputs
         run: |
           if [ "${{ github.event.inputs.environment }}" = "-- Select environment --" ]; then
-            echo "Please select a valid environment"
+            echo "Please select a valid environment."
             exit 1
           fi
 
           if [ "${{ github.event.inputs.application }}" = "-- Select application --" ]; then
-            echo "Please select a valid application"
+            echo "Please select a valid application."
             exit 1
           fi
 
@@ -109,19 +109,14 @@ jobs:
           output-env-credentials: true
 
       # ---------------------------------------------------------
-      # Find EC2 instance using Name tag
+      # Find EC2 instance by Name tag
       # ---------------------------------------------------------
 
       - name: Find application instance
         env:
           APPLICATION: ${{ github.event.inputs.application }}
-          ENVIRONMENT: ${{ github.event.inputs.environment }}
         run: |
-          echo "------------------------------------------"
-          echo "Finding application instance"
-          echo "Application: $APPLICATION"
-          echo "Environment: $ENVIRONMENT"
-          echo "------------------------------------------"
+          echo "Finding $APPLICATION instance..."
 
           INSTANCE_IDS=$(aws ec2 describe-instances \
             --filters \
@@ -131,20 +126,10 @@ jobs:
             --output text)
 
           if [ -z "$INSTANCE_IDS" ] || [ "$INSTANCE_IDS" = "None" ]; then
-            echo "ERROR: No running instance found with Name=$APPLICATION"
+            echo "No running instance found for $APPLICATION."
             exit 1
           fi
 
-          INSTANCE_COUNT=$(echo "$INSTANCE_IDS" | wc -w)
-
-          if [ "$INSTANCE_COUNT" -gt 1 ]; then
-            echo "WARNING: Multiple running instances found for $APPLICATION"
-            echo "SSM will be executed against all matching instances."
-          fi
-
-          echo "Application instance found."
-
-          # Instance IDs are stored internally only.
           echo "INSTANCE_IDS=$INSTANCE_IDS" >> "$GITHUB_ENV"
 
       # ---------------------------------------------------------
@@ -153,7 +138,7 @@ jobs:
 
       - name: Check SSM connectivity
         run: |
-          echo "Checking SSM connectivity..."
+          echo "Checking instance connectivity..."
 
           for INSTANCE_ID in $INSTANCE_IDS; do
 
@@ -163,23 +148,21 @@ jobs:
               --output text)
 
             if [ "$STATUS" = "None" ] || [ -z "$STATUS" ]; then
-              echo "ERROR: Instance is not registered with SSM: $INSTANCE_ID"
+              echo "Instance is not registered with Systems Manager."
               exit 1
             fi
 
-            echo "SSM status: $STATUS"
-
             if [ "$STATUS" != "Online" ]; then
-              echo "ERROR: Instance is not online in SSM."
+              echo "Instance is not currently available through Systems Manager."
               exit 1
             fi
 
           done
 
-          echo "SSM connectivity OK."
+          echo "Instance connectivity OK."
 
       # ---------------------------------------------------------
-      # Retrieve Docker logs
+      # Retrieve application logs
       # ---------------------------------------------------------
 
       - name: Retrieve application logs
@@ -190,37 +173,34 @@ jobs:
         run: |
           mkdir -p logs
 
-          echo "------------------------------------------"
-          echo "Requesting application logs"
-          echo "Application: $APPLICATION"
-          echo "Environment: $ENVIRONMENT"
-          echo "Duration: $DURATION"
-          echo "------------------------------------------"
+          echo "Requesting logs for $APPLICATION ($ENVIRONMENT)..."
+
+          cat > ssm-commands.json <<EOF
+          {
+            "commands": [
+              "set -e",
+              "CONTAINER=\\$(sudo docker ps --filter 'name=blue-web' --filter 'status=running' --format '{{.Names}}' | head -n 1)",
+              "if [ -z \"\\$CONTAINER\" ]; then CONTAINER=\\$(sudo docker ps --filter 'name=green-web' --filter 'status=running' --format '{{.Names}}' | head -n 1); fi",
+              "if [ -z \"\\$CONTAINER\" ]; then echo 'ERROR: No blue-web or green-web container is running'; exit 1; fi",
+              "sudo docker logs --since ${DURATION} --timestamps \"\\$CONTAINER\" 2>&1"
+            ]
+          }
+          EOF
 
           COMMAND_ID=$(aws ssm send-command \
             --document-name "AWS-RunShellScript" \
             --instance-ids $INSTANCE_IDS \
-            --parameters "commands=[
-              \"set -e\",
-              \"echo 'Finding active blue/green container...'\",
-              \"CONTAINER=\\$(sudo docker ps --filter 'name=blue-web' --filter 'status=running' --format '{{.Names}}' | head -n 1)\",
-              \"if [ -z \\\"\\$CONTAINER\\\" ]; then CONTAINER=\\$(sudo docker ps --filter 'name=green-web' --filter 'status=running' --format '{{.Names}}' | head -n 1); fi\",
-              \"if [ -z \\\"\\$CONTAINER\\\" ]; then echo 'ERROR: No blue-web or green-web container is running'; exit 1; fi\",
-              \"echo \\\"Active container: \\$CONTAINER\\\"\",
-              \"echo \\\"Collecting logs for the last ${DURATION}\\\"\",
-              \"sudo docker logs --since ${DURATION} --timestamps \\\"\\$CONTAINER\\\" 2>&1\"
-            ]" \
+            --parameters file://ssm-commands.json \
             --comment "Get application logs for $APPLICATION" \
             --query 'Command.CommandId' \
             --output text)
 
-          echo "SSM command submitted."
+          echo "Logs requested successfully."
+          echo "Waiting for logs..."
 
           sleep 5
 
           for INSTANCE_ID in $INSTANCE_IDS; do
-
-            echo "Waiting for logs..."
 
             for i in {1..30}; do
 
@@ -230,8 +210,6 @@ jobs:
                 --query 'Status' \
                 --output text 2>/dev/null || true)
 
-              echo "Attempt $i - Status: $STATUS"
-
               if [ "$STATUS" = "Success" ]; then
                 break
               fi
@@ -240,12 +218,7 @@ jobs:
                  [ "$STATUS" = "Cancelled" ] ||
                  [ "$STATUS" = "TimedOut" ]; then
 
-                echo "ERROR: SSM command failed."
-
-                aws ssm get-command-invocation \
-                  --command-id "$COMMAND_ID" \
-                  --instance-id "$INSTANCE_ID"
-
+                echo "Unable to retrieve application logs."
                 exit 1
               fi
 
@@ -260,12 +233,10 @@ jobs:
               --output text)
 
             if [ "$FINAL_STATUS" != "Success" ]; then
-              echo "ERROR: Timed out waiting for SSM command."
+              echo "Timed out waiting for application logs."
               exit 1
             fi
 
-            # Save logs using application/environment name only.
-            # The EC2 instance ID is deliberately not exposed.
             aws ssm get-command-invocation \
               --command-id "$COMMAND_ID" \
               --instance-id "$INSTANCE_ID" \
@@ -275,11 +246,13 @@ jobs:
 
           done
 
-          echo "------------------------------------------"
-          echo "Logs collected successfully"
-          echo "------------------------------------------"
+          rm -f ssm-commands.json
 
-          ls -lh logs/
+          echo "Logs collected successfully."
+
+      # ---------------------------------------------------------
+      # Upload logs as GitHub Actions artifact
+      # ---------------------------------------------------------
 
       - name: Upload application logs
         uses: actions/upload-artifact@v4
@@ -287,3 +260,4 @@ jobs:
           name: ${{ github.event.inputs.application }}-${{ github.event.inputs.environment }}-logs
           path: logs/${{ github.event.inputs.application }}-${{ github.event.inputs.environment }}.log
           retention-days: 7
+
