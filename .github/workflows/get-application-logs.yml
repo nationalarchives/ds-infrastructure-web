@@ -1,0 +1,289 @@
+name: Get Application Logs
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Select environment"
+        required: true
+        type: choice
+        options:
+          - "-- Select environment --"
+          - dev
+          - staging
+          - live
+
+      application:
+        description: "Select application"
+        required: true
+        type: choice
+        options:
+          - "-- Select application --"
+          - web-frontend
+          - web-search
+          - web-wagtail
+          - web-wagtaildocs
+          - web-catalogue
+          - web-hosprec
+          - web-forms
+          - web-enrichment
+          - web-bulkdownload
+          - web-request-service-record
+
+      duration:
+        description: "How far back should the logs go?"
+        required: true
+        type: choice
+        options:
+          - 15m
+          - 1h
+          - 6h
+          - 24h
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  get-application-logs:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # ---------------------------------------------------------
+      # Validate inputs
+      # ---------------------------------------------------------
+
+      - name: Validate selected inputs
+        run: |
+          if [ "${{ github.event.inputs.environment }}" = "-- Select environment --" ]; then
+            echo "Please select a valid environment"
+            exit 1
+          fi
+
+          if [ "${{ github.event.inputs.application }}" = "-- Select application --" ]; then
+            echo "Please select a valid application"
+            exit 1
+          fi
+
+      # ---------------------------------------------------------
+      # Configure AWS credentials - Dev
+      # ---------------------------------------------------------
+
+      - name: Configure AWS credentials for Dev
+        if: github.event.inputs.environment == 'dev'
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
+        with:
+          aws-region: eu-west-2
+          role-to-assume: arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL
+          role-session-name: GitHubActions-ApplicationLogs-Dev
+          audience: sts.amazonaws.com
+          output-env-credentials: true
+
+      # ---------------------------------------------------------
+      # Configure AWS credentials - Staging
+      # ---------------------------------------------------------
+
+      - name: Configure AWS credentials for Staging
+        if: github.event.inputs.environment == 'staging'
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
+        with:
+          aws-region: eu-west-2
+          role-to-assume: arn:aws:iam::337670467269:role/GitHubActionRole
+          role-session-name: GitHubActions-ApplicationLogs-Staging
+          audience: sts.amazonaws.com
+          output-env-credentials: true
+
+      # ---------------------------------------------------------
+      # Configure AWS credentials - Live
+      # ---------------------------------------------------------
+
+      - name: Configure AWS credentials for Live
+        if: github.event.inputs.environment == 'live'
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
+        with:
+          aws-region: eu-west-2
+          role-to-assume: arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0
+          role-session-name: GitHubActions-ApplicationLogs-Live
+          audience: sts.amazonaws.com
+          output-env-credentials: true
+
+      # ---------------------------------------------------------
+      # Find EC2 instance using Name tag
+      # ---------------------------------------------------------
+
+      - name: Find application instance
+        env:
+          APPLICATION: ${{ github.event.inputs.application }}
+          ENVIRONMENT: ${{ github.event.inputs.environment }}
+        run: |
+          echo "------------------------------------------"
+          echo "Finding application instance"
+          echo "Application: $APPLICATION"
+          echo "Environment: $ENVIRONMENT"
+          echo "------------------------------------------"
+
+          INSTANCE_IDS=$(aws ec2 describe-instances \
+            --filters \
+              "Name=tag:Name,Values=$APPLICATION" \
+              "Name=instance-state-name,Values=running" \
+            --query 'Reservations[].Instances[].InstanceId' \
+            --output text)
+
+          if [ -z "$INSTANCE_IDS" ] || [ "$INSTANCE_IDS" = "None" ]; then
+            echo "ERROR: No running instance found with Name=$APPLICATION"
+            exit 1
+          fi
+
+          INSTANCE_COUNT=$(echo "$INSTANCE_IDS" | wc -w)
+
+          if [ "$INSTANCE_COUNT" -gt 1 ]; then
+            echo "WARNING: Multiple running instances found for $APPLICATION"
+            echo "SSM will be executed against all matching instances."
+          fi
+
+          echo "Application instance found."
+
+          # Instance IDs are stored internally only.
+          echo "INSTANCE_IDS=$INSTANCE_IDS" >> "$GITHUB_ENV"
+
+      # ---------------------------------------------------------
+      # Check SSM connectivity
+      # ---------------------------------------------------------
+
+      - name: Check SSM connectivity
+        run: |
+          echo "Checking SSM connectivity..."
+
+          for INSTANCE_ID in $INSTANCE_IDS; do
+
+            STATUS=$(aws ssm describe-instance-information \
+              --filters "Key=InstanceIds,Values=$INSTANCE_ID" \
+              --query 'InstanceInformationList[0].PingStatus' \
+              --output text)
+
+            if [ "$STATUS" = "None" ] || [ -z "$STATUS" ]; then
+              echo "ERROR: Instance is not registered with SSM: $INSTANCE_ID"
+              exit 1
+            fi
+
+            echo "SSM status: $STATUS"
+
+            if [ "$STATUS" != "Online" ]; then
+              echo "ERROR: Instance is not online in SSM."
+              exit 1
+            fi
+
+          done
+
+          echo "SSM connectivity OK."
+
+      # ---------------------------------------------------------
+      # Retrieve Docker logs
+      # ---------------------------------------------------------
+
+      - name: Retrieve application logs
+        env:
+          APPLICATION: ${{ github.event.inputs.application }}
+          ENVIRONMENT: ${{ github.event.inputs.environment }}
+          DURATION: ${{ github.event.inputs.duration }}
+        run: |
+          mkdir -p logs
+
+          echo "------------------------------------------"
+          echo "Requesting application logs"
+          echo "Application: $APPLICATION"
+          echo "Environment: $ENVIRONMENT"
+          echo "Duration: $DURATION"
+          echo "------------------------------------------"
+
+          COMMAND_ID=$(aws ssm send-command \
+            --document-name "AWS-RunShellScript" \
+            --instance-ids $INSTANCE_IDS \
+            --parameters "commands=[
+              \"set -e\",
+              \"echo 'Finding active blue/green container...'\",
+              \"CONTAINER=\\$(sudo docker ps --filter 'name=blue-web' --filter 'status=running' --format '{{.Names}}' | head -n 1)\",
+              \"if [ -z \\\"\\$CONTAINER\\\" ]; then CONTAINER=\\$(sudo docker ps --filter 'name=green-web' --filter 'status=running' --format '{{.Names}}' | head -n 1); fi\",
+              \"if [ -z \\\"\\$CONTAINER\\\" ]; then echo 'ERROR: No blue-web or green-web container is running'; exit 1; fi\",
+              \"echo \\\"Active container: \\$CONTAINER\\\"\",
+              \"echo \\\"Collecting logs for the last ${DURATION}\\\"\",
+              \"sudo docker logs --since ${DURATION} --timestamps \\\"\\$CONTAINER\\\" 2>&1\"
+            ]" \
+            --comment "Get application logs for $APPLICATION" \
+            --query 'Command.CommandId' \
+            --output text)
+
+          echo "SSM command submitted."
+
+          sleep 5
+
+          for INSTANCE_ID in $INSTANCE_IDS; do
+
+            echo "Waiting for logs..."
+
+            for i in {1..30}; do
+
+              STATUS=$(aws ssm get-command-invocation \
+                --command-id "$COMMAND_ID" \
+                --instance-id "$INSTANCE_ID" \
+                --query 'Status' \
+                --output text 2>/dev/null || true)
+
+              echo "Attempt $i - Status: $STATUS"
+
+              if [ "$STATUS" = "Success" ]; then
+                break
+              fi
+
+              if [ "$STATUS" = "Failed" ] ||
+                 [ "$STATUS" = "Cancelled" ] ||
+                 [ "$STATUS" = "TimedOut" ]; then
+
+                echo "ERROR: SSM command failed."
+
+                aws ssm get-command-invocation \
+                  --command-id "$COMMAND_ID" \
+                  --instance-id "$INSTANCE_ID"
+
+                exit 1
+              fi
+
+              sleep 5
+
+            done
+
+            FINAL_STATUS=$(aws ssm get-command-invocation \
+              --command-id "$COMMAND_ID" \
+              --instance-id "$INSTANCE_ID" \
+              --query 'Status' \
+              --output text)
+
+            if [ "$FINAL_STATUS" != "Success" ]; then
+              echo "ERROR: Timed out waiting for SSM command."
+              exit 1
+            fi
+
+            # Save logs using application/environment name only.
+            # The EC2 instance ID is deliberately not exposed.
+            aws ssm get-command-invocation \
+              --command-id "$COMMAND_ID" \
+              --instance-id "$INSTANCE_ID" \
+              --query 'StandardOutputContent' \
+              --output text \
+              > "logs/${APPLICATION}-${ENVIRONMENT}.log"
+
+          done
+
+          echo "------------------------------------------"
+          echo "Logs collected successfully"
+          echo "------------------------------------------"
+
+          ls -lh logs/
+
+      - name: Upload application logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.event.inputs.application }}-${{ github.event.inputs.environment }}-logs
+          path: logs/${{ github.event.inputs.application }}-${{ github.event.inputs.environment }}.log
+          retention-days: 7
