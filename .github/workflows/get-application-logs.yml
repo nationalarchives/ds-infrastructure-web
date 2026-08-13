@@ -109,14 +109,14 @@ jobs:
           output-env-credentials: true
 
       # ---------------------------------------------------------
-      # Find EC2 instance by Name tag
+      # Find ALL running EC2 instances by Name tag
       # ---------------------------------------------------------
 
-      - name: Find application instance
+      - name: Find application instances
         env:
           APPLICATION: ${{ github.event.inputs.application }}
         run: |
-          echo "Finding $APPLICATION instance..."
+          echo "Finding running $APPLICATION instances..."
 
           INSTANCE_IDS=$(aws ec2 describe-instances \
             --filters \
@@ -130,12 +130,14 @@ jobs:
             exit 1
           fi
 
-          echo "Application instance found."
+          INSTANCE_COUNT=$(echo "$INSTANCE_IDS" | wc -w)
+
+          echo "Found $INSTANCE_COUNT running instance(s)."
 
           echo "INSTANCE_IDS=$INSTANCE_IDS" >> "$GITHUB_ENV"
 
       # ---------------------------------------------------------
-      # Check SSM connectivity
+      # Check SSM connectivity for ALL instances
       # ---------------------------------------------------------
 
       - name: Check SSM connectivity
@@ -150,21 +152,23 @@ jobs:
               --output text)
 
             if [ "$STATUS" = "None" ] || [ -z "$STATUS" ]; then
-              echo "Instance is not registered with Systems Manager."
+              echo "Instance $INSTANCE_ID is not registered with Systems Manager."
               exit 1
             fi
 
             if [ "$STATUS" != "Online" ]; then
-              echo "Instance is not currently available through Systems Manager."
+              echo "Instance $INSTANCE_ID is not currently available through Systems Manager."
               exit 1
             fi
 
+            echo "Instance $INSTANCE_ID is online."
+
           done
 
-          echo "Instance connectivity OK."
+          echo "All instances are available through SSM."
 
       # ---------------------------------------------------------
-      # Retrieve application logs
+      # Retrieve logs from EVERY instance
       # ---------------------------------------------------------
 
       - name: Retrieve application logs
@@ -177,11 +181,15 @@ jobs:
 
           echo "Requesting logs for $APPLICATION ($ENVIRONMENT)..."
 
-          python3 - <<'PY'
-          import json
-          import os
+          for INSTANCE_ID in $INSTANCE_IDS; do
 
-          duration = os.environ["DURATION"]
+            echo "Collecting logs from instance..."
+
+            python3 - "$DURATION" <<'PY'
+          import json
+          import sys
+
+          duration = sys.argv[1]
 
           commands = [
               "set -e",
@@ -192,26 +200,20 @@ jobs:
           ]
 
           with open("ssm-commands.json", "w") as f:
-              json.dump(
-                  {"commands": commands},
-                  f
-              )
+              json.dump({"commands": commands}, f)
           PY
 
-          COMMAND_ID=$(aws ssm send-command \
-            --document-name "AWS-RunShellScript" \
-            --instance-ids $INSTANCE_IDS \
-            --parameters file://ssm-commands.json \
-            --comment "Get application logs for $APPLICATION" \
-            --query 'Command.CommandId' \
-            --output text)
+            COMMAND_ID=$(aws ssm send-command \
+              --document-name "AWS-RunShellScript" \
+              --instance-ids "$INSTANCE_ID" \
+              --parameters file://ssm-commands.json \
+              --comment "Get application logs for $APPLICATION" \
+              --query 'Command.CommandId' \
+              --output text)
 
-          echo "Logs requested successfully."
-          echo "Waiting for logs..."
+            echo "Log request submitted."
 
-          sleep 5
-
-          for INSTANCE_ID in $INSTANCE_IDS; do
+            sleep 5
 
             COMMAND_COMPLETED=false
 
@@ -232,7 +234,7 @@ jobs:
                  [ "$STATUS" = "Cancelled" ] ||
                  [ "$STATUS" = "TimedOut" ]; then
 
-                echo "Unable to retrieve application logs."
+                echo "Unable to retrieve logs from instance."
 
                 rm -f ssm-commands.json
 
@@ -244,7 +246,7 @@ jobs:
             done
 
             if [ "$COMMAND_COMPLETED" != "true" ]; then
-              echo "Timed out waiting for application logs."
+              echo "Timed out waiting for logs."
 
               rm -f ssm-commands.json
 
@@ -256,7 +258,7 @@ jobs:
               --instance-id "$INSTANCE_ID" \
               --query 'StandardOutputContent' \
               --output text \
-              > "logs/${APPLICATION}-${ENVIRONMENT}.log"
+              > "logs/${APPLICATION}-${ENVIRONMENT}-${INSTANCE_ID}.log"
 
           done
 
@@ -264,15 +266,17 @@ jobs:
 
           echo "Logs collected successfully."
 
+          echo "Log files:"
           ls -lh logs/
 
       # ---------------------------------------------------------
-      # Upload logs as GitHub Actions artifact
+      # Upload ALL instance logs
       # ---------------------------------------------------------
 
       - name: Upload application logs
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.event.inputs.application }}-${{ github.event.inputs.environment }}-logs
-          path: logs/${{ github.event.inputs.application }}-${{ github.event.inputs.environment }}.log
+          path: logs/
           retention-days: 7
+
