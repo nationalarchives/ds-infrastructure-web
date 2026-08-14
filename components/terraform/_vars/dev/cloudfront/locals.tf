@@ -5,6 +5,7 @@ locals {
 
     origin_id_www   = "dev-www.nationalarchives.gov.uk"
     origin_id_wagtail = "dev-wagtail.nationalarchives.gov.uk"
+    origin_id_download = "dev-download.nationalarchives.gov.uk"
     # remove blog and/or media - March 2027
     #origin_id_blog  = "dev-blog.nationalarchives.gov.uk"
     #origin_id_media = "dev-media.nationalarchives.gov.uk"
@@ -29,6 +30,14 @@ locals {
             #    "domain_name" = var.web_reverse_proxy_lb_dns_name
             #},
         ]
+
+        "s3_origins" = [
+            {
+                "origin_id"              = local.origin_id_download
+                "domain_name"            = "ds-dev-downloads.s3.eu-west-2.amazonaws.com"
+            }
+        ]
+
         "create_distribution" = true
         "domain_name"         = var.web_reverse_proxy_lb_dns_name
         "origin_id"           = local.origin_id_www
@@ -37,6 +46,7 @@ locals {
         "aliases" = [
             local.origin_id_www,
             local.origin_id_wagtail,
+            local.origin_id_download,
             # remove blog and/or media - March 2027
             #local.origin_id_blog,
             #local.origin_id_media,
@@ -371,6 +381,22 @@ locals {
             target_origin_id         = local.origin_id_wagtail
             trusted_key_groups = []
             trusted_signers = []
+            viewer_protocol_policy   = "redirect-to-https"
+        },
+        {
+            path_pattern             = "/merlin/*.zip"
+            allowed_methods          = ["GET", "HEAD"]
+            cache_policy_id          = local.Managed_CachingDisabled_cache_policy_id
+            cached_methods           = ["GET", "HEAD"]
+            compress                 = true
+            default_ttl              = 0
+            max_ttl                  = 0
+            min_ttl                  = 0
+            origin_request_policy_id = null
+            smooth_streaming         = false
+            target_origin_id         = local.origin_id_download
+            trusted_key_groups       = []
+            trusted_signers          = []
             viewer_protocol_policy   = "redirect-to-https"
         },
     ]
