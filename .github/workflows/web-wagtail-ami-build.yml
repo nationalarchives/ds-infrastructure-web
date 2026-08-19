@@ -57,6 +57,14 @@ jobs:
           aws-region: "${{ inputs.region }}"
           role-to-assume: "${{ inputs.base_role }}"
           output-credentials: true
+          
+      - name: Get cron notifications SNS topic ARN
+        id: cron_notifications
+        run: |
+          ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          SNS_TOPIC_ARN="arn:aws:sns:${{ inputs.region }}:${ACCOUNT_ID}:web-cron-failures-${{ inputs.account }}"
+          echo "sns_topic_arn=$SNS_TOPIC_ARN" >> "$GITHUB_OUTPUT"
+
       - name: Get VPC ID from SSM
         id: vpc
         run: |
@@ -109,7 +117,8 @@ jobs:
           instance_type='${{ inputs.instance_type }}' \
           volume_size='${{ inputs.volume_size }}' \
           s3_deployment_bucket='${{ inputs.s3_deployment_bucket }}' \
-          s3_deployment_root='${{ inputs.s3_deployment_root }}'" \
+          s3_deployment_root='${{ inputs.s3_deployment_root }}' \
+          web_cron_notifications_sns_topic_arn='${{ steps.cron_notifications.outputs.sns_topic_arn }}' \
           --private-key $cur_dir/${{ inputs.key_name }} \
           web-wagtail-playbook.yml
 ...

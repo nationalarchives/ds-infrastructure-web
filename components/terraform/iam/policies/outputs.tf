@@ -69,3 +69,7 @@ output "lambda_wagtail_cron_trigger_policy_arn" {
 output "lambda_ssm_execution_policy_arn" {
   value = aws_iam_policy.lambda_ssm_execution.arn
 }
+
+output "web_wagtail_cron_notifications_policy_arn" {
+  value = aws_iam_policy.web_wagtail_cron_notifications.arn
+}

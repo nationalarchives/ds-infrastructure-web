@@ -122,6 +122,7 @@
     vars:
       s3_deployment_bucket: "{{ s3_deployment_bucket }}"
       s3_deployment_root: "{{ s3_deployment_root }}"
+      web_cron_notifications_sns_topic_arn: "{{ web_cron_notifications_sns_topic_arn }}"
     template:
       src: "./templates/userdata.sh.j2"
       dest: "./userdata.sh"

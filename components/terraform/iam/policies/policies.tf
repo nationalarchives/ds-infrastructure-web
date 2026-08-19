@@ -287,3 +287,27 @@ resource "aws_iam_policy" "lambda_ssm_execution" {
     "${path.root}/iam/policies/templates/lambda-ssm-execution-policy.json"
   )
 }
+
+##########################################
+# IAM Policy: Web Wagtail Cron Notifications
+##########################################
+resource "aws_iam_policy" "web_wagtail_cron_notifications" {
+  name        = "web-wagtail-cron-notifications-policy"
+  description = "Allow Wagtail EC2 instances to publish cron failure notifications to SNS"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+
+    Statement = [
+      {
+        Effect = "Allow"
+
+        Action = [
+          "sns:Publish"
+        ]
+
+        Resource = var.web_cron_notifications_sns_topic_arn
+      }
+    ]
+  })
+}

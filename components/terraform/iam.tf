@@ -14,6 +14,7 @@ module "policies" {
     account_id = data.aws_caller_identity.current.account_id
     tags = local.tags
     ses_nationalarchives_gov_uk_domain_arn = data.aws_ssm_parameter.ses_nationalarchives_gov_uk_domain_arn.value
+    web_cron_notifications_sns_topic_arn = module.cron_notifications.sns_topic_arn
 }
 
 module "roles" {
@@ -39,5 +40,6 @@ module "roles" {
     web_forms_ses_policy_arn = module.policies.web_forms_ses_policy_arn
     lambda_wagtail_cron_trigger_policy_arn = module.policies.lambda_wagtail_cron_trigger_policy_arn
     lambda_ssm_execution_policy_arn = module.policies.lambda_ssm_execution_policy_arn
+    web_wagtail_cron_notifications_policy_arn = module.policies.web_wagtail_cron_notifications_policy_arn
     tags = local.tags
 }

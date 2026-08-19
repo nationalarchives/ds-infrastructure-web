@@ -338,6 +338,10 @@ resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_6" {
   role       = aws_iam_role.web_wagtail_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudFrontFullAccess"
 }
+resource "aws_iam_role_policy_attachment" "web_wagtail_cron_notifications" {
+  role       = aws_iam_role.web_wagtail_role.name
+  policy_arn = var.web_wagtail_cron_notifications_policy_arn
+}
 
 ##-------------------------------------------------------------
 ############# Attach Policies to Wagtaildocs Role
