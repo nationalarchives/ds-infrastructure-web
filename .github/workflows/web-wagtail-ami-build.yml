@@ -118,7 +118,7 @@ jobs:
           volume_size='${{ inputs.volume_size }}' \
           s3_deployment_bucket='${{ inputs.s3_deployment_bucket }}' \
           s3_deployment_root='${{ inputs.s3_deployment_root }}' \
-          web_cron_notifications_sns_topic_arn='${{ steps.cron_notifications.outputs.sns_topic_arn }}' \
+          web_cron_notifications_sns_topic_arn='${{ steps.cron_notifications.outputs.sns_topic_arn }}'" \
           --private-key $cur_dir/${{ inputs.key_name }} \
           web-wagtail-playbook.yml
 ...
