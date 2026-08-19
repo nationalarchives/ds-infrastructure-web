@@ -21,7 +21,8 @@ resource "aws_launch_template" "web_wagtail" {
         mount_target         = var.efs_dns_name,
         web_wagtail_efs_mount_dir            = var.web_wagtail_efs_mount_dir,
         deployment_s3_bucket = var.deployment_s3_bucket,
-        nginx_folder_s3_key  = var.folder_s3_key
+        nginx_folder_s3_key  = var.folder_s3_key,
+        web_cron_notifications_sns_topic_arn    = var.web_cron_notifications_sns_topic_arn
     }))
 
     block_device_mappings {
