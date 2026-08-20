@@ -33,6 +33,7 @@ jobs:
           - requestservicerecord
           - bulkdownload
           - forms
+          - hospitalrecords
     permissions:
       id-token: write
       packages: read
