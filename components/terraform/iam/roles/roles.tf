@@ -46,9 +46,9 @@ resource "aws_iam_role" "web_forms_role" {
   assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
-# HoSPREC Role
-resource "aws_iam_role" "web_hosprec_role" {
-  name               = "web-hosprec-assume-role"
+# Hospital Records Role
+resource "aws_iam_role" "web_hospitalrecords_role" {
+  name               = "web-hospitalrecords-assume-role"
   assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
@@ -173,10 +173,10 @@ resource "aws_iam_instance_profile" "web_request_service_record_profile" {
   role = aws_iam_role.web_request_service_record_role.name
 }
 
-## Instance Profile for HoSPREC Role
-resource "aws_iam_instance_profile" "web_hosprec_profile" {
-  name = "web-hosprec-profile"
-  role = aws_iam_role.web_hosprec_role.name
+## Instance Profile for Hospital Records Role
+resource "aws_iam_instance_profile" "web_hospitalrecords_profile" {
+  name = "web-hospitalrecords-profile"
+  role = aws_iam_role.web_hospitalrecords_role.name
 }
 
 ## Instance Profile for Web Reverse Proxy Role
@@ -453,31 +453,28 @@ resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_6" {
 }
 
 ##-------------------------------------------------------------  
-####### Attach Policies to HOSPREC Role
+####### Attach Policies to HOSPITAL RECORDS Role
 ##-------------------------------------------------------------
 
-resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_1" {
-  role       = aws_iam_role.web_hosprec_role.name
+resource "aws_iam_role_policy_attachment" "web_hospitalrecords_policy_attachment_1" {
+  role       = aws_iam_role.web_hospitalrecords_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
-resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_2" {
-  role       = aws_iam_role.web_hosprec_role.name
+resource "aws_iam_role_policy_attachment" "web_hospitalrecords_policy_attachment_2" {
+  role       = aws_iam_role.web_hospitalrecords_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
-resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_3" {
-  role       = aws_iam_role.web_hosprec_role.name
+resource "aws_iam_role_policy_attachment" "web_hospitalrecords_policy_attachment_3" {
+  role       = aws_iam_role.web_hospitalrecords_role.name
   policy_arn = var.org_level_logging_arn
 }
-# resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_5" {
-#   role       = aws_iam_role.web_hosprec_role.name
-#   policy_arn = var.deployment_s3_policy
-# }
-resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_4" {
-  role       = aws_iam_role.web_hosprec_role.name
+
+resource "aws_iam_role_policy_attachment" "web_hospitalrecords_policy_attachment_4" {
+  role       = aws_iam_role.web_hospitalrecords_role.name
   policy_arn = var.application_parameter_store_policy_arn
 }
-resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_5" {
-  role       = aws_iam_role.web_hosprec_role.name
+resource "aws_iam_role_policy_attachment" "web_hospitalrecords_policy_attachment_5" {
+  role       = aws_iam_role.web_hospitalrecords_role.name
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
 

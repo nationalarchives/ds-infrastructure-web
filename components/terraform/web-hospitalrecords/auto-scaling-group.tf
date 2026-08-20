@@ -1,8 +1,8 @@
 locals {
-    asg_web_hosprec_tags = concat(var.asg_tags, [
+    asg_web_hospitalrecords_tags = concat(var.asg_tags, [
         {
             key                 = "Name"
-            value               = "web-hosprec"
+            value               = "web-hospitalrecords"
         },
         {
             key                 = "AutoSwitchOff"
@@ -31,11 +31,11 @@ locals {
     ])
 }
 
-resource "aws_autoscaling_group" "web_hosprec" {
-    name = "web-hosprec"
+resource "aws_autoscaling_group" "web_hospitalrecords" {
+    name = "web-hospitalrecords"
     launch_template {
-        id      = aws_launch_template.web_hosprec.id
-        version = aws_launch_template.web_hosprec.latest_version
+        id      = aws_launch_template.web_hospitalrecords.id
+        version = aws_launch_template.web_hospitalrecords.latest_version
     }
 
     vpc_zone_identifier = [
@@ -68,7 +68,7 @@ resource "aws_autoscaling_group" "web_hosprec" {
     }
 
     dynamic "tag" {
-        for_each = local.asg_web_hosprec_tags
+        for_each = local.asg_web_hospitalrecords_tags
         content {
             key                 = tag.value["key"]
             value               = tag.value["value"]
@@ -77,23 +77,23 @@ resource "aws_autoscaling_group" "web_hosprec" {
     }
 }
 
-resource "aws_autoscaling_attachment" "web_hosprec" {
-    autoscaling_group_name = aws_autoscaling_group.web_hosprec.id
-    lb_target_group_arn    = aws_lb_target_group.web_hosprec.arn
+resource "aws_autoscaling_attachment" "web_hospitalrecords" {
+    autoscaling_group_name = aws_autoscaling_group.web_hospitalrecords.id
+    lb_target_group_arn    = aws_lb_target_group.web_hospitalrecords.arn
 }
 
-resource "aws_autoscaling_policy" "web_hosprec_up_policy" {
-    name                   = "web-hosprec-up-policy"
+resource "aws_autoscaling_policy" "web_hospitalrecords_up_policy" {
+    name                   = "web-hospitalrecords-up-policy"
     scaling_adjustment     = 1
     adjustment_type        = "ChangeInCapacity"
     cooldown               = 300
-    autoscaling_group_name = aws_autoscaling_group.web_hosprec.name
+    autoscaling_group_name = aws_autoscaling_group.web_hospitalrecords.name
 }
 
-resource "aws_autoscaling_policy" "web_hosprec_down_policy" {
-    name                   = "web-hosprec-down-policy"
+resource "aws_autoscaling_policy" "web_hospitalrecords_down_policy" {
+    name                   = "web-hospitalrecords-down-policy"
     scaling_adjustment     = -1
     adjustment_type        = "ChangeInCapacity"
     cooldown               = 300
-    autoscaling_group_name = aws_autoscaling_group.web_hosprec.name
+    autoscaling_group_name = aws_autoscaling_group.web_hospitalrecords.name
 }

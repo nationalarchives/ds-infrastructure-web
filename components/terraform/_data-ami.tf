@@ -229,13 +229,13 @@ data "aws_ami" "web_reverse_proxy_ami" {
     ]
 }
 
-data "aws_ami" "web_hosprec_ami" {
+data "aws_ami" "web_hospitalrecords_ami" {
     most_recent = true
 
     filter {
         name   = "name"
         values = [
-            "web-hosprec-primer*"
+            "web-hospitalrecords-primer*"
         ]
     }
 

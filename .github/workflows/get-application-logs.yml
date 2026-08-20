@@ -23,7 +23,7 @@ on:
           - web-frontend
           - web-wagtaildocs
           - web-catalogue
-          - web-hosprec
+          - web-hospitalrecords
           - web-forms
           - web-enrichment
           - web-wagtail

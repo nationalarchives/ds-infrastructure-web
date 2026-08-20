@@ -7,14 +7,14 @@ sudo touch /var/log/server-startup.log
 
 region="eu-west-2"
 AWS_REGION="eu-west-2"
-PARAMETER_PATH="/application/web/hosprec"
+PARAMETER_PATH="/application/web/hospitalrecords"
 if [ -z ${TRAEFIK_IMAGE+x} ]; then export TRAEFIK_IMAGE="none"; fi
-if [ -z ${HOSPREC_APP_IMAGE+x} ]; then export HOSPREC_APP_IMAGE="none"; fi
+if [ -z ${HOSPITALRECORDS_APP_IMAGE+x} ]; then export HOSPITALRECORDS_APP_IMAGE="none"; fi
 
 # Install dependencies
 sudo dnf -y update && sudo dnf install -y aws-cli jq
 
-OUTPUT_FILE="/var/docker/hosprec.env"
+OUTPUT_FILE="/var/docker/hospitalrecords.env"
 sudo touch "$OUTPUT_FILE"
 sudo chmod 777 "$OUTPUT_FILE"
 > "$OUTPUT_FILE"
@@ -57,10 +57,10 @@ for full_name in $PARAM_NAMES; do
             --query "Parameter.Value" \
             --output text)
         
-        HOSPREC_APP_IMAGE=$(echo "$docker_json" | jq -r '.["hosprec-application"]')
+        HOSPITALRECORDS_APP_IMAGE=$(echo "$docker_json" | jq -r '.["hospitalrecords-application"]')
         TRAEFIK_IMAGE=$(echo "$docker_json" | jq -r '.["traefik"]')
 
-        printf 'DOCKER_IMAGE_HOSPREC_APPLICATION="%s"\n' "$HOSPREC_APP_IMAGE" >> "$OUTPUT_FILE"
+        printf 'DOCKER_IMAGE_HOSPITALRECORDS_APPLICATION="%s"\n' "$HOSPITALRECORDS_APP_IMAGE" >> "$OUTPUT_FILE"
         printf 'DOCKER_IMAGE_TRAEFIK="%s"\n' "$TRAEFIK_IMAGE" >> "$OUTPUT_FILE"
         continue
     fi
@@ -79,7 +79,7 @@ echo "Environment variables have been written to $OUTPUT_FILE."
 echo "Retrieving Docker images..."
 
 # Pull the image
-sudo docker pull "$HOSPREC_APP_IMAGE"
+sudo docker pull "$HOSPITALRECORDS_APP_IMAGE"
 # Get currently set images in compose files
 set_traefik_image=$(yq '.services.traefik.image' /var/docker/compose.traefik.yml)
 set_app_image=$(yq '.services.blue-web.image' /var/docker/compose.yml)
@@ -105,9 +105,9 @@ else
 fi
 
 # update app version
-if [ "$HOSPREC_APP_IMAGE" != "$set_app_image" ]; then
-  sudo yq -i ".services.blue-web.image = \"$HOSPREC_APP_IMAGE\"" /var/docker/compose.yml
-  sudo sed -i "s|export HOSPREC_APP_IMAGE=.*|export HOSPREC_APP_IMAGE=\"$HOSPREC_APP_IMAGE\"|g" /etc/environment
+if [ "$HOSPITALRECORDS_APP_IMAGE" != "$set_app_image" ]; then
+  sudo yq -i ".services.blue-web.image = \"$HOSPITALRECORDS_APP_IMAGE\"" /var/docker/compose.yml
+  sudo sed -i "s|export HOSPITALRECORDS_APP_IMAGE=.*|export HOSPITALRECORDS_APP_IMAGE=\"$HOSPITALRECORDS_APP_IMAGE\"|g" /etc/environment
 fi
 
 # Blue-green deployment

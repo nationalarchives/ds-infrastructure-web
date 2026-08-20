@@ -75,9 +75,9 @@ resource "aws_route53_record" "web_forms" {
     ]
 }
 
-resource "aws_route53_record" "web_hosprec" {
+resource "aws_route53_record" "web_hospitalrecords" {
     zone_id = var.route53_zone
-    name    = "web-hosprec.${var.environment}.local"
+    name    = "web-hospitalrecords.${var.environment}.local"
     type    = "CNAME"
     ttl     = 15
 

@@ -1,5 +1,5 @@
-resource "aws_lb_target_group" "web_hosprec" {
-    name     = "web-hosprec"
+resource "aws_lb_target_group" "web_hospitalrecords" {
+    name     = "web-hospitalrecords"
     port     = 80
     protocol = "HTTP"
     vpc_id   = var.vpc_id
@@ -23,7 +23,7 @@ resource "aws_lb_listener_rule" "x_target_header_routing" {
 
     action {
         type             = "forward"
-        target_group_arn = aws_lb_target_group.web_hosprec.arn
+        target_group_arn = aws_lb_target_group.web_hospitalrecords.arn
     }
 
     condition {
@@ -39,7 +39,7 @@ resource "aws_lb_listener_rule" "host_based_routing" {
 
     action {
         type             = "forward"
-        target_group_arn = aws_lb_target_group.web_hosprec.arn
+        target_group_arn = aws_lb_target_group.web_hospitalrecords.arn
     }
 
     condition {

@@ -30,7 +30,7 @@ variable "tags" {}
 
 variable "efs_dns_name" {}
 variable "enable_monitoring" {}
-variable "web_hosprec_sg_id" {}
-variable "web_hosprec_role_name" {}  
-variable "web_hosprec_instance_profile_arn" {}
+variable "web_hospitalrecords_sg_id" {}
+variable "web_hospitalrecords_role_name" {}  
+variable "web_hospitalrecords_instance_profile_arn" {}
   

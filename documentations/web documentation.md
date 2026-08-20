@@ -51,8 +51,8 @@ The ds-infrastructure-web repository contains terraform configurations for migra
 - Currently reverse proxied from `beta-rp`.
 - URL: https://beta.nationalarchives.gov.uk/catalogue/
 
-**_Hosprec_**
-- Hosted on EC2 instance (`web-hosprec`).
+**_Hospitalrecords_**
+- Hosted on EC2 instance (`web-hospitalrecords`).
 - Responsible for handling hospital record-related functionality.
 - URL: https://www.nationalarchives.gov.uk/hospital-records/
 
@@ -171,7 +171,7 @@ terraform plan \
   -var-file="_vars/dev/forms.auto.tfvars" \
   -var-file="_vars/dev/reverse-proxy.auto.tfvars" \
   -var-file="_vars/dev/wp-website.auto.tfvars" \
-  -var-file="_vars/dev/hosprec.auto.tfvars" \
+  -var-file="_vars/dev/hospitalrecords.auto.tfvars" \
   -var-file="_vars/dev/cloudfront.auto.tfvars" \
   -var-file="_vars/dev/environment.auto.tfvars" \
   -var-file="_vars/dev/waf.auto.tfvars" \
@@ -207,7 +207,7 @@ terraform plan \
   -var-file="_vars/staging/forms.auto.tfvars" \
   -var-file="_vars/staging/reverse-proxy.auto.tfvars" \
   -var-file="_vars/staging/wp-website.auto.tfvars" \
-  -var-file="_vars/staging/hosprec.auto.tfvars" \
+  -var-file="_vars/staging/hospitalrecords.auto.tfvars" \
   -var-file="_vars/staging/cloudfront.auto.tfvars" \
   -var-file="_vars/staging/environment.auto.tfvars" \
   -var-file="_vars/staging/waf.auto.tfvars" \
@@ -243,7 +243,7 @@ terraform plan \
 -var-file="_vars/live/forms.auto.tfvars" \
 -var-file="_vars/live/reverse-proxy.auto.tfvars" \
 -var-file="_vars/live/wp-website.auto.tfvars" \
--var-file="_vars/live/hosprec.auto.tfvars" \
+-var-file="_vars/live/hospitalrecords.auto.tfvars" \
 -var-file="_vars/live/cloudfront.auto.tfvars" \
 -var-file="_vars/live/environment.auto.tfvars" \
 -var-file="_vars/live/waf.auto.tfvars" \
@@ -281,7 +281,7 @@ terraform apply \
   -var-file="_vars/dev/forms/auto.tfvars" \
   -var-file="_vars/dev/reverse-proxy.auto.tfvars" \
   -var-file="_vars/dev/wp-website.auto.tfvars" \
-  -var-file="_vars/dev/hosprec.auto.tfvars" \
+  -var-file="_vars/dev/hospitalrecords.auto.tfvars" \
   -var-file="_vars/dev/cloudfront.auto.tfvars" \
   -var-file="_vars/dev/environment.auto.tfvars" \
   -var-file="_vars/dev/waf.auto.tfvars" \
@@ -317,7 +317,7 @@ terraform apply \
   -var-file="_vars/staging/forms.auto.tfvars" \
   -var-file="_vars/staging/reverse-proxy.auto.tfvars" \
   -var-file="_vars/staging/wp-website.auto.tfvars" \
-  -var-file="_vars/staging/hosprec.auto.tfvars" \
+  -var-file="_vars/staging/hospitalrecords.auto.tfvars" \
   -var-file="_vars/staging/cloudfront.auto.tfvars" \
   -var-file="_vars/staging/environment.auto.tfvars" \
   -var-file="_vars/staging/waf.auto.tfvars" \
@@ -353,7 +353,7 @@ terraform apply \
 -var-file="_vars/live/forms.auto.tfvars" \
 -var-file="_vars/live/reverse-proxy.auto.tfvars" \
 -var-file="_vars/live/wp-website.auto.tfvars" \
--var-file="_vars/live/hosprec.auto.tfvars" \
+-var-file="_vars/live/hospitalrecords.auto.tfvars" \
 -var-file="_vars/live/cloudfront.auto.tfvars" \
 -var-file="_vars/live/environment.auto.tfvars" \
 -var-file="_vars/live/waf.auto.tfvars" \
@@ -382,7 +382,7 @@ terraform apply \
 - `web-search.tf`: Configures the search service.
 - `web-request-service-record.tf`: Configures the Request a Military Record service.
 - `web-wagtail.tf`: Configures the wagtail CMS service.
-- `web-hosprec.tf`: Configures the hosprec service.
+- `web-hospitalrecords.tf`: Configures the hospital records service.
 - `web-bulkdownload.tf`: Configures the bulkdownload service.
 - `web-reverse-proxy.tf`: Configures the NGINX reverse proxy service that routes and filters traffic between CloudFront and backend services.
 - `lambda.tf`: Manages lambda functions and layers.

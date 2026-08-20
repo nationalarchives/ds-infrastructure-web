@@ -1,11 +1,11 @@
 # -----------------------------------------------------------------------------
 # Launch Template
 # -----------------------------------------------------------------------------
-resource "aws_launch_template" "web_hosprec" {
-    name = "web-hosprec"
+resource "aws_launch_template" "web_hospitalrecords" {
+    name = "web-hospitalrecords"
 
     iam_instance_profile {
-        arn = var.web_hosprec_instance_profile_arn
+        arn = var.web_hospitalrecords_instance_profile_arn
     }
 
     image_id               = var.ami_id
@@ -14,7 +14,7 @@ resource "aws_launch_template" "web_hosprec" {
     update_default_version = true
 
     vpc_security_group_ids = [
-        var.web_hosprec_sg_id
+        var.web_hospitalrecords_sg_id
     ]
 
     user_data = base64encode(templatefile("${path.module}/scripts/userdata.sh", {

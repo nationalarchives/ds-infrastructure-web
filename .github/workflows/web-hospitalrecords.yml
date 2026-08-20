@@ -1,6 +1,6 @@
 ---
-name: Web Hosprec AMI
-run-name: Web Hosprec AMI web-hosprec-primer-(date-time) to ${{ inputs.account }} by @${{ github.actor }}
+name: Web Hospitalrecords AMI
+run-name: Web Hospitalrecords AMI web-hospitalrecords-primer-(date-time) to ${{ inputs.account }} by @${{ github.actor }}
 
 permissions:
   id-token: write
@@ -22,9 +22,9 @@ jobs:
   # ------------------------------------------------------------------------------
   # dev deployment
   # ------------------------------------------------------------------------------
-  web-hosprec-ami-dev:
+  web-hospitalrecords-ami-dev:
     if: github.event.inputs.account == 'dev'
-    uses: nationalarchives/ds-infrastructure-web/.github/workflows/web-hosprec-ami-build.yml@main
+    uses: nationalarchives/ds-infrastructure-web/.github/workflows/web-hospitalrecords-ami-build.yml@main
     with:
       base_role: "arn:aws:iam::846769538626:role/GithubOIDCProviderIAMRolePermissions-Role-I80RXHT6O1PL"
       playbook_role: "arn:aws:iam::846769538626:role/s-devops-ansible-amis"
@@ -35,14 +35,14 @@ jobs:
       instance_type: "t3a.small"
       volume_size: 20
       s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
-      s3_deployment_root: "web/hosprec"
+      s3_deployment_root: "web/hospitalrecords"
     
   # ------------------------------------------------------------------------------
   # staging deployment
   # ------------------------------------------------------------------------------
-  web-hosprec-ami-staging:
+  web-hospitalrecords-ami-staging:
     if: github.event.inputs.account == 'staging'
-    uses: nationalarchives/ds-infrastructure-web/.github/workflows/web-hosprec-ami-build.yml@main
+    uses: nationalarchives/ds-infrastructure-web/.github/workflows/web-hospitalrecords-ami-build.yml@main
     with:
       base_role: "arn:aws:iam::337670467269:role/GitHubActionRole"
       playbook_role: "arn:aws:iam::337670467269:role/s-devops-ansible-amis"
@@ -53,14 +53,14 @@ jobs:
       instance_type: "t3a.small"
       volume_size: 40
       s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
-      s3_deployment_root: "web/hosprec"
+      s3_deployment_root: "web/hospitalrecords"
     
   # ------------------------------------------------------------------------------
   # live deployment
   # ------------------------------------------------------------------------------
-  web-hosprec-ami-live:
+  web-hospitalrecords-ami-live:
     if: github.event.inputs.account == 'live'
-    uses: nationalarchives/ds-infrastructure-web/.github/workflows/web-hosprec-ami-build.yml@main
+    uses: nationalarchives/ds-infrastructure-web/.github/workflows/web-hospitalrecords-ami-build.yml@main
     with:
       base_role: "arn:aws:iam::968803923593:role/github-oidc-Role-1QSZDDE2NZQV0"
       playbook_role: "arn:aws:iam::968803923593:role/s-devops-ansible-amis"
@@ -71,4 +71,4 @@ jobs:
       instance_type: "t3a.small"
       volume_size: 100
       s3_deployment_bucket: "ds-${{ github.event.inputs.account }}-deployment-source"
-      s3_deployment_root: "web/hosprec"
+      s3_deployment_root: "web/hospitalrecords"

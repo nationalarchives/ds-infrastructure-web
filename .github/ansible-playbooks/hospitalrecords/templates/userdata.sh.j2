@@ -63,7 +63,7 @@ sudo find /app/media -type f -exec sudo chmod 0664 {} \;
 # set environment variables
 echo "$(date '+%Y-%m-%d %T') - set environment variables" | sudo tee -a  /var/log/ami-install.log > /dev/null
 echo 'export TRAEFIK_IMAGE="none"' |tee -a /etc/environment
-echo 'export HOSPREC_APP_IMAGE="none"' | tee -a /etc/environment
+echo 'export HOSPITALRECORDS_APP_IMAGE="none"' | tee -a /etc/environment
 
 cat << EOF > /var/finish-init.txt
 [status]

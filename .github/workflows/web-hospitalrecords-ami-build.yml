@@ -1,5 +1,5 @@
 ---
-name: Build Hosprec AMI
+name: Build Hospital Records AMI
 on:
   workflow_call:
     inputs:
@@ -95,7 +95,7 @@ jobs:
           SUBNET_ID: ${{ steps.subnet.outputs.subnet_id }}
         run: |
           cur_dir=$(pwd)
-          cd $cur_dir/.github/ansible-playbooks/hosprec
+          cd $cur_dir/.github/ansible-playbooks/hospitalrecords
           export AWS_ACCESS_KEY_ID=${{ steps.creds.outputs.aws-access-key-id }}
           export AWS_SECRET_ACCESS_KEY=${{ steps.creds.outputs.aws-secret-access-key }}
           export AWS_SESSION_TOKEN=${{ steps.creds.outputs.aws-session-token }}
@@ -111,5 +111,5 @@ jobs:
           s3_deployment_bucket='${{ inputs.s3_deployment_bucket }}' \
           s3_deployment_root='${{ inputs.s3_deployment_root }}'" \
           --private-key $cur_dir/${{ inputs.key_name }} \
-          web-hosprec-playbook.yml
+          web-hospitalrecords-playbook.yml
 ...

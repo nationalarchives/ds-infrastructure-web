@@ -119,15 +119,15 @@ web_reverse_proxy_default_cooldown               = 0
 web_reverse_proxy_scale_in_threshold             = 0  
 web_reverse_proxy_scale_out_threshold            = 0 
 
-# Web Hosprec
-web_hosprec_patch_group      = "web-hosprec-patchgroup"
-web_hosprec_deployment_group = "web-hosprec-deploygroup"
+# Web Hospital Records
+web_hospitalrecords_patch_group      = "web-hospitalrecords-patchgroup"
+web_hospitalrecords_deployment_group = "web-hospitalrecords-deploygroup"
 
-web_hosprec_asg_max_size                  = 1
-web_hosprec_asg_min_size                  = 1
-web_hosprec_asg_desired_capacity          = 1
-web_hosprec_asg_health_check_grace_period = 150
-web_hosprec_asg_health_check_type         = "EC2"
+web_hospitalrecords_asg_max_size                  = 1
+web_hospitalrecords_asg_min_size                  = 1
+web_hospitalrecords_asg_desired_capacity          = 1
+web_hospitalrecords_asg_health_check_grace_period = 150
+web_hospitalrecords_asg_health_check_type         = "EC2"
 
 # Bulkdownload
 web_bulkdownload_deployment_group              = "web-bulkdownload-patchgroup"
