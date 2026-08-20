@@ -52,7 +52,7 @@
         },
         "hospitalrecords": {
             "image": "ghcr.io/nationalarchives/ds-hospital-records",
-            "version": "26.08.20.169",
+            "version": "26.08.20.171",
             "repo": "https://github.com/nationalarchives/ds-hospital-records"
         }
     }
