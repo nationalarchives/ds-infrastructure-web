@@ -22,15 +22,6 @@ variable "web_catalogue_folder_s3_key" {}
 variable "slack_workspace_id" {}
 variable "slack_channel_id" {}
 
-module "notifications" {
-  source = "./chatbot/web-sns-notifications"
-
-  environment        = var.environment
-  slack_workspace_id = var.slack_workspace_id
-  slack_channel_id   = var.slack_channel_id
-  chatbot_name       = "web-asg-notifications-${var.environment}"
-}
-
 module "web_catalogue" {
     source = "./web-catalogue"
 
