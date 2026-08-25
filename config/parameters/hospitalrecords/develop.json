@@ -13,5 +13,6 @@
   "ENVIRONMENT_NAME": "develop",
   "GA4_ID": "GTM-KX8ZWVZG",
   "DATABASE_HOST": "postgres-main-prime.dev.local",
-  "DATABASE_NAME": "hosprec"
+  "DATABASE_NAME": "hosprec",
+  "ADMIN_URL": "hospital-records/admin/"
 }
