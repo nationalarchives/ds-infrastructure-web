@@ -15,6 +15,7 @@ module "policies" {
     tags = local.tags
     ses_nationalarchives_gov_uk_domain_arn = data.aws_ssm_parameter.ses_nationalarchives_gov_uk_domain_arn.value
     web_cron_notifications_sns_topic_arn = module.cron_notifications.sns_topic_arn
+    wagtail_migration_failures_sns_topic_arn = module.wagtail_migration_notifications.sns_topic_arn
 }
 
 module "roles" {

@@ -306,7 +306,10 @@ resource "aws_iam_policy" "web_wagtail_cron_notifications" {
           "sns:Publish"
         ]
 
-        Resource = var.web_cron_notifications_sns_topic_arn
+        Resource = [
+          var.web_cron_notifications_sns_topic_arn,
+          var.wagtail_migration_failures_sns_topic_arn
+        ]
       }
     ]
   })
