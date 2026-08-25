@@ -160,7 +160,16 @@ fi
 # Run migrate inside the running container, output to migrate.log
 if [ -n "$RUNNING_WEB" ]; then
   echo "Running migration in container: $RUNNING_WEB"
+
   sudo docker exec "$RUNNING_WEB" poetry run python /app/manage.py migrate > /var/log/migrate.log 2>&1
+  MIGRATION_EXIT_CODE=$?
+
+  if [ "$MIGRATION_EXIT_CODE" -ne 0 ]; then
+    echo "Migration failed with exit code $MIGRATION_EXIT_CODE"
+    exit "$MIGRATION_EXIT_CODE"
+  fi
+
+  echo "Migration completed successfully."
 else
   echo "Error: Neither green-web nor blue-web is running."
   exit 1
