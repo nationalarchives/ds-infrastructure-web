@@ -83,6 +83,15 @@ resource "aws_s3_object" "redirects_conf" {
   source_hash = filemd5("${path.module}/scripts/redirects.conf")
 }
 
+resource "aws_s3_object" "streamline_hpp_conf" {
+  bucket = var.deployment_s3_bucket
+  key    = "${var.service}/${var.nginx_folder_s3_key}/streamline-hpp.conf"
+  content = templatefile("${path.module}/scripts/streamline-hpp.conf", {
+    environment      = var.environment,
+    set_real_ip_from = var.set_real_ip_from
+  })
+}
+
 resource "aws_s3_object" "update_nginx_confs" {
   bucket = var.deployment_s3_bucket
   key    = "${var.service}/${var.nginx_folder_s3_key}/update_nginx_confs.sh"
