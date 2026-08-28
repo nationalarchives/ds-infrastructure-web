@@ -18,6 +18,6 @@
   "WAGTAIL_API_URL": "http://web-wagtail.live.local/api/v2",
   "CACHE_REDIS_URL": "redis://platform-redis.live.local:6379",
   "ENRICHMENT_TIMING_ENABLED": "true",
-  "ENABLE_PARALLEL_API_CALLS": "true",
+  "ENABLE_PARALLEL_API_CALLS": "false",
   "FEATURE_ENABLE_HELD_BY_DISCOVERY": "false"
 }
