@@ -73,3 +73,7 @@ output "lambda_ssm_execution_policy_arn" {
 output "web_wagtail_cron_notifications_policy_arn" {
   value = aws_iam_policy.web_wagtail_cron_notifications.arn
 }
+
+output "web_bulkdownload_merlin_notifications_policy_arn" {
+  value = aws_iam_policy.web_bulkdownload_merlin_notifications.arn
+}

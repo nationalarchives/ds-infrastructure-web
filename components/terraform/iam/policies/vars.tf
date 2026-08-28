@@ -14,3 +14,4 @@ variable "s3_deployment_source_arn" {}
 variable "ses_nationalarchives_gov_uk_domain_arn" {}
 variable "web_cron_notifications_sns_topic_arn" {}
 variable "wagtail_migration_failures_sns_topic_arn" {}
+variable "merlin_process_failures_sns_topic_arn" {}

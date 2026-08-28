@@ -24,3 +24,4 @@ variable "web_forms_ses_policy_arn" {}
 variable "lambda_wagtail_cron_trigger_policy_arn" {}
 variable "lambda_ssm_execution_policy_arn" {}
 variable "web_wagtail_cron_notifications_policy_arn" {}
+variable "web_bulkdownload_merlin_notifications_policy_arn" {}

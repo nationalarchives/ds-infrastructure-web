@@ -611,6 +611,11 @@ resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_7"
   policy_arn = var.web_bulkdownload_s3_access_policy_arn
 }
 
+resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_merlin_notifications" {
+  role       = aws_iam_role.web_bulkdownload_role.name
+  policy_arn = var.web_bulkdownload_merlin_notifications_policy_arn
+}
+
 ##-------------------------------------------------------------  
 ####### Attach Policies to wagtail cron trigger Role
 ##-------------------------------------------------------------

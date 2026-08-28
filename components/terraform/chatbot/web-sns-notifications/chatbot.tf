@@ -17,7 +17,8 @@ resource "aws_chatbot_slack_channel_configuration" "web_asg_notifications" {
   sns_topic_arns = [
     aws_sns_topic.web_asg_notifications[0].arn,
     var.web_cron_notifications_sns_topic_arn,
-    var.wagtail_migration_failures_sns_topic_arn
+    var.wagtail_migration_failures_sns_topic_arn,
+    var.merlin_process_failures_sns_topic_arn
   ]
 
   iam_role_arn = aws_iam_role.chatbot_role[0].arn

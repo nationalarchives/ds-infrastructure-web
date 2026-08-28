@@ -314,3 +314,28 @@ resource "aws_iam_policy" "web_wagtail_cron_notifications" {
     ]
   })
 }
+
+
+##########################################
+# IAM Policy: Merlin Process Notifications
+##########################################
+resource "aws_iam_policy" "web_bulkdownload_merlin_notifications" {
+  name        = "web-bulkdownload-merlin-notifications-policy"
+  description = "Allow web bulkdownload EC2 instances to publish Merlin process failure notifications to SNS"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+
+    Statement = [
+      {
+        Effect = "Allow"
+
+        Action = [
+          "sns:Publish"
+        ]
+
+        Resource = var.merlin_process_failures_sns_topic_arn
+      }
+    ]
+  })
+}

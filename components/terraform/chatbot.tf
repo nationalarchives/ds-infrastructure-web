@@ -20,4 +20,13 @@ module "notifications" {
   web_cron_notifications_sns_topic_arn = module.cron_notifications.sns_topic_arn
 
   wagtail_migration_failures_sns_topic_arn = module.wagtail_migration_notifications.sns_topic_arn
+
+  merlin_process_failures_sns_topic_arn = module.merlin_process_notifications.sns_topic_arn
+}
+
+module "merlin_process_notifications" {
+
+  source = "./chatbot/merlin-process-sns-notifications"
+
+  environment = var.environment
 }
