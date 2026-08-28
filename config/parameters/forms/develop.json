@@ -9,5 +9,7 @@
   "CACHE_REDIS_URL": "redis://platform-redis.dev.local:6379/0",
   "SESSION_REDIS_URL": "redis://platform-redis.dev.local:6379/1",
   "RATELIMIT_REDIS_URL": "redis://platform-redis.dev.local:6379/2",
-  "LOG_LEVEL": "debug"
+  "LOG_LEVEL": "debug",
+  "ROSETTA_API_URL": "https://rosetta-dev.k-int.com/rosetta/data",
+  "FORM_REPORT_A_CATALOGUE_ISSUE_INBOX": "Samantha.Bell@nationalarchives.gov.uk"
 }
