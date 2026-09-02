@@ -101,6 +101,15 @@ resource "aws_iam_role" "lambda_web_rsr_cron_role" {
   description        = "Allows Lambda functions to call AWS services on your behalf"
   tags               = var.tags
 }
+
+# Lambda Platform Redis DNS Update Role
+resource "aws_iam_role" "lambda_platform_redis_dns_update_role" {
+  name               = "platform-redis-dns-update-role"
+  assume_role_policy = file("${path.root}/shared-templates/assume-role-lambda-policy.json")
+  description        = "Allows Lambda to update Platform Redis Route 53 DNS record"
+  tags               = var.tags
+}
+
 resource "aws_iam_role_policy_attachment" "lambda_vpc_access" {
   role       = aws_iam_role.lambda_web_rsr_cron_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
@@ -612,6 +621,7 @@ resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_7"
 }
 
 resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_merlin_notifications" {
+  count      = var.environment == "live" ? 1 : 0
   role       = aws_iam_role.web_bulkdownload_role.name
   policy_arn = var.web_bulkdownload_merlin_notifications_policy_arn
 }
@@ -631,4 +641,9 @@ resource "aws_iam_role_policy_attachment" "lambda_wagtail_cron_trigger_policy" {
 resource "aws_iam_role_policy_attachment" "lambda_ssm_execution_policy" {
   role       = aws_iam_role.lambda_auto_run_startup_script_role.name
   policy_arn = var.lambda_ssm_execution_policy_arn
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_platform_redis_dns_update" {
+  role       = aws_iam_role.lambda_platform_redis_dns_update_role.name
+  policy_arn = var.lambda_platform_redis_dns_update_policy_arn
 }

@@ -6,6 +6,7 @@ module "policies" {
     foi_s3_bucket_arn    = var.foi_s3_bucket
     service              = var.service
     foi_s3_bucket        = var.foi_s3_bucket
+    route53_zone = var.route53_zone
     lambda_role_name = module.roles.lambda_web_rsr_role_name
     lambda_web_request_sqs_queue_arn  = var.lambda_web_request_sqs_queue_arn
     process_submitted_files_queue_arn = var.process_submitted_files_queue_arn
@@ -34,6 +35,7 @@ module "roles" {
     codedeploy_web_asg_policy_arn = module.policies.codedeploy_web_asg_policy_arn
     codedeploy_web_s3_access_arn  = module.policies.codedeploy_web_s3_access_arn
     codedeploy_web_access_policy  = module.policies.codedeploy_web_access_policy
+    lambda_platform_redis_dns_update_policy_arn = module.policies.lambda_platform_redis_dns_update_policy_arn
 
     codedeploy_web_reverse_proxy_asg_policy_arn = module.policies.codedeploy_web_reverse_proxy_asg_policy_arn
     codedeploy_web_reverse_proxy_access_policy  = module.policies.codedeploy_web_reverse_proxy_access_policy

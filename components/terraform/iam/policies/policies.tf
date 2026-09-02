@@ -320,6 +320,8 @@ resource "aws_iam_policy" "web_wagtail_cron_notifications" {
 # IAM Policy: Merlin Process Notifications
 ##########################################
 resource "aws_iam_policy" "web_bulkdownload_merlin_notifications" {
+  count       = var.environment == "live" ? 1 : 0
+
   name        = "web-bulkdownload-merlin-notifications-policy"
   description = "Allow web bulkdownload EC2 instances to publish Merlin process failure notifications to SNS"
 
@@ -335,6 +337,57 @@ resource "aws_iam_policy" "web_bulkdownload_merlin_notifications" {
         ]
 
         Resource = var.merlin_process_failures_sns_topic_arn
+      }
+    ]
+  })
+}
+
+##########################################
+# IAM Policy: Platform Redis DNS Update
+##########################################
+resource "aws_iam_policy" "lambda_platform_redis_dns_update" {
+  name        = "platform-redis-dns-update-policy"
+  description = "Allow Lambda to update Platform Redis Route 53 DNS record"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+
+    Statement = [
+      {
+        Effect = "Allow"
+
+        Action = [
+          "route53:ChangeResourceRecordSets"
+        ]
+
+        Resource = "arn:aws:route53:::hostedzone/${var.route53_zone}"
+      },
+      {
+        Effect = "Allow"
+
+        Action = [
+          "route53:ListResourceRecordSets"
+        ]
+
+        Resource = "arn:aws:route53:::hostedzone/${var.route53_zone}"
+      },
+      {
+        Effect = "Allow"
+
+        Action = [
+          "autoscaling:DescribeAutoScalingInstances"
+        ]
+
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+
+        Action = [
+          "ec2:DescribeInstances"
+        ]
+
+        Resource = "*"
       }
     ]
   })

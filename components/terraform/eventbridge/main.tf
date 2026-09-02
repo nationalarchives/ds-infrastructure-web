@@ -10,6 +10,7 @@ locals {
 # Web RSR Expire Old Payments
 ##########################################
 resource "aws_scheduler_schedule" "expire_old_payments" {
+  count = var.lambda_arn != null && var.scheduler_role_arn != null ? 1 : 0
   name       = "expire-old-payments"
   group_name = "default"
 
@@ -39,6 +40,7 @@ resource "aws_scheduler_schedule" "expire_old_payments" {
 # Web RSR Retry Paid Requests
 ##########################################
 resource "aws_scheduler_schedule" "retry_paid_requests" {
+  count = var.lambda_arn != null && var.scheduler_role_arn != null ? 1 : 0
   name       = "retry-paid-requests"
   group_name = "default"
 
@@ -68,7 +70,7 @@ resource "aws_scheduler_schedule" "retry_paid_requests" {
 # Web RSR Retry Paid Dynamics Payments
 ##########################################
 resource "aws_scheduler_schedule" "retry_paid_dynamics_payments" {
-  count = local.is_live ? 1 : 0
+  count = var.lambda_arn != null && var.scheduler_role_arn != null && local.is_live ? 1 : 0
 
   name       = "retry-paid-dynamics-payments"
   group_name = "default"

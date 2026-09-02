@@ -75,5 +75,9 @@ output "web_wagtail_cron_notifications_policy_arn" {
 }
 
 output "web_bulkdownload_merlin_notifications_policy_arn" {
-  value = aws_iam_policy.web_bulkdownload_merlin_notifications.arn
+  value = var.environment == "live" ? aws_iam_policy.web_bulkdownload_merlin_notifications[0].arn : null
+}
+
+output "lambda_platform_redis_dns_update_policy_arn" {
+  value = aws_iam_policy.lambda_platform_redis_dns_update.arn
 }
