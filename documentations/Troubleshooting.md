@@ -93,7 +93,7 @@ Example output:
 ```text
 CONTAINER ID   IMAGE                                                 COMMAND                  CREATED       STATUS                 PORTS                                            NAMES
 8edd08d3df0c   ghcr.io/nationalarchives/ds-catalogue:26.07.24.2495   "tna-asgi config.asg…"   8 hours ago   Up 8 hours (healthy)   8080/tcp                                        green-web
-af14527d985d   traefik:v3.6                                          "/entrypoint.sh --pr…"   8 days ago    Up 8 hours             0.0.0.0:80->80/tcp, :::80->80/tcp,              traefik
+af14527d985d   traefik:v3.7                                         "/entrypoint.sh --pr…"   8 days ago    Up 8 hours             0.0.0.0:80->80/tcp, :::80->80/tcp,              traefik
                                                                                                                         0.0.0.0:8080->8080/tcp, :::8080->8080/tcp
 ```
 
@@ -264,7 +264,7 @@ sudo docker ps -a | grep traefik
 Example:
 
 ```text
-af14527d985d   traefik:v3.6   Up 8 hours   traefik
+af14527d985d   traefik:v3.7   Up 8 hours   traefik
 ```
 
 Traefik ports:
