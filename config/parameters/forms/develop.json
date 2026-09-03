@@ -11,5 +11,9 @@
   "RATELIMIT_REDIS_URL": "redis://platform-redis.dev.local:6379/2",
   "LOG_LEVEL": "debug",
   "ROSETTA_API_URL": "https://rosetta-dev.k-int.com/rosetta/data",
-  "FORM_REPORT_A_CATALOGUE_ISSUE_INBOX": "Samantha.Bell@nationalarchives.gov.uk"
+  "DEFAULT_INBOX": "Andrew.Hosgood@nationalarchives.gov.uk",
+  "FORM_REPORT_A_CATALOGUE_ISSUE_DIGITAL_DOWNLOADS_INBOX": "Samantha.Bell@nationalarchives.gov.uk",
+  "FORM_REPORT_A_CATALOGUE_ISSUE_DIGITAL_PRESERVATION_INBOX": "Samantha.Bell@nationalarchives.gov.uk",
+  "FORM_REPORT_A_CATALOGUE_ISSUE_FINDING_ARCHIVES_PROJECT_INBOX": "Samantha.Bell@nationalarchives.gov.uk",
+  "FORM_REPORT_A_CATALOGUE_ISSUE_CATALOGUE_AMENDMENTS_INBOX": "Samantha.Bell@nationalarchives.gov.uk"
 }
