@@ -16,3 +16,8 @@ variable "redis_dns_lambda_arn" {
   type    = string
   default = null
 }
+
+variable "enable_redis_dns" {
+  type    = bool
+  default = false
+}

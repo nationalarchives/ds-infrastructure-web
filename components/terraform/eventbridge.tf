@@ -11,4 +11,5 @@ module "eventbridge_platform_redis" {
 
   redis_dns_lambda_arn = module.lambda.platform_redis_dns_update_lambda_arn
   environment          = var.environment
+  enable_redis_dns     = true
 }
