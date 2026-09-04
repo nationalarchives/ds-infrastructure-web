@@ -16,3 +16,4 @@ variable "environment" {}
 
 variable "custom_header_name" {}
 variable "custom_header_value" {}
+variable "web_waf_arn" {}
