@@ -79,7 +79,7 @@ jobs:
 
       - name: Run tests
         run: |
-          HOUR=$(date +"%H")
+          HOUR=$(TZ=Europe/London date +"%H")
           DAY_OF_WEEK=$(date +%u)
           if [ "$HOUR" -ge 7 ] && [ "$HOUR" -le 19 ] && [ "$DAY_OF_WEEK" -ge 1 ] && [ "$DAY_OF_WEEK" -le 5 ];
           then
