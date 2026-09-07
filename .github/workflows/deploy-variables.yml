@@ -31,7 +31,7 @@ jobs:
       url: https://${{ github.event.inputs.environment == 'staging' && 'staging-www' || github.event.inputs.environment == 'develop' && 'dev-www' || 'www' }}.nationalarchives.gov.uk/
     steps:
       - name: Show environment
-        run: echo "Environment: ${{ github.event.inputs.environment }}"
+        run: echo "Hello world"
 
   update-variables:
     runs-on: ubuntu-latest
