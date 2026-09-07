@@ -30,7 +30,8 @@ jobs:
       name: ${{ github.event.inputs.environment }}
       url: https://${{ github.event.inputs.environment == 'staging' && 'staging-www' || github.event.inputs.environment == 'develop' && 'dev-www' || 'www' }}.nationalarchives.gov.uk/
     steps:
-      - run: echo "Environment: ${{ github.event.inputs.environment }}"
+      - name: Show environment
+        run: echo "Environment: ${{ github.event.inputs.environment }}"
 
   update-variables:
     runs-on: ubuntu-latest
