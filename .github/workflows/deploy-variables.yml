@@ -39,7 +39,8 @@ jobs:
           - search
           - wagtaildocs
           - requestservicerecord
-          # - forms  # TODO: Re-enable when forms is deployed to production
+          - bulkdownload
+          - forms
     permissions:
       id-token: write
     timeout-minutes: 15
