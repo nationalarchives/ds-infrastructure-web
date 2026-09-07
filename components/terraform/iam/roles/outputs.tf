@@ -46,6 +46,10 @@ output "lambda_web_rsr_role_name" {
   value = aws_iam_role.lambda_web_rsr_cron_role.name
 }
 
+output "lambda_platform_redis_dns_update_role_arn" {
+  value = aws_iam_role.lambda_platform_redis_dns_update_role.arn
+}
+
 ## Web Frontend role and profile outputs
 output "web_frontend_role_name" {
     value = aws_iam_role.web_frontend_role.name

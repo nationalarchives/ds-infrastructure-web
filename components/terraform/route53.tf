@@ -96,3 +96,19 @@ resource "aws_route53_record" "web_bulkdownload" {
         module.load-balancer.load_balancer_dns_name
     ]
 }
+
+resource "aws_route53_record" "platform_redis" {
+    zone_id = var.route53_zone
+    name    = "platform-redis.${var.environment}.local"
+    type    = "A"
+    ttl     = 15
+
+    records = [
+        "0.0.0.0"
+    ]
+
+    lifecycle {
+        ignore_changes = [records]
+    }
+}
+
