@@ -2,22 +2,22 @@
     "services": {
         "frontend": {
             "image": "ghcr.io/nationalarchives/ds-frontend",
-            "version": "26.09.04.1917",
+            "version": "26.09.08.1922",
             "repo": "https://github.com/nationalarchives/ds-frontend"
         },
         "wagtail": {
             "image": "ghcr.io/nationalarchives/ds-wagtail",
-            "version": "26.09.04.2268",
+            "version": "26.09.08.2270",
             "repo": "https://github.com/nationalarchives/ds-wagtail"
         },
         "wagtaildocs": {
             "image": "ghcr.io/nationalarchives/ds-frontend",
-            "version": "26.09.04.1917",
+            "version": "26.09.08.1922",
             "repo": "https://github.com/nationalarchives/ds-frontend"
         },
         "catalogue": {
             "image": "ghcr.io/nationalarchives/ds-catalogue",
-            "version": "26.09.07.2568",
+            "version": "26.09.08.2575",
             "repo": "https://github.com/nationalarchives/ds-catalogue"
         },
         "enrichment": {
@@ -42,12 +42,12 @@
         },
         "forms": {
             "image": "ghcr.io/nationalarchives/ds-forms",
-            "version": "26.09.04.153",
+            "version": "26.09.07.154",
             "repo": "https://github.com/nationalarchives/ds-forms"
         },
         "bulkdownload": {
             "image": "ghcr.io/nationalarchives/ds-bulk-download",
-            "version": "26.09.04.70",
+            "version": "26.09.08.76",
             "repo": "https://github.com/nationalarchives/ds-bulk-download"
         },
         "hospitalrecords": {
