@@ -83,6 +83,23 @@ resource "aws_wafv2_rule_group" "web_rate_limiting_rg" {
                         }
                     }
                 }
+                statement {
+                    not_statement {
+                        statement {
+                            byte_match_statement {
+                                positional_constraint = "STARTS_WITH"
+                                search_string         = "/pronom/fmt"
+                                field_to_match {
+                                    uri_path {}
+                                }
+                                text_transformation {
+                                    priority = 0
+                                    type     = "LOWERCASE"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
         visibility_config {
