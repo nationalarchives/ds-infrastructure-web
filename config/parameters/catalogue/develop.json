@@ -23,5 +23,6 @@
   "WAGTAIL_API_TIMEOUT": 5,
   "DELIVERY_OPTIONS_API_TIMEOUT": 5,
   "CACHE_REDIS_URL": "redis://platform-redis.dev.local:6379",
+  "CSRF_TRUSTED_ORIGINS": "http://dev-www.nationalarchives.gov.uk",
   "FEATURE_ENABLE_HELD_BY_DISCOVERY": "false"
 }
