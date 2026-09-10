@@ -87,7 +87,7 @@ resource "aws_wafv2_rule_group" "web_rate_limiting_rg" {
                     not_statement {
                         statement {
                             regex_match_statement {
-                                regex_string = "\\/pronom\\/x-fmt\\/.*\\.xml"
+                                regex_string = "\\/pronom\\/fmt\\/.*\\.xml"
                                 field_to_match {
                                     uri_path {}
                                 }

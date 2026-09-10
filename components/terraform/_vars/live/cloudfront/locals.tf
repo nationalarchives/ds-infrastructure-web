@@ -416,5 +416,37 @@ locals {
             trusted_signers          = []
             viewer_protocol_policy   = "redirect-to-https"
         },
+        {
+            path_pattern             = "/merlin/*.csv"
+            allowed_methods          = ["GET", "HEAD"]
+            cache_policy_id          = local.Managed_CachingDisabled_cache_policy_id
+            cached_methods           = ["GET", "HEAD"]
+            compress                 = true
+            default_ttl              = 0
+            max_ttl                  = 0
+            min_ttl                  = 0
+            origin_request_policy_id = null
+            smooth_streaming         = false
+            target_origin_id         = local.origin_id_download
+            trusted_key_groups       = []
+            trusted_signers          = []
+            viewer_protocol_policy   = "redirect-to-https"
+        },
+        {
+            path_pattern             = "/merlin/*.json"
+            allowed_methods          = ["GET", "HEAD"]
+            cache_policy_id          = local.Managed_CachingDisabled_cache_policy_id
+            cached_methods           = ["GET", "HEAD"]
+            compress                 = true
+            default_ttl              = 0
+            max_ttl                  = 0
+            min_ttl                  = 0
+            origin_request_policy_id = null
+            smooth_streaming         = false
+            target_origin_id         = local.origin_id_download
+            trusted_key_groups       = []
+            trusted_signers          = []
+            viewer_protocol_policy   = "redirect-to-https"
+        },
     ]
 }
