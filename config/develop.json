@@ -47,7 +47,7 @@
         },
         "bulkdownload": {
             "image": "ghcr.io/nationalarchives/ds-bulk-download",
-            "version": "26.09.10.82",
+            "version": "26.09.10.84",
             "repo": "https://github.com/nationalarchives/ds-bulk-download"
         },
         "hospitalrecords": {
