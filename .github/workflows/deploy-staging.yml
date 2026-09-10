@@ -13,6 +13,11 @@ on:
         type: boolean
         required: true
         default: true
+      ignore-working-hours:
+        description: Ignore working hours restriction
+        type: boolean
+        required: true
+        default: false
 
 permissions: {}
 
@@ -28,12 +33,16 @@ jobs:
         run: |
           HOUR=$(TZ=Europe/London date +"%H")
           DAY_OF_WEEK=$(date +%u)
-          if [ "$HOUR" -ge 7 ] && [ "$HOUR" -le 19 ] && [ "$DAY_OF_WEEK" -ge 1 ] && [ "$DAY_OF_WEEK" -le 5 ];
+          if [ "${{ inputs.ignore-working-hours }}" != 'true' ] && [ "$HOUR" -ge 7 ] && [ "$HOUR" -le 19 ] && [ "$DAY_OF_WEEK" -ge 1 ] && [ "$DAY_OF_WEEK" -le 5 ];
           then
             echo "Allowing workflow run (07:00 to 19:00, Monday to Friday)"
           else
-            echo "Deployments to staging are only allowed during working hours (07:00 to 19:00, Monday to Friday)"
-            exit 1
+            if [ "${{ inputs.ignore-working-hours }}" == 'true' ]; then
+              echo "Ignoring working hours restriction"
+            else
+              echo "Deployments to staging are only allowed during working hours (07:00 to 19:00, Monday to Friday)"
+              exit 1
+            fi
           fi
 
   compare:
