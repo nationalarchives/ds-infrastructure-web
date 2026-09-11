@@ -28,21 +28,22 @@ concurrency:
 jobs:
   check-time:
     runs-on: ubuntu-latest
+    outputs:
+      within-hours: ${{ steps.check.outputs.within-hours }}
     steps:
-      - name: Check time
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Check working hours
+        id: check
+        uses: ./.github/actions/check-working-hours
+
+      - name: Enforce working hours restriction
         run: |
-          HOUR=$(TZ=Europe/London date +"%H")
-          DAY_OF_WEEK=$(date +%u)
-          if [ "${{ inputs.ignore-working-hours }}" != 'true' ] && [ "$HOUR" -ge 7 ] && [ "$HOUR" -le 19 ] && [ "$DAY_OF_WEEK" -ge 1 ] && [ "$DAY_OF_WEEK" -le 5 ];
-          then
-            echo "Allowing workflow run (07:00 to 19:00, Monday to Friday)"
-          else
-            if [ "${{ inputs.ignore-working-hours }}" == 'true' ]; then
-              echo "Ignoring working hours restriction"
-            else
-              echo "Deployments to staging are only allowed during working hours (07:00 to 19:00, Monday to Friday)"
-              exit 1
-            fi
+          if [ "${{ steps.check.outputs.within-hours }}" != 'true' ] && [ "${{ inputs.ignore-working-hours }}" != 'true' ]; then
+            echo "Deployments to staging are only allowed during working hours (07:00 to 19:00, Monday to Friday)"
+            exit 1
           fi
 
   compare:
@@ -145,8 +146,8 @@ jobs:
   notify-start:
     runs-on: ubuntu-latest
     needs:
+      - check-time
       - create-release
-    if: inputs.notify-slack
     steps:
       - uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661 # v2.3.3
         env:
@@ -163,7 +164,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs:
+      - check-time
       - create-release
+    if: needs.check-time.outputs.within-hours == 'true'
     strategy:
       matrix:
         service:
@@ -212,6 +215,7 @@ jobs:
   notify-end-status:
     runs-on: ubuntu-latest
     needs:
+      - check-time
       - create-release
       - deploy
     if: ${{ !cancelled() && inputs.notify-slack }}
@@ -245,7 +249,9 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     needs:
+      - check-time
       - deploy
+    if: needs.check-time.outputs.within-hours == 'true'
     env:
       GH_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN_TEST_RUNNER }}
     steps:
