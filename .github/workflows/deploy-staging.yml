@@ -29,20 +29,19 @@ jobs:
   check-time:
     runs-on: ubuntu-latest
     outputs:
-      within-hours: ${{ steps.check.outputs.WITHIN_HOURS }}
+      within-hours: ${{ steps.check.outputs.within-hours }}
     steps:
-      - name: Check time
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Check working hours
         id: check
+        uses: ./.github/actions/check-working-hours
+
+      - name: Enforce working hours restriction
         run: |
-          HOUR=$(TZ=Europe/London date +"%H")
-          DAY_OF_WEEK=$(date +%u)
-          if [ "$HOUR" -ge 7 ] && [ "$HOUR" -le 19 ] && [ "$DAY_OF_WEEK" -ge 1 ] && [ "$DAY_OF_WEEK" -le 5 ]; then
-            echo "Allowing workflow run (07:00 to 19:00, Monday to Friday)"
-            echo "WITHIN_HOURS=true" >> "$GITHUB_OUTPUT"
-          elif [ "${{ inputs.ignore-working-hours }}" == 'true' ]; then
-            echo "Ignoring working hours restriction"
-            echo "WITHIN_HOURS=false" >> "$GITHUB_OUTPUT"
-          else
+          if [ "${{ steps.check.outputs.within-hours }}" != 'true' ] && [ "${{ inputs.ignore-working-hours }}" != 'true' ]; then
             echo "Deployments to staging are only allowed during working hours (07:00 to 19:00, Monday to Friday)"
             exit 1
           fi

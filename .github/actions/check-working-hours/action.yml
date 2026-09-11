@@ -1,0 +1,24 @@
+name: Check working hours
+description: Determine whether the current time is within permitted working hours (07:00-19:00, Monday-Friday, Europe/London)
+
+outputs:
+  within-hours:
+    description: "'true' if within working hours, 'false' otherwise"
+    value: ${{ steps.check.outputs.WITHIN_HOURS }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check time
+      id: check
+      shell: bash
+      run: |
+        HOUR=$(TZ=Europe/London date +"%H")
+        DAY_OF_WEEK=$(date +%u)
+        if [ "$HOUR" -ge 7 ] && [ "$HOUR" -le 19 ] && [ "$DAY_OF_WEEK" -ge 1 ] && [ "$DAY_OF_WEEK" -le 5 ]; then
+          echo "Within working hours (07:00 to 19:00, Monday to Friday)"
+          echo "WITHIN_HOURS=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "Outside working hours (07:00 to 19:00, Monday to Friday)"
+          echo "WITHIN_HOURS=false" >> "$GITHUB_OUTPUT"
+        fi
