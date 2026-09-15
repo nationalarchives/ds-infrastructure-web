@@ -1,3 +1,14 @@
 {
-    "ENVIRONMENT_NAME": "develop"
+  "ALLOW_INSECURE": "true",
+  "APPLICATION_PROTOCOL": "http",
+  "ALLOWED_HOSTS": "*",
+  "CSRF_TRUSTED_ORIGINS": "https://www.nationalarchives.gov.uk",
+  "SECRET_KEY": "=====SECRET=====",
+  "COOKIE_DOMAIN": ".nationalarchives.gov.uk",
+  "DJANGO_SETTINGS_MODULE": "config.settings.develop",
+  "ENVIRONMENT_NAME": "develop",
+  "DATABASE_HOST": "????????????",
+  "DATABASE_NAME": "????????????",
+  "DATABASE_USER": "=====SECRET=====",
+  "DATABASE_PASSWORD": "=====SECRET====="
 }
