@@ -112,3 +112,13 @@ resource "aws_route53_record" "platform_redis" {
     }
 }
 
+resource "aws_route53_record" "web_feedback" {
+    zone_id = var.route53_zone
+    name    = "web-feedback.${var.environment}.local"
+    type    = "CNAME"
+    ttl     = 15
+
+    records = [
+        module.load-balancer.load_balancer_dns_name
+    ]
+}
