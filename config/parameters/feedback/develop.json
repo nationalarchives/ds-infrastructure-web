@@ -7,8 +7,8 @@
   "COOKIE_DOMAIN": ".nationalarchives.gov.uk",
   "DJANGO_SETTINGS_MODULE": "config.settings.develop",
   "ENVIRONMENT_NAME": "develop",
-  "DATABASE_HOST": "????????????",
-  "DATABASE_NAME": "????????????",
+  "DATABASE_HOST": "postgres-main-prime.dev.local",
+  "DATABASE_NAME": "feedback",
   "DATABASE_USER": "=====SECRET=====",
   "DATABASE_PASSWORD": "=====SECRET====="
 }
