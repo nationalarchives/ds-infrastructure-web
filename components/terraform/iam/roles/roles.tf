@@ -64,6 +64,12 @@ resource "aws_iam_role" "web_bulkdownload_role" {
     assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
+# Feedback Role
+resource "aws_iam_role" "web_feedback_role" {
+    name = "web-feedback-role"
+    assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
+}
+
 # Request Service Record Role - MoD FoI
 resource "aws_iam_role" "web_request_service_record_role" {
   name = "web-request-service-record-role"
@@ -210,6 +216,12 @@ resource "aws_iam_instance_profile" "web_catalogue_profile" {
 resource "aws_iam_instance_profile" "web_bulkdownload_profile" {
   name = "web-bulkdownload-profile"
   role = aws_iam_role.web_bulkdownload_role.name
+}
+
+## Instance Profile for Web Feedback Role
+resource "aws_iam_instance_profile" "web_feedback_profile" {
+  name = "web-feedback-profile"
+  role = aws_iam_role.web_feedback_role.name
 }
 
 #---------------------------------------------------------------------------
@@ -624,6 +636,25 @@ resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_me
   count      = var.environment == "live" ? 1 : 0
   role       = aws_iam_role.web_bulkdownload_role.name
   policy_arn = var.web_bulkdownload_merlin_notifications_policy_arn
+}
+
+##-------------------------------------------------------------
+### Attach Policies to Web Feedback Role  
+##-------------------------------------------------------------
+
+resource "aws_iam_role_policy_attachment" "web_feedback_policy_attachment_1" {
+  role       = aws_iam_role.web_feedback_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_role_policy_attachment" "web_feedback_policy_attachment_2" {
+  role       = aws_iam_role.web_feedback_role.name
+  policy_arn = var.org_level_logging_arn
+}
+
+resource "aws_iam_role_policy_attachment" "web_feedback_policy_attachment_3" {
+  role       = aws_iam_role.web_feedback_role.name
+  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
 
 ##-------------------------------------------------------------  

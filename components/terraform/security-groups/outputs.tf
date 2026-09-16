@@ -47,3 +47,7 @@ output "web_hospitalrecords_sg_id" {
 output "web_bulkdownload_sg_id" {
   value = aws_security_group.web_bulkdownload.id
 }
+
+output "web_feedback_sg_id" {
+  value = aws_security_group.web_feedback.id
+}

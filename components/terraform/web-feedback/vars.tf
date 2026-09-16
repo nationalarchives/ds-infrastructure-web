@@ -28,10 +28,7 @@ variable "folder_s3_key" {}
 variable "asg_tags" {}
 variable "tags" {}
 
-variable "efs_dns_name" {}
-
 variable "web_feedback_sg_id" {}
-variable "enable_monitoring" {}
-variable "web_feedback_efs_mount_dir" {}
 variable "web_feedback_instance_profile_arn" {}
 variable "web_feedback_role_name" {}
+variable "enable_monitoring" {}

@@ -62,6 +62,22 @@ resource "aws_wafv2_ip_set" "wagtail_admins" {
     }
 }
 
+resource "aws_wafv2_ip_set" "hospitalrecords_admins" {
+    provider = aws.aws-cf-waf
+
+    name               = "hospitalrecords-admins"
+    description        = "IP set containing Hospital Records admin IP addresses."
+    scope              = "CLOUDFRONT"
+    ip_address_version = "IPV4"
+    addresses          = var.hospitalrecords_admin_ips
+
+    tags = var.tags
+
+    lifecycle {
+        ignore_changes = [addresses]
+    }
+}
+
 resource "aws_wafv2_ip_set" "torchbox_seo_audit" {
     provider = aws.aws-cf-waf
 

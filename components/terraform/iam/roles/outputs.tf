@@ -164,3 +164,13 @@ output "web_bulkdownload_role_name" {
 output "web_bulkdownload_instance_profile_arn" {
   value = aws_iam_instance_profile.web_bulkdownload_profile.arn
 }
+
+## Feedback
+output "web_feedback_role_name" {
+  value = aws_iam_role.web_feedback_role.name
+}
+
+output "web_feedback_instance_profile_arn" {
+  value = aws_iam_instance_profile.web_feedback_profile.arn
+}
+

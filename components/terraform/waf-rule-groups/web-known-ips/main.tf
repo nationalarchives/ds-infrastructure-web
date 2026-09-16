@@ -19,6 +19,9 @@ variable "wagtail_admin_ipset_arn" {
 variable "wp_admin_ipset_arn" {
     description = "wordpress admin ipset arn"
 }
+variable "hospitalrecords_admin_ipset_arn" {
+    description = "hospitalrecords admin ipset arn"
+}
 
 locals {
     wagtail_admin_prefix = var.environment == "live" ? "wagtail." : "${var.environment}-wagtail."
@@ -177,6 +180,50 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
             cloudwatch_metrics_enabled = true
             metric_name                = "web-wp-admin-ips"
             sampled_requests_enabled   = true
+        }
+    }
+    rule {
+    name     = "hospitalrecords-admin-ips"
+    priority = 5
+
+    action {
+        block {}
+    }
+
+    statement {
+        and_statement {
+            # Match only the Hospital Records admin path
+            statement {
+                byte_match_statement {
+                    positional_constraint = "STARTS_WITH"
+                    search_string         = "/hospital-records/admin/"
+
+                    field_to_match {
+                        uri_path {}
+                    }
+
+                    text_transformation {
+                        priority = 0
+                        type     = "LOWERCASE"
+                    }
+                }
+            }
+            statement {
+                not_statement {
+                    statement {
+                        ip_set_reference_statement {
+                            arn = var.hospitalrecords_admin_ipset_arn
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    visibility_config {
+        cloudwatch_metrics_enabled = true
+        metric_name                = "hospitalrecords-admin-ips"
+        sampled_requests_enabled   = true
         }
     }
     visibility_config {

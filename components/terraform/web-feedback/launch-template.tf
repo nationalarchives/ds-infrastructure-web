@@ -17,9 +17,7 @@ resource "aws_launch_template" "web_feedback" {
         var.web_feedback_sg_id
     ]
 
-    user_data = base64encode(templatefile("${path.module}/scripts/userdata.sh", {
-        mount_target         = var.efs_dns_name,
-        web_feedback_efs_mount_dir            = var.web_feedback_efs_mount_dir,
+    user_data = base64encode(templatefile("${path.module}/scripts/userdata.sh", {        
         deployment_s3_bucket = var.deployment_s3_bucket,
         nginx_folder_s3_key  = var.folder_s3_key
     }))
