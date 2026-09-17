@@ -657,6 +657,11 @@ resource "aws_iam_role_policy_attachment" "web_feedback_policy_attachment_3" {
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
 
+resource "aws_iam_role_policy_attachment" "web_feedback_policy_attachment_4" {
+  role       = aws_iam_role.web_feedback_role.name
+  policy_arn = var.application_parameter_store_policy_arn
+}
+
 ##-------------------------------------------------------------  
 ####### Attach Policies to wagtail cron trigger Role
 ##-------------------------------------------------------------

@@ -61,7 +61,7 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
     }
     rule {
         name     = "known-ips-list"
-        priority = 1
+        priority = 4
         action {
             dynamic "allow" {
                 for_each = var.allow_action == false ? [""] : []
@@ -86,7 +86,7 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
     }
     rule {
         name     = "torchbox-seo-audit-ips-list-exceptions"
-        priority = 2
+        priority = 5
         action {
             allow {}
         }
@@ -104,7 +104,7 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
     }
     rule {
         name     = "wagtail-admin-ips"
-        priority = 3
+        priority = 1
         action {
             block {}
         }
@@ -144,7 +144,7 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
     }
     rule {
         name     = "wp-admin-ips"
-        priority = 4
+        priority = 2
         action {
             block {}
         }
@@ -184,7 +184,7 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
     }
     rule {
     name     = "hospitalrecords-admin-ips"
-    priority = 5
+    priority = 3
 
     action {
         block {}
@@ -196,7 +196,7 @@ resource "aws_wafv2_rule_group" "web_known_ips_rg" {
             statement {
                 byte_match_statement {
                     positional_constraint = "STARTS_WITH"
-                    search_string         = "/hospital-records/admin/"
+                    search_string         = "/hospital-records/admin"
 
                     field_to_match {
                         uri_path {}
