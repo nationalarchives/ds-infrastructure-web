@@ -138,3 +138,12 @@ web_bulkdownload_asg_min_size                  = 1
 web_bulkdownload_asg_desired_capacity          = 1
 web_bulkdownload_asg_health_check_grace_period = 150
 web_bulkdownload_asg_health_check_type         = "EC2"
+
+## Feedback
+web_feedback_patch_group      = "web-feedback-patchgroup"
+web_feedback_deployment_group = "web-feedback-deploygroup" 
+web_feedback_asg_max_size                  = 2
+web_feedback_asg_min_size                  = 1
+web_feedback_asg_desired_capacity          = 1
+web_feedback_asg_health_check_grace_period = 150
+web_feedback_asg_health_check_type         = "EC2"

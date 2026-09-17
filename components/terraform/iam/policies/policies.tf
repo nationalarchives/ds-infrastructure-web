@@ -169,6 +169,7 @@ resource "aws_iam_policy" "codedeploy_web_access_policy" {
     policy = templatefile("${path.root}/shared-templates/codedeploy-access-policy.json",
         {
             service_policy_arn = aws_iam_policy.codedeploy_web_s3_access.arn
+            environment        = var.environment
         }
     )
 }
@@ -208,6 +209,7 @@ resource "aws_iam_policy" "codedeploy_web_reverse_proxy_access_policy" {
     policy = templatefile("${path.root}/shared-templates/codedeploy-access-policy.json",
         {
             service_policy_arn = aws_iam_policy.codedeploy_web_reverse_proxy_s3_access.arn
+            environment        = var.environment
         }
     )
 }

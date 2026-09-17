@@ -130,7 +130,7 @@ resource "aws_iam_role" "codedeploy_web_reverse_proxy_service_role" {
 
 # CodeDeploy Service Role for Web Role
 resource "aws_iam_role" "codedeploy_web_service_role" {
-    name = "codedeploy-web-service_role"
+    name = "codedeploy-web-service-role"
     assume_role_policy = file("${path.root}/shared-templates/codedeploy-service-policy.json")
     tags = var.tags
 }
@@ -588,10 +588,6 @@ resource "aws_iam_role_policy_attachment" "codedeploy_web_lambda_sync_s3_to_efs_
     role       = aws_iam_role.codedeploy_web_service_role.name
     policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
-# resource "aws_iam_role_policy_attachment" "codedeploy_web_lambda_sync_s3_to_efs_read_content" {
-#     role       = aws_iam_role.codedeploy_web_service_role.name
-#     policy_arn = var.s3_deployment_source_static_content_read_arn
-# }
 
 ##-------------------------------------------------------------  
 ####### Attach Policies to Web Bulk Download Role

@@ -25,7 +25,6 @@
                 "iam:ListRoles",
                 "iam:PutRolePolicy",
                 "iam:RemoveRoleFromInstanceProfile",
-                "s3:*",
                 "ssm:*"
             ],
             "Resource": "*"
@@ -39,15 +38,26 @@
             "Resource": "${service_policy_arn}"
         },
         {
+            "Sid": "DeploymentSourceS3Access",
+            "Effect": "Allow",
+            "Action": [
+                "s3:*"
+            ],
+            "Resource": [
+                "arn:aws:s3:::ds-${environment}-deployment-source",
+                "arn:aws:s3:::ds-${environment}-deployment-source/*"
+            ]
+        },
+        {
+            "Sid": "CodeDeployS3Access",
+            "Effect": "Allow",
             "Action": [
                 "s3:Get*",
                 "s3:List*"
             ],
-            "Effect": "Allow",
             "Resource": [
                 "arn:aws:s3:::aws-codedeploy-eu-west-2/*"
-            ],
-            "Sid": "CodeDeployS3Access"
+            ]
         }
     ]
 }
