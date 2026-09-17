@@ -19,5 +19,6 @@
   "CACHE_REDIS_URL": "redis://platform-redis.live.local:6379",
   "ENRICHMENT_TIMING_ENABLED": "false",
   "ENABLE_PARALLEL_API_CALLS": "true",
+  "CSRF_TRUSTED_ORIGINS": "https://beta.nationalarchives.gov.uk",
   "FEATURE_ENABLE_HELD_BY_DISCOVERY": "false"
 }
