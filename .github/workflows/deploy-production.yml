@@ -135,6 +135,8 @@ jobs:
           - requestservicerecord
           - bulkdownload
           - forms
+          - hospitalrecords
+          - feedback
     timeout-minutes: 15
     permissions:
       id-token: write

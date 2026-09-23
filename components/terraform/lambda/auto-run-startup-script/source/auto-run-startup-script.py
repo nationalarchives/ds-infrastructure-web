@@ -125,7 +125,8 @@ def lambda_handler(event, context):
         "requestservicerecord":"web-request-service-record",
         "forms":"web-forms",
         "bulkdownload":"web-bulkdownload",
-        "hospitalrecords":"web-hospitalrecords"
+        "hospitalrecords":"web-hospitalrecords",
+        "feedback":"web-feedback"
     }
 
     if 'service' in event:

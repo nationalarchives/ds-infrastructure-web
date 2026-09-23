@@ -29,6 +29,7 @@ on:
           - web-wagtail
           - web-bulkdownload
           - web-request-service-record
+          - web-feedback
 
       duration:
         description: "How far back should the logs go?"

@@ -48,6 +48,8 @@ jobs:
           - requestservicerecord
           - bulkdownload
           - forms
+          - hospitalrecords
+          - feedback
     permissions:
       id-token: write
     timeout-minutes: 15

@@ -123,7 +123,7 @@ web_reverse_proxy_scale_out_threshold            = 0
 web_hospitalrecords_patch_group      = "web-hospitalrecords-patchgroup"
 web_hospitalrecords_deployment_group = "web-hospitalrecords-deploygroup"
 
-web_hospitalrecords_asg_max_size                  = 1
+web_hospitalrecords_asg_max_size                  = 2
 web_hospitalrecords_asg_min_size                  = 1
 web_hospitalrecords_asg_desired_capacity          = 1
 web_hospitalrecords_asg_health_check_grace_period = 150
