@@ -83,6 +83,13 @@ resource "aws_s3_object" "redirects_conf" {
   source_hash = filemd5("${path.module}/scripts/redirects.conf")
 }
 
+resource "aws_s3_object" "redirects_query_conf" {
+  bucket = var.deployment_s3_bucket
+  key    = "${var.service}/${var.nginx_folder_s3_key}/redirects-query.conf"
+  source = "${path.module}/scripts/redirects-query.conf"
+  source_hash = filemd5("${path.module}/scripts/redirects-query.conf")
+}
+
 resource "aws_s3_object" "streamline_hpp_conf" {
   bucket = var.deployment_s3_bucket
   key    = "${var.service}/${var.nginx_folder_s3_key}/streamline-hpp.conf"

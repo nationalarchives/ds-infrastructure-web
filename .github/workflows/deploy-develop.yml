@@ -50,7 +50,6 @@ jobs:
           - bulkdownload
           - forms
           - hospitalrecords
-          - feedback
     permissions:
       id-token: write
       packages: read
