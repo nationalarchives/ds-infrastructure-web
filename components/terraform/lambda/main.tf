@@ -126,7 +126,8 @@ resource "aws_lambda_function" "process_submitted_files" {
   timeout       = 300
 
 
-  filename = "${path.module}/process-submitted-files/process-submitted-files.zip"
+  filename         = data.archive_file.process_submitted_files.output_path
+  source_code_hash = data.archive_file.process_submitted_files.output_base64sha256
 
   environment {
     variables = {
