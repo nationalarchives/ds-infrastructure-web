@@ -31,7 +31,7 @@ module "web_bulkdownload" {
     web_bulkdownload_sg_id = module.sgs.web_bulkdownload_sg_id
     efs_dns_name = module.media_efs.media_efs_dns_name
     enable_monitoring = var.enable_monitoring
-    
+    account = var.account
     asg_max_size = var.web_bulkdownload_asg_max_size
     asg_min_size = var.web_bulkdownload_asg_min_size
     asg_desired_capacity = var.web_bulkdownload_asg_desired_capacity

@@ -75,9 +75,9 @@ resource "aws_route53_record" "web_forms" {
     ]
 }
 
-resource "aws_route53_record" "web_hosprec" {
+resource "aws_route53_record" "web_hospitalrecords" {
     zone_id = var.route53_zone
-    name    = "web-hosprec.${var.environment}.local"
+    name    = "web-hospitalrecords.${var.environment}.local"
     type    = "CNAME"
     ttl     = 15
 
@@ -89,6 +89,32 @@ resource "aws_route53_record" "web_hosprec" {
 resource "aws_route53_record" "web_bulkdownload" {
     zone_id = var.route53_zone
     name    = "web-bulkdownload.${var.environment}.local"
+    type    = "CNAME"
+    ttl     = 15
+
+    records = [
+        module.load-balancer.load_balancer_dns_name
+    ]
+}
+
+resource "aws_route53_record" "platform_redis" {
+    zone_id = var.route53_zone
+    name    = "platform-redis.${var.environment}.local"
+    type    = "A"
+    ttl     = 15
+
+    records = [
+        "0.0.0.0"
+    ]
+
+    lifecycle {
+        ignore_changes = [records]
+    }
+}
+
+resource "aws_route53_record" "web_feedback" {
+    zone_id = var.route53_zone
+    name    = "web-feedback.${var.environment}.local"
     type    = "CNAME"
     ttl     = 15
 

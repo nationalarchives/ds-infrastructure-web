@@ -24,4 +24,6 @@ jobs:
           persist-credentials: false
       - name: Copy database to development
         run: |
-          echo "Copy ${{ inputs.source }} DB to development"
+          echo "Copy $SOURCE DB to development"
+        env:
+          SOURCE: ${{ inputs.source }}

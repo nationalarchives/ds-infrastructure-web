@@ -2,7 +2,7 @@ resource "aws_wafv2_ip_set" "web_access" {
     provider = aws.aws-cf-waf
 
     name               = "web-access"
-    description        = "IP set containing allowed or blocked IP addresses, depending on the default action."
+    description        = "IP set containing allowed or blocked IP addresses,depending on the default action."
     scope              = "CLOUDFRONT"
     ip_address_version = "IPV4"
     addresses          = var.site_ips
@@ -18,7 +18,7 @@ resource "aws_wafv2_ip_set" "web_exceptions" {
     provider = aws.aws-cf-waf
 
     name               = "web-exceptions"
-    description        = "IP set containing exception IP addresses, depending on the default action."
+    description        = "IP set containing exception IP addresses,depending on the default action."
     scope              = "CLOUDFRONT"
     ip_address_version = "IPV4"
     addresses          = var.exception_site_ips
@@ -54,6 +54,22 @@ resource "aws_wafv2_ip_set" "wagtail_admins" {
     scope              = "CLOUDFRONT"
     ip_address_version = "IPV4"
     addresses          = var.wagtail_admin_ips
+
+    tags = var.tags
+
+    lifecycle {
+        ignore_changes = [addresses]
+    }
+}
+
+resource "aws_wafv2_ip_set" "hospitalrecords_admins" {
+    provider = aws.aws-cf-waf
+
+    name               = "hospitalrecords-admins"
+    description        = "IP set containing Hospital Records admin IP addresses."
+    scope              = "CLOUDFRONT"
+    ip_address_version = "IPV4"
+    addresses          = var.hospitalrecords_admin_ips
 
     tags = var.tags
 

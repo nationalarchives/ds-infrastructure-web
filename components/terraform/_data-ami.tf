@@ -229,13 +229,13 @@ data "aws_ami" "web_reverse_proxy_ami" {
     ]
 }
 
-data "aws_ami" "web_hosprec_ami" {
+data "aws_ami" "web_hospitalrecords_ami" {
     most_recent = true
 
     filter {
         name   = "name"
         values = [
-            "web-hosprec-primer*"
+            "web-hospitalrecords-primer*"
         ]
     }
 
@@ -259,6 +259,29 @@ data "aws_ami" "web_bulkdownload_ami" {
         name   = "name"
         values = [
             "web-bulkdownload-primer*"
+        ]
+    }
+
+    filter {
+        name   = "virtualization-type"
+        values = [
+            "hvm"
+        ]
+    }
+
+    owners = [
+        data.aws_caller_identity.current.account_id,
+        "amazon"
+    ]
+}
+
+data "aws_ami" "web_feedback_ami" {
+    most_recent = true
+
+    filter {
+        name   = "name"
+        values = [
+            "web-feedback-primer*"
         ]
     }
 

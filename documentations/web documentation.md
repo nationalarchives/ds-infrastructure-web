@@ -7,8 +7,7 @@
 The ds-infrastructure-web repository contains terraform configurations for migrating the **Etna** application from **Platform.sh** to **AWS**. This documentation provides a detailed guide on the architecture, deployment process, security practices, and recovery procedures.
 
 ## **2. Architecture**
-
-![Architecture diagram](./general-web-infrastructure.draw.io)
+![Etna Architecture](Etna%20Architecture.jpg)
 
 ## **3. Components**
 
@@ -17,31 +16,49 @@ The ds-infrastructure-web repository contains terraform configurations for migra
 - Accessed via an Application Load Balancer.
 - Uses AMI for deployment (web-frontend-primer\*).
 - It serves user facing part of Etna application.
+- URL: https://www.nationalarchives.gov.uk/
 
 **_Enrichment_**
 - Hosted on EC2 instances (`web-enrichment`) in an ASG.
 - Uses AMI for deployment (web-enrichment-primer\*).
 - The enrichment service is a backend component that processes and enhances data before it's delivered to users or other services.
+- URL: https://www.nationalarchives.gov.uk/enrichment/css/logo-adornments.css
 
 **_Wagtail_**
 - Wagtail refers to the **CMS(Content Management System)** component likely used to manage and serve content for Etna application.
+- Hosted on EC2 instance (`web-wagtail`)
+- URL: https://wagtail.nationalarchives.gov.uk/admin
 
 **_Wagtaildocs_**
 - Wagtaildocs is likely a component of the Wagtail CMS that manages document storage and retrieval.
 - Hosted on EC2 instances (`web-wagtaildocs`).
+- URL: https://wagtail.nationalarchives.gov.uk/
 
 **_Forms_**
 - Hosted on EC2 instances (`web-forms`).
+- URL: https://www.nationalarchives.gov.uk/forms/static/main.css
 
 **_Search_**
 - Hosted on EC2 instances (`web-search`).
+- URL: https://beta.nationalarchives.gov.uk/search/
 
 **_Request-Service-Record_**
 - Hosted on EC2 instances (`web-request-service-record`).
+- URL: https://www.nationalarchives.gov.uk/request-a-military-service-record/
 
 **_Catalogue_**
 - Hosted on EC2 instances (`web-catalogue`).
 - Currently reverse proxied from `beta-rp`.
+- URL: https://beta.nationalarchives.gov.uk/catalogue/
+
+**_Hospitalrecords_**
+- Hosted on EC2 instance (`web-hospitalrecords`).
+- Responsible for handling hospital record-related functionality.
+- URL: https://www.nationalarchives.gov.uk/hospital-records/
+
+**_Bulkdownload_**
+- Hosted on EC2 instance (`web-bulkdownload`).
+- Provides bulk download functionality, allowing users to download large sets of records or files efficiently.
 
 **_Cognito_**
 - Manages user authentication and authorization.
@@ -54,7 +71,7 @@ The ds-infrastructure-web repository contains terraform configurations for migra
 - Used for media storage.
 
 **_Reverse Proxy_**
-- Hosted on EC2 instances in an ASG.
+- Hosted on EC2 instances (`web-reverse-proxy`) in an ASG.
 - Uses AMI for deployment (web-reverse-proxy-primer\*).
 - Configured with NGINX for routing traffic.
 
@@ -115,6 +132,7 @@ After completing your Terraform operations, ensure that all copied variable and 
 ```
 rm -f *.auto.tfvars backend.tf
 ```
+Make sure `locals.tf` file is deleted from cloudfront and IAM Polciies.
 
 **_2. Initialise Terraform_**
 
@@ -153,12 +171,13 @@ terraform plan \
   -var-file="_vars/dev/forms.auto.tfvars" \
   -var-file="_vars/dev/reverse-proxy.auto.tfvars" \
   -var-file="_vars/dev/wp-website.auto.tfvars" \
-  -var-file="_vars/dev/hosprec.auto.tfvars" \
+  -var-file="_vars/dev/hospitalrecords.auto.tfvars" \
   -var-file="_vars/dev/cloudfront.auto.tfvars" \
   -var-file="_vars/dev/environment.auto.tfvars" \
   -var-file="_vars/dev/waf.auto.tfvars" \
   -var-file="_vars/dev/waf-rules.auto.tfvars" \
-  -var-file="_vars/dev/codedeploy.auto.tfvars"
+  -var-file="_vars/dev/codedeploy.auto.tfvars" \
+  -var-file="_vars/dev/bulkdownload.auto.tfvars"
 ```
 
 **_Staging plan_**
@@ -188,12 +207,13 @@ terraform plan \
   -var-file="_vars/staging/forms.auto.tfvars" \
   -var-file="_vars/staging/reverse-proxy.auto.tfvars" \
   -var-file="_vars/staging/wp-website.auto.tfvars" \
-  -var-file="_vars/staging/hosprec.auto.tfvars" \
+  -var-file="_vars/staging/hospitalrecords.auto.tfvars" \
   -var-file="_vars/staging/cloudfront.auto.tfvars" \
   -var-file="_vars/staging/environment.auto.tfvars" \
   -var-file="_vars/staging/waf.auto.tfvars" \
   -var-file="_vars/staging/waf-rules.auto.tfvars" \
-  -var-file="_vars/staging/codedeploy.auto.tfvars"
+  -var-file="_vars/staging/codedeploy.auto.tfvars" \
+  -var-file="_vars/staging/bulkdownload.auto.tfvars"
 ```
 
 **_Live plan_**
@@ -223,12 +243,13 @@ terraform plan \
 -var-file="_vars/live/forms.auto.tfvars" \
 -var-file="_vars/live/reverse-proxy.auto.tfvars" \
 -var-file="_vars/live/wp-website.auto.tfvars" \
--var-file="_vars/live/hosprec.auto.tfvars" \
+-var-file="_vars/live/hospitalrecords.auto.tfvars" \
 -var-file="_vars/live/cloudfront.auto.tfvars" \
 -var-file="_vars/live/environment.auto.tfvars" \
 -var-file="_vars/live/waf.auto.tfvars" \
 -var-file="_vars/live/waf-rules.auto.tfvars" \
--var-file="_vars/live/codedeploy.auto.tfvars"
+-var-file="_vars/live/codedeploy.auto.tfvars" /
+-var-file="_vars/live/bulkdownload.auto.tfvars"
 ```
 
 **_4. Apply Configuration_**
@@ -260,12 +281,13 @@ terraform apply \
   -var-file="_vars/dev/forms/auto.tfvars" \
   -var-file="_vars/dev/reverse-proxy.auto.tfvars" \
   -var-file="_vars/dev/wp-website.auto.tfvars" \
-  -var-file="_vars/dev/hosprec.auto.tfvars" \
+  -var-file="_vars/dev/hospitalrecords.auto.tfvars" \
   -var-file="_vars/dev/cloudfront.auto.tfvars" \
   -var-file="_vars/dev/environment.auto.tfvars" \
   -var-file="_vars/dev/waf.auto.tfvars" \
   -var-file="_vars/dev/waf-rules.auto.tfvars" \
-  -var-file="_vars/dev/codedeploy.auto.tfvars"
+  -var-file="_vars/dev/codedeploy.auto.tfvars" \
+  -var-file="_vars/dev/bulkdownload.auto.tfvars"
 ```
 
 **_Staging apply_**
@@ -295,12 +317,13 @@ terraform apply \
   -var-file="_vars/staging/forms.auto.tfvars" \
   -var-file="_vars/staging/reverse-proxy.auto.tfvars" \
   -var-file="_vars/staging/wp-website.auto.tfvars" \
-  -var-file="_vars/staging/hosprec.auto.tfvars" \
+  -var-file="_vars/staging/hospitalrecords.auto.tfvars" \
   -var-file="_vars/staging/cloudfront.auto.tfvars" \
   -var-file="_vars/staging/environment.auto.tfvars" \
   -var-file="_vars/staging/waf.auto.tfvars" \
   -var-file="_vars/staging/waf-rules.auto.tfvars" \
-  -var-file="_vars/staging/codedeploy.auto.tfvars"
+  -var-file="_vars/staging/codedeploy.auto.tfvars" \
+  -var-file="_vars/staging/bulkdownload.auto.tfvars"
 ```
 
 **_Live apply_**
@@ -330,12 +353,13 @@ terraform apply \
 -var-file="_vars/live/forms.auto.tfvars" \
 -var-file="_vars/live/reverse-proxy.auto.tfvars" \
 -var-file="_vars/live/wp-website.auto.tfvars" \
--var-file="_vars/live/hosprec.auto.tfvars" \
+-var-file="_vars/live/hospitalrecords.auto.tfvars" \
 -var-file="_vars/live/cloudfront.auto.tfvars" \
 -var-file="_vars/live/environment.auto.tfvars" \
 -var-file="_vars/live/waf.auto.tfvars" \
 -var-file="_vars/live/waf-rules.auto.tfvars" \
--var-file="_vars/live/codedeploy.auto.tfvars"
+-var-file="_vars/live/codedeploy.auto.tfvars" \
+-var-file="_vars/live/bulkdownload.auto.tfvars"
 ```
 
 **_5. Verify Deployment_**
@@ -355,16 +379,20 @@ terraform apply \
 - `web-catalogue.tf`: Configures the catalogue service.
 - `web-wagtaildocs.tf`: Configures the wagtail docs service.
 - `web-forms.tf`: Configures the forms service.
+- `web-search.tf`: Configures the search service.
 - `web-request-service-record.tf`: Configures the Request a Military Record service.
+- `web-wagtail.tf`: Configures the wagtail CMS service.
+- `web-hospitalrecords.tf`: Configures the hospital records service.
+- `web-bulkdownload.tf`: Configures the bulkdownload service.
+- `web-reverse-proxy.tf`: Configures the NGINX reverse proxy service that routes and filters traffic between CloudFront and backend services.
 - `lambda.tf`: Manages lambda functions and layers.
 - `media-efs.tf`: Configures EFS and backups.
 - `iam.tf`: Defines IAM roles and policies.
 - `provider.tf`: Configures terraform providers (AWS and klayers).
 - `security-groups.tf`: Defines security groups for network access.
-- `web-wagtail.tf`: Configures the wagtail CMS service.
 - `global-variables.tf`: Defines global variables and tags used across all Terraform modules.
 - `waf.tf`: Configures AWS WAF (Web Application Firewall) to protect web services from common exploits (SQL injection, XSS, DDoS).
-- `web-reverse-proxy.tf`: Configures the NGINX reverse proxy service that routes and filters traffic between CloudFront and backend services.
+
 
 **_Best Practices_**
 
@@ -426,18 +454,50 @@ terraform apply \
 
 **Useful commands**
 
+***Nginx***
+
 - Check version of nginx - `nginx -v`
 - More details of nginx - `nginx -V`
-- Location of nginx - `which nginx`
+- Location of nginx binary - `which nginx`
+- Check nginx configuration syntax - `sudo nginx -t`
+- Reload nginx configuration: `sudo nginx -s reload` or `sudo systemctl reload nginx`
+- Restart nginx: `sudo systemctl restart nginx`
+- Check nginx service status: `sudo systemctl status nginx`
+- View nginx logs: `sudo tail -f /var/log/nginx/access.log`
+`sudo tail -f /var/log/nginx/error.log`
+
+***Disk / Mounts***
+
 - Check mounts/disk usage - `df -h`
-- EFS mount - `sudo mount -t nfs4 -o nfsvers=4.1 <efs-dns-name>:/ /path/`
+- Check mounted filesystems - `mount`
+- Check filesystem type - `df -T`
+- List block devices- `lsblk`
+
+
+***EFS Mounts***
+
+- Mount EFS - `sudo mount -t nfs4 -o nfsvers=4.1 <efs-dns-name>:/ /path/`
+(Eg: `sudo mount -t nfs4 -o nfsvers=4.1 fs-xxxxxxxx.efs.eu-west-2.amazonaws.com:/ /mnt/efs`)
+
 - Normal unmount - `sudo umount /path/`
 - If target is busy - `sudo umount -l /path/`
-- Symlink - `sudo ln -s <target> <link_name>` (Eg: `sudo ln -s /mnt/efs /var/nationalarchives.gov.uk`)
+
+***Symlinks***
+
+- Create Symlink - `sudo ln -s <target> <link_name>` (Eg: `sudo ln -s /mnt/efs /var/nationalarchives.gov.uk`)
 - Check symlink - `ls -l /var/nationalarchives.gov.uk`
 - Find where a symlink points - `readlink /var/nationalarchives.gov.uk`
 - remove symlink - `sudo rm /var/nationalarchives.gov.uk` or `sudo unlink /var/nationalarchives.gov.uk`
 - update/change a symlink - `sudo ln -sfn /new/path /old/path/`
-- Check CPU/process uage - `top`
+
+***CPU / Memory / Processes***
+- Check CPU and running processes - `top`
+- Interactive process monitoring - `htop`
+- Check memory usage - `free -h`
+- List running processes - `ps aux`
+- Find a specific process - `ps aux | grep <process-name>`
+- Check process by PID - `ps -fp <PID>`
+- Kill a process - `kill <PID>`
+
 
 

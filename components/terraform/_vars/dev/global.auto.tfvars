@@ -19,8 +19,8 @@ web_enrichment_deployment_s3_root = "web/enrichment"
 web_enrichment_logfile_s3_root = "web/enrichment"
 
 enable_monitoring                 = false
-slack_workspace_id = ""
-slack_channel_id   = ""
+slack_workspace_id = "T09LRLGHY"
+slack_channel_id   = "C0A7BDN600K"
 
 on_prem_cidrs = [
     "172.31.2.0/24",

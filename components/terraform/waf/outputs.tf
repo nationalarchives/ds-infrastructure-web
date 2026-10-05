@@ -19,3 +19,6 @@ output "wp_admin_ip_set_arn" {
 output "torchbox_seo_audit_ip_set_arn" {
     value = aws_wafv2_ip_set.torchbox_seo_audit.arn
 }
+output "hospitalrecords_admin_ip_set_arn" {
+    value       = aws_wafv2_ip_set.hospitalrecords_admins.arn
+}

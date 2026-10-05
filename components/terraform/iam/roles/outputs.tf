@@ -46,6 +46,10 @@ output "lambda_web_rsr_role_name" {
   value = aws_iam_role.lambda_web_rsr_cron_role.name
 }
 
+output "lambda_platform_redis_dns_update_role_arn" {
+  value = aws_iam_role.lambda_platform_redis_dns_update_role.arn
+}
+
 ## Web Frontend role and profile outputs
 output "web_frontend_role_name" {
     value = aws_iam_role.web_frontend_role.name
@@ -59,13 +63,13 @@ output "web_frontend_instance_profile_arn" {
     value = aws_iam_instance_profile.web_frontend_profile.arn
 }
 
-## Hosprec role and profile outputs
-output "web_hosprec_role_name" {
-  value = aws_iam_role.web_hosprec_role.name
+## Hospital Records role and profile outputs
+output "web_hospitalrecords_role_name" {
+  value = aws_iam_role.web_hospitalrecords_role.name
 }
 
-output "web_hosprec_instance_profile_arn" {
-  value = aws_iam_instance_profile.web_hosprec_profile.arn
+output "web_hospitalrecords_instance_profile_arn" {
+  value = aws_iam_instance_profile.web_hospitalrecords_profile.arn
 }
 
 ## Enrichment role and profile outputs
@@ -160,3 +164,13 @@ output "web_bulkdownload_role_name" {
 output "web_bulkdownload_instance_profile_arn" {
   value = aws_iam_instance_profile.web_bulkdownload_profile.arn
 }
+
+## Feedback
+output "web_feedback_role_name" {
+  value = aws_iam_role.web_feedback_role.name
+}
+
+output "web_feedback_instance_profile_arn" {
+  value = aws_iam_instance_profile.web_feedback_profile.arn
+}
+

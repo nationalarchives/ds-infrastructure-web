@@ -53,7 +53,7 @@ jobs:
           MSG_MINIMAL: true
           ENABLE_ESCAPES: true
           SLACKIFY_MARKDOWN: true
-          SLACK_MESSAGE: "@here 👀 Release **[v${{ needs.release-variables.outputs.version }}](${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ needs.release-variables.outputs.version }})** needs approval to deploy to production. [Review the workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+          SLACK_MESSAGE: "@channel 👀 Release **[v${{ needs.release-variables.outputs.version }}](${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ needs.release-variables.outputs.version }})** needs approval to deploy to production. [Review the workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
 
   prepare:
     runs-on: ubuntu-latest
@@ -134,9 +134,12 @@ jobs:
           - wagtaildocs
           - requestservicerecord
           - bulkdownload
+          - forms
+          - hospitalrecords
     timeout-minutes: 15
     permissions:
       id-token: write
+      packages: read
     steps:
       - name: Checkout repo
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2

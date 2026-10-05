@@ -69,3 +69,15 @@ output "lambda_wagtail_cron_trigger_policy_arn" {
 output "lambda_ssm_execution_policy_arn" {
   value = aws_iam_policy.lambda_ssm_execution.arn
 }
+
+output "web_wagtail_cron_notifications_policy_arn" {
+  value = aws_iam_policy.web_wagtail_cron_notifications.arn
+}
+
+output "web_bulkdownload_merlin_notifications_policy_arn" {
+  value = try(aws_iam_policy.web_bulkdownload_merlin_notifications[0].arn, null)
+}
+
+output "lambda_platform_redis_dns_update_policy_arn" {
+  value = aws_iam_policy.lambda_platform_redis_dns_update.arn
+}

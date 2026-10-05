@@ -48,7 +48,7 @@ module "web_wagtail" {
     scale_out_threshold = var.web_wagtail_scale_out_threshold
     enable_monitoring = var.enable_monitoring
 
-
+    web_cron_notifications_sns_topic_arn = module.cron_notifications.sns_topic_arn
     web_wagtail_sg_id = module.sgs.web_wagtail_sg_id
 
     efs_dns_name = module.media_efs.media_efs_dns_name

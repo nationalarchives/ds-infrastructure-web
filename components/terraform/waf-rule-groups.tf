@@ -22,6 +22,7 @@ module "known_ips" {
     wagtail_admin_ipset_arn       = module.waf.wagtail_admin_ip_set_arn
     wp_admin_ipset_arn            = module.waf.wp_admin_ip_set_arn
     torchbox_seo_audit_ipset_arn = module.waf.torchbox_seo_audit_ip_set_arn
+    hospitalrecords_admin_ipset_arn        = module.waf.hospitalrecords_admin_ip_set_arn
 }
 
 module "api_access" {

@@ -126,7 +126,8 @@ resource "aws_lambda_function" "process_submitted_files" {
   timeout       = 300
 
 
-  filename = "${path.module}/process-submitted-files/process-submitted-files.zip"
+  filename         = data.archive_file.process_submitted_files.output_path
+  source_code_hash = data.archive_file.process_submitted_files.output_base64sha256
 
   environment {
     variables = {
@@ -188,5 +189,46 @@ resource "aws_lambda_function" "web_rsr_cron" {
 }
 resource "aws_cloudwatch_log_group" "web_rsr_cron" {
   name              = "/aws/lambda/WebrsrCron"
+  retention_in_days = 7
+}
+
+
+data "archive_file" "platform_redis_dns_update" {
+  type        = "zip"
+  source_dir  = "${path.root}/lambda/platform-redis-dns-update/source"
+  output_path = "${path.root}/lambda/platform-redis-dns-update/platform-redis-dns-update.zip"
+}
+
+resource "aws_lambda_function" "platform_redis_dns_update" {
+  filename         = data.archive_file.platform_redis_dns_update.output_path
+  source_code_hash = data.archive_file.platform_redis_dns_update.output_base64sha256
+
+  function_name = "PlatformRedisDnsUpdate"
+  role          = var.platform_redis_dns_update_role_arn
+  handler       = "platform-redis-dns-update.lambda_handler"
+  runtime       = "python3.12"
+
+  memory_size = 128
+  timeout     = 60
+
+  environment {
+    variables = {
+      ASG_NAME       = "platform-redis"
+      HOSTED_ZONE_ID = var.route53_zone
+      RECORD_NAME    = "platform-redis.${var.environment}.local"
+    }
+  }
+
+  tags = merge(var.tags, {
+    Role            = "serverless"
+    ApplicationType = "python"
+    CreatedBy       = "devops@nationalarchives.gov.uk"
+    Service         = "platform-redis-dns-update"
+    Name            = "platform_redis_dns_update"
+  })
+}
+
+resource "aws_cloudwatch_log_group" "platform_redis_dns_update" {
+  name              = "/aws/lambda/PlatformRedisDnsUpdate"
   retention_in_days = 7
 }

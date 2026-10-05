@@ -25,6 +25,10 @@ variable "torchbox_seo_audit_ips" {
     description = "ip addresses of torchbox seo audit"
     default = []
 }
+variable "hospitalrecords_admin_ips" {
+    description = "ip addresses of hospitalrecords admins"
+    default     = []
+}
 
 # rule switches
 # -------------

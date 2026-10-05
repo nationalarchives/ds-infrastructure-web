@@ -40,10 +40,14 @@ output "web_reverse_proxy_sg_id" {
 output "web_reverse_proxy_lb_security_group_id" {
   value = aws_security_group.web_reverse_proxy.id
 }
-output "web_hosprec_sg_id" {
-    value = aws_security_group.web_hosprec.id
+output "web_hospitalrecords_sg_id" {
+    value = aws_security_group.web_hospitalrecords.id
 }
 
 output "web_bulkdownload_sg_id" {
   value = aws_security_group.web_bulkdownload.id
+}
+
+output "web_feedback_sg_id" {
+  value = aws_security_group.web_feedback.id
 }

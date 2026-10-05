@@ -21,6 +21,8 @@ on:
           - Charlie Jones
           - Corporate Wifi
           - Elise Wong
+          - Freya
+          - ForcePoint
           - Gnanesh
           - Gov Wifi
           - Guy Grannum
@@ -61,6 +63,7 @@ on:
           - web-exceptions
           - wp-admins
           - wagtail-admins
+          - hospitalrecords-admins
 
       new_ip:
         description: "Enter your new IP/CIDR (e.g., 203.0.113.5/32)"
@@ -104,7 +107,8 @@ jobs:
         if: |
           github.event.inputs.ip_set_name == 'web-access' ||
           github.event.inputs.ip_set_name == 'wp-admins' ||
-          github.event.inputs.ip_set_name == 'wagtail-admins'
+          github.event.inputs.ip_set_name == 'wagtail-admins' ||
+          github.event.inputs.ip_set_name == 'hospitalrecords-admins'
         uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
         with:
           aws-region: us-east-1
@@ -117,7 +121,8 @@ jobs:
         if: |
           github.event.inputs.ip_set_name == 'web-access' ||
           github.event.inputs.ip_set_name == 'wp-admins' ||
-          github.event.inputs.ip_set_name == 'wagtail-admins'
+          github.event.inputs.ip_set_name == 'wagtail-admins' ||
+          github.event.inputs.ip_set_name == 'hospitalrecords-admins'
         env:
           ENVIRONMENT: dev
           IP_SET_NAME: ${{ github.event.inputs.ip_set_name }}
@@ -186,6 +191,7 @@ jobs:
 
           lock_token = resp["LockToken"]
           addresses = resp["IPSet"]["Addresses"]
+          description = resp["IPSet"].get("Description")
 
           if old_ip and old_ip in addresses:
               addresses.remove(old_ip)
@@ -202,7 +208,8 @@ jobs:
               Scope="CLOUDFRONT",
               Id=ip_set_id,
               Addresses=addresses,
-              LockToken=lock_token
+              LockToken=lock_token,
+              Description=description
           )
 
           user_ips[user_name] = new_ip
@@ -221,7 +228,8 @@ jobs:
         if: |
           github.event.inputs.ip_set_name == 'web-access' ||
           github.event.inputs.ip_set_name == 'wp-admins' ||
-          github.event.inputs.ip_set_name == 'wagtail-admins'
+          github.event.inputs.ip_set_name == 'wagtail-admins' ||
+          github.event.inputs.ip_set_name == 'hospitalrecords-admins'
         uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
         with:
           aws-region: us-east-1
@@ -234,7 +242,8 @@ jobs:
         if: |
           github.event.inputs.ip_set_name == 'web-access' ||
           github.event.inputs.ip_set_name == 'wp-admins' ||
-          github.event.inputs.ip_set_name == 'wagtail-admins'
+          github.event.inputs.ip_set_name == 'wagtail-admins' ||
+          github.event.inputs.ip_set_name == 'hospitalrecords-admins'
         env:
           ENVIRONMENT: staging
           IP_SET_NAME: ${{ github.event.inputs.ip_set_name }}
@@ -338,6 +347,7 @@ jobs:
         if: |
           github.event.inputs.ip_set_name == 'wp-admins' ||
           github.event.inputs.ip_set_name == 'wagtail-admins' ||
+          github.event.inputs.ip_set_name == 'hospitalrecords-admins' ||
           github.event.inputs.ip_set_name == 'web-exceptions'
         uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
         with:
@@ -351,6 +361,7 @@ jobs:
         if: |
           github.event.inputs.ip_set_name == 'wp-admins' ||
           github.event.inputs.ip_set_name == 'wagtail-admins' ||
+          github.event.inputs.ip_set_name == 'hospitalrecords-admins' ||
           github.event.inputs.ip_set_name == 'web-exceptions'
         env:
           ENVIRONMENT: live

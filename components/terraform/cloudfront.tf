@@ -19,6 +19,7 @@ module "cloudfront" {
 
     wildcard_certificate_arn = data.aws_ssm_parameter.us_east_1_wildcard_certificate_arn.value
     web_waf_info         = module.waf.web_waf_info
+    web_waf_arn              = module.waf.web_waf_info
 
     web_monthly_update_policy_id  = module.cf_custom_cache_policies.web_monthly_update_id
     web_weekly_update_policy_id   = module.cf_custom_cache_policies.web_weekly_update_id

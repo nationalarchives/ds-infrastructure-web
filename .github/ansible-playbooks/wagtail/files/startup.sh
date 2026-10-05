@@ -73,6 +73,11 @@ for full_name in $PARAM_NAMES; do
         --output text)
 
     printf '%s="%s"\n' "$key" "$value" >> "$OUTPUT_FILE"
+
+    # Capture SNS topic ARN for Wagtail migration failure notifications
+    if [ "$key" == "WAGTAIL_MIGRATION_FAILURES_SNS_TOPIC_ARN" ]; then
+        WAGTAIL_MIGRATION_SNS_TOPIC_ARN="$value"
+    fi
 done
 
 echo "Environment variables have been written to $OUTPUT_FILE."
@@ -160,7 +165,27 @@ fi
 # Run migrate inside the running container, output to migrate.log
 if [ -n "$RUNNING_WEB" ]; then
   echo "Running migration in container: $RUNNING_WEB"
+
   sudo docker exec "$RUNNING_WEB" poetry run python /app/manage.py migrate > /var/log/migrate.log 2>&1
+  MIGRATION_EXIT_CODE=$?
+
+  if [ "$MIGRATION_EXIT_CODE" -ne 0 ]; then
+    echo "Migration failed with exit code $MIGRATION_EXIT_CODE"
+
+    # Send migration failure notification to SNS
+    aws sns publish \
+        --topic-arn "$WAGTAIL_MIGRATION_SNS_TOPIC_ARN" \
+        --subject "Wagtail Migration Failure" \
+        --message "Wagtail migration failed on $(hostname) with exit code $MIGRATION_EXIT_CODE.
+
+Migration logs:
+$(sudo tail -100 /var/log/migrate.log)"
+
+    exit "$MIGRATION_EXIT_CODE"
+  fi
+
+  echo "Migration completed successfully."
+
 else
   echo "Error: Neither green-web nor blue-web is running."
   exit 1

@@ -83,6 +83,22 @@ resource "aws_s3_object" "redirects_conf" {
   source_hash = filemd5("${path.module}/scripts/redirects.conf")
 }
 
+resource "aws_s3_object" "redirects_query_conf" {
+  bucket = var.deployment_s3_bucket
+  key    = "${var.service}/${var.nginx_folder_s3_key}/redirects-query.conf"
+  source = "${path.module}/scripts/redirects-query.conf"
+  source_hash = filemd5("${path.module}/scripts/redirects-query.conf")
+}
+
+resource "aws_s3_object" "streamline_hpp_conf" {
+  bucket = var.deployment_s3_bucket
+  key    = "${var.service}/${var.nginx_folder_s3_key}/streamline-hpp.conf"
+  content = templatefile("${path.module}/scripts/streamline-hpp.conf", {
+    environment      = var.environment,
+    set_real_ip_from = var.set_real_ip_from
+  })
+}
+
 resource "aws_s3_object" "update_nginx_confs" {
   bucket = var.deployment_s3_bucket
   key    = "${var.service}/${var.nginx_folder_s3_key}/update_nginx_confs.sh"
@@ -120,3 +136,58 @@ resource "aws_s3_object" "wagtail_admin_conf" {
     set_real_ip_from = var.set_real_ip_from
   })
 }
+
+resource "aws_s3_object" "web_enrichment_conf" {
+  bucket = var.deployment_s3_bucket
+  key    = "${var.service}/${var.nginx_folder_s3_key}/web-enrichment.conf"
+  content = templatefile("${path.module}/scripts/web-enrichment.conf", {
+    environment      = var.environment,
+    set_real_ip_from = var.set_real_ip_from
+  })
+}
+
+resource "aws_s3_object" "web_bulkdownload_conf" {
+  bucket = var.deployment_s3_bucket
+  key    = "${var.service}/${var.nginx_folder_s3_key}/web-bulkdownload.conf"
+  content = templatefile("${path.module}/scripts/web-bulkdownload.conf", {
+    environment      = var.environment,
+    set_real_ip_from = var.set_real_ip_from
+  })
+}
+
+resource "aws_s3_object" "web_feedback_conf" {
+  bucket = var.deployment_s3_bucket
+  key    = "${var.service}/${var.nginx_folder_s3_key}/web-feedback.conf"
+  content = templatefile("${path.module}/scripts/web-feedback.conf", {
+    environment      = var.environment,
+    set_real_ip_from = var.set_real_ip_from
+  })
+}
+
+resource "aws_s3_object" "web_forms_conf" {
+  bucket = var.deployment_s3_bucket
+  key    = "${var.service}/${var.nginx_folder_s3_key}/web-forms.conf"
+  content = templatefile("${path.module}/scripts/web-forms.conf", {
+    environment      = var.environment,
+    set_real_ip_from = var.set_real_ip_from
+  })
+}
+
+resource "aws_s3_object" "web_frontend_conf" {
+  bucket = var.deployment_s3_bucket
+  key    = "${var.service}/${var.nginx_folder_s3_key}/web-frontend.conf"
+  content = templatefile("${path.module}/scripts/web-frontend.conf", {
+    environment      = var.environment,
+    set_real_ip_from = var.set_real_ip_from
+  })
+}
+
+resource "aws_s3_object" "web_hospitalrecords_conf" {
+  bucket = var.deployment_s3_bucket
+  key    = "${var.service}/${var.nginx_folder_s3_key}/web-hospitalrecords.conf"
+  content = templatefile("${path.module}/scripts/web-hospitalrecords.conf", {
+    environment      = var.environment,
+    set_real_ip_from = var.set_real_ip_from
+  })
+}
+

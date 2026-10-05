@@ -36,7 +36,7 @@ variable "folder_s3_key" {}
 
 variable "asg_tags" {}
 variable "tags" {}
-
+variable "account" {}
 variable "efs_dns_name" {}
 
 variable "enable_monitoring" {}

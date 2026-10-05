@@ -240,6 +240,7 @@
       - { file_name: traefik-down.sh }
       - { file_name: traefik-deploy.sh }
       - { file_name: website-blue-green-deploy.sh }
+      - { file_name: merlin_process.sh }
 
 - name: switch to localhost
   hosts: localhost

@@ -46,9 +46,9 @@ resource "aws_iam_role" "web_forms_role" {
   assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
-# HoSPREC Role
-resource "aws_iam_role" "web_hosprec_role" {
-  name               = "web-hosprec-assume-role"
+# Hospital Records Role
+resource "aws_iam_role" "web_hospitalrecords_role" {
+  name               = "web-hospitalrecords-assume-role"
   assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
@@ -61,6 +61,12 @@ resource "aws_iam_role" "web_reverse_proxy_role" {
 # Web Bulkdownload Role
 resource "aws_iam_role" "web_bulkdownload_role" {
     name = "web-bulkdownload-role"
+    assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
+}
+
+# Feedback Role
+resource "aws_iam_role" "web_feedback_role" {
+    name = "web-feedback-role"
     assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
@@ -101,6 +107,15 @@ resource "aws_iam_role" "lambda_web_rsr_cron_role" {
   description        = "Allows Lambda functions to call AWS services on your behalf"
   tags               = var.tags
 }
+
+# Lambda Platform Redis DNS Update Role
+resource "aws_iam_role" "lambda_platform_redis_dns_update_role" {
+  name               = "platform-redis-dns-update-role"
+  assume_role_policy = file("${path.root}/shared-templates/assume-role-lambda-policy.json")
+  description        = "Allows Lambda to update Platform Redis Route 53 DNS record"
+  tags               = var.tags
+}
+
 resource "aws_iam_role_policy_attachment" "lambda_vpc_access" {
   role       = aws_iam_role.lambda_web_rsr_cron_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
@@ -115,7 +130,7 @@ resource "aws_iam_role" "codedeploy_web_reverse_proxy_service_role" {
 
 # CodeDeploy Service Role for Web Role
 resource "aws_iam_role" "codedeploy_web_service_role" {
-    name = "codedeploy-web-service_role"
+    name = "codedeploy-web-service-role"
     assume_role_policy = file("${path.root}/shared-templates/codedeploy-service-policy.json")
     tags = var.tags
 }
@@ -173,10 +188,10 @@ resource "aws_iam_instance_profile" "web_request_service_record_profile" {
   role = aws_iam_role.web_request_service_record_role.name
 }
 
-## Instance Profile for HoSPREC Role
-resource "aws_iam_instance_profile" "web_hosprec_profile" {
-  name = "web-hosprec-profile"
-  role = aws_iam_role.web_hosprec_role.name
+## Instance Profile for Hospital Records Role
+resource "aws_iam_instance_profile" "web_hospitalrecords_profile" {
+  name = "web-hospitalrecords-profile"
+  role = aws_iam_role.web_hospitalrecords_role.name
 }
 
 ## Instance Profile for Web Reverse Proxy Role
@@ -201,6 +216,12 @@ resource "aws_iam_instance_profile" "web_catalogue_profile" {
 resource "aws_iam_instance_profile" "web_bulkdownload_profile" {
   name = "web-bulkdownload-profile"
   role = aws_iam_role.web_bulkdownload_role.name
+}
+
+## Instance Profile for Web Feedback Role
+resource "aws_iam_instance_profile" "web_feedback_profile" {
+  name = "web-feedback-profile"
+  role = aws_iam_role.web_feedback_role.name
 }
 
 #---------------------------------------------------------------------------
@@ -338,6 +359,10 @@ resource "aws_iam_role_policy_attachment" "web_wagtail_policy_attachment_6" {
   role       = aws_iam_role.web_wagtail_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudFrontFullAccess"
 }
+resource "aws_iam_role_policy_attachment" "web_wagtail_cron_notifications" {
+  role       = aws_iam_role.web_wagtail_role.name
+  policy_arn = var.web_wagtail_cron_notifications_policy_arn
+}
 
 ##-------------------------------------------------------------
 ############# Attach Policies to Wagtaildocs Role
@@ -449,31 +474,28 @@ resource "aws_iam_role_policy_attachment" "web_forms_policy_attachment_6" {
 }
 
 ##-------------------------------------------------------------  
-####### Attach Policies to HOSPREC Role
+####### Attach Policies to HOSPITAL RECORDS Role
 ##-------------------------------------------------------------
 
-resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_1" {
-  role       = aws_iam_role.web_hosprec_role.name
+resource "aws_iam_role_policy_attachment" "web_hospitalrecords_policy_attachment_1" {
+  role       = aws_iam_role.web_hospitalrecords_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
-resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_2" {
-  role       = aws_iam_role.web_hosprec_role.name
+resource "aws_iam_role_policy_attachment" "web_hospitalrecords_policy_attachment_2" {
+  role       = aws_iam_role.web_hospitalrecords_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
-resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_3" {
-  role       = aws_iam_role.web_hosprec_role.name
+resource "aws_iam_role_policy_attachment" "web_hospitalrecords_policy_attachment_3" {
+  role       = aws_iam_role.web_hospitalrecords_role.name
   policy_arn = var.org_level_logging_arn
 }
-# resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_5" {
-#   role       = aws_iam_role.web_hosprec_role.name
-#   policy_arn = var.deployment_s3_policy
-# }
-resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_4" {
-  role       = aws_iam_role.web_hosprec_role.name
+
+resource "aws_iam_role_policy_attachment" "web_hospitalrecords_policy_attachment_4" {
+  role       = aws_iam_role.web_hospitalrecords_role.name
   policy_arn = var.application_parameter_store_policy_arn
 }
-resource "aws_iam_role_policy_attachment" "web_hosprec_policy_attachment_5" {
-  role       = aws_iam_role.web_hosprec_role.name
+resource "aws_iam_role_policy_attachment" "web_hospitalrecords_policy_attachment_5" {
+  role       = aws_iam_role.web_hospitalrecords_role.name
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
 }
 
@@ -566,10 +588,6 @@ resource "aws_iam_role_policy_attachment" "codedeploy_web_lambda_sync_s3_to_efs_
     role       = aws_iam_role.codedeploy_web_service_role.name
     policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
-# resource "aws_iam_role_policy_attachment" "codedeploy_web_lambda_sync_s3_to_efs_read_content" {
-#     role       = aws_iam_role.codedeploy_web_service_role.name
-#     policy_arn = var.s3_deployment_source_static_content_read_arn
-# }
 
 ##-------------------------------------------------------------  
 ####### Attach Policies to Web Bulk Download Role
@@ -610,6 +628,36 @@ resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_7"
   policy_arn = var.web_bulkdownload_s3_access_policy_arn
 }
 
+resource "aws_iam_role_policy_attachment" "web_bulkdownload_policy_attachment_merlin_notifications" {
+  count      = var.environment == "live" ? 1 : 0
+  role       = aws_iam_role.web_bulkdownload_role.name
+  policy_arn = var.web_bulkdownload_merlin_notifications_policy_arn
+}
+
+##-------------------------------------------------------------
+### Attach Policies to Web Feedback Role  
+##-------------------------------------------------------------
+
+resource "aws_iam_role_policy_attachment" "web_feedback_policy_attachment_1" {
+  role       = aws_iam_role.web_feedback_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_role_policy_attachment" "web_feedback_policy_attachment_2" {
+  role       = aws_iam_role.web_feedback_role.name
+  policy_arn = var.org_level_logging_arn
+}
+
+resource "aws_iam_role_policy_attachment" "web_feedback_policy_attachment_3" {
+  role       = aws_iam_role.web_feedback_role.name
+  policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/org-session-manager-logs"
+}
+
+resource "aws_iam_role_policy_attachment" "web_feedback_policy_attachment_4" {
+  role       = aws_iam_role.web_feedback_role.name
+  policy_arn = var.application_parameter_store_policy_arn
+}
+
 ##-------------------------------------------------------------  
 ####### Attach Policies to wagtail cron trigger Role
 ##-------------------------------------------------------------
@@ -625,4 +673,9 @@ resource "aws_iam_role_policy_attachment" "lambda_wagtail_cron_trigger_policy" {
 resource "aws_iam_role_policy_attachment" "lambda_ssm_execution_policy" {
   role       = aws_iam_role.lambda_auto_run_startup_script_role.name
   policy_arn = var.lambda_ssm_execution_policy_arn
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_platform_redis_dns_update" {
+  role       = aws_iam_role.lambda_platform_redis_dns_update_role.name
+  policy_arn = var.lambda_platform_redis_dns_update_policy_arn
 }

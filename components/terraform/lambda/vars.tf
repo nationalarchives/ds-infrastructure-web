@@ -9,3 +9,5 @@ variable "layers" {}
 variable "environment" {}
 variable "tags" {}
 variable "foi_s3_bucket"{}
+variable "platform_redis_dns_update_role_arn" {}
+variable "route53_zone" {}

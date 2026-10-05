@@ -6,6 +6,7 @@ module "policies" {
     foi_s3_bucket_arn    = var.foi_s3_bucket
     service              = var.service
     foi_s3_bucket        = var.foi_s3_bucket
+    route53_zone = var.route53_zone
     lambda_role_name = module.roles.lambda_web_rsr_role_name
     lambda_web_request_sqs_queue_arn  = var.lambda_web_request_sqs_queue_arn
     process_submitted_files_queue_arn = var.process_submitted_files_queue_arn
@@ -14,6 +15,9 @@ module "policies" {
     account_id = data.aws_caller_identity.current.account_id
     tags = local.tags
     ses_nationalarchives_gov_uk_domain_arn = data.aws_ssm_parameter.ses_nationalarchives_gov_uk_domain_arn.value
+    web_cron_notifications_sns_topic_arn = module.cron_notifications.sns_topic_arn
+    wagtail_migration_failures_sns_topic_arn = module.wagtail_migration_notifications.sns_topic_arn
+    merlin_process_failures_sns_topic_arn = module.merlin_process_notifications.sns_topic_arn
 }
 
 module "roles" {
@@ -31,6 +35,7 @@ module "roles" {
     codedeploy_web_asg_policy_arn = module.policies.codedeploy_web_asg_policy_arn
     codedeploy_web_s3_access_arn  = module.policies.codedeploy_web_s3_access_arn
     codedeploy_web_access_policy  = module.policies.codedeploy_web_access_policy
+    lambda_platform_redis_dns_update_policy_arn = module.policies.lambda_platform_redis_dns_update_policy_arn
 
     codedeploy_web_reverse_proxy_asg_policy_arn = module.policies.codedeploy_web_reverse_proxy_asg_policy_arn
     codedeploy_web_reverse_proxy_access_policy  = module.policies.codedeploy_web_reverse_proxy_access_policy
@@ -39,5 +44,7 @@ module "roles" {
     web_forms_ses_policy_arn = module.policies.web_forms_ses_policy_arn
     lambda_wagtail_cron_trigger_policy_arn = module.policies.lambda_wagtail_cron_trigger_policy_arn
     lambda_ssm_execution_policy_arn = module.policies.lambda_ssm_execution_policy_arn
+    web_wagtail_cron_notifications_policy_arn = module.policies.web_wagtail_cron_notifications_policy_arn
+    web_bulkdownload_merlin_notifications_policy_arn = module.policies.web_bulkdownload_merlin_notifications_policy_arn
     tags = local.tags
 }

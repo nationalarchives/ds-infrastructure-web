@@ -6,5 +6,6 @@
   "S3_SOURCE_BUCKET_MERLIN": "ds-live-digital-files",
   "S3_SOURCE_PREFIX_MERLIN": "66/ES/38",
   "S3_EXPORT_BUCKET": "ds-live-downloads",
-  "S3_EXPORT_BUCKET_HOST_URL": "https://download.nationalarchives.gov.uk"
+  "S3_EXPORT_BUCKET_HOST_URL": "https://download.nationalarchives.gov.uk",
+  "MERLIN_FILENAME_REPORT_URL": "https://download.nationalarchives.gov.uk/merlin/ES38-filenames-mapped-to-records.csv"
 }
