@@ -12,13 +12,23 @@ ZIP_PATH="$TMP_DIR/$ZIP_NAME"
 sudo mkdir -p "$TMP_DIR"
 sudo mkdir -p /var/log
 
-UPDATED_FILES=$(find "$SOURCE_DIR" -type f ! -name "wagtail-content.zip")
+# Find media files, excluding the backup directory itself
+UPDATED_FILES=$(find "$SOURCE_DIR" \
+    -path "$TMP_DIR" -prune -o \
+    -type f \
+    ! -name "wagtail-content.zip" \
+    -print)
 
-cd "$SOURCE_DIR"
+cd "$SOURCE_DIR" || {
+    echo "$(date): ERROR: Failed to change directory to $SOURCE_DIR" | sudo tee -a "$LOG_FILE"
+    exit 1
+}
+
 echo "$UPDATED_FILES" | zip -@ "$ZIP_PATH"
 
 if [ $? -ne 0 ]; then
     echo "$(date): ERROR: Failed to create backup $ZIP_PATH" | sudo tee -a "$LOG_FILE"
+    sudo rm -f "$ZIP_PATH"
     exit 1
 fi
 
