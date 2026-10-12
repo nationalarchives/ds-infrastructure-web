@@ -1,1 +1,13 @@
-{}
+{
+  "ALLOW_INSECURE": "true",
+  "APPLICATION_PROTOCOL": "http",
+  "ALLOWED_HOSTS": "*",
+  "CSRF_TRUSTED_ORIGINS": "https://www.nationalarchives.gov.uk",
+  "CSP_FONT_SRC": "'self',https://fonts.gstatic.com,https://use.typekit.net",
+  "CSP_STYLE_SRC": "'self',https://*.nationalarchives.gov.uk,https://fonts.googleapis.com,https://p.typekit.net,https://use.typekit.net",
+  "COOKIE_DOMAIN": ".nationalarchives.gov.uk",
+  "DJANGO_SETTINGS_MODULE": "config.settings.staging",
+  "ENVIRONMENT_NAME": "staging",
+  "DATABASE_HOST": "postgres-main-prime.staging.local",
+  "DATABASE_NAME": "feedback"
+}

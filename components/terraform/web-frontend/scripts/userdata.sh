@@ -23,6 +23,11 @@ sudo touch /var/log/start-up.log
 
 echo "$(date '+%Y-%m-%d %T') - system update" | sudo tee -a /var/log/start-up.log > /dev/null
 sudo dnf -y update
+
+echo "$(date '+%Y-%m-%d %T') - configure CloudWatch agent" | sudo tee -a /var/log/start-up.log > /dev/null
+sudo aws s3 cp s3://${deployment_s3_bucket}/${nginx_folder_s3_key}/cloudwatch/cloudwatch-agent-config.json /opt/aws/amazon-cloudwatch-agent/bin/config.json
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json
+
 # included parameter store for automation in startup.sh
 echo "$(date '+%Y-%m-%d %T') - call startup script" | sudo tee -a /var/log/start-up.log > /dev/null
 /usr/local/bin/startup.sh

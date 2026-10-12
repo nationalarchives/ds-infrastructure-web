@@ -1,24 +1,15 @@
 data "aws_ami" "web_frontend_ami" {
-    most_recent = true
+    owners = ["self"]
 
     filter {
-        name   = "name"
-        values = [
-            "web-frontend-primer*"
-        ]
+        name   = "tag:Image"
+        values = ["ds-web-frontend"]
     }
 
     filter {
-        name   = "virtualization-type"
-        values = [
-            "hvm"
-        ]
+        name   = "tag:ImageVersion"
+        values = [var.web_frontend_image_version]
     }
-
-    owners = [
-        data.aws_caller_identity.current.account_id,
-        "amazon"
-    ]
 }
 
 data "aws_ami" "web_request_service_record_ami" {

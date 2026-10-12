@@ -1,5 +1,5 @@
 variable "web_frontend_instance_type" {}
-
+variable "web_frontend_image_version" {}
 variable "web_frontend_asg_max_size" {}
 variable "web_frontend_asg_min_size" {}
 variable "web_frontend_asg_desired_capacity" {}
