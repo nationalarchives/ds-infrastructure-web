@@ -6,7 +6,7 @@ variable "web_bulkdownload_asg_min_size" {}
 variable "web_bulkdownload_asg_desired_capacity" {}
 variable "web_bulkdownload_asg_health_check_grace_period" {}
 variable "web_bulkdownload_asg_health_check_type" {}
-
+variable "web_bulkdownload_image_version" {}
 variable "web_bulkdownload_auto_switch_off" {}
 variable "web_bulkdownload_auto_switch_on" {}
 variable "web_bulkdownload_deployment_group" {}

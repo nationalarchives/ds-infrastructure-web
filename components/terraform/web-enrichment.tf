@@ -6,7 +6,7 @@ variable "web_enrichment_asg_min_size" {}
 variable "web_enrichment_asg_desired_capacity" {}
 variable "web_enrichment_asg_health_check_grace_period" {}
 variable "web_enrichment_asg_health_check_type" {}
-
+variable "web_enrichment_image_version" {}
 variable "web_enrichment_auto_switch_off" {}
 variable "web_enrichment_auto_switch_on" {}
 variable "web_enrichment_deployment_group" {}

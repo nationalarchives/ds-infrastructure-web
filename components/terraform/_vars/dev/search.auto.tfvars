@@ -1,6 +1,6 @@
 web_search_deployment_s3_bucket = "ds-dev-deployment-source"
 web_search_folder_s3_key = "web/search"
-
+web_search_image_version = "0.0.1-1"
 web_search_efs_mount_dir = "/media"
 web_search_key_name      = "search-dev-eu-west-2"
 web_search_instance_type = "t3a.small"

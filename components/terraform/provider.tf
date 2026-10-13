@@ -17,14 +17,26 @@ terraform {
 provider "aws" {
     alias  = "aws-cf-waf"
     region = "us-east-1"
+
+    default_tags {
+        tags = var.default_tags
+    }
 }
 
 provider "aws" {
     region = "eu-west-2"
     alias  = "environment"
+
+    default_tags {
+        tags = var.default_tags
+    }
 }
 
 # this provider is used for command line to  suppress input for region
 provider "aws" {
     region = "eu-west-2"
+
+    default_tags {
+        tags = var.default_tags
+    }
 }

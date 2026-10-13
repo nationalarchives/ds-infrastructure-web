@@ -2,7 +2,7 @@ variable "web_wagtail_instance_type" {}
 variable "web_wagtail_key_name" {}
 variable "web_wagtail_root_block_device_size" {}
 variable "web_wagtail_efs_mount_dir" {}
-
+variable "web_wagtail_image_version" {}
 variable "web_wagtail_asg_max_size" {}
 variable "web_wagtail_asg_min_size" {}
 variable "web_wagtail_asg_desired_capacity" {}

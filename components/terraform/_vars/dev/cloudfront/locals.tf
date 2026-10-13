@@ -6,6 +6,7 @@ locals {
     origin_id_www   = "dev-www.nationalarchives.gov.uk"
     origin_id_wagtail = "dev-wagtail.nationalarchives.gov.uk"
     origin_id_download = "dev-download.nationalarchives.gov.uk"
+    origin_id_feedback = "dev-feedback.nationalarchives.gov.uk"
     # remove blog and/or media - March 2027
     #origin_id_blog  = "dev-blog.nationalarchives.gov.uk"
     #origin_id_media = "dev-media.nationalarchives.gov.uk"
@@ -47,6 +48,7 @@ locals {
             local.origin_id_www,
             local.origin_id_wagtail,
             local.origin_id_download,
+            local.origin_id_feedback,
             # remove blog and/or media - March 2027
             #local.origin_id_blog,
             #local.origin_id_media,

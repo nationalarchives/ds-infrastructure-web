@@ -6,7 +6,7 @@ variable "web_feedback_asg_min_size" {}
 variable "web_feedback_asg_desired_capacity" {}
 variable "web_feedback_asg_health_check_grace_period" {}
 variable "web_feedback_asg_health_check_type" {}
-
+variable "web_feedback_image_version" {}
 variable "web_feedback_auto_switch_off" {}
 variable "web_feedback_auto_switch_on" {}
 variable "web_feedback_deployment_group" {}

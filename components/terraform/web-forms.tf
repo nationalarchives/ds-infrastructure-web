@@ -6,7 +6,7 @@ variable "web_forms_asg_min_size" {}
 variable "web_forms_asg_desired_capacity" {}
 variable "web_forms_asg_health_check_grace_period" {}
 variable "web_forms_asg_health_check_type" {}
-
+variable "web_forms_image_version" {}
 variable "web_forms_auto_switch_off" {}
 variable "web_forms_auto_switch_on" {}
 variable "web_forms_deployment_group" {}

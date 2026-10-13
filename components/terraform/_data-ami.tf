@@ -13,74 +13,47 @@ data "aws_ami" "web_frontend_ami" {
 }
 
 data "aws_ami" "web_request_service_record_ami" {
-    most_recent = true
+    owners = ["self"]
 
     filter {
-        name   = "name"
-        values = [
-            "web-request-service-record-primer*"
-        ]
+        name   = "tag:Image"
+        values = ["ds-web-request-service-record"]
     }
 
     filter {
-        name   = "virtualization-type"
-        values = [
-            "hvm"
-        ]
+        name   = "tag:ImageVersion"
+        values = [var.web_request_service_record_image_version]
     }
-
-    owners = [
-        data.aws_caller_identity.current.account_id,
-        "amazon"
-    ]
 }
 
 data "aws_ami" "web_wagtail_ami" {
-    most_recent = true
+    owners = ["self"]
 
     filter {
-        name   = "name"
-        values = [
-            "web-wagtail-primer*"
-        ]
+        name   = "tag:Image"
+        values = ["ds-web-wagtail"]
     }
 
     filter {
-        name   = "virtualization-type"
-        values = [
-            "hvm"
-        ]
+        name   = "tag:ImageVersion"
+        values = [var.web_wagtail_image_version]
     }
-
-    owners = [
-        data.aws_caller_identity.current.account_id,
-        "amazon"
-    ]
 }
 
 data "aws_ami" "web_enrichment_ami" {
-    most_recent = true
+    owners = ["self"]
 
     filter {
-        name   = "name"
-        values = [
-            "web-enrichment-primer*"
-        ]
+        name   = "tag:Image"
+        values = ["ds-web-enrichment"]
     }
 
     filter {
-        name   = "virtualization-type"
-        values = [
-            "hvm"
-        ]
+        name   = "tag:ImageVersion"
+        values = [var.web_enrichment_image_version]
     }
-
-    owners = [
-        data.aws_caller_identity.current.account_id,
-        "amazon"
-    ]
 }
-
+        
 data "aws_ami" "redis_ami" {
     most_recent = true
 
@@ -105,96 +78,59 @@ data "aws_ami" "redis_ami" {
 }
 
 data "aws_ami" "web_catalogue_ami" {
-    most_recent = true
+    owners = ["self"]
 
     filter {
-        name   = "name"
-        values = [
-            "web-catalogue-primer*"
-        ]
+        name   = "tag:Image"
+        values = ["ds-web-catalogue"]
     }
 
     filter {
-        name   = "virtualization-type"
-        values = [
-            "hvm"
-        ]
+        name   = "tag:ImageVersion"
+        values = [var.web_catalogue_image_version]
     }
-
-    owners = [
-        data.aws_caller_identity.current.account_id,
-        "amazon"
-    ]
 }
-
 
 data "aws_ami" "web_search_ami" {
-    most_recent = true
+    owners = ["self"]
 
     filter {
-        name   = "name"
-        values = [
-            "web-search-primer*"
-        ]
+        name   = "tag:Image"
+        values = ["ds-web-search"]
     }
 
     filter {
-        name   = "virtualization-type"
-        values = [
-            "hvm"
-        ]
+        name   = "tag:ImageVersion"
+        values = [var.web_search_image_version]
     }
-
-    owners = [
-        data.aws_caller_identity.current.account_id,
-        "amazon"
-    ]
 }
-
+    
 data "aws_ami" "web_wagtaildocs_ami" {
-    most_recent = true
+    owners = ["self"]
 
     filter {
-        name   = "name"
-        values = [
-            "web-wagtaildocs-primer*"
-        ]
+        name   = "tag:Image"
+        values = ["ds-web-wagtaildocs"]
     }
 
     filter {
-        name   = "virtualization-type"
-        values = [
-            "hvm"
-        ]
+        name   = "tag:ImageVersion"
+        values = [var.web_wagtaildocs_image_version]
     }
-
-    owners = [
-        data.aws_caller_identity.current.account_id,
-        "amazon"
-    ]
 }
 
 data "aws_ami" "web_forms_ami" {
-    most_recent = true
+    owners = ["self"]
 
     filter {
-        name   = "name"
-        values = [
-            "web-forms-primer*"
-        ]
+        name   = "tag:Image"
+        values = ["ds-web-forms"]
     }
 
     filter {
-        name   = "virtualization-type"
-        values = [
-            "hvm"
-        ]
+        name   = "tag:ImageVersion"
+        values = [var.web_forms_image_version]
     }
-
-    owners = [
-        data.aws_caller_identity.current.account_id,
-        "amazon"
-    ]
 }
 
 data "aws_ami" "web_reverse_proxy_ami" {
@@ -221,70 +157,43 @@ data "aws_ami" "web_reverse_proxy_ami" {
 }
 
 data "aws_ami" "web_hospitalrecords_ami" {
-    most_recent = true
+    owners = ["self"]
 
     filter {
-        name   = "name"
-        values = [
-            "web-hospitalrecords-primer*"
-        ]
+        name   = "tag:Image"
+        values = ["ds-web-hospitalrecords"]
     }
 
     filter {
-        name   = "virtualization-type"
-        values = [
-            "hvm"
-        ]
+        name   = "tag:ImageVersion"
+        values = [var.web_hospitalrecords_image_version]
     }
-
-    owners = [
-        data.aws_caller_identity.current.account_id,
-        "amazon"
-    ]
 }
 
 data "aws_ami" "web_bulkdownload_ami" {
-    most_recent = true
+    owners = ["self"]
 
     filter {
-        name   = "name"
-        values = [
-            "web-bulkdownload-primer*"
-        ]
+        name   = "tag:Image"
+        values = ["ds-web-bulkdownload"]
     }
 
     filter {
-        name   = "virtualization-type"
-        values = [
-            "hvm"
-        ]
+        name   = "tag:ImageVersion"
+        values = [var.web_bulkdownload_image_version]
     }
-
-    owners = [
-        data.aws_caller_identity.current.account_id,
-        "amazon"
-    ]
 }
 
 data "aws_ami" "web_feedback_ami" {
-    most_recent = true
+    owners = ["self"]
 
     filter {
-        name   = "name"
-        values = [
-            "web-feedback-primer*"
-        ]
+        name   = "tag:Image"
+        values = ["ds-web-feedback"]
     }
 
     filter {
-        name   = "virtualization-type"
-        values = [
-            "hvm"
-        ]
+        name   = "tag:ImageVersion"
+        values = [var.web_feedback_image_version]
     }
-
-    owners = [
-        data.aws_caller_identity.current.account_id,
-        "amazon"
-    ]
 }

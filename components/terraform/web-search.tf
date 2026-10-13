@@ -2,7 +2,7 @@ variable "web_search_instance_type" {}
 variable "web_search_key_name" {}
 variable "web_search_root_block_device_size" {}
 variable "web_search_efs_mount_dir" {}
-
+variable "web_search_image_version" {}
 variable "web_search_asg_max_size" {}
 variable "web_search_asg_min_size" {}
 variable "web_search_asg_desired_capacity" {}

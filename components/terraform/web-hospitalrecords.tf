@@ -6,7 +6,7 @@ variable "web_hospitalrecords_asg_min_size" {}
 variable "web_hospitalrecords_asg_desired_capacity" {}
 variable "web_hospitalrecords_asg_health_check_grace_period" {}
 variable "web_hospitalrecords_asg_health_check_type" {}
-
+variable "web_hospitalrecords_image_version" {}
 variable "web_hospitalrecords_auto_switch_off" {}
 variable "web_hospitalrecords_auto_switch_on" {}
 variable "web_hospitalrecords_deployment_group" {}

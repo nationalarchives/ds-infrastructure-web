@@ -1,6 +1,6 @@
 variable "web_request_service_record_instance_type" {}
 variable "web_request_service_record_root_block_device_size" {}
-
+variable "web_request_service_record_image_version" {}
 variable "web_request_service_record_asg_max_size" {}
 variable "web_request_service_record_asg_min_size" {}
 variable "web_request_service_record_asg_desired_capacity" {}

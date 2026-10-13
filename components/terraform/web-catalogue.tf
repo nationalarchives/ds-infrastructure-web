@@ -2,7 +2,7 @@ variable "web_catalogue_instance_type" {}
 variable "web_catalogue_key_name" {}
 variable "web_catalogue_root_block_device_size" {}
 variable "web_catalogue_efs_mount_dir" {}
-
+variable "web_catalogue_image_version" {}
 variable "web_catalogue_asg_max_size" {}
 variable "web_catalogue_asg_min_size" {}
 variable "web_catalogue_asg_desired_capacity" {}
