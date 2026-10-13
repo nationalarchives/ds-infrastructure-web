@@ -9,6 +9,7 @@ locals {
     origin_id_blog  = "blog.nationalarchives.gov.uk"
     origin_id_media = "media.nationalarchives.gov.uk"
     origin_id_download = "download.nationalarchives.gov.uk"
+    origin_id_feedback = "feedback.nationalarchives.gov.uk"
 
     cloudfront_distribution = {
         "cloudfront_origins" = [
@@ -48,6 +49,7 @@ locals {
             local.origin_id_www,
             local.origin_id_wagtail,
             local.origin_id_download,
+            local.origin_id_feedback,
             # remove blog and/or media - March 2027
             local.origin_id_blog,
             local.origin_id_media,

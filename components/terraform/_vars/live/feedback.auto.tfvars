@@ -1,6 +1,6 @@
 web_feedback_deployment_s3_bucket = "ds-live-deployment-source"
 web_feedback_folder_s3_key = "web/feedback"
-
+web_feedback_image_version = "0.0.1-1"
 web_feedback_key_name      = "web-frontend-live-eu-west-2"
 web_feedback_instance_type = "t3a.small"
 

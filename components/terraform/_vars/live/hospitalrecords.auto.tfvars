@@ -1,6 +1,6 @@
 web_hospitalrecords_deployment_s3_bucket = "ds-live-deployment-source"
 web_hospitalrecords_folder_s3_key = "web/hospitalrecords"
-
+web_hospitalrecords_image_version = "0.0.1-1"
 web_hospitalrecords_key_name      = "web-frontend-live-eu-west-2"
 web_hospitalrecords_instance_type = "t3a.medium"
 
