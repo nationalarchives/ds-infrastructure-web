@@ -1,6 +1,6 @@
 web_bulkdownload_deployment_s3_bucket = "ds-staging-deployment-source"
 web_bulkdownload_folder_s3_key = "web/bulkdownload"
-
+web_bulkdownload_image_version = "0.0.1-1"
 web_bulkdownload_key_name      = "web-frontend-staging-eu-west-2"
 web_bulkdownload_instance_type = "t3a.small"
 

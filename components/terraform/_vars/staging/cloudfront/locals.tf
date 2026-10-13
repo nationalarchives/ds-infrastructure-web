@@ -6,6 +6,7 @@ locals {
     origin_id_www     = "staging-www.nationalarchives.gov.uk"
     origin_id_wagtail = "staging-wagtail.nationalarchives.gov.uk"
     origin_id_download = "staging-download.nationalarchives.gov.uk"
+    origin_id_feedback = "staging-feedback.nationalarchives.gov.uk"
 
     cloudfront_distribution = {
         "cloudfront_origins" = [
@@ -34,6 +35,7 @@ locals {
             local.origin_id_www,
             local.origin_id_wagtail,
             local.origin_id_download,
+            local.origin_id_feedback,
         ]
         "default_behaviour_allowed_methods" = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
         "default_behaviour_cached_methods" = ["GET", "HEAD"]
