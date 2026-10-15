@@ -17,6 +17,7 @@ variable "web_reverse_proxy_patch_group" {}
 variable "web_reverse_proxy_deployment_s3_bucket" {}
 variable "web_reverse_proxy_folder_s3_key" {}
 variable "web_reverse_proxy_wagtail_efs_mount_dir" {}
+variable "web_reverse_proxy_image_version" {}
 variable "nginx_folder_s3_key" {}
 variable "vpc_cidr" {}
 variable "intersite_vpc_and_clientvpn_cidr" {}

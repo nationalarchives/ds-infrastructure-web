@@ -134,26 +134,17 @@ data "aws_ami" "web_forms_ami" {
 }
 
 data "aws_ami" "web_reverse_proxy_ami" {
-    most_recent = true
+  owners = ["self"]
 
-    filter {
-        name   = "name"
-        values = [
-            "web-reverse-proxy-primer*"
-        ]
-    }
+  filter {
+    name   = "tag:Image"
+    values = ["ds-web-reverse-proxy"]
+  }
 
-    filter {
-        name   = "virtualization-type"
-        values = [
-            "hvm"
-        ]
-    }
-
-    owners = [
-        data.aws_caller_identity.current.account_id,
-        "amazon"
-    ]
+  filter {
+    name   = "tag:ImageVersion"
+    values = [var.web_reverse_proxy_image_version]
+  }
 }
 
 data "aws_ami" "web_hospitalrecords_ami" {
