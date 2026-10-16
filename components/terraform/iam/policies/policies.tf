@@ -394,3 +394,24 @@ resource "aws_iam_policy" "lambda_platform_redis_dns_update" {
     ]
   })
 }
+
+
+##########################################
+# IAM Policy: Web ASG Notifications Lambda
+##########################################
+
+resource "aws_iam_policy" "lambda_web_asg_notifications" {
+  count = var.environment == "live" ? 1 : 0
+
+  name        = "web-asg-notifications-policy"
+  description = "Allow Lambda to read Web ASG and EC2 details and publish SNS notifications"
+
+  policy = templatefile(
+    "${path.module}/templates/web-asg-notifications-policy.json",
+    {
+      sns_topic_arn = var.web_asg_notifications_sns_arn
+    }
+  )
+
+  tags = var.tags
+}

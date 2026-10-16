@@ -26,3 +26,5 @@ variable "lambda_ssm_execution_policy_arn" {}
 variable "web_wagtail_cron_notifications_policy_arn" {}
 variable "web_bulkdownload_merlin_notifications_policy_arn" {}
 variable "lambda_platform_redis_dns_update_policy_arn" {}
+
+variable "lambda_web_asg_notifications_policy_arn" {}

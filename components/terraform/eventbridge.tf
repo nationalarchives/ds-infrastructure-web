@@ -13,3 +13,16 @@ module "eventbridge_platform_redis" {
   environment          = var.environment
   enable_redis_dns     = true
 }
+
+##########################################
+# Web Auto Scaling Notifications
+##########################################
+
+module "eventbridge_web_asg_notifications" {
+  source = "./eventbridge"
+
+  environment = var.environment
+  enable_web_asg_notifications = true
+
+  web_asg_notifications_lambda_arn = module.lambda.web_asg_notifications_lambda_arn
+}

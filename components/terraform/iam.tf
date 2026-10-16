@@ -18,6 +18,7 @@ module "policies" {
     web_cron_notifications_sns_topic_arn = module.cron_notifications.sns_topic_arn
     wagtail_migration_failures_sns_topic_arn = module.wagtail_migration_notifications.sns_topic_arn
     merlin_process_failures_sns_topic_arn = module.merlin_process_notifications.sns_topic_arn
+    web_asg_notifications_sns_arn = module.notifications.sns_topic_arn
 }
 
 module "roles" {
@@ -36,6 +37,7 @@ module "roles" {
     codedeploy_web_s3_access_arn  = module.policies.codedeploy_web_s3_access_arn
     codedeploy_web_access_policy  = module.policies.codedeploy_web_access_policy
     lambda_platform_redis_dns_update_policy_arn = module.policies.lambda_platform_redis_dns_update_policy_arn
+    lambda_web_asg_notifications_policy_arn = module.policies.lambda_web_asg_notifications_policy_arn
 
     codedeploy_web_reverse_proxy_asg_policy_arn = module.policies.codedeploy_web_reverse_proxy_asg_policy_arn
     codedeploy_web_reverse_proxy_access_policy  = module.policies.codedeploy_web_reverse_proxy_access_policy

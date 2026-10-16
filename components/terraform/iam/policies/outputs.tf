@@ -81,3 +81,7 @@ output "web_bulkdownload_merlin_notifications_policy_arn" {
 output "lambda_platform_redis_dns_update_policy_arn" {
   value = aws_iam_policy.lambda_platform_redis_dns_update.arn
 }
+
+output "lambda_web_asg_notifications_policy_arn" {
+  value = var.environment == "live" ? aws_iam_policy.lambda_web_asg_notifications[0].arn : null
+}

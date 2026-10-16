@@ -17,3 +17,7 @@ output "platform_redis_dns_update_lambda_arn" {
 output "platform_redis_dns_update_lambda_name" {
   value = aws_lambda_function.platform_redis_dns_update.function_name
 }
+
+output "web_asg_notifications_lambda_arn" {
+  value = var.environment == "live" ? aws_lambda_function.web_asg_notifications[0].arn : null
+}

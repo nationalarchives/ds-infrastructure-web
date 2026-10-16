@@ -27,6 +27,8 @@ module "lambda" {
     web_request_service_record_role_arn = module.roles.lambda_web_request_service_record_role_arn
     web_rsr_cron_role_arn = module.roles.lambda_web_rsr_cron_role_arn
     platform_redis_dns_update_role_arn = module.roles.lambda_platform_redis_dns_update_role_arn
+    web_asg_notifications_role_arn = module.roles.lambda_web_asg_notifications_role_arn
+    web_asg_notifications_sns_arn  = module.notifications.sns_topic_arn
     
     subnet_ids = [
         data.aws_ssm_parameter.private_subnet_2a_id.value,

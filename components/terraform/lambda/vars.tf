@@ -11,3 +11,6 @@ variable "tags" {}
 variable "foi_s3_bucket"{}
 variable "platform_redis_dns_update_role_arn" {}
 variable "route53_zone" {}
+
+variable "web_asg_notifications_role_arn" {}
+variable "web_asg_notifications_sns_arn" {}

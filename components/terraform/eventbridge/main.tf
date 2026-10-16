@@ -98,3 +98,41 @@ resource "aws_scheduler_schedule" "retry_paid_dynamics_payments" {
     }
   }
 }
+
+##########################################
+# Web Auto Scaling Notifications
+##########################################
+
+resource "aws_cloudwatch_event_rule" "web_asg_notifications" {
+  count = local.is_live && var.enable_web_asg_notifications ? 1 : 0
+
+  name        = "web-asg-notifications"
+  description = "Capture successful Web Auto Scaling instance events"
+
+  event_pattern = jsonencode({
+    source = ["aws.autoscaling"]
+
+    "detail-type" = [
+      "EC2 Instance Launch Successful",
+      "EC2 Instance Terminate Successful"
+    ]
+  })
+}
+
+resource "aws_cloudwatch_event_target" "web_asg_notifications" {
+  count = local.is_live && var.enable_web_asg_notifications ? 1 : 0
+
+  rule      = aws_cloudwatch_event_rule.web_asg_notifications[0].name
+  target_id = "WebAsgNotificationsLambda"
+  arn       = var.web_asg_notifications_lambda_arn
+}
+
+resource "aws_lambda_permission" "web_asg_notifications" {
+  count = local.is_live && var.enable_web_asg_notifications ? 1 : 0
+
+  statement_id  = "AllowEventBridgeWebAsgNotifications"
+  action        = "lambda:InvokeFunction"
+  function_name = var.web_asg_notifications_lambda_arn
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.web_asg_notifications[0].arn
+}

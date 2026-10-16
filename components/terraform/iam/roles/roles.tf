@@ -685,3 +685,30 @@ resource "aws_iam_role_policy_attachment" "lambda_platform_redis_dns_logging" {
   role       = aws_iam_role.lambda_platform_redis_dns_update_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
+
+##########################################
+# Web Auto Scaling Notifications Lambda Role
+##########################################
+
+resource "aws_iam_role" "lambda_web_asg_notifications_role" {
+  count = var.environment == "live" ? 1 : 0
+
+  name               = "web-asg-notifications-role"
+  assume_role_policy = file("${path.root}/shared-templates/assume-role-lambda-policy.json")
+  description        = "Allows Lambda to retrieve Web ASG details and send SNS notifications"
+  tags               = var.tags
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_web_asg_notifications_logging" {
+  count = var.environment == "live" ? 1 : 0
+
+  role       = aws_iam_role.lambda_web_asg_notifications_role[0].name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_web_asg_notifications" {
+  count = var.environment == "live" ? 1 : 0
+
+  role       = aws_iam_role.lambda_web_asg_notifications_role[0].name
+  policy_arn = var.lambda_web_asg_notifications_policy_arn
+}

@@ -232,3 +232,49 @@ resource "aws_cloudwatch_log_group" "platform_redis_dns_update" {
   name              = "/aws/lambda/PlatformRedisDnsUpdate"
   retention_in_days = 7
 }
+
+##########################################
+# Web Auto Scaling Notifications
+##########################################
+
+data "archive_file" "web_asg_notifications" {
+  type        = "zip"
+  source_dir  = "${path.root}/lambda/web-asg-notifications/source"
+  output_path = "${path.root}/lambda/web-asg-notifications/web-asg-notifications.zip"
+}
+
+resource "aws_lambda_function" "web_asg_notifications" {
+  count = var.environment == "live" ? 1 : 0
+
+  filename         = data.archive_file.web_asg_notifications.output_path
+  source_code_hash = data.archive_file.web_asg_notifications.output_base64sha256
+
+  function_name = "WebAsgNotifications"
+  role          = var.web_asg_notifications_role_arn
+  handler       = "handler.lambda_handler"
+  runtime       = "python3.14"
+
+  memory_size = 128
+  timeout     = 30
+
+  environment {
+    variables = {
+      SNS_TOPIC_ARN = var.web_asg_notifications_sns_arn
+    }
+  }
+
+  tags = merge(var.tags, {
+    Role            = "serverless"
+    ApplicationType = "python"
+    CreatedBy       = "Digital Services Platform Team"
+    Service         = "web-asg-notifications"
+    Name            = "web_asg_notifications"
+  })
+}
+
+resource "aws_cloudwatch_log_group" "web_asg_notifications" {
+  count = var.environment == "live" ? 1 : 0
+
+  name              = "/aws/lambda/WebAsgNotifications"
+  retention_in_days = 7
+}

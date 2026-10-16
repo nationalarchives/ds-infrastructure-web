@@ -58,8 +58,8 @@ web_catalogue_asg_health_check_grace_period = 150
 web_catalogue_asg_health_check_type         = "EC2"
 web_catalogue_autoscaling_policy_name_prefix = "web-catalogue"
 web_catalogue_default_cooldown               = 300
-web_catalogue_scale_in_threshold             = 20
-web_catalogue_scale_out_threshold            = 80
+web_catalogue_scale_in_threshold             = 10
+web_catalogue_scale_out_threshold            = 60
 
 # Search
 web_search_patch_group      = "web-search-patchgroup"

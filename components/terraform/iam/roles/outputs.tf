@@ -174,3 +174,6 @@ output "web_feedback_instance_profile_arn" {
   value = aws_iam_instance_profile.web_feedback_profile.arn
 }
 
+output "lambda_web_asg_notifications_role_arn" {
+  value = var.environment == "live" ? aws_iam_role.lambda_web_asg_notifications_role[0].arn : null
+}

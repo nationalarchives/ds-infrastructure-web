@@ -63,7 +63,8 @@ resource "aws_autoscaling_group" "web_catalogue" {
         create_before_destroy = true
         ignore_changes = [
             load_balancers,
-            target_group_arns
+            target_group_arns,
+            desired_capacity
         ]
     }
 
