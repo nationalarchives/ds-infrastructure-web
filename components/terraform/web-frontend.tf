@@ -24,6 +24,7 @@ module "web_frontend" {
     source = "./web-frontend"
 
     ami_id = data.aws_ami.web_frontend_ami.id
+
     web_frontend_role_name = module.roles.web_frontend_role_name
     web_frontend_instance_profile_arn = module.roles.web_frontend_instance_profile_arn
 
@@ -39,7 +40,6 @@ module "web_frontend" {
     
     enable_autoscaling = var.environment == "live" ? true : false
     autoscaling_policy_name_prefix = var.environment == "live" ? "web-frontend" : ""
-
     web_frontend_autoscaling_policy_name_prefix = var.environment == "live" ? "web-frontend" : ""
     asg_max_size = var.web_frontend_asg_max_size
     asg_min_size = var.web_frontend_asg_min_size

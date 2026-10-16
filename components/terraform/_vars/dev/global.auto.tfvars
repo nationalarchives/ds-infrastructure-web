@@ -6,8 +6,6 @@ environment = "dev"
 region      = "eu-west-2"
 service     = "web"
 
-internal_domain_name = "web-frontend.dev.local"
-
 deployment_s3_bucket  = "ds-dev-deployment-source"
 logfile_s3_bucket     = "ds-dev-logfiles"
 

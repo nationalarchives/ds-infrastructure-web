@@ -1,7 +1,7 @@
 variable "redis_instance_type" {}
 variable "redis_key_name" {}
 variable "redis_root_block_device_size" {}
-
+variable "redis_image_version" {}
 variable "redis_asg_max_size" {}
 variable "redis_asg_min_size" {}
 variable "redis_asg_desired_capacity" {}

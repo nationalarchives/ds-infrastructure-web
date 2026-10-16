@@ -14,7 +14,7 @@ resource "aws_lambda_function" "auto_run_startup_script" {
   role          = var.auto_run_startup_script_role_arn
 
   handler = "auto-run-startup-script.lambda_handler"  
-  runtime = "python3.12"
+  runtime = "python3.14"
 
   memory_size = 128
   timeout     = 900
@@ -59,7 +59,7 @@ resource "aws_lambda_function" "wagtail_cron_trigger" {
   role          = var.wagtail_cron_trigger_role_arn
 
   handler = "wagtail-cron-trigger.wagtail_cron_trigger"  
-  runtime = "python3.12"
+  runtime = "python3.14"
 
   memory_size = 128
   timeout     = 900
@@ -122,7 +122,7 @@ resource "aws_lambda_function" "process_submitted_files" {
   function_name = "process-submitted-files"
   role          = var.web_request_service_record_role_arn
   handler       = "process-submitted-files.lambda_handler"
-  runtime       = "python3.12"
+  runtime       = "python3.14"
   timeout       = 300
 
 
@@ -165,7 +165,7 @@ resource "aws_lambda_function" "web_rsr_cron" {
   role          = var.web_rsr_cron_role_arn
 
   handler = "web-rsr-cron.web_rsr_cron"  
-  runtime = "python3.12"
+  runtime = "python3.14"
 
   memory_size = 128
   timeout     = 900
@@ -206,7 +206,7 @@ resource "aws_lambda_function" "platform_redis_dns_update" {
   function_name = "PlatformRedisDnsUpdate"
   role          = var.platform_redis_dns_update_role_arn
   handler       = "platform-redis-dns-update.lambda_handler"
-  runtime       = "python3.12"
+  runtime       = "python3.14"
 
   memory_size = 128
   timeout     = 60

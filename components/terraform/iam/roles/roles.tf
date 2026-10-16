@@ -123,7 +123,7 @@ resource "aws_iam_role_policy_attachment" "lambda_vpc_access" {
 
 # CodeDeploy Service Role for Web Role
 resource "aws_iam_role" "codedeploy_web_reverse_proxy_service_role" {
-    name = "codedeploy-web-reverse-proxy-service_role"
+    name = "codedeploy-web-reverse-proxy-service-role"
     assume_role_policy = file("${path.root}/shared-templates/codedeploy-service-policy.json")
     tags = var.tags
 }
@@ -678,4 +678,10 @@ resource "aws_iam_role_policy_attachment" "lambda_ssm_execution_policy" {
 resource "aws_iam_role_policy_attachment" "lambda_platform_redis_dns_update" {
   role       = aws_iam_role.lambda_platform_redis_dns_update_role.name
   policy_arn = var.lambda_platform_redis_dns_update_policy_arn
+}
+
+# CloudWatch Logs permissions for Redis DNS Lambda
+resource "aws_iam_role_policy_attachment" "lambda_platform_redis_dns_logging" {
+  role       = aws_iam_role.lambda_platform_redis_dns_update_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }

@@ -19,6 +19,7 @@ module "web_wagtaildocs" {
     source = "./web-wagtaildocs"
 
     ami_id = data.aws_ami.web_wagtaildocs_ami.id
+
     web_wagtaildocs_role_name = module.roles.web_wagtaildocs_role_name
     web_wagtaildocs_instance_profile_arn = module.roles.web_wagtaildocs_instance_profile_arn
 
@@ -36,24 +37,24 @@ module "web_wagtaildocs" {
     enable_monitoring = var.enable_monitoring
 
     web_wagtaildocs_efs_mount_dir = var.web_wagtaildocs_efs_mount_dir
+
     asg_max_size = var.web_wagtaildocs_asg_max_size
     asg_min_size = var.web_wagtaildocs_asg_min_size
     asg_desired_capacity = var.web_wagtaildocs_asg_desired_capacity
     asg_health_check_grace_period = var.web_wagtaildocs_asg_health_check_grace_period
     asg_health_check_type = var.web_wagtaildocs_asg_health_check_type
+    auto_switch_off = var.web_wagtaildocs_auto_switch_off
+    auto_switch_on = var.web_wagtaildocs_auto_switch_on
 
     instance_type = var.web_wagtaildocs_instance_type
     key_name = "wagtaildocs-${var.environment}-eu-west-2"
     root_block_device_size = "100"
 
-
     instance_cidr = [
         data.aws_ssm_parameter.private_subnet_2a_cidr.value,
         data.aws_ssm_parameter.private_subnet_2b_cidr.value,
     ]
-
-    auto_switch_off = var.web_wagtaildocs_auto_switch_off
-    auto_switch_on = var.web_wagtaildocs_auto_switch_on
+    
     deployment_group = var.web_wagtaildocs_deployment_group
     patch_group = var.web_wagtaildocs_patch_group
 

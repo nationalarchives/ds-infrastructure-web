@@ -23,6 +23,7 @@ module "web_wagtail" {
     source = "./web-wagtail"
 
     ami_id = data.aws_ami.web_wagtail_ami.id
+
     web_wagtail_role_name            = module.roles.web_wagtail_role_name
     web_wagtail_instance_profile_arn = module.roles.web_wagtail_instance_profile_arn
 
@@ -36,8 +37,7 @@ module "web_wagtail" {
 
     enable_autoscaling = var.environment == "live" ? true : false
     autoscaling_policy_name_prefix = var.environment == "live" ? "web-wagtail" : ""
-    web_wagtail_autoscaling_policy_name_prefix = var.environment == "live" ? "web-wagtail" : ""
-    
+    web_wagtail_autoscaling_policy_name_prefix = var.environment == "live" ? "web-wagtail" : ""    
     asg_max_size = var.web_wagtail_asg_max_size
     asg_min_size = var.web_wagtail_asg_min_size
     asg_desired_capacity = var.web_wagtail_asg_desired_capacity
@@ -47,6 +47,11 @@ module "web_wagtail" {
     scale_in_threshold = var.web_wagtail_scale_in_threshold
     scale_out_threshold = var.web_wagtail_scale_out_threshold
     enable_monitoring = var.enable_monitoring
+    auto_switch_off = var.web_wagtail_auto_switch_off
+    auto_switch_on = var.web_wagtail_auto_switch_on
+    deployment_group = var.web_wagtail_deployment_group
+    patch_group = var.web_wagtail_patch_group
+    asg_notifications_sns_arn = module.notifications.sns_topic_arn
 
     web_cron_notifications_sns_topic_arn = module.cron_notifications.sns_topic_arn
     web_wagtail_sg_id = module.sgs.web_wagtail_sg_id
@@ -56,17 +61,12 @@ module "web_wagtail" {
     web_wagtail_efs_mount_dir = var.web_wagtail_efs_mount_dir    
     instance_type = var.web_wagtail_instance_type
     key_name = "wagtail-${var.environment}-eu-west-2"
-    root_block_device_size = "100"
-
-    auto_switch_off = var.web_wagtail_auto_switch_off
-    auto_switch_on = var.web_wagtail_auto_switch_on
-    deployment_group = var.web_wagtail_deployment_group
-    patch_group = var.web_wagtail_patch_group
+    root_block_device_size = "100"    
 
     deployment_s3_bucket = var.web_wagtail_deployment_s3_bucket
     folder_s3_key = var.web_wagtail_folder_s3_key
 
     asg_tags = local.asg_default_tags
     tags = local.tags
-    asg_notifications_sns_arn = module.notifications.sns_topic_arn
+    
 }

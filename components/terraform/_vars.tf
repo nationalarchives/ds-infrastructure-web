@@ -4,13 +4,12 @@ variable "logfile_s3_bucket" {}
 variable "service" {}
 variable "web_enrichment_deployment_s3_root" {}
 variable "web_enrichment_logfile_s3_root" {}
-variable "private_record" {}
+
 variable "web_frontend_deployment_s3_root" {}
 variable "web_frontend_logfile_s3_root" {}
-variable "public_domain" {}
+
 variable "region" {}
-variable "db_record" {}
-variable "internal_domain_name" {}
+
 variable "web_enrichment_efs_mount_dir" {}
 variable "web_frontend_efs_mount_dir" {}
 variable "on_prem_cidrs" {}

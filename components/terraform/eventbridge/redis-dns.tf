@@ -6,14 +6,14 @@ resource "aws_cloudwatch_event_rule" "platform_redis_dns_update" {
   count = var.enable_redis_dns ? 1 : 0
 
   name        = "platform-redis-dns-update"
-  description = "Trigger Redis DNS update when Platform Redis instance starts"
+  description = "Update Redis DNS when a new Platform Redis ASG instance launches"
 
   event_pattern = jsonencode({
-    source      = ["aws.ec2"]
-    detail-type = ["EC2 Instance State-change Notification"]
+    source      = ["aws.autoscaling"]
+    detail-type = ["EC2 Instance Launch Successful"]
 
     detail = {
-      state = ["running"]
+      AutoScalingGroupName = ["platform-redis"]
     }
   })
 }

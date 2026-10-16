@@ -55,26 +55,17 @@ data "aws_ami" "web_enrichment_ami" {
 }
         
 data "aws_ami" "redis_ami" {
-    most_recent = true
+    owners = ["self"]
 
     filter {
-        name   = "name"
-        values = [
-            "platform-redis-primer*"
-        ]
+        name   = "tag:Image"
+        values = ["ds-platform-redis"]
     }
 
     filter {
-        name   = "virtualization-type"
-        values = [
-            "hvm"
-        ]
+        name   = "tag:ImageVersion"
+        values = [var.redis_image_version]
     }
-
-    owners = [
-        data.aws_caller_identity.current.account_id,
-        "amazon"
-    ]
 }
 
 data "aws_ami" "web_catalogue_ami" {
