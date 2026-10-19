@@ -7,7 +7,7 @@
         },
         "wagtail": {
             "image": "ghcr.io/nationalarchives/ds-wagtail",
-            "version": "26.10.14.2360",
+            "version": "26.10.17.2363",
             "repo": "https://github.com/nationalarchives/ds-wagtail"
         },
         "wagtaildocs": {
@@ -37,7 +37,7 @@
         },
         "requestservicerecord": {
             "image": "ghcr.io/nationalarchives/ds-request-service-record",
-            "version": "26.10.13.941",
+            "version": "26.10.16.979",
             "repo": "https://github.com/nationalarchives/ds-request-service-record"
         },
         "forms": {
@@ -52,7 +52,7 @@
         },
         "hospitalrecords": {
             "image": "ghcr.io/nationalarchives/ds-hospital-records",
-            "version": "26.10.13.251",
+            "version": "26.10.17.253",
             "repo": "https://github.com/nationalarchives/ds-hospital-records"
         }
     }
