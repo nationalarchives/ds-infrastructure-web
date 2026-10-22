@@ -146,7 +146,7 @@ jobs:
           echo "echo 'A log of an nginx test is displayed below:' >> /etc/nginx/nginx_last_test_log.txt" >> prep-nginx.sh
           echo "echo '' >> /etc/nginx/nginx_last_test_log.txt" >> prep-nginx.sh
           echo "#!/bin/bash" > deploy-nginx.sh
-          echo "nginx -t 2>> /etc/nginx/nginx_last_test_log.txt" >> deploy-nginx.sh
+          echo "nginx -t 2>&1 | tee -a /etc/nginx/nginx_last_test_log.txt" >> deploy-nginx.sh
           echo "if [ -z \$(grep -o successful /etc/nginx/nginx_last_test_log.txt) ]; then" >> deploy-nginx.sh
           echo "  sleep 60" >> deploy-nginx.sh
           echo "else" >> deploy-nginx.sh
@@ -206,5 +206,30 @@ jobs:
           aws deploy create-deployment --application-name web-nginx-rp --deployment-config-name web-nginx-rp --deployment-group-name web-nginx-rp-group --s3-location bucket=ds-$deploy_env-deployment-source,bundleType=zip,key=web/nginx-deployment/web-nginx-conf.zip | tee id.txt
           x=$(cut id.txt -d '"' -f 4 -s)
           echo "Waiting for successful deployment..."
-          aws deploy wait deployment-successful --deployment-id $x
-          echo "Successfully deployed!"
+
+          if aws deploy wait deployment-successful --deployment-id $x; then
+            echo "Successfully deployed!"
+          else
+            echo "::error::Nginx deployment failed!"
+
+            instance_ids=$(aws deploy list-deployment-instances \
+              --deployment-id $x \
+              --query 'instancesList[*]' \
+              --output text)
+
+            for instance_id in $instance_ids; do
+              echo "===================================="
+              echo "Instance ID: $instance_id"
+              echo "===================================="
+
+              aws deploy get-deployment-instance \
+                --deployment-id $x \
+                --instance-id $instance_id \
+                --query 'instanceSummary.lifecycleEvents[?status==`Failed`].{Hook:lifecycleEventName,Error:diagnostics.message,Log:diagnostics.logTail}' \
+                --output json
+            done
+
+            exit 1
+          fi
+
+

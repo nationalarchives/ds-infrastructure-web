@@ -13,7 +13,7 @@ resource "aws_lambda_function" "auto_run_startup_script" {
   function_name = "AutoRunStartupScript"
   role          = var.auto_run_startup_script_role_arn
 
-  handler = "auto-run-startup-script.lambda_handler"  
+  handler = "auto-run-startup-script.lambda_handler"
   runtime = "python3.14"
 
   memory_size = 128
@@ -58,7 +58,7 @@ resource "aws_lambda_function" "wagtail_cron_trigger" {
   function_name = "WagtailCronTrigger"
   role          = var.wagtail_cron_trigger_role_arn
 
-  handler = "wagtail-cron-trigger.wagtail_cron_trigger"  
+  handler = "wagtail-cron-trigger.wagtail_cron_trigger"
   runtime = "python3.14"
 
   memory_size = 128
@@ -96,15 +96,15 @@ data "archive_file" "process_submitted_files" {
 }
 
 resource "aws_sqs_queue" "process_submitted_files_queue" {
-  count = var.environment == "live" ? 1 : 0
-  name = "process-submitted-files-queue"
+  count                      = var.environment == "live" ? 1 : 0
+  name                       = "process-submitted-files-queue"
   visibility_timeout_seconds = 360
   message_retention_seconds  = 1209600
 }
 
 resource "aws_s3_bucket_notification" "submitted_folder_event" {
-  count = var.environment == "live" ? 1 : 0
-  bucket = var.foi_s3_bucket
+  count       = var.environment == "live" ? 1 : 0
+  bucket      = var.foi_s3_bucket
   eventbridge = true
 
   queue {
@@ -131,7 +131,7 @@ resource "aws_lambda_function" "process_submitted_files" {
 
   environment {
     variables = {
-      BUCKET_NAME      = var.foi_s3_bucket
+      BUCKET_NAME       = var.foi_s3_bucket
       PLACEHOLDER_IMAGE = "${path.module}/source/placeholder.jpg"
     }
   }
@@ -139,7 +139,7 @@ resource "aws_lambda_function" "process_submitted_files" {
   depends_on = [aws_sqs_queue.process_submitted_files_queue]
 }
 resource "aws_lambda_event_source_mapping" "process_submitted_files_sqs" {
-  count = var.environment == "live" ? 1 : 0
+  count            = var.environment == "live" ? 1 : 0
   event_source_arn = aws_sqs_queue.process_submitted_files_queue[0].arn
   function_name    = aws_lambda_function.process_submitted_files[0].arn
   batch_size       = 1
@@ -164,7 +164,7 @@ resource "aws_lambda_function" "web_rsr_cron" {
   function_name = "WebrsrCron"
   role          = var.web_rsr_cron_role_arn
 
-  handler = "web-rsr-cron.web_rsr_cron"  
+  handler = "web-rsr-cron.web_rsr_cron"
   runtime = "python3.14"
 
   memory_size = 128
