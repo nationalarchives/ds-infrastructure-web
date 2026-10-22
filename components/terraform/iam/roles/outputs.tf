@@ -1,5 +1,5 @@
 output "web_request_service_record_role_arn" {
-   value = aws_iam_role.web_request_service_record_role.arn
+  value = aws_iam_role.web_request_service_record_role.arn
 }
 
 # output "web_request_service_record_role_name" {
@@ -7,39 +7,39 @@ output "web_request_service_record_role_arn" {
 # }
 
 output "web_request_service_record_profile_name" {
-   value = aws_iam_instance_profile.web_request_service_record_profile.name
+  value = aws_iam_instance_profile.web_request_service_record_profile.name
 }
 
 output "web_request_service_record_profile_arn" {
-   value = aws_iam_instance_profile.web_request_service_record_profile.arn
+  value = aws_iam_instance_profile.web_request_service_record_profile.arn
 }
 
 output "media_efs_backup_arn" {
-    value = aws_iam_role.media_efs_backup.arn
+  value = aws_iam_role.media_efs_backup.arn
 }
 
 output "web_frontend_role_id" {
-    value = aws_iam_role.web_frontend_role.id
+  value = aws_iam_role.web_frontend_role.id
 }
 
 output "lambda_auto_run_startup_script_role_arn" {
-    value = aws_iam_role.lambda_auto_run_startup_script_role.arn
+  value = aws_iam_role.lambda_auto_run_startup_script_role.arn
 }
 
-output "lambda_wagtail_cron_trigger_role_arn"{
-    value = aws_iam_role.lambda_wagtail_cron_trigger_role.arn
+output "lambda_wagtail_cron_trigger_role_arn" {
+  value = aws_iam_role.lambda_wagtail_cron_trigger_role.arn
 }
 
 output "lambda_wagtail_cron_trigger_role_name" {
   value = aws_iam_role.lambda_wagtail_cron_trigger_role.name
 }
 
-output "lambda_web_request_service_record_role_arn"{
-    value = aws_iam_role.lambda_web_request_service_record_role.arn
+output "lambda_web_request_service_record_role_arn" {
+  value = aws_iam_role.lambda_web_request_service_record_role.arn
 }
 
-output "lambda_web_rsr_cron_role_arn"{
-    value = aws_iam_role.lambda_web_rsr_cron_role.arn
+output "lambda_web_rsr_cron_role_arn" {
+  value = aws_iam_role.lambda_web_rsr_cron_role.arn
 }
 
 output "lambda_web_rsr_role_name" {
@@ -52,15 +52,15 @@ output "lambda_platform_redis_dns_update_role_arn" {
 
 ## Web Frontend role and profile outputs
 output "web_frontend_role_name" {
-    value = aws_iam_role.web_frontend_role.name
+  value = aws_iam_role.web_frontend_role.name
 }
 
 output "web_frontend_profile_name" {
-    value = aws_iam_instance_profile.web_frontend_profile.name
+  value = aws_iam_instance_profile.web_frontend_profile.name
 }
 
 output "web_frontend_instance_profile_arn" {
-    value = aws_iam_instance_profile.web_frontend_profile.arn
+  value = aws_iam_instance_profile.web_frontend_profile.arn
 }
 
 ## Hospital Records role and profile outputs
@@ -122,9 +122,9 @@ output "web_wagtail_role_name" {
   value = aws_iam_role.web_wagtail_role.name
 }
 
-output "web_wagtail_instance_profile_arn" { 
+output "web_wagtail_instance_profile_arn" {
   value = aws_iam_instance_profile.web_wagtail_profile.arn
-} 
+}
 
 ## Wagtail docs role and profile outputs
 output "web_wagtaildocs_role_name" {
@@ -136,15 +136,15 @@ output "web_wagtaildocs_instance_profile_arn" {
 }
 
 output "codedeploy_web_service_role_arn" {
-    value = aws_iam_role.codedeploy_web_service_role.arn
+  value = aws_iam_role.codedeploy_web_service_role.arn
 }
 
 output "codedeploy_web_reverse_proxy_service_role_arn" {
-    value = aws_iam_role.codedeploy_web_reverse_proxy_service_role.arn
+  value = aws_iam_role.codedeploy_web_reverse_proxy_service_role.arn
 }
 
 output "web_lambda_sync_s3_to_efs_role_arn" {
-    value = aws_iam_role.web_lambda_sync_s3_to_efs.arn
+  value = aws_iam_role.web_lambda_sync_s3_to_efs.arn
 }
 
 ## RSR
@@ -152,7 +152,7 @@ output "web_request_service_record_role_name" {
   value = aws_iam_role.web_request_service_record_role.name
 }
 
-output "web_request_service_record_instance_profile_arn"{
+output "web_request_service_record_instance_profile_arn" {
   value = aws_iam_instance_profile.web_request_service_record_profile.arn
 }
 

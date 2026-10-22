@@ -54,25 +54,25 @@ resource "aws_iam_role" "web_hospitalrecords_role" {
 
 # Web Reverse Proxy Role
 resource "aws_iam_role" "web_reverse_proxy_role" {
-    name = "web-reverse-proxy-assume-role"
-    assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
+  name               = "web-reverse-proxy-assume-role"
+  assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
 # Web Bulkdownload Role
 resource "aws_iam_role" "web_bulkdownload_role" {
-    name = "web-bulkdownload-role"
-    assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
+  name               = "web-bulkdownload-role"
+  assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
 # Feedback Role
 resource "aws_iam_role" "web_feedback_role" {
-    name = "web-feedback-role"
-    assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
+  name               = "web-feedback-role"
+  assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
 # Request Service Record Role - MoD FoI
 resource "aws_iam_role" "web_request_service_record_role" {
-  name = "web-request-service-record-role"
+  name               = "web-request-service-record-role"
   assume_role_policy = file("${path.root}/shared-templates/ec2_assume_role.json")
 }
 
@@ -123,22 +123,22 @@ resource "aws_iam_role_policy_attachment" "lambda_vpc_access" {
 
 # CodeDeploy Service Role for Web Role
 resource "aws_iam_role" "codedeploy_web_reverse_proxy_service_role" {
-    name = "codedeploy-web-reverse-proxy-service-role"
-    assume_role_policy = file("${path.root}/shared-templates/codedeploy-service-policy.json")
-    tags = var.tags
+  name               = "codedeploy-web-reverse-proxy-service-role"
+  assume_role_policy = file("${path.root}/shared-templates/codedeploy-service-policy.json")
+  tags               = var.tags
 }
 
 # CodeDeploy Service Role for Web Role
 resource "aws_iam_role" "codedeploy_web_service_role" {
-    name = "codedeploy-web-service-role"
-    assume_role_policy = file("${path.root}/shared-templates/codedeploy-service-policy.json")
-    tags = var.tags
+  name               = "codedeploy-web-service-role"
+  assume_role_policy = file("${path.root}/shared-templates/codedeploy-service-policy.json")
+  tags               = var.tags
 }
 
 resource "aws_iam_role" "web_lambda_sync_s3_to_efs" {
-    name = "web-lambda-sync-s3-to-efs"
-    assume_role_policy = file("${path.root}/shared-templates/assume-role-lambda-policy.json")
-    tags = var.tags
+  name               = "web-lambda-sync-s3-to-efs"
+  assume_role_policy = file("${path.root}/shared-templates/assume-role-lambda-policy.json")
+  tags               = var.tags
 }
 
 # --------------------------------------------------------------
@@ -196,20 +196,20 @@ resource "aws_iam_instance_profile" "web_hospitalrecords_profile" {
 
 ## Instance Profile for Web Reverse Proxy Role
 resource "aws_iam_instance_profile" "web_reverse_proxy_profile" {
-    name = "web-reverse-proxy-profile"
-    role = aws_iam_role.web_reverse_proxy_role.name
+  name = "web-reverse-proxy-profile"
+  role = aws_iam_role.web_reverse_proxy_role.name
 }
 
 ## Instance Profile for Web Search Role
 resource "aws_iam_instance_profile" "web_search_profile" {
-    name = "web-search-profile"
-    role = aws_iam_role.web_search_role.name
+  name = "web-search-profile"
+  role = aws_iam_role.web_search_role.name
 }
 
 ## Instance Profile for Web Catalogue Role
 resource "aws_iam_instance_profile" "web_catalogue_profile" {
-    name = "web-catalogue-profile"
-    role = aws_iam_role.web_catalogue_role.name
+  name = "web-catalogue-profile"
+  role = aws_iam_role.web_catalogue_role.name
 }
 
 ## Instance Profile for Web Bulkdownload Role
@@ -413,7 +413,7 @@ resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_2" {
 resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_3" {
   role       = aws_iam_role.web_request_service_record_role.name
   policy_arn = var.org_level_logging_arn
-  }
+}
 resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_4" {
   role       = aws_iam_role.web_request_service_record_role.name
   policy_arn = var.deployment_s3_policy
@@ -427,17 +427,17 @@ resource "aws_iam_role_policy_attachment" "attach_web_request_s3_copy" {
   policy_arn = var.web_request_s3_copy_policy_arn
 }
 resource "aws_iam_role_policy_attachment" "attach_lambda_rsr_sqs" {
-  count = var.environment == "live" ? 1 : 0
+  count      = var.environment == "live" ? 1 : 0
   role       = aws_iam_role.lambda_web_request_service_record_role.name
   policy_arn = var.lambda_web_request_rsr_sqs_arn
 }
-resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_6"{
-  role = aws_iam_role.web_request_service_record_role.name
+resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_6" {
+  role       = aws_iam_role.web_request_service_record_role.name
   policy_arn = var.web_request_service_record_ses_access_policy_arn
 }
 resource "aws_iam_role_policy_attachment" "web_rsr_policy_attachment_7" {
-    role       = aws_iam_role.web_request_service_record_role.name
-    policy_arn = var.web_request_service_record_ec2_access_arn
+  role       = aws_iam_role.web_request_service_record_role.name
+  policy_arn = var.web_request_service_record_ec2_access_arn
 }
 
 ##-------------------------------------------------------------  
@@ -512,8 +512,8 @@ resource "aws_iam_role_policy_attachment" "web_enrichment_policy_attachment_2" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 resource "aws_iam_role_policy_attachment" "web_enrichment_policy_attachment_3" {
-    role       = aws_iam_role.web_enrichment_role.name
-    policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+  role       = aws_iam_role.web_enrichment_role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 resource "aws_iam_role_policy_attachment" "web_enrichment_policy_attachment_4" {
   role       = aws_iam_role.web_enrichment_role.name
@@ -537,8 +537,8 @@ resource "aws_iam_role_policy_attachment" "web_reverse_proxy_policy_attachment_2
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 resource "aws_iam_role_policy_attachment" "web_reverse_proxy_policy_attachment_3" {
-    role       = aws_iam_role.web_reverse_proxy_role.name
-    policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+  role       = aws_iam_role.web_reverse_proxy_role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 resource "aws_iam_role_policy_attachment" "web_reverse_proxy_policy_attachment_4" {
   role       = aws_iam_role.web_reverse_proxy_role.name
@@ -554,39 +554,39 @@ resource "aws_iam_role_policy_attachment" "web_reverse_proxy_policy_attachment_5
 ##-------------------------------------------------------------
 
 resource "aws_iam_role_policy_attachment" "codedeploy_web_service_role_AWSCodeDeploy" {
-    role       = aws_iam_role.codedeploy_web_service_role.name
-    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy"
+  role       = aws_iam_role.codedeploy_web_service_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy"
 }
 resource "aws_iam_role_policy_attachment" "codedeploy_web_service_role_asg_policy" {
-    role       = aws_iam_role.codedeploy_web_service_role.name
-    policy_arn = var.codedeploy_web_asg_policy_arn
+  role       = aws_iam_role.codedeploy_web_service_role.name
+  policy_arn = var.codedeploy_web_asg_policy_arn
 }
 resource "aws_iam_role_policy_attachment" "codedeploy_web_service_role_access_policy" {
-    role       = aws_iam_role.codedeploy_web_service_role.name
-    policy_arn = var.codedeploy_web_access_policy
+  role       = aws_iam_role.codedeploy_web_service_role.name
+  policy_arn = var.codedeploy_web_access_policy
 }
 
 resource "aws_iam_role_policy_attachment" "codedeploy_web_reverse_proxy_service_role_AWSCodeDeploy" {
-    role       = aws_iam_role.codedeploy_web_reverse_proxy_service_role.name
-    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy"
+  role       = aws_iam_role.codedeploy_web_reverse_proxy_service_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy"
 }
 resource "aws_iam_role_policy_attachment" "codedeploy_web_reverse_proxy_service_role_asg_policy" {
-    role       = aws_iam_role.codedeploy_web_reverse_proxy_service_role.name
-    policy_arn = var.codedeploy_web_reverse_proxy_asg_policy_arn
+  role       = aws_iam_role.codedeploy_web_reverse_proxy_service_role.name
+  policy_arn = var.codedeploy_web_reverse_proxy_asg_policy_arn
 }
 resource "aws_iam_role_policy_attachment" "codedeploy_web_reverse_proxy_service_role_access_policy" {
-    role       = aws_iam_role.codedeploy_web_reverse_proxy_service_role.name
-    policy_arn = var.codedeploy_web_reverse_proxy_access_policy
+  role       = aws_iam_role.codedeploy_web_reverse_proxy_service_role.name
+  policy_arn = var.codedeploy_web_reverse_proxy_access_policy
 }
 
 
 resource "aws_iam_role_policy_attachment" "codedeploy_web_lambda_sync_s3_to_efs_full_access" {
-    role       = aws_iam_role.codedeploy_web_service_role.name
-    policy_arn = "arn:aws:iam::aws:policy/AmazonElasticFileSystemClientFullAccess"
+  role       = aws_iam_role.codedeploy_web_service_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonElasticFileSystemClientFullAccess"
 }
 resource "aws_iam_role_policy_attachment" "codedeploy_web_lambda_sync_s3_to_efs_execution" {
-    role       = aws_iam_role.codedeploy_web_service_role.name
-    policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+  role       = aws_iam_role.codedeploy_web_service_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
 ##-------------------------------------------------------------  

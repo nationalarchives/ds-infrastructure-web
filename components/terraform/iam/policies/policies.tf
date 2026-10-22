@@ -2,24 +2,24 @@
 # IAM Policy: Deployment S3 Access
 ##########################################
 resource "aws_iam_policy" "deployment_s3" {
-    name        = "web-deployment-source-s3-policy"
-    description = "deployment S3 access for web"
+  name        = "web-deployment-source-s3-policy"
+  description = "deployment S3 access for web"
 
-    policy = templatefile("${path.module}/templates/deployment-source-s3-access.json", {
-        deployment_s3_bucket = var.deployment_s3_bucket,
-        service              = var.service
-    })
+  policy = templatefile("${path.module}/templates/deployment-source-s3-access.json", {
+    deployment_s3_bucket = var.deployment_s3_bucket,
+    service              = var.service
+  })
 }
 
 ##########################################
 # IAM Policy: SSM Access for Web Frontend
 ##########################################
 resource "aws_iam_policy" "web_ssm" {
-   name        = "web-frontend-ssm-policy"
-   description = "SSM access to web frontend server"
-   policy = templatefile("${path.module}/templates/instance-ssm-policy.json", {
-       account_id = var.account_id
-   })
+  name        = "web-frontend-ssm-policy"
+  description = "SSM access to web frontend server"
+  policy = templatefile("${path.module}/templates/instance-ssm-policy.json", {
+    account_id = var.account_id
+  })
 }
 
 ##########################################
@@ -37,8 +37,8 @@ resource "aws_iam_policy" "web_request_s3_copy_policy" {
 # SQS Queue for Submitted Files
 ##########################################
 resource "aws_sqs_queue" "process_submitted_files_queue" {
-  count                     = var.environment == "live" ? 1 : 0
-  name                      = "process-submitted-files-queue"
+  count                      = var.environment == "live" ? 1 : 0
+  name                       = "process-submitted-files-queue"
   visibility_timeout_seconds = 360
   message_retention_seconds  = 1209600
 }
@@ -47,24 +47,24 @@ resource "aws_sqs_queue" "process_submitted_files_queue" {
 # IAM Policy: Allow Lambda to read from SQS
 ##########################################
 resource "aws_iam_policy" "lambda_web_request_rsr_sqs" {
-  count = var.environment == "live" ? 1 : 0
+  count       = var.environment == "live" ? 1 : 0
   name        = "lambda-web-request-rsr-sqs-policy"
   description = "Allow Lambda to read messages from SQS queue"
 
   policy = templatefile("${path.module}/templates/lambda_rsr_policy.json", {
-    queue_arn = aws_sqs_queue.process_submitted_files_queue[0].arn 
+    queue_arn = aws_sqs_queue.process_submitted_files_queue[0].arn
   })
 }
 ##########################################
 # SQS Queue Policy: Allow S3 to send messages
 ##########################################
 resource "aws_sqs_queue_policy" "process_submitted_files_queue_policy" {
-  count = var.environment == "live" ? 1 : 0
+  count     = var.environment == "live" ? 1 : 0
   queue_url = aws_sqs_queue.process_submitted_files_queue[0].id
 
   policy = templatefile("${path.module}/templates/process_submitted_files_sqs_policy.json", {
     queue_arn  = aws_sqs_queue.process_submitted_files_queue[0].arn
-    bucket_arn =  "arn:aws:s3:::${var.foi_s3_bucket}"
+    bucket_arn = "arn:aws:s3:::${var.foi_s3_bucket}"
   })
 }
 
@@ -72,8 +72,8 @@ resource "aws_sqs_queue_policy" "process_submitted_files_queue_policy" {
 # S3 Bucket Notification: trigger SQS on object creation
 ##########################################
 resource "aws_s3_bucket_notification" "submitted_folder_event" {
-  count  = var.environment == "live" ? 1 : 0
-  bucket = var.foi_s3_bucket
+  count       = var.environment == "live" ? 1 : 0
+  bucket      = var.foi_s3_bucket
   eventbridge = true
 
   queue {
@@ -149,81 +149,81 @@ resource "aws_iam_policy" "web_enrichment_deployment_s3" {
 
 
 resource "aws_iam_policy" "codedeploy_web_s3_access" {
-    name        = "codedeploy-web-s3-access-policy"
-    description = "allow code deploy agent access to s3"
+  name        = "codedeploy-web-s3-access-policy"
+  description = "allow code deploy agent access to s3"
 
-    policy = file("${path.root}/shared-templates/codedeploy-s3-policy.json")
+  policy = file("${path.root}/shared-templates/codedeploy-s3-policy.json")
 }
 
 resource "aws_iam_policy" "codedeploy_web_asg_policy" {
-    name        = "codedeploy-web-asg-policy"
-    description = "codedeploy access to ASG policy"
+  name        = "codedeploy-web-asg-policy"
+  description = "codedeploy access to ASG policy"
 
-    policy = file("${path.root}/shared-templates/codedeploy-asg-policy.json")
+  policy = file("${path.root}/shared-templates/codedeploy-asg-policy.json")
 }
 
 resource "aws_iam_policy" "codedeploy_web_access_policy" {
-    name        = "codedeploy-web-access-policy"
-    description = "codedeploy access role policy"
+  name        = "codedeploy-web-access-policy"
+  description = "codedeploy access role policy"
 
-    policy = templatefile("${path.root}/shared-templates/codedeploy-access-policy.json",
-        {
-            service_policy_arn = aws_iam_policy.codedeploy_web_s3_access.arn
-            environment        = var.environment
-        }
-    )
+  policy = templatefile("${path.root}/shared-templates/codedeploy-access-policy.json",
+    {
+      service_policy_arn = aws_iam_policy.codedeploy_web_s3_access.arn
+      environment        = var.environment
+    }
+  )
 }
 
 resource "aws_iam_policy" "s3_deployment_source_access_policy" {
-    name        = "s3-web-deployment-source-access-policy"
-    description = "access to source code"
+  name        = "s3-web-deployment-source-access-policy"
+  description = "access to source code"
 
-    policy = templatefile("${path.root}/shared-templates/s-devops-s3-access-policy.tftpl",
-        {
-            bucket_arns = [
-                var.s3_deployment_source_arn.value,
-            ]
-            object_arns = local.object_arns
-        }
-    )
+  policy = templatefile("${path.root}/shared-templates/s-devops-s3-access-policy.tftpl",
+    {
+      bucket_arns = [
+        var.s3_deployment_source_arn.value,
+      ]
+      object_arns = local.object_arns
+    }
+  )
 }
 
 resource "aws_iam_policy" "codedeploy_web_reverse_proxy_s3_access" {
-    name        = "codedeploy-web-reverse-proxy-s3-access-policy"
-    description = "allow code deploy agent access to s3"
+  name        = "codedeploy-web-reverse-proxy-s3-access-policy"
+  description = "allow code deploy agent access to s3"
 
-    policy = file("${path.root}/shared-templates/codedeploy-s3-policy.json")
+  policy = file("${path.root}/shared-templates/codedeploy-s3-policy.json")
 }
 
 resource "aws_iam_policy" "codedeploy_web_reverse_proxy_asg_policy" {
-    name        = "codedeploy-web-reverse-proxy-asg-policy"
-    description = "codedeploy access to ASG policy"
+  name        = "codedeploy-web-reverse-proxy-asg-policy"
+  description = "codedeploy access to ASG policy"
 
-    policy = file("${path.root}/shared-templates/codedeploy-asg-policy.json")
+  policy = file("${path.root}/shared-templates/codedeploy-asg-policy.json")
 }
 
 resource "aws_iam_policy" "codedeploy_web_reverse_proxy_access_policy" {
-    name        = "codedeploy-web-reverse-proxy-access-policy"
-    description = "codedeploy access role policy"
+  name        = "codedeploy-web-reverse-proxy-access-policy"
+  description = "codedeploy access role policy"
 
-    policy = templatefile("${path.root}/shared-templates/codedeploy-access-policy.json",
-        {
-            service_policy_arn = aws_iam_policy.codedeploy_web_reverse_proxy_s3_access.arn
-            environment        = var.environment
-        }
-    )
+  policy = templatefile("${path.root}/shared-templates/codedeploy-access-policy.json",
+    {
+      service_policy_arn = aws_iam_policy.codedeploy_web_reverse_proxy_s3_access.arn
+      environment        = var.environment
+    }
+  )
 }
 
 resource "aws_iam_policy" "s3_deployment_source_static_content_read" {
-    name        = "s3-deployment-source-static-content-read"
-    description = "read access to the ds-<env>-deployment-source/static_content folder"
+  name        = "s3-deployment-source-static-content-read"
+  description = "read access to the ds-<env>-deployment-source/static_content folder"
 
-    policy = templatefile("${path.root}/shared-templates/s3_constrained_read_access.tftpl",
-        {
-            s3_bucket_arn = var.s3_deployment_source_arn.value
-            prefix_list   = ["","static_content/","static_content/accessions/"]
-        }
-    )
+  policy = templatefile("${path.root}/shared-templates/s3_constrained_read_access.tftpl",
+    {
+      s3_bucket_arn = var.s3_deployment_source_arn.value
+      prefix_list   = ["", "static_content/", "static_content/accessions/"]
+    }
+  )
 }
 
 resource "aws_iam_policy" "ses_access" {
@@ -322,7 +322,7 @@ resource "aws_iam_policy" "web_wagtail_cron_notifications" {
 # IAM Policy: Merlin Process Notifications
 ##########################################
 resource "aws_iam_policy" "web_bulkdownload_merlin_notifications" {
-  count       = var.environment == "live" ? 1 : 0
+  count = var.environment == "live" ? 1 : 0
 
   name        = "web-bulkdownload-merlin-notifications-policy"
   description = "Allow web bulkdownload EC2 instances to publish Merlin process failure notifications to SNS"

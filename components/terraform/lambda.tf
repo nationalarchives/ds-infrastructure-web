@@ -1,51 +1,51 @@
 # python version for klayers need updating when the python version for lambda changes
 data "klayers_package_latest_version" "boto3" {
-    name   = "boto3"
-    region = "eu-west-2"
+  name   = "boto3"
+  region = "eu-west-2"
 
-    python_version = "3.14"
+  python_version = "3.14"
 }
 
 resource "aws_lambda_layer_version" "datetime" {
-    layer_name = "datetime"
+  layer_name = "datetime"
 
-    s3_bucket = "ds-${var.environment}-deployment-source"
-    s3_key    = "lambda/layers/datetime-5.2.zip"
+  s3_bucket = "ds-${var.environment}-deployment-source"
+  s3_key    = "lambda/layers/datetime-5.2.zip"
 
-    compatible_runtimes = [
-        "python3.12",
-        "python3.13",
-        "python3.14",
-    ]
+  compatible_runtimes = [
+    "python3.12",
+    "python3.13",
+    "python3.14",
+  ]
 }
 
 module "lambda" {
-    source = "./lambda"
+  source = "./lambda"
 
-    auto_run_startup_script_role_arn = module.roles.lambda_auto_run_startup_script_role_arn
-    wagtail_cron_trigger_role_arn = module.roles.lambda_wagtail_cron_trigger_role_arn
-    web_request_service_record_role_arn = module.roles.lambda_web_request_service_record_role_arn
-    web_rsr_cron_role_arn = module.roles.lambda_web_rsr_cron_role_arn
-    platform_redis_dns_update_role_arn = module.roles.lambda_platform_redis_dns_update_role_arn
-    web_asg_notifications_role_arn = module.roles.lambda_web_asg_notifications_role_arn
-    web_asg_notifications_sns_arn  = module.notifications.sns_topic_arn
-    
-    subnet_ids = [
-        data.aws_ssm_parameter.private_subnet_2a_id.value,
-        data.aws_ssm_parameter.private_subnet_2b_id.value,
-    ]
+  auto_run_startup_script_role_arn    = module.roles.lambda_auto_run_startup_script_role_arn
+  wagtail_cron_trigger_role_arn       = module.roles.lambda_wagtail_cron_trigger_role_arn
+  web_request_service_record_role_arn = module.roles.lambda_web_request_service_record_role_arn
+  web_rsr_cron_role_arn               = module.roles.lambda_web_rsr_cron_role_arn
+  platform_redis_dns_update_role_arn  = module.roles.lambda_platform_redis_dns_update_role_arn
+  web_asg_notifications_role_arn      = module.roles.lambda_web_asg_notifications_role_arn
+  web_asg_notifications_sns_arn       = module.notifications.sns_topic_arn
 
-    layers = [
-        data.klayers_package_latest_version.boto3.arn,
-        aws_lambda_layer_version.datetime.arn
-    ]
+  subnet_ids = [
+    data.aws_ssm_parameter.private_subnet_2a_id.value,
+    data.aws_ssm_parameter.private_subnet_2b_id.value,
+  ]
 
-    security_group_ids = [
-        module.sgs.lambda_web_deployment_id,
-    ]
-    foi_s3_bucket_arn = var.foi_s3_bucket_arn
-    environment = var.environment
-    foi_s3_bucket = var.foi_s3_bucket
-    tags = local.tags
-    route53_zone = var.route53_zone
+  layers = [
+    data.klayers_package_latest_version.boto3.arn,
+    aws_lambda_layer_version.datetime.arn
+  ]
+
+  security_group_ids = [
+    module.sgs.lambda_web_deployment_id,
+  ]
+  foi_s3_bucket_arn = var.foi_s3_bucket_arn
+  environment       = var.environment
+  foi_s3_bucket     = var.foi_s3_bucket
+  tags              = local.tags
+  route53_zone      = var.route53_zone
 }
