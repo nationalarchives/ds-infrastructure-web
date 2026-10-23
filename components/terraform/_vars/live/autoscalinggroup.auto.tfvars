@@ -52,8 +52,8 @@ web_catalogue_patch_group      = "web-catalogue-patchgroup"
 web_catalogue_deployment_group = "web-catalogue-deploygroup"
 
 web_catalogue_asg_max_size                  = 4
-web_catalogue_asg_min_size                  = 1
-web_catalogue_asg_desired_capacity          = 1
+web_catalogue_asg_min_size                  = 2
+web_catalogue_asg_desired_capacity          = 2
 web_catalogue_asg_health_check_grace_period = 150
 web_catalogue_asg_health_check_type         = "EC2"
 web_catalogue_autoscaling_policy_name_prefix = "web-catalogue"
